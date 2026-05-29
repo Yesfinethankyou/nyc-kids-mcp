@@ -1,0 +1,44 @@
+[project]
+name = "nyc-events"
+version = "0.1.0"
+description = "NYC family-friendly events MCP server"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.2.0",
+    "httpx>=0.27",
+    "feedparser>=6.0",
+    "icalendar>=5.0",
+    "selectolax>=0.3",
+    "python-dateutil>=2.8",
+    "pydantic>=2.5",
+    "uvicorn[standard]>=0.30",
+    "starlette>=0.37",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+nyc-events-server = "nyc_events.server:main"
+nyc-events-ingest = "nyc_events.ingest:main"
+nyc-events-seed = "nyc_events.seed_fake:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nyc_events"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
