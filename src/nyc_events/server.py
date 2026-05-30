@@ -531,11 +531,17 @@ async def register(request: Request) -> Response:
     limited = _rate_limit(request, "register")
     if limited is not None:
         return limited
-    # RFC 7591: accept anything; we don't really care who the client is.
-    try:
-        body = await request.json()
-    except Exception:
-        body = {}
+    # RFC 7591 says POST-only. We accept GET too as a soft guard against the
+    # same http→https-redirect-downgrade pitfall described on /token: if the
+    # advertised registration_endpoint is http://… and Funnel 302s to https,
+    # httpx silently rewrites POST→GET and drops the body. DCR is already a
+    # security no-op (any client_id works), so widening the method is fine.
+    body: dict = {}
+    if request.method == "POST":
+        try:
+            body = await request.json()
+        except Exception:
+            body = {}
     client_id = oauth.new_client_id()
     return JSONResponse(
         {
@@ -669,13 +675,22 @@ async def token_endpoint(request: Request) -> Response:
     limited = _rate_limit(request, "token")
     if limited is not None:
         return limited
-    form = await request.form()
-    if form.get("grant_type") != "authorization_code":
+    # Accept GET in addition to POST: when the OAuth metadata accidentally
+    # advertises an http:// token endpoint (e.g. FORWARDED_ALLOW_IPS not set
+    # for a Docker bridge), Tailscale Funnel 302s the POST to https, and
+    # httpx auto-follows by downgrading POST→GET and dropping the body.
+    # Accepting GET means we 400 with a useful error instead of silently
+    # 404-ing through the MCP catch-all. The real fix is upstream config.
+    if request.method == "POST":
+        params = await request.form()
+    else:
+        params = request.query_params
+    if params.get("grant_type") != "authorization_code":
         return JSONResponse({"error": "unsupported_grant_type"}, status_code=400)
     ac = oauth.consume_auth_code(
-        code=form.get("code", "") or "",
-        code_verifier=form.get("code_verifier", "") or "",
-        redirect_uri=form.get("redirect_uri", "") or "",
+        code=params.get("code", "") or "",
+        code_verifier=params.get("code_verifier", "") or "",
+        redirect_uri=params.get("redirect_uri", "") or "",
     )
     if ac is None:
         return JSONResponse({"error": "invalid_grant"}, status_code=400)
@@ -721,10 +736,10 @@ def build_app() -> Starlette:
                 "/.well-known/oauth-authorization-server",
                 authorization_server_metadata,
             ),
-            Route("/register", register, methods=["POST"]),
+            Route("/register", register, methods=["GET", "POST"]),
             Route("/authorize", authorize_get, methods=["GET"]),
             Route("/authorize", authorize_post, methods=["POST"]),
-            Route("/token", token_endpoint, methods=["POST"]),
+            Route("/token", token_endpoint, methods=["GET", "POST"]),
             Mount("/", app=mcp_app),
         ],
         middleware=[

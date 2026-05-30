@@ -1,0 +1,63 @@
+# Single-host deployment: NYC events MCP server + Watchtower auto-updater.
+#
+# Bind to 127.0.0.1 so the port is not exposed to the LAN. Public reach is
+# via Tailscale Funnel on the host, which proxies to localhost:8765.
+#
+# Data lives in ./data on the host (events.db + oauth.db). Wipe events.db
+# without touching oauth.db and your claude.ai connector keeps working.
+
+services:
+  nyc-events:
+    image: ghcr.io/yesfinethankyou/nyc-kids-mcp:latest
+    container_name: nyc-events
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Inside the container, the canonical paths are under /data. Override
+      # whatever was in .env so a host-style path can't leak in.
+      DB_PATH: /data/events.db
+      OAUTH_DB_PATH: /data/oauth.db
+      PORT: "8765"
+      # Requests arrive from the Docker bridge gateway, not 127.0.0.1, so
+      # the loopback-only default would make uvicorn ignore X-Forwarded-Proto
+      # and advertise http://… in OAuth metadata. claude.ai then POSTs http,
+      # Funnel 302s to https, httpx follows and downgrades POST→GET, losing
+      # the body — and the /token exchange dies silently. Trusting all
+      # forwarded headers is safe here because the host port is bound to
+      # 127.0.0.1, so only local processes (Funnel, curl) can reach this.
+      FORWARDED_ALLOW_IPS: "*"
+    volumes:
+      - ./data:/data
+    ports:
+      - "127.0.0.1:8765:8765"
+    labels:
+      # Watchtower will only consider containers with this label set to true.
+      com.centurylinklabs.watchtower.enable: "true"
+    healthcheck:
+      # Defined in the Dockerfile; restating the policy here so compose can
+      # surface the result via `docker compose ps`.
+      test: ["CMD", "python", "-c", "import socket,sys; s=socket.socket(); s.settimeout(3); sys.exit(0) if s.connect_ex(('127.0.0.1',8765))==0 else sys.exit(1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: nyc-events-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Only update containers with the enable label; do NOT scan the whole
+      # host (this matters on a NAS shared with other services).
+      WATCHTOWER_LABEL_ENABLE: "true"
+      # Poll every 5 minutes. Image updates are user-triggered (tag push on
+      # GitHub), so a tight poll window is fine.
+      WATCHTOWER_POLL_INTERVAL: "300"
+      # Clean up old image versions after a successful update.
+      WATCHTOWER_CLEANUP: "true"
+      # Public image, no registry auth needed. If we ever flip the GHCR
+      # package to private, mount a docker config with a PAT.
+      WATCHTOWER_INCLUDE_RESTARTING: "true"

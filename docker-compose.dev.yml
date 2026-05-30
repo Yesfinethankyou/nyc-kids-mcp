@@ -1,0 +1,20 @@
+# Dev/local override. Use with:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+#
+# Why an override rather than editing the base file:
+#  - Production NAS pulls `ghcr.io/.../latest`; we don't want a local `build:`
+#    field shipped to it.
+#  - Production runs Watchtower; locally that's just churn.
+#  - The bind-mounted ./data is owned by the host user; the image's app user
+#    (uid 10001) can't write to it, so we run the container as the host UID
+#    for local dev.
+
+services:
+  nyc-events:
+    build: .
+    image: nyc-kids-mcp:dev
+    user: "1000:1000"
+
+  watchtower:
+    # Profile that we never activate -> watchtower won't start in dev.
+    profiles: ["never"]

@@ -6,8 +6,9 @@ tools — designed for use from the Claude mobile app while out with a kid.
 
 **Status:**
 - Checkpoint A ✅ scaffold + FastMCP + OAuth 2.1 shim + connected to claude.ai via Funnel.
-- Checkpoint B ✅ NYC Permitted Events (tvpp-9vvx) ingest, ~850 kid-relevant events / 60 days, 48 passing tests.
-- Checkpoint C ⏳ Docker + Synology + nightly cron.
+- Checkpoint B ✅ NYC Permitted Events (tvpp-9vvx) ingest, ~700 kid-relevant events / 60 days.
+- Checkpoint C ✅ security audit + bundle B fixes (rate limiter, redirect allowlist, consent CSP, OAuth expiry).
+- Checkpoint D ✅ Dockerfile + docker-compose + GHCR + Watchtower + GH Actions multi-arch publish.
 
 **Why "Permitted Events" and not "Parks":** the spec originally named the
 NYC Parks Events Listing (`fudw-fgrp`) SODA dataset, but it's been frozen
@@ -41,6 +42,86 @@ cp .env.example .env
 # Generate a token and put it in .env:
 python -c "import secrets; print(secrets.token_urlsafe(48))"
 ```
+
+## Deploy (Docker + Synology + Tailscale Funnel)
+
+The production target is a Synology NAS. The compose file ships two services:
+the MCP server itself and a Watchtower instance scoped to update only this
+container.
+
+### 1. Pull and run
+
+On the NAS, in a directory of your choice:
+
+```bash
+git clone https://github.com/Yesfinethankyou/nyc-kids-mcp.git
+cd nyc-kids-mcp
+cp .env.example .env
+# Edit .env, set MCP_AUTH_TOKEN to a long random string:
+python3 -c "import secrets; print(secrets.token_urlsafe(48))"
+
+mkdir -p data
+docker compose pull
+docker compose up -d
+```
+
+The compose file binds the server to `127.0.0.1:8765` on the host, NOT
+`0.0.0.0` — public reach is intentionally only via Tailscale Funnel, never
+via the LAN.
+
+### 2. Expose via Tailscale Funnel
+
+On the same host:
+
+```bash
+sudo tailscale funnel --bg 8765
+# → reports the public hostname, e.g. https://nas-name.tailnet.ts.net
+```
+
+That hostname is what you paste into claude.ai → Settings → Connectors as
+the bare connector URL (no `/mcp` suffix — claude.ai treats the URL as the
+MCP endpoint itself).
+
+### 3. Nightly ingest cron
+
+The container runs the **server**, not the ingest loop. Nightly ingest is a
+separate one-shot. On Synology DSM, schedule it via Task Scheduler:
+
+- **Control Panel → Task Scheduler → Create → Scheduled Task → User-defined script**
+- **User:** `root` (needed for Docker socket access)
+- **Schedule:** Daily, 03:30 (or whenever your upstream feels least loaded)
+- **Run command:**
+
+  ```bash
+  docker exec nyc-events python -m nyc_events.ingest
+  ```
+
+The ingest writes to the mounted `./data` volume so the running server picks
+up the new rows immediately (SQLite + WAL).
+
+Don't bake the cron into the container — Watchtower restarts the container
+on every image update, which would race with a long-running ingest.
+
+### 4. Auto-updates via Watchtower
+
+The compose file's Watchtower service polls every 5 minutes for new
+`ghcr.io/yesfinethankyou/nyc-kids-mcp:latest` images. It only touches
+containers carrying the `com.centurylinklabs.watchtower.enable=true` label,
+so other containers on your NAS are untouched.
+
+When a new tag is pushed to GitHub (`v0.2.0`, etc.), the GH Actions workflow
+builds + pushes amd64 and arm64 images. The NAS picks up the update on the
+next poll.
+
+### Image tags
+
+The CI publishes the following on every `vX.Y.Z` tag push:
+
+- `:latest` (only from `main` branch pushes)
+- `:vX.Y.Z`, `:X.Y`, `:X` (semver-derived)
+
+For pinning in production, prefer `:vX.Y.Z` over `:latest` and disable
+Watchtower auto-update for that container by removing the enable label.
 
 ## Checkpoint A — verify the HTTP + auth + tools path
 
