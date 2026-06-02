@@ -7,7 +7,7 @@ import os
 import sqlite3
 from collections.abc import Iterable
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from .models import Borough, Event, Price
 
@@ -51,12 +51,14 @@ END;
 
 CREATE TRIGGER IF NOT EXISTS events_ad AFTER DELETE ON events BEGIN
     INSERT INTO events_fts(events_fts, rowid, title, description, venue_name, neighborhood, tags)
-    VALUES('delete', old.rowid, old.title, old.description, old.venue_name, old.neighborhood, old.tags);
+    VALUES('delete', old.rowid, old.title, old.description, old.venue_name,
+           old.neighborhood, old.tags);
 END;
 
 CREATE TRIGGER IF NOT EXISTS events_au AFTER UPDATE ON events BEGIN
     INSERT INTO events_fts(events_fts, rowid, title, description, venue_name, neighborhood, tags)
-    VALUES('delete', old.rowid, old.title, old.description, old.venue_name, old.neighborhood, old.tags);
+    VALUES('delete', old.rowid, old.title, old.description, old.venue_name,
+           old.neighborhood, old.tags);
     INSERT INTO events_fts(rowid, title, description, venue_name, neighborhood, tags)
     VALUES (new.rowid, new.title, new.description, new.venue_name, new.neighborhood, new.tags);
 END;
@@ -134,7 +136,7 @@ def _iso(dt: datetime | None) -> str | None:
         return None
     if dt.tzinfo is None:
         raise ValueError(f"naive datetime not allowed: {dt!r}")
-    return dt.astimezone(timezone.utc).isoformat()
+    return dt.astimezone(UTC).isoformat()
 
 
 def _parse_iso(s: str | None) -> datetime | None:
@@ -144,7 +146,7 @@ def _parse_iso(s: str | None) -> datetime | None:
 
 
 def upsert_events(conn: sqlite3.Connection, events: Iterable[Event]) -> tuple[int, int]:
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     before = conn.execute("SELECT COUNT(*) FROM events").fetchone()[0]
     processed = 0
     for ev in events:
@@ -210,7 +212,7 @@ def upsert_events(conn: sqlite3.Connection, events: Iterable[Event]) -> tuple[in
 def prune_stale(conn: sqlite3.Connection, before: datetime) -> int:
     if before.tzinfo is None:
         raise ValueError("prune cutoff must be tz-aware")
-    cutoff = before.astimezone(timezone.utc).isoformat()
+    cutoff = before.astimezone(UTC).isoformat()
     cur = conn.execute(
         "DELETE FROM events WHERE COALESCE(end_dt, start_dt) < ?",
         (cutoff,),
@@ -314,7 +316,7 @@ def store_oauth_token(
     scope: str | None = None,
     expires_at: datetime | None = None,
 ) -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     conn.execute(
         "INSERT INTO oauth_tokens (access_token, client_id, scope, issued_at, expires_at) "
         "VALUES (?, ?, ?, ?, ?)",
@@ -341,7 +343,7 @@ def is_valid_oauth_token(conn: sqlite3.Connection, access_token: str) -> bool:
         # Legacy row (issued before expiry tracking existed). Treat as valid
         # — manual `DELETE FROM oauth_tokens` is still how you revoke these.
         return True
-    return datetime.fromisoformat(expires_at) > datetime.now(timezone.utc)
+    return datetime.fromisoformat(expires_at) > datetime.now(UTC)
 
 
 def list_sources(conn: sqlite3.Connection) -> list[dict]:

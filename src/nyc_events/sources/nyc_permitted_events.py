@@ -94,7 +94,8 @@ KID_KEYWORDS: list[tuple[str, tuple[str, ...]]] = [
         "summer on the hudson",  # NYC's flagship free public series
     )),
     ("arts & crafts", ("craft", "art workshop", "paint", "draw", "make ", "diy ", "art class")),
-    ("nature", ("nature", "garden", "stewardship", "outdoor", "wildlife", "birding", "tree ", "park tour")),
+    ("nature", ("nature", "garden", "stewardship", "outdoor", "wildlife",
+                "birding", "tree ", "park tour")),
     ("music", (
         "music", "concert", "sing", "shape up", "dance party", "dance class", "drum",
         "performance", "recital", "free concert",
@@ -148,7 +149,8 @@ def _clean_row(row: dict[str, Any]) -> dict[str, Any]:
         try:
             if datetime.fromisoformat(edt) <= datetime.fromisoformat(sdt):
                 logger.warning(
-                    "nyc_permitted_events: end<=start on event_id=%s (start=%s, end=%s); dropping end_date_time",
+                    "nyc_permitted_events: end<=start on event_id=%s "
+                    "(start=%s, end=%s); dropping end_date_time",
                     row.get("event_id"), sdt, edt,
                 )
                 row["end_date_time"] = None
@@ -205,8 +207,10 @@ def _is_rain_date_occurrence(title: str, start_local_date) -> bool:
     patterns = (
         rf"\b{month}\s+0?{day}\b",            # "may 30"
         rf"\b{abbr}\.?\s+0?{day}\b",          # "may 30" / "may. 30"
-        rf"\b0?{start_local_date.month}[/.\-]0?{day}(?:[/.\-]\d{{2,4}})?\b",  # "5/30", "05.30", "5/30/2026"
-        rf"\b{start_local_date.year}[/.\-]0?{start_local_date.month}[/.\-]0?{day}\b",  # "2026-05-30"
+        # "5/30", "05.30", "5/30/2026"
+        rf"\b0?{start_local_date.month}[/.\-]0?{day}(?:[/.\-]\d{{2,4}})?\b",
+        # "2026-05-30"
+        rf"\b{start_local_date.year}[/.\-]0?{start_local_date.month}[/.\-]0?{day}\b",
     )
     return any(re.search(p, after) for p in patterns)
 

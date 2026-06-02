@@ -6,7 +6,7 @@ testing is exercised manually via curl + claude.ai.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -20,7 +20,7 @@ from nyc_events.server import (
     _render_consent,
 )
 
-UTC = timezone.utc
+UTC = UTC
 
 
 # ---- Fix #1: redirect_uri allowlist -----------------------------------------
@@ -87,7 +87,8 @@ def test_oauth_migration_adds_expires_at_column(tmp_path):
             scope TEXT, issued_at TEXT NOT NULL
         );
     """)
-    legacy.commit(); legacy.close()
+    legacy.commit()
+    legacy.close()
     with db.connect_oauth(p) as conn:
         cols = {r["name"] for r in conn.execute("PRAGMA table_info(oauth_tokens)")}
     assert "expires_at" in cols
@@ -125,7 +126,8 @@ def test_unknown_token_is_invalid(oauth_conn):
 
 class _FakeRequest:
     def __init__(self, ip: str):
-        class _C: host = ip
+        class _C:
+            host = ip
         self.client = _C()
 
 

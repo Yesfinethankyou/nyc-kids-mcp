@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from . import db
 from .sources import ENABLED_SOURCES
@@ -35,7 +35,7 @@ def main() -> int:
             total_in += ins
             total_up += upd
             print(f"{src.name}: {ins} inserted, {upd} updated ({len(events)} fetched)")
-        pruned = db.prune_stale(conn, datetime.now(timezone.utc) - timedelta(days=1))
+        pruned = db.prune_stale(conn, datetime.now(UTC) - timedelta(days=1))
 
     print(f"TOTAL: {total_in} inserted, {total_up} updated, {pruned} pruned")
     if failures:

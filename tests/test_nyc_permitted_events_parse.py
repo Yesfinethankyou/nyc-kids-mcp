@@ -7,7 +7,6 @@ hand-crafted dicts for edge cases the live data doesn't always exhibit.
 from __future__ import annotations
 
 import json
-from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -18,7 +17,6 @@ from nyc_events.sources.nyc_permitted_events import (
     _clean_row,
     _clean_venue,
     _infer_tags,
-    _parse_local_dt,
 )
 
 FIXTURE = Path(__file__).parent / "fixtures" / "tvpp_9vvx_sample.json"

@@ -9,7 +9,11 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 
-class Borough(str, Enum):
+# noqa rationale: (str, Enum) is intentional, not a StrEnum candidate. StrEnum
+# changes str()/format() to return the bare value, which would alter how these
+# members render in f-strings and serialization — and compute_id hashing and
+# pydantic output depend on the current behavior. Don't "modernize" to StrEnum.
+class Borough(str, Enum):  # noqa: UP042
     MANHATTAN = "Manhattan"
     BROOKLYN = "Brooklyn"
     QUEENS = "Queens"
@@ -17,7 +21,7 @@ class Borough(str, Enum):
     STATEN_ISLAND = "Staten Island"
 
 
-class Price(str, Enum):
+class Price(str, Enum):  # noqa: UP042  (see Borough rationale above)
     FREE = "free"
     PAID = "paid"
     UNKNOWN = "unknown"
