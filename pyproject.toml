@@ -9,6 +9,7 @@ dependencies = [
     "feedparser>=6.0",
     "icalendar>=5.0",
     "selectolax>=0.3",
+    "curl_cffi>=0.9",
     "python-dateutil>=2.8",
     "pydantic>=2.5",
     "uvicorn[standard]>=0.30",
