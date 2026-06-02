@@ -7,14 +7,14 @@ exists. Run with: `python -m nyc_events.seed_fake`. Delete after Checkpoint B.
 from __future__ import annotations
 
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from . import db
 from .models import Borough, Event, Price, compute_id
 
 NYC_TZ = ZoneInfo("America/New_York")
-UTC = timezone.utc
+UTC = UTC
 
 _SAMPLES = [
     dict(

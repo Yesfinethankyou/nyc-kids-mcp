@@ -9,14 +9,14 @@ Covers what Phase 1 promised:
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime
 
 import pytest
 
 from nyc_events import db
 from nyc_events.models import Borough, Event, Price, compute_id
 
-UTC = timezone.utc
+UTC = UTC
 
 
 def _ev(**overrides):

@@ -13,7 +13,7 @@ import os
 import secrets
 import time as _time
 from collections import deque
-from datetime import datetime, time, timedelta, timezone
+from datetime import UTC, datetime, time, timedelta
 from typing import Any
 from urllib.parse import quote_plus
 from zoneinfo import ZoneInfo
@@ -38,7 +38,7 @@ from . import db, oauth
 from .models import Event
 
 NYC_TZ = ZoneInfo("America/New_York")
-UTC = timezone.utc
+UTC = UTC
 DB_PATH = os.environ.get("DB_PATH", "data/events.db")
 # OAuth state in a separate SQLite file so wiping events.db during dev
 # doesn't blow away access tokens claude.ai has cached.
@@ -264,7 +264,8 @@ def search_events(
             window includes this age, plus events without a declared range.
         free_only: if True, only events explicitly flagged free.
         days_ahead: window starts now and ends N days from today (default 14).
-        limit: max events to return (default 10). Use get_event_detail(event_id) to drill into a specific result.
+        limit: max events to return (default 10). Use
+            get_event_detail(event_id) to drill into a specific result.
     """
     now = datetime.now(NYC_TZ)
     until = now + timedelta(days=days_ahead)
@@ -299,7 +300,8 @@ def events_this_weekend(
         borough: Manhattan, Brooklyn, Queens, Bronx, or Staten Island.
         age: kid's age in years (see search_events for matching semantics).
         free_only: if True, only events explicitly flagged free.
-        limit: max events to return (default 10). Use get_event_detail(event_id) to drill into a specific result.
+        limit: max events to return (default 10). Use
+            get_event_detail(event_id) to drill into a specific result.
     """
     now = datetime.now(NYC_TZ)
     days_to_sunday = (6 - now.weekday()) % 7  # weekday: Mon=0..Sun=6
@@ -333,7 +335,8 @@ def events_on_date(
         borough: Manhattan, Brooklyn, Queens, Bronx, or Staten Island.
         age: kid's age in years.
         free_only: if True, only events explicitly flagged free.
-        limit: max events to return (default 10). Use get_event_detail(event_id) to drill into a specific result.
+        limit: max events to return (default 10). Use
+            get_event_detail(event_id) to drill into a specific result.
     """
     try:
         d = datetime.strptime(date, "%Y-%m-%d").date()
