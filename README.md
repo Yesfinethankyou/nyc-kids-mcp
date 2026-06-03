@@ -9,6 +9,9 @@ tools — designed for use from the Claude mobile app while out with a kid.
 - Checkpoint B ✅ NYC Permitted Events (tvpp-9vvx) ingest, ~700 kid-relevant events / 60 days.
 - Checkpoint C ✅ security audit + bundle B fixes (rate limiter, redirect allowlist, consent CSP, OAuth expiry).
 - Checkpoint D ✅ Dockerfile + docker-compose + GHCR + Watchtower + GH Actions multi-arch publish.
+- Phase 2 🚧 editorial scrapers. **Mommy Poppins NYC ✅ shipped** (~233 events/run
+  with real descriptions, URLs, age ranges, coordinates, prices). BPL, Time Out
+  NY Kids, Brooklyn Children's Museum, Prospect Park Alliance still pending.
 
 **Why "Permitted Events" and not "Parks":** the spec originally named the
 NYC Parks Events Listing (`fudw-fgrp`) SODA dataset, but it's been frozen
@@ -16,9 +19,9 @@ since 2019-12. The live successor is `tvpp-9vvx` (NYC Permitted Event
 Information) — a citywide permitting catalog, broader and noisier. The
 ingest filters to `event_agency='Parks Department'`, a kid-friendly event
 type allowlist, a title blocklist (drops Eid/load-in/RC-plane noise), and
-finally a kid-keyword filter (must match at least one tag). Phase 2 scrapers
-(Mommy Poppins, BPL, Time Out NY Kids, Brooklyn Children's Museum) will
-provide the higher-curated signal alongside this baseline.
+finally a kid-keyword filter (must match at least one tag). Phase 2 editorial
+sources add higher-curated signal alongside this baseline — Mommy Poppins NYC
+is live; BPL, Time Out NY Kids, and Brooklyn Children's Museum are pending.
 
 ## Architecture
 
@@ -29,6 +32,8 @@ RSS / ICS / SODA / scrapers  →  ingest (nightly cron)  →  SQLite (FTS5)  →
 - Python 3.11+ (developed on 3.14)
 - `mcp` SDK with FastMCP, streamable-HTTP transport
 - SQLite + FTS5 for text search
+- `httpx` for most fetching; `curl_cffi` (Chrome impersonation) for sources
+  behind Cloudflare TLS-fingerprinting (Mommy Poppins)
 - **Auth:** minimal single-user OAuth 2.1 + PKCE shim (claude.ai web requires it; bare bearer
   isn't an option). Master token also still works directly for curl testing.
 - Docker target: Synology NAS; public HTTPS via Tailscale Funnel
@@ -144,35 +149,38 @@ In another shell:
 # Unauthenticated healthz works
 curl http://127.0.0.1:8765/healthz                       # → "ok"
 
-# MCP endpoint requires Bearer token
-curl -X POST http://127.0.0.1:8765/mcp \
+# MCP is served at the ROOT path (/), not /mcp — claude.ai treats the pasted
+# connector URL as the endpoint itself (see streamable_http_path="/" in
+# server.py). The endpoint requires a Bearer token:
+curl -X POST http://127.0.0.1:8765/ \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -d '{}'                                                # → 401 "unauthorized"
 
 # Full MCP handshake — initialize, capture session id, list tools
 TOKEN=<your-token>
-SID=$(curl -s -D - -o /dev/null -X POST http://127.0.0.1:8765/mcp \
+SID=$(curl -s -D - -o /dev/null -X POST http://127.0.0.1:8765/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}' \
   | grep -i '^mcp-session-id' | tr -d '\r' | cut -d' ' -f2)
 
-curl -X POST http://127.0.0.1:8765/mcp \
+curl -X POST http://127.0.0.1:8765/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -H "Mcp-Session-Id: $SID" \
   -d '{"jsonrpc":"2.0","method":"notifications/initialized"}'
 
-curl -X POST http://127.0.0.1:8765/mcp \
+curl -X POST http://127.0.0.1:8765/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -H "Mcp-Session-Id: $SID" \
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
-# → should show: search_events, events_this_weekend, events_on_date, list_sources
+# → should show 6 tools: search_events, events_this_weekend, events_on_date,
+#   get_event_detail, get_event_raw, list_sources
 ```
 
 ### Adding as a custom connector in claude.ai web
@@ -187,7 +195,7 @@ covered below. Quick recipe:
    (claude.ai treats the URL as the MCP endpoint itself — don't append `/mcp`)
 4. claude.ai redirects you to a one-field consent page on your server
 5. **Paste your `MCP_AUTH_TOKEN`** on the consent page and click Approve
-6. claude.ai stores an issued access token; you should now see the 4 tools
+6. claude.ai stores an issued access token; you should now see the 6 tools
 
 That's it — there's no "API key" field anywhere. The master token's role is
 just the password on that one consent page. After approval, claude.ai sends
@@ -198,7 +206,7 @@ every request. Revoking access = `DELETE FROM oauth_tokens` for that row.
 
 | Endpoint                                       | Purpose                                                        |
 |-----------------------------------------------|----------------------------------------------------------------|
-| `WWW-Authenticate` on 401 from `/mcp`         | Tells the client where the discovery metadata is               |
+| `WWW-Authenticate` on 401 from `/` (the MCP endpoint) | Tells the client where the discovery metadata is        |
 | `/.well-known/oauth-protected-resource`       | RFC 9728 — points at us as the authorization server            |
 | `/.well-known/oauth-authorization-server`     | RFC 8414 — lists `/authorize`, `/token`, `/register`           |
 | `POST /register`                              | RFC 7591 DCR — accepts anything, returns a generated client_id |
@@ -267,17 +275,24 @@ If you ask "why is the data so thin / why is everything `low_confidence`",
 that's the adapter behaving correctly — the upstream is thin. Phase 2
 sources will fix the descriptive gap.
 
-### Phase 2 (not implemented yet): curated editorial sources
+### Phase 2 (in progress): curated editorial sources
 
-Planned adapters with real descriptions, URLs, age ranges:
+Adapters with real descriptions, URLs, age ranges:
 
-- **Mommy Poppins NYC** — RSS / structured HTML scraping
+- ✅ **Mommy Poppins NYC** — *shipped.* Sitemap URL discovery + JSON-LD detail
+  scraping (uses `curl_cffi` to clear Cloudflare). ~233 events/run with
+  descriptions, URLs, age ranges, coordinates, prices.
 - **Brooklyn Public Library** — calendar scraping (no public RSS feed)
-- **Prospect Park Alliance** — scraping
 - **Time Out NY Kids** — scraping
+- **Brooklyn Children's Museum** — scraping
+- **Prospect Park Alliance** — scraping
 
-These will land alongside `nyc_permitted_events` rather than replace it;
-permit data is a useful denominator even with its thinness.
+See `SOURCES-BACKLOG.md` for additional candidate venues under research
+(Brooklyn Cyclones, Coney Island USA, Domino Park, Industry City, Green-Wood,
+Governors Island).
+
+These land alongside `nyc_permitted_events` rather than replace it; permit
+data is a useful denominator even with its thinness.
 
 ## Project layout
 
@@ -289,19 +304,23 @@ nyc-events-mcp/
 │   ├── models.py         # Event + Borough/Price enums + compute_id
 │   ├── db.py             # SQLite schema, FTS5, upsert, prune, search
 │   ├── server.py         # FastMCP app + bearer middleware + tools + /healthz
-│   ├── ingest.py         # CLI: loops enabled sources -> upsert -> prune  (Checkpoint B)
-│   ├── seed_fake.py      # Hardcoded events for Checkpoint A; delete after B
+│   ├── ingest.py         # CLI: loops ENABLED_SOURCES -> upsert -> prune
+│   ├── seed_fake.py      # Hardcoded events for connector smoke-testing
 │   └── sources/
-│       ├── base.py             # Source ABC
-│       ├── nyc_parks.py        # NYC Open Data SODA   (Checkpoint B)
-│       ├── mommy_poppins.py    # stub                  (Phase 2)
-│       ├── bpl.py              # stub                  (Phase 2)
-│       ├── timeout_nykids.py   # stub                  (Phase 2)
-│       └── bk_childrens_museum.py  # stub              (Phase 2)
+│       ├── base.py                   # Source ABC
+│       ├── __init__.py               # ENABLED_SOURCES registry
+│       ├── nyc_permitted_events.py   # NYC Open Data tvpp-9vvx  (Phase 1)
+│       ├── mommy_poppins.py          # editorial scraper        (Phase 2, shipped)
+│       ├── bpl.py                    # stub                     (Phase 2)
+│       ├── timeout_nykids.py         # stub                     (Phase 2)
+│       └── bk_childrens_museum.py    # stub                     (Phase 2)
 ├── data/                 # SQLite lives here; gitignored
+├── SOURCES-BACKLOG.md    # researched candidate sources (unverified)
 └── tests/
-    ├── test_db.py                 # filled at Checkpoint B
-    └── test_nyc_parks_parse.py    # filled at Checkpoint B
+    ├── test_db.py                          # schema, migrations, search
+    ├── test_security_fixes.py              # Checkpoint C bundle
+    ├── test_nyc_permitted_events_parse.py  # Phase 1 parser
+    └── test_mommy_poppins_parse.py         # Phase 2 parser
 ```
 
 ## Env vars
