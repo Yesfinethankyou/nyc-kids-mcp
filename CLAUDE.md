@@ -197,12 +197,35 @@ Known accepted residuals (see `git log` for the security-audit commit):
 
 ## Phase roadmap
 
-- **Phase 1 (current):** `tvpp-9vvx` only. Permit data, no descriptions, all
+- **Phase 1 (done):** `tvpp-9vvx` only. Permit data, no descriptions, all
   ingested rows `low_confidence: true`. ~700 events / 60-day window.
-- **Phase 2:** editorial scrapers (Mommy Poppins, BPL, Time Out NY Kids,
-  Brooklyn Children's Museum, Prospect Park Alliance). These will provide
-  real descriptions, URLs, age ranges. Stubs already exist in
-  `src/nyc_events/sources/`. See `.claude/agents/source-adder.md`.
+- **Phase 2 (in progress):** editorial scrapers — real descriptions, URLs,
+  age ranges. See `.claude/agents/source-adder.md` for the recipe.
+  - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood Cemetery.
+  - **Not started:** Prospect Park Alliance.
+  - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
+    stub kept). JS-rendered editorial site; no structured data, no API,
+    no sitemap with events. Needs headless browser — out of scope.
+- **Phase 2 backlog — venue sources (see `SOURCES-BACKLOG.md` for full
+  probe instructions and data shapes):**
+  - **CONFIRMED — ready to build (priority order):**
+    1. Brooklyn Cyclones — MLB Stats API, `teamId=453`, public JSON, no auth.
+       Game schedule confirmed; themed nights (Star Wars Night etc.) are NOT
+       in the Stats API — stored in Contentful CMS, only JS-rendered. Needs
+       research before building (see SOURCES-BACKLOG.md § "The themed-night problem").
+    2. Coney Island USA — Squarespace `?format=json`, `upcoming` array,
+       epoch-ms timestamps. Reuses Mommy Poppins JSON-LD path.
+  - **CONFIRMED — ready to build (continued):**
+    4. Prospect Park Alliance — same WordPress/Tribe Events REST as Green-Wood.
+       Filter to kid categories (Kids, Audubon Center, Carousel, Lefferts,
+       Nature Programs). Needs `curl_cffi` (Cloudflare).
+    5. Brooklyn Army Terminal — Drupal, single-page HTML, 27 events.
+       Needs `curl_cffi`. Filter out "Live Music Concert" events (adult EDM,
+       21+) — ~13 of 27. ~14 kid-relevant community events remain.
+  - **Deprioritized — no structured feed found:**
+    5. Industry City — custom headless CMS, JS-rendered, no API surface.
+    6. Domino Park — Sanity CMS, no public feed confirmed.
+    7. Governors Island — custom CMS (S3/Reflexions), no JSON-LD/iCal found.
 - **Phase 3+ (speculative):** geocoding + distance-from-home, weather,
   subway routing, email digest. Not designed yet.
 
