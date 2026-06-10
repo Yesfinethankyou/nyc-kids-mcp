@@ -257,6 +257,10 @@ Known accepted residuals (see `git log` for the security-audit commit):
     5. Brooklyn Army Terminal — Drupal, single-page HTML, 27 events.
        Needs `curl_cffi`. Filter out "Live Music Concert" events (adult EDM,
        21+) — ~13 of 27. ~14 kid-relevant community events remain.
+    6. New York Transit Museum — third Tribe Events REST instance
+       (copy-adapt `prospect_park.py`). ~10-12 kid events / 60 days
+       (Transit Tots, Nostalgia Rides). Per-event venue object — some
+       programs are off-site. Needs `curl_cffi`.
   - **Deprioritized — no structured feed found:**
     5. Industry City — custom headless CMS, JS-rendered, no API surface.
     6. Domino Park — Sanity CMS, no public feed confirmed.

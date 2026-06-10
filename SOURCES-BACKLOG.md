@@ -231,6 +231,41 @@ Revisit in Phase 3+ if a simpler path turns up.
 
 ---
 
+### 6. New York Transit Museum
+
+- **Status:** CONFIRMED (probed 2026-06-10, from a cloud Claude session —
+  this domain is reachable from the sandbox, unlike most on this list)
+- **Source:** WordPress + The Events Calendar REST API (same Tribe plugin
+  as Green-Wood and Prospect Park — third confirmed instance)
+- **Endpoint:** `https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events`
+- **Auth:** plain fetchers 403 (default-UA urllib blocked); curl with a
+  Chrome User-Agent succeeds. Use `curl_cffi` (`impersonate="chrome"`) per
+  project precedent.
+- **Pagination:** `?per_page=50&page=N` + `start_date`/`end_date` params,
+  follow `next_rest_url`. Small calendar: 26 events / 60-day window —
+  single page in practice.
+- **Data shape:** standard Tribe record (`title`, `utc_start_date`,
+  `cost`, `description` HTML, `categories`), with two differences from
+  Prospect Park:
+  - `venue` is a real per-event object, NOT an empty list — e.g.
+    "New York Transit Museum, Brooklyn" vs "Off-Site" (subway tours meet
+    in Manhattan, e.g. Old City Hall station). Don't hardcode venue;
+    map it per-row, borough Brooklyn for the museum itself.
+  - `cost` is populated ("$40", "$10 – $20", "$50").
+- **IDs:** per-occurrence confirmed live (two occurrences of the same tour
+  → distinct ids 93098 / 93102). `external_id = str(id)`, no date suffix.
+- **Filtering:** category allowlist. Live 60-day counts: Family Programs=8
+  (Transit Tots — toddler program, Movers and Makers family workshop),
+  Nostalgia Rides=2 (vintage subway rides, very kid-friendly), Special
+  Event=2. Exclude "Members-Only Programs" (3) and "Virtual Programs" (3);
+  the adult Tours/Lectures fall out of the allowlist naturally.
+- **Volume:** modest (~10-12 kid-relevant / 60 days) but high-quality and
+  uniquely on-theme — transit-obsessed kids are a core audience. Cheap to
+  build: copy-adapt `prospect_park.py`, swap the category list, add the
+  per-row venue mapping.
+
+---
+
 ## Priority 3 — Low confidence, deprioritize
 
 ### 5. Industry City
