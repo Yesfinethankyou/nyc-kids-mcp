@@ -372,3 +372,4 @@ In addition to the obvious event fields (`title`, `when_local`, `venue`, `boroug
 - `url` — the event's own page if the source has one (null for permit-source rows).
 - `venue_map_url` — a Google Maps lookup link for the venue, synthesized from `venue + borough`. Useful when `url` is null.
 - `low_confidence` — `true` when the row has no description AND no real URL. Almost always the case for `nyc_permitted_events` rows (permits, not curated events); tell the user before they make plans.
+- `possibly_cancelled` — `true` when a future event has been missing from its source's feed for two consecutive nightly ingests. The event may have been cancelled upstream; confirm with the venue before making plans. (Flagged, never deleted — the flag clears itself if the event reappears.)

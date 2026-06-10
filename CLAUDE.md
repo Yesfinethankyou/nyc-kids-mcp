@@ -49,6 +49,8 @@ own file before touching anything else.
   no HTTP layer.
 - `tests/test_nyc_permitted_events_parse.py` — parser + `_clean_row` against
   real captured rows in `tests/fixtures/`.
+- `tests/test_missing_detection.py` — possible-cancellation flagging
+  (mark/clear semantics, circuit breaker, grace period, source opt-in).
 - New sources: add a fixture under `tests/fixtures/` from a real upstream
   response, then a `test_<source>_parse.py` that exercises the parser
   directly. Don't mock httpx — the parser takes a dict, not a response.
@@ -171,6 +173,39 @@ All event dicts include:
   best clickable when `url` is null, which is most permit rows)
 - `low_confidence: bool` (true when `description IS NULL AND url IS NULL` —
   Claude should caveat these to the user)
+- `possibly_cancelled: bool` (true when the event has been missing from its
+  source's ingest for > 30h — see "Missing-event detection" below)
+
+## Missing-event detection (possible cancellations)
+
+A future event that disappears from its source's feed is flagged, never
+deleted. Four layers prevent a fetch blip from mass-flagging a source:
+
+1. **Hard failures opt out** — a source whose `fetch()` raises is skipped
+   entirely in `ingest.py`; its rows are never evaluated.
+2. **Circuit breaker for silent partial failures** — paginated sources
+   soft-fail mid-run (`_get_page` returns "no more pages" on error), so a
+   "successful" fetch can be half-empty. `ingest._fetch_looks_complete`
+   skips marking when the fetch returned 0 events or < 50% of the source's
+   stored future rows (`MIN_FETCH_RATIO`).
+3. **Flag + self-heal** — `db.mark_missing` stamps `events.missing_since`;
+   the upsert clears it the moment any later run re-sees the event. A false
+   stamp lasts at most until the next successful nightly run.
+4. **Read-time grace** — tools only surface `possibly_cancelled: true` when
+   the stamp is > 30h old (`_MISSING_GRACE_HOURS`), i.e. the event was
+   missed by two consecutive nightly runs.
+
+Participation is opt-in via `Source.window_days` (set by the five
+full-window sources). **`mommy_poppins` must stay excluded** — its sitemap
+lastmod discovery is incremental, so an unmodified event page legitimately
+drops out of a run while the event is still on. Apply the same caution to
+any future source that doesn't re-fetch its entire window every run.
+
+`mark_missing` only stamps rows with `start_dt` inside the fetched window
+minus one day of margin (sources truncate window ends to date boundaries),
+and never re-stamps — grace is measured from the first miss. Staleness is
+measured against the source's own successful runs (stamps only happen
+during one), so a dead ingest cron flags nothing.
 
 ## HTTP security baseline (established Checkpoint C)
 

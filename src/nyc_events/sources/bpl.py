@@ -252,6 +252,7 @@ class BPLSource(Source):
     ):
         self._search_url = search_url
         self._window_days = window_days
+        self.window_days = window_days  # full-window re-fetch: missing-detection eligible
         self._page_delay = page_delay
         self._timeout = http_timeout
         self._max_pages = max_pages

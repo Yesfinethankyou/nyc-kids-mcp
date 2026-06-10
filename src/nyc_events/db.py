@@ -7,7 +7,7 @@ import os
 import sqlite3
 from collections.abc import Iterable
 from contextlib import contextmanager
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from .models import Borough, Event, Price
 
@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS events (
     tags TEXT,
     raw_payload TEXT,
     first_seen TEXT NOT NULL,
-    last_seen TEXT NOT NULL
+    last_seen TEXT NOT NULL,
+    missing_since TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_events_start ON events(start_dt);
@@ -99,6 +100,9 @@ def _migrate_events(conn: sqlite3.Connection) -> None:
     if "raw_payload" not in existing:
         conn.execute("ALTER TABLE events ADD COLUMN raw_payload TEXT")
         conn.commit()
+    if "missing_since" not in existing:
+        conn.execute("ALTER TABLE events ADD COLUMN missing_since TEXT")
+        conn.commit()
 
 
 def _migrate_oauth(conn: sqlite3.Connection) -> None:
@@ -156,8 +160,8 @@ def upsert_events(conn: sqlite3.Connection, events: Iterable[Event]) -> tuple[in
                 id, source, external_id, title, description, url,
                 start_dt, end_dt, venue_name, borough, neighborhood,
                 lat, lng, age_min, age_max, price, tags, raw_payload,
-                first_seen, last_seen
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                first_seen, last_seen, missing_since
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)
             ON CONFLICT(id) DO UPDATE SET
                 source       = excluded.source,
                 external_id  = excluded.external_id,
@@ -176,7 +180,8 @@ def upsert_events(conn: sqlite3.Connection, events: Iterable[Event]) -> tuple[in
                 price        = excluded.price,
                 tags         = excluded.tags,
                 raw_payload  = COALESCE(excluded.raw_payload, raw_payload),
-                last_seen    = excluded.last_seen
+                last_seen    = excluded.last_seen,
+                missing_since = NULL
             """,
             (
                 ev.id,
@@ -221,10 +226,63 @@ def prune_stale(conn: sqlite3.Connection, before: datetime) -> int:
     return cur.rowcount
 
 
+def count_future_events(conn: sqlite3.Connection, source: str, now: datetime) -> int:
+    """Number of stored future events for one source. The ingest circuit
+    breaker compares this baseline against the fetched count to detect
+    silently-incomplete fetches before any missing-marking happens."""
+    return conn.execute(
+        "SELECT COUNT(*) FROM events WHERE source = ? AND start_dt > ?",
+        (source, _iso(now)),
+    ).fetchone()[0]
+
+
+def mark_missing(
+    conn: sqlite3.Connection,
+    *,
+    source: str,
+    run_start: datetime,
+    window_days: int,
+) -> int:
+    """Stamp missing_since on rows a successful ingest run should have
+    re-seen but didn't — the upstream may have cancelled them.
+
+    Only stamps rows that are: from this source, currently unstamped (a
+    prior stamp keeps its original timestamp so the user-facing grace
+    period is measured from the FIRST miss), not re-seen this run
+    (last_seen predates run_start), in the future, and inside the window
+    the source actually fetched — minus one day of margin, because some
+    sources truncate their window end to a date boundary.
+
+    The stamp is cleared by upsert_events the moment any later run sees
+    the event again, so false positives self-heal on the next ingest.
+    Callers must gate on the source's fetch having succeeded AND looking
+    complete (see ingest._fetch_looks_complete); this function does no
+    sanity checking of its own.
+    """
+    if run_start.tzinfo is None:
+        raise ValueError("run_start must be tz-aware")
+    run_iso = run_start.astimezone(UTC).isoformat()
+    window_end = (run_start + timedelta(days=window_days - 1)).astimezone(UTC)
+    cur = conn.execute(
+        """
+        UPDATE events SET missing_since = ?
+        WHERE source = ?
+          AND missing_since IS NULL
+          AND last_seen < ?
+          AND start_dt > ?
+          AND start_dt < ?
+        """,
+        (run_iso, source, run_iso, run_iso, _iso(window_end)),
+    )
+    conn.commit()
+    return cur.rowcount
+
+
 def _row_to_event(row: sqlite3.Row) -> Event:
-    # raw_payload column may not exist on very old DBs from before the
-    # migration; defend against that.
+    # raw_payload / missing_since columns may not exist on very old DBs from
+    # before their migrations; defend against that.
     raw_payload = row["raw_payload"] if "raw_payload" in row.keys() else None
+    missing_since = row["missing_since"] if "missing_since" in row.keys() else None
     return Event(
         id=row["id"],
         source=row["source"],
@@ -244,6 +302,7 @@ def _row_to_event(row: sqlite3.Row) -> Event:
         price=Price(row["price"]),
         tags=json.loads(row["tags"]) if row["tags"] else [],
         raw_payload=raw_payload,
+        missing_since=_parse_iso(missing_since),
     )
 
 

@@ -229,6 +229,7 @@ class NYCPermittedEventsSource(Source):
     ):
         self._url = dataset_url
         self._days_ahead = days_ahead
+        self.window_days = days_ahead  # full-window re-fetch: missing-detection eligible
         self._timeout = http_timeout
 
     def fetch(self) -> Iterable[Event]:
