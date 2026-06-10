@@ -204,8 +204,8 @@ Known accepted residuals (see `git log` for the security-audit commit):
   ingested rows `low_confidence: true`. ~700 events / 60-day window.
 - **Phase 2 (in progress):** editorial scrapers — real descriptions, URLs,
   age ranges. See `.claude/agents/source-adder.md` for the recipe.
-  - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood Cemetery.
-  - **Not started:** Prospect Park Alliance.
+  - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood
+    Cemetery, Prospect Park Alliance.
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
@@ -219,9 +219,6 @@ Known accepted residuals (see `git log` for the security-audit commit):
     2. Coney Island USA — Squarespace `?format=json`, `upcoming` array,
        epoch-ms timestamps. Reuses Mommy Poppins JSON-LD path.
   - **CONFIRMED — ready to build (continued):**
-    4. Prospect Park Alliance — same WordPress/Tribe Events REST as Green-Wood.
-       Filter to kid categories (Kids, Audubon Center, Carousel, Lefferts,
-       Nature Programs). Needs `curl_cffi` (Cloudflare).
     5. Brooklyn Army Terminal — Drupal, single-page HTML, 27 events.
        Needs `curl_cffi`. Filter out "Live Music Concert" events (adult EDM,
        21+) — ~13 of 27. ~14 kid-relevant community events remain.

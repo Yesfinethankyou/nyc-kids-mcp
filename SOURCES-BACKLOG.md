@@ -154,31 +154,38 @@ Revisit in Phase 3+ if a simpler path turns up.
 - **Note:** This is **Coney Island USA** (sideshow, Mermaid Parade, film fest).
   Not Luna Park (park hours only, not events).
 
-### 4. Prospect Park Alliance
+### 4. Prospect Park Alliance — ✅ BUILT (live)
 
-- **Status:** CONFIRMED
+- **Status:** BUILT — shipped as source `prospect_park`
+  (`src/nyc_events/sources/prospect_park.py`).
 - **Source:** WordPress + The Events Calendar REST API
 - **Endpoint:** `https://www.prospectpark.org/wp-json/tribe/events/v1/events`
-- **Auth:** Requires `curl_cffi` (`impersonate="chrome"`) — Cloudflare blocks
-  plain httpx/curl.
-- **Pagination:** `?per_page=50&page=N` — 500+ events, paginate until no
-  `next_rest_url` in response.
-- **Data shape:** identical to Green-Wood Cemetery (same Tribe Events plugin):
-  `title`, `start_date` ("2026-06-05 08:00:00"), `end_date`, `url`,
-  `cost` ("Free", "Free, RSVP!", "$3 – $13"), `description` (HTML),
-  `categories` (list of `{name}`).
-- **Venue:** always empty list — all events are in Prospect Park. Hardcode
-  venue = "Prospect Park", borough = BROOKLYN.
-- **Filtering:** not all events are kid-relevant. Filter to events whose
-  `categories` include any of: "Kids", "Audubon Center", "Carousel",
-  "Lefferts Historic House", "Nature Programs", "Film", "Performing Arts",
-  "Education". (Category counts from live data: Kids=39, Audubon=43,
-  Nature=24, Carousel=10, Lefferts=7.)
-- **Build notes:** strip HTML from `description`. Parse `cost` string:
-  "Free" or "Free, RSVP!" → `Price.FREE`; any `$` → `Price.PAID`.
-  `external_id` = event slug from `url`. Do not use `start_date` as
-  external_id (recurring events share a slug; the Tribe URL includes the
-  occurrence date).
+- **Pagination:** `?per_page=50&page=N`, follow `next_rest_url` until absent.
+- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — Cloudflare blocks plain
+  fetchers.
+- **As-built notes (differ from original research):**
+  - **`external_id = str(id)`, NOT slug-from-url.** The original research
+    claimed recurring events share a Tribe `id`; live verification
+    (2026-06, 456 events / 60-day window) showed the Tribe `id` IS
+    per-occurrence — 456 distinct ids and 456 distinct dated URL slugs.
+    Recurring events get a new id per occurrence (e.g. Wednesday
+    Greenmarket: 10000742, 10000743, …). No `:start.isoformat()` suffix
+    needed.
+  - Category filter as researched: "Kids", "Audubon Center", "Carousel",
+    "Lefferts Historic House", "Nature Programs", "Film",
+    "Performing Arts", "Education" — all names verified live (Kids=124,
+    Audubon=176, Nature=95, Lefferts=107, Carousel=17, Education=18,
+    Performing Arts=8, Film=4 in a 60-day window; counts are
+    per-occurrence, much higher than the original per-series counts).
+  - Defensive title hard-exclude ("21+", "adults only", "members only")
+    overrides any included category. No live events currently trigger it —
+    the included categories are clean (checked for adult-content leakage).
+  - `cost` is populated (unlike Green-Wood): "Free" variants → FREE,
+    `$` → PAID, "Prices Vary"/empty → UNKNOWN.
+  - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
+  - Venue always empty upstream as researched — hardcoded
+    venue = "Prospect Park", borough = BROOKLYN. No lat/lng, no age range.
+  - ~307 kid-relevant events of 456 total in a 60-day window (verified live).
 
 ---
 
