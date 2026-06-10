@@ -279,6 +279,7 @@ class BrooklynChildrensMuseumSource(Source):
         self._url_page_1 = events_url_page_1
         self._url_page_n = events_url_page_n
         self._window_days = window_days
+        self.window_days = window_days  # full-window re-fetch: missing-detection eligible
         self._delay = request_delay
         self._timeout = http_timeout
         self._max_pages = max_pages

@@ -266,6 +266,7 @@ class GreenWoodCemeterySource(Source):
     ):
         self._events_url = events_url
         self._window_days = window_days
+        self.window_days = window_days  # full-window re-fetch: missing-detection eligible
         self._per_page = per_page
         self._delay = page_delay
         self._timeout = http_timeout

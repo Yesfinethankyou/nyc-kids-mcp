@@ -9,9 +9,12 @@ tools — designed for use from the Claude mobile app while out with a kid.
 - Checkpoint B ✅ NYC Permitted Events (tvpp-9vvx) ingest, ~700 kid-relevant events / 60 days.
 - Checkpoint C ✅ security audit + bundle B fixes (rate limiter, redirect allowlist, consent CSP, OAuth expiry).
 - Checkpoint D ✅ Dockerfile + docker-compose + GHCR + Watchtower + GH Actions multi-arch publish.
-- Phase 2 🚧 editorial scrapers. **Mommy Poppins NYC ✅ shipped** (~233 events/run
-  with real descriptions, URLs, age ranges, coordinates, prices). BPL, Time Out
-  NY Kids, Brooklyn Children's Museum, Prospect Park Alliance still pending.
+- Phase 2 🚧 editorial scrapers. **Shipped:** Mommy Poppins NYC (~233 events/run),
+  Brooklyn Public Library, Brooklyn Children's Museum, Green-Wood Cemetery
+  (~104 events/60d), Prospect Park Alliance (~307 events/60d) — real
+  descriptions, URLs, and (where upstream provides them) age ranges,
+  coordinates, prices. Time Out NY Kids rejected (no event feed without a
+  headless browser). More venues in `SOURCES-BACKLOG.md`.
 
 **Why "Permitted Events" and not "Parks":** the spec originally named the
 NYC Parks Events Listing (`fudw-fgrp`) SODA dataset, but it's been frozen
@@ -20,8 +23,9 @@ Information) — a citywide permitting catalog, broader and noisier. The
 ingest filters to `event_agency='Parks Department'`, a kid-friendly event
 type allowlist, a title blocklist (drops Eid/load-in/RC-plane noise), and
 finally a kid-keyword filter (must match at least one tag). Phase 2 editorial
-sources add higher-curated signal alongside this baseline — Mommy Poppins NYC
-is live; BPL, Time Out NY Kids, and Brooklyn Children's Museum are pending.
+sources add higher-curated signal alongside this baseline — Mommy Poppins NYC,
+BPL, Brooklyn Children's Museum, Green-Wood Cemetery, and Prospect Park
+Alliance are live.
 
 ## Architecture
 
@@ -33,7 +37,8 @@ RSS / ICS / SODA / scrapers  →  ingest (nightly cron)  →  SQLite (FTS5)  →
 - `mcp` SDK with FastMCP, streamable-HTTP transport
 - SQLite + FTS5 for text search
 - `httpx` for most fetching; `curl_cffi` (Chrome impersonation) for sources
-  behind Cloudflare TLS-fingerprinting (Mommy Poppins)
+  behind Cloudflare TLS-fingerprinting (Mommy Poppins, Green-Wood Cemetery,
+  Prospect Park Alliance)
 - **Auth:** minimal single-user OAuth 2.1 + PKCE shim (claude.ai web requires it; bare bearer
   isn't an option). Master token also still works directly for curl testing.
 - Docker target: Synology NAS; public HTTPS via Tailscale Funnel
@@ -222,7 +227,7 @@ testing — useful for diagnostics without going through OAuth.
 | Tool                  | Purpose                                                                                          |
 |-----------------------|--------------------------------------------------------------------------------------------------|
 | `search_events`       | Free-text + filters (borough/age/free/days_ahead). Returns the cheap summary projection.         |
-| `events_this_weekend` | Now → upcoming Sunday 23:59 local. Cheap summary projection.                                     |
+| `events_this_weekend` | Saturday 00:00 → Sunday 23:59 local of the current/upcoming weekend (starts now if mid-weekend). |
 | `events_on_date`      | Single YYYY-MM-DD in `America/New_York`. Cheap summary projection.                               |
 | `get_event_detail`    | Drill into one event by `event_id`. Untruncated description + all metadata (no raw payload).     |
 | `get_event_raw`       | Original upstream JSON for one event by `event_id`. For debugging or recovering aged-out detail. |
@@ -282,14 +287,20 @@ Adapters with real descriptions, URLs, age ranges:
 - ✅ **Mommy Poppins NYC** — *shipped.* Sitemap URL discovery + JSON-LD detail
   scraping (uses `curl_cffi` to clear Cloudflare). ~233 events/run with
   descriptions, URLs, age ranges, coordinates, prices.
-- **Brooklyn Public Library** — calendar scraping (no public RSS feed)
-- **Time Out NY Kids** — scraping
-- **Brooklyn Children's Museum** — scraping
-- **Prospect Park Alliance** — scraping
+- ✅ **Brooklyn Public Library** — *shipped.* Calendar ingestion, kid programs
+  across branches.
+- ✅ **Brooklyn Children's Museum** — *shipped.*
+- ✅ **Green-Wood Cemetery** — *shipped.* WordPress/Tribe Events REST API,
+  keyword-filtered to kid-relevant programming (~104 events/60 days).
+- ✅ **Prospect Park Alliance** — *shipped.* Same Tribe Events REST API,
+  category-filtered (Kids, Audubon, Carousel, Lefferts, Nature Programs,
+  Film, Performing Arts, Education); ~307 events/60 days.
+- ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
+  structured feed; would need a headless browser (out of scope).
 
 See `SOURCES-BACKLOG.md` for additional candidate venues under research
-(Brooklyn Cyclones, Coney Island USA, Domino Park, Industry City, Green-Wood,
-Governors Island).
+(Brooklyn Cyclones, Coney Island USA, Brooklyn Army Terminal, Domino Park,
+Industry City, Governors Island).
 
 These land alongside `nyc_permitted_events` rather than replace it; permit
 data is a useful denominator even with its thinness.
@@ -311,16 +322,19 @@ nyc-events-mcp/
 │       ├── __init__.py               # ENABLED_SOURCES registry
 │       ├── nyc_permitted_events.py   # NYC Open Data tvpp-9vvx  (Phase 1)
 │       ├── mommy_poppins.py          # editorial scraper        (Phase 2, shipped)
-│       ├── bpl.py                    # stub                     (Phase 2)
-│       ├── timeout_nykids.py         # stub                     (Phase 2)
-│       └── bk_childrens_museum.py    # stub                     (Phase 2)
+│       ├── bpl.py                    # BPL calendar             (Phase 2, shipped)
+│       ├── bk_childrens_museum.py    # Brooklyn Children's Mus. (Phase 2, shipped)
+│       ├── greenwood_cemetery.py     # Tribe Events REST        (Phase 2, shipped)
+│       ├── prospect_park.py          # Tribe Events REST        (Phase 2, shipped)
+│       └── timeout_nykids.py         # stub                     (rejected — no feed)
 ├── data/                 # SQLite lives here; gitignored
-├── SOURCES-BACKLOG.md    # researched candidate sources (unverified)
+├── SOURCES-BACKLOG.md    # researched candidate sources
 └── tests/
     ├── test_db.py                          # schema, migrations, search
     ├── test_security_fixes.py              # Checkpoint C bundle
+    ├── test_weekend_window.py              # events_this_weekend window
     ├── test_nyc_permitted_events_parse.py  # Phase 1 parser
-    └── test_mommy_poppins_parse.py         # Phase 2 parser
+    └── test_<source>_parse.py              # one per Phase 2 source
 ```
 
 ## Env vars
@@ -332,7 +346,7 @@ nyc-events-mcp/
 | `DB_PATH`                      | `data/events.db`                                                                       | SQLite file for events (safe to wipe during ingest iteration)                                    |
 | `OAUTH_DB_PATH`                | `data/oauth.db`                                                                        | Separate SQLite file for OAuth access tokens, so wiping events DB keeps connectors authenticated |
 | `FORWARDED_ALLOW_IPS`          | `127.0.0.1`                                                                            | Source IPs whose `X-Forwarded-*` headers uvicorn trusts. On Synology Docker include the bridge.  |
-| `OAUTH_REDIRECT_URI_ALLOWLIST` | `https://claude.ai/api/mcp/auth_callback,http://localhost,http://127.0.0.1`            | Comma-separated prefix allowlist for OAuth `redirect_uri`. Blocks open-redirect / phishing.       |
+| `OAUTH_REDIRECT_URI_ALLOWLIST` | `https://claude.ai/api/mcp/auth_callback,http://localhost,http://127.0.0.1`            | Comma-separated allowlist for OAuth `redirect_uri`, matched by URL components (exact scheme+host, port if pinned, path prefix). Blocks open-redirect / phishing. |
 | `OAUTH_TOKEN_TTL_DAYS`         | `90`                                                                                   | Default lifetime of an OAuth-issued access token. Bounds an undetected leak.                     |
 
 ### Auth rotation model
@@ -358,3 +372,4 @@ In addition to the obvious event fields (`title`, `when_local`, `venue`, `boroug
 - `url` — the event's own page if the source has one (null for permit-source rows).
 - `venue_map_url` — a Google Maps lookup link for the venue, synthesized from `venue + borough`. Useful when `url` is null.
 - `low_confidence` — `true` when the row has no description AND no real URL. Almost always the case for `nyc_permitted_events` rows (permits, not curated events); tell the user before they make plans.
+- `possibly_cancelled` — `true` when a future event has been missing from its source's feed for two consecutive nightly ingests. The event may have been cancelled upstream; confirm with the venue before making plans. (Flagged, never deleted — the flag clears itself if the event reappears.)

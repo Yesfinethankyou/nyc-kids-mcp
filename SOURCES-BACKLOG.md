@@ -154,31 +154,38 @@ Revisit in Phase 3+ if a simpler path turns up.
 - **Note:** This is **Coney Island USA** (sideshow, Mermaid Parade, film fest).
   Not Luna Park (park hours only, not events).
 
-### 4. Prospect Park Alliance
+### 4. Prospect Park Alliance — ✅ BUILT (live)
 
-- **Status:** CONFIRMED
+- **Status:** BUILT — shipped as source `prospect_park`
+  (`src/nyc_events/sources/prospect_park.py`).
 - **Source:** WordPress + The Events Calendar REST API
 - **Endpoint:** `https://www.prospectpark.org/wp-json/tribe/events/v1/events`
-- **Auth:** Requires `curl_cffi` (`impersonate="chrome"`) — Cloudflare blocks
-  plain httpx/curl.
-- **Pagination:** `?per_page=50&page=N` — 500+ events, paginate until no
-  `next_rest_url` in response.
-- **Data shape:** identical to Green-Wood Cemetery (same Tribe Events plugin):
-  `title`, `start_date` ("2026-06-05 08:00:00"), `end_date`, `url`,
-  `cost` ("Free", "Free, RSVP!", "$3 – $13"), `description` (HTML),
-  `categories` (list of `{name}`).
-- **Venue:** always empty list — all events are in Prospect Park. Hardcode
-  venue = "Prospect Park", borough = BROOKLYN.
-- **Filtering:** not all events are kid-relevant. Filter to events whose
-  `categories` include any of: "Kids", "Audubon Center", "Carousel",
-  "Lefferts Historic House", "Nature Programs", "Film", "Performing Arts",
-  "Education". (Category counts from live data: Kids=39, Audubon=43,
-  Nature=24, Carousel=10, Lefferts=7.)
-- **Build notes:** strip HTML from `description`. Parse `cost` string:
-  "Free" or "Free, RSVP!" → `Price.FREE`; any `$` → `Price.PAID`.
-  `external_id` = event slug from `url`. Do not use `start_date` as
-  external_id (recurring events share a slug; the Tribe URL includes the
-  occurrence date).
+- **Pagination:** `?per_page=50&page=N`, follow `next_rest_url` until absent.
+- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — Cloudflare blocks plain
+  fetchers.
+- **As-built notes (differ from original research):**
+  - **`external_id = str(id)`, NOT slug-from-url.** The original research
+    claimed recurring events share a Tribe `id`; live verification
+    (2026-06, 456 events / 60-day window) showed the Tribe `id` IS
+    per-occurrence — 456 distinct ids and 456 distinct dated URL slugs.
+    Recurring events get a new id per occurrence (e.g. Wednesday
+    Greenmarket: 10000742, 10000743, …). No `:start.isoformat()` suffix
+    needed.
+  - Category filter as researched: "Kids", "Audubon Center", "Carousel",
+    "Lefferts Historic House", "Nature Programs", "Film",
+    "Performing Arts", "Education" — all names verified live (Kids=124,
+    Audubon=176, Nature=95, Lefferts=107, Carousel=17, Education=18,
+    Performing Arts=8, Film=4 in a 60-day window; counts are
+    per-occurrence, much higher than the original per-series counts).
+  - Defensive title hard-exclude ("21+", "adults only", "members only")
+    overrides any included category. No live events currently trigger it —
+    the included categories are clean (checked for adult-content leakage).
+  - `cost` is populated (unlike Green-Wood): "Free" variants → FREE,
+    `$` → PAID, "Prices Vary"/empty → UNKNOWN.
+  - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
+  - Venue always empty upstream as researched — hardcoded
+    venue = "Prospect Park", borough = BROOKLYN. No lat/lng, no age range.
+  - ~307 kid-relevant events of 456 total in a 60-day window (verified live).
 
 ---
 
@@ -221,6 +228,41 @@ Revisit in Phase 3+ if a simpler path turns up.
   borough = BROOKLYN. All community events are free; concerts are PAID —
   set price based on whether the external link is to dice.fm/posh.vip.
   Fetch: `curl_cffi` GET of the single events page, parse with selectolax.
+
+---
+
+### 6. New York Transit Museum
+
+- **Status:** CONFIRMED (probed 2026-06-10, from a cloud Claude session —
+  this domain is reachable from the sandbox, unlike most on this list)
+- **Source:** WordPress + The Events Calendar REST API (same Tribe plugin
+  as Green-Wood and Prospect Park — third confirmed instance)
+- **Endpoint:** `https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events`
+- **Auth:** plain fetchers 403 (default-UA urllib blocked); curl with a
+  Chrome User-Agent succeeds. Use `curl_cffi` (`impersonate="chrome"`) per
+  project precedent.
+- **Pagination:** `?per_page=50&page=N` + `start_date`/`end_date` params,
+  follow `next_rest_url`. Small calendar: 26 events / 60-day window —
+  single page in practice.
+- **Data shape:** standard Tribe record (`title`, `utc_start_date`,
+  `cost`, `description` HTML, `categories`), with two differences from
+  Prospect Park:
+  - `venue` is a real per-event object, NOT an empty list — e.g.
+    "New York Transit Museum, Brooklyn" vs "Off-Site" (subway tours meet
+    in Manhattan, e.g. Old City Hall station). Don't hardcode venue;
+    map it per-row, borough Brooklyn for the museum itself.
+  - `cost` is populated ("$40", "$10 – $20", "$50").
+- **IDs:** per-occurrence confirmed live (two occurrences of the same tour
+  → distinct ids 93098 / 93102). `external_id = str(id)`, no date suffix.
+- **Filtering:** category allowlist. Live 60-day counts: Family Programs=8
+  (Transit Tots — toddler program, Movers and Makers family workshop),
+  Nostalgia Rides=2 (vintage subway rides, very kid-friendly), Special
+  Event=2. Exclude "Members-Only Programs" (3) and "Virtual Programs" (3);
+  the adult Tours/Lectures fall out of the allowlist naturally.
+- **Volume:** modest (~10-12 kid-relevant / 60 days) but high-quality and
+  uniquely on-theme — transit-obsessed kids are a core audience. Cheap to
+  build: copy-adapt `prospect_park.py`, swap the category list, add the
+  per-row venue mapping.
 
 ---
 

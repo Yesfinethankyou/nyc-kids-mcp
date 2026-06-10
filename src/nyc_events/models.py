@@ -69,3 +69,8 @@ class Event(BaseModel):
     # the upstream is volatile or rolls off (tvpp-9vvx has a ~30-day window)
     # set this so we can debug field-mapping or recover aged-out detail.
     raw_payload: str | None = None
+    # Ingest-managed, never set by sources: timestamp of the first successful
+    # ingest run that should have included this (future, in-window) event but
+    # didn't — the event may have been cancelled upstream. Cleared by the
+    # upsert whenever the event is seen again. See db.mark_missing.
+    missing_since: datetime | None = None

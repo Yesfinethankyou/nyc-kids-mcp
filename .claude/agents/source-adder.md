@@ -1,6 +1,6 @@
 ---
 name: source-adder
-description: Use this agent when the user wants to add a new event source to nyc-kids-mcp (Phase 2 editorial sources like Mommy Poppins, BPL, Time Out NY Kids, Brooklyn Children's Museum, or any future source). It implements the established source recipe end-to-end: fixture capture, parser, registry wiring, and parser tests. Do NOT use it for changes to existing sources, schema changes, or server/OAuth work.
+description: Use this agent when the user wants to add a new event source to nyc-kids-mcp (backlog venues like Coney Island USA, Brooklyn Cyclones, Brooklyn Army Terminal, or any future source — see SOURCES-BACKLOG.md). It implements the established source recipe end-to-end: fixture capture, parser, registry wiring, parser tests, and doc updates. Do NOT use it for changes to existing sources, schema changes, or server/OAuth work.
 tools: Read, Edit, Write, Bash, Grep, Glob, WebFetch
 ---
 
@@ -38,6 +38,25 @@ For each new source, you must produce:
    - If upstream IDs aren't per-occurrence (e.g. permit ids covering many
      recurring dates), bind `external_id = f"{upstream_id}:{start.isoformat()}"`.
      See `nyc_permitted_events.py` for the precedent.
+   - **VERIFY the external_id strategy against live data before committing
+     to it — never trust backlog research alone.** Fetch real rows and
+     check whether recurring events share an upstream id or get one per
+     occurrence (count distinct ids vs distinct occurrences). external_id
+     choices are permanent (stable IDs hash from them), and research has
+     been wrong before: SOURCES-BACKLOG claimed Prospect Park needed
+     slug-from-url because Tribe ids repeat; live data showed ids are
+     per-occurrence there. Record what you verified in the module docstring.
+   - **Decides the `window_days` opt-in** (missing-event / cancellation
+     detection — see `## Missing-event detection` in `CLAUDE.md`):
+     - If every `fetch()` is a FULL re-fetch of all events from now through
+       now+N days (windowed API query or full calendar scrape), set
+       `self.window_days = window_days` in `__init__`. "In-window future
+       event absent from this fetch" then means upstream removed it.
+     - If fetch is INCREMENTAL — sitemap lastmod filtering, "recently
+       updated" feeds, anything that legitimately skips unchanged events
+       (e.g. `mommy_poppins`) — leave `window_days` as the inherited `None`.
+       Getting this wrong falsely flags the source's entire catalog as
+       possibly cancelled.
    - Applies kid-relevance filtering at parse time if the source is noisy.
      See `## Source-data hygiene philosophy` in `CLAUDE.md`. Curated kids
      feeds don't need filtering — don't add it for consistency.
@@ -54,7 +73,16 @@ For each new source, you must produce:
    - Assert on stable Event fields (title, venue_name, start_dt, tags),
      not on `id` (the hash is implementation-detail).
 
-5. **Run the full test suite** with
+5. **Documentation updates** — all three, every time (skipping these is how
+   the README went three sources stale):
+   - `CLAUDE.md` → `## Phase roadmap`: move the source to the Live list.
+   - `SOURCES-BACKLOG.md`: mark the section BUILT with as-built notes,
+     explicitly recording anything that differed from the original research
+     (see the Green-Wood and Prospect Park sections for the format).
+   - `README.md`: the Phase 2 shipped list (with approximate event volume)
+     and the project-layout tree.
+
+6. **Run the full test suite** with
    `.venv/bin/python -m pytest tests/ -q` and ensure it passes. Then run
    `.venv/bin/ruff check` and fix any lint.
 
@@ -135,10 +163,10 @@ hardcode it — don't add the inference machinery unnecessarily.
 
 ## Stub files
 
-`timeout_nykids.py` and `bk_childrens_museum.py` exist but are empty
-stubs (`raise NotImplementedError`). When implementing either, **replace
-the stub entirely** — don't try to fill it in. The stub has no useful
-structure to preserve.
+`timeout_nykids.py` is a stub (`raise NotImplementedError`) kept as a
+tombstone — the source was REJECTED (JS-rendered, no feed; see CLAUDE.md
+roadmap). Don't implement it and don't delete it. If a future stub is
+ever implemented, **replace it entirely** — don't try to fill it in.
 
 ## Reporting back
 

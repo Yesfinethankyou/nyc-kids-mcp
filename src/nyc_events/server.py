@@ -184,6 +184,18 @@ def _venue_map_url(venue: str | None, borough: str | None) -> str | None:
 
 _DESCRIPTION_PREVIEW_CHARS = 200
 
+# How long an event must be continuously missing from its source's ingest
+# before tools surface possibly_cancelled. 30h ≈ two consecutive nightly
+# runs: a one-night blip stamps rows, the next night clears them, and no
+# user ever sees the flag.
+_MISSING_GRACE_HOURS = 30
+
+
+def _possibly_cancelled(ev: Event) -> bool:
+    if ev.missing_since is None:
+        return False
+    return datetime.now(UTC) - ev.missing_since > timedelta(hours=_MISSING_GRACE_HOURS)
+
 
 def _truncate(s: str | None, max_len: int = _DESCRIPTION_PREVIEW_CHARS) -> str | None:
     if s is None or len(s) <= max_len:
@@ -210,6 +222,7 @@ def _event_summary(ev: Event) -> dict[str, Any]:
         ),
         "description": _truncate(ev.description),
         "low_confidence": low_confidence,
+        "possibly_cancelled": _possibly_cancelled(ev),
     }
 
 
@@ -243,6 +256,7 @@ def _event_detail(ev: Event) -> dict[str, Any]:
             ev.venue_name, ev.borough.value if ev.borough else None
         ),
         "low_confidence": low_confidence,
+        "possibly_cancelled": _possibly_cancelled(ev),
     }
 
 
@@ -284,6 +298,11 @@ def search_events(
     Each result also has a `venue_map_url` field with a Google Maps link
     for the venue. If `url` is null (most permit-source rows are),
     `venue_map_url` is the best clickable destination to give the user.
+
+    `possibly_cancelled: true` means the event vanished from its source's
+    feed across multiple recent ingests — it may have been cancelled
+    upstream. Still show it if relevant, but warn the user to confirm with
+    the venue (via `url` or `venue_map_url`) before making plans.
 
     Args:
         query: optional free-text search over title, description, venue,

@@ -1,0 +1,1877 @@
+{
+  "events": [
+    {
+      "id": 10023055,
+      "global_id": "www.prospectpark.org?id=10023055",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=10023055"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-05-15 13:10:49",
+      "date_utc": "2026-05-15 17:10:49",
+      "modified": "2026-05-27 14:50:18",
+      "modified_utc": "2026-05-27 18:50:18",
+      "url": "https://www.prospectpark.org/event/nature-exploration-pollinator-month-5/2026-06-11/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/10023055",
+      "title": "Nature Exploration: Pollinator Month",
+      "description": "<p>Join Prospect Park Alliance for family-friendly nature fun as we explore the question &#8220;What is a pollinator?&#8221; with park naturalists.</p>\n<p><b>Featured Activities:</b></p>\n<p><strong>Butterfly Watch, 10 am–3 pm:</strong> Learn about butterflies you can find in your neighborhood, their life cycle, and how they help plants thrive in Brooklyn&#8217;s Backyard and beyond.</p>\n<p><strong>Animal Encounter, 1–2 pm:</strong> Join Alliance naturalists to learn about the animals in our nature collection. This program starts promptly at 1 pm.</p>\n<p><strong>Nature on the Go, 2–3 pm:</strong> Join an Alliance naturalist to explore the park and learn about the nature around us.</p>",
+      "excerpt": "",
+      "slug": "nature-exploration-pollinator-month-5",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-scaled.jpg",
+        "id": 12638,
+        "extension": "jpg",
+        "width": 2560,
+        "height": 1707,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 200,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-300x200.jpg"
+          },
+          "large": {
+            "width": 1024,
+            "height": 683,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-1024x683.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 512,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-768x512.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 1024,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-1536x1024.jpg"
+          },
+          "2048x2048": {
+            "width": 2048,
+            "height": 1365,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-2048x1365.jpg"
+          },
+          "homepage-slider": {
+            "width": 1920,
+            "height": 550,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-1920x550.jpg"
+          }
+        },
+        "original_image": "RS1246_20140607_PPA_4323.jpg"
+      },
+      "all_day": false,
+      "start_date": "2026-06-11 10:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "10",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-11 15:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "15",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-11 14:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "14",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-11 19:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "Free",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "free"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Audubon Center",
+          "slug": "audubon-center",
+          "term_group": 0,
+          "term_taxonomy_id": 121,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 209,
+          "filter": "raw",
+          "id": 121,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/121",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Free",
+          "slug": "free",
+          "term_group": 0,
+          "term_taxonomy_id": 123,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 581,
+          "filter": "raw",
+          "id": 123,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/123",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Kids",
+          "slug": "kids",
+          "term_group": 0,
+          "term_taxonomy_id": 124,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 316,
+          "filter": "raw",
+          "id": 124,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/124",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Nature Programs",
+          "slug": "nature-programs",
+          "term_group": 0,
+          "term_taxonomy_id": 122,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 161,
+          "filter": "raw",
+          "id": 122,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/122",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10023056,
+      "global_id": "www.prospectpark.org?id=10023056",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=10023056"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-05-15 13:10:49",
+      "date_utc": "2026-05-15 17:10:49",
+      "modified": "2026-05-27 14:50:18",
+      "modified_utc": "2026-05-27 18:50:18",
+      "url": "https://www.prospectpark.org/event/nature-exploration-pollinator-month-5/2026-06-12/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/10023056",
+      "title": "Nature Exploration: Pollinator Month",
+      "description": "<p>Join Prospect Park Alliance for family-friendly nature fun as we explore the question &#8220;What is a pollinator?&#8221; with park naturalists.</p>\n<p><b>Featured Activities:</b></p>\n<p><strong>Butterfly Watch, 10 am–3 pm:</strong> Learn about butterflies you can find in your neighborhood, their life cycle, and how they help plants thrive in Brooklyn&#8217;s Backyard and beyond.</p>\n<p><strong>Animal Encounter, 1–2 pm:</strong> Join Alliance naturalists to learn about the animals in our nature collection. This program starts promptly at 1 pm.</p>\n<p><strong>Nature on the Go, 2–3 pm:</strong> Join an Alliance naturalist to explore the park and learn about the nature around us.</p>",
+      "excerpt": "",
+      "slug": "nature-exploration-pollinator-month-5",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-scaled.jpg",
+        "id": 12638,
+        "extension": "jpg",
+        "width": 2560,
+        "height": 1707,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 200,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-300x200.jpg"
+          },
+          "large": {
+            "width": 1024,
+            "height": 683,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-1024x683.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 512,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-768x512.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 1024,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-1536x1024.jpg"
+          },
+          "2048x2048": {
+            "width": 2048,
+            "height": 1365,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-2048x1365.jpg"
+          },
+          "homepage-slider": {
+            "width": 1920,
+            "height": 550,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/2022/03/RS1246_20140607_PPA_4323-1920x550.jpg"
+          }
+        },
+        "original_image": "RS1246_20140607_PPA_4323.jpg"
+      },
+      "all_day": false,
+      "start_date": "2026-06-12 10:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "12",
+        "hour": "10",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-12 15:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "12",
+        "hour": "15",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-12 14:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "12",
+        "hour": "14",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-12 19:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "12",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "Free",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "free"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Audubon Center",
+          "slug": "audubon-center",
+          "term_group": 0,
+          "term_taxonomy_id": 121,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 209,
+          "filter": "raw",
+          "id": 121,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/121",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Free",
+          "slug": "free",
+          "term_group": 0,
+          "term_taxonomy_id": 123,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 581,
+          "filter": "raw",
+          "id": 123,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/123",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Kids",
+          "slug": "kids",
+          "term_group": 0,
+          "term_taxonomy_id": 124,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 316,
+          "filter": "raw",
+          "id": 124,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/124",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Nature Programs",
+          "slug": "nature-programs",
+          "term_group": 0,
+          "term_taxonomy_id": 122,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 161,
+          "filter": "raw",
+          "id": 122,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/122",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10023083,
+      "global_id": "www.prospectpark.org?id=10023083",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=10023083"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-05-15 13:45:27",
+      "date_utc": "2026-05-15 17:45:27",
+      "modified": "2026-05-27 15:07:56",
+      "modified_utc": "2026-05-27 19:07:56",
+      "url": "https://www.prospectpark.org/event/pop-up-audubon-i-9/2026-06-13/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/10023083",
+      "title": "Pop Up Audubon I",
+      "description": "<p>Join us at LeFrak Center at Lakeside as we learn about Prospect Park&#8217;s watercourse by examining our underwater visitors with magnifying glasses.</p>\n<p><span style=\"font-weight: 400;\">Featured Activities:</span></p>\n<ul>\n<li><strong>Stay + Play, 12–3 pm:</strong> Families, children and caregivers can enjoy a range of nature fun including games, puzzles and drawing activities.</li>\n<li><strong>Pond Water Discovery, 12–3 pm:</strong> Did you know that an entire community of living insects, plants and animals makes the Lake their home? Get a closer view with one of our park naturalists.</li>\n<li><strong>Nature on the Go!, 3–4 pm:</strong> <span style=\"font-weight: 400;\">Join a park naturalist as we explore the Lake&#8217;s shoreline and learn about the wildlife that calls it home. <a href=\"https://www.prospectpark.org/learn-more/what-we-do/sustaining-the-environment/be-a-park-champion/\">Be a Park Champion</a> by helping to remove trash.</span></li>\n</ul>",
+      "excerpt": "",
+      "slug": "pop-up-audubon-i-9",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/2025/05/RS10490_PPA_ADG_Photography_10_23_16-70-scaled.jpg",
+        "id": 33019,
+        "extension": "jpg",
+        "width": 2560,
+        "height": 1707,
+        "filesize": 922281,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 200,
+            "mime-type": "image/jpeg",
+            "filesize": 32353,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2025/05/RS10490_PPA_ADG_Photography_10_23_16-70-300x200.jpg"
+          },
+          "large": {
+            "width": 1024,
+            "height": 683,
+            "mime-type": "image/jpeg",
+            "filesize": 213445,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2025/05/RS10490_PPA_ADG_Photography_10_23_16-70-1024x683.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 19400,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2025/05/RS10490_PPA_ADG_Photography_10_23_16-70-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 512,
+            "mime-type": "image/jpeg",
+            "filesize": 132894,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2025/05/RS10490_PPA_ADG_Photography_10_23_16-70-768x512.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 1024,
+            "mime-type": "image/jpeg",
+            "filesize": 409594,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2025/05/RS10490_PPA_ADG_Photography_10_23_16-70-1536x1024.jpg"
+          },
+          "2048x2048": {
+            "width": 2048,
+            "height": 1365,
+            "mime-type": "image/jpeg",
+            "filesize": 647715,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2025/05/RS10490_PPA_ADG_Photography_10_23_16-70-2048x1365.jpg"
+          },
+          "homepage-slider": {
+            "width": 1920,
+            "height": 550,
+            "mime-type": "image/jpeg",
+            "filesize": 258728,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2025/05/RS10490_PPA_ADG_Photography_10_23_16-70-1920x550.jpg"
+          }
+        },
+        "original_image": "RS10490_PPA_ADG_Photography_10_23_16-70.jpg"
+      },
+      "all_day": false,
+      "start_date": "2026-06-13 12:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-13 16:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-13 16:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-13 20:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "Free",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "free"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Audubon Center",
+          "slug": "audubon-center",
+          "term_group": 0,
+          "term_taxonomy_id": 121,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 209,
+          "filter": "raw",
+          "id": 121,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/121",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Free",
+          "slug": "free",
+          "term_group": 0,
+          "term_taxonomy_id": 123,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 581,
+          "filter": "raw",
+          "id": 123,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/123",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Kids",
+          "slug": "kids",
+          "term_group": 0,
+          "term_taxonomy_id": 124,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 316,
+          "filter": "raw",
+          "id": 124,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/124",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Nature Programs",
+          "slug": "nature-programs",
+          "term_group": 0,
+          "term_taxonomy_id": 122,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 161,
+          "filter": "raw",
+          "id": 122,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/122",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Pop-Up Audubon",
+          "slug": "pop-up-audubon",
+          "term_group": 0,
+          "term_taxonomy_id": 144,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 34,
+          "filter": "raw",
+          "id": 144,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/144",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10023970,
+      "global_id": "www.prospectpark.org?id=10023970",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=10023970"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-03-12 17:01:58",
+      "date_utc": "2026-03-12 21:01:58",
+      "modified": "2026-05-29 10:59:09",
+      "modified_utc": "2026-05-29 14:59:09",
+      "url": "https://www.prospectpark.org/event/carousel-rides-9/2026-06-11/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/10023970",
+      "title": "Carousel Rides",
+      "description": "<p><b>Children’s Corner, $3 per ride, $13 for a book of 5 tickets, </b><a href=\"https://donate.prospectpark.org/campaign/membership/c168785\"><b>Free with Prospect Park Alliance Family Supporter membership or higher.</b></a><b> </b></p>\n<p>Enjoy a ride on Prospect Park’s <a href=\"https://www.prospectpark.org/visit-the-park/places-to-go/carousel/\"><b>beloved 1912 Carousel</b></a>. Open Thursdays – Sundays and Holidays, this treasured historic attraction features magnificent carved horses, lions, giraffes and deer.</p>\n<p><a href=\"https://donate.prospectpark.org/campaign/membership/c168785\"><b>Join the Alliance at the Family Supporter level or above and enjoy unlimited free rides!</b></a></p>",
+      "excerpt": "",
+      "slug": "carousel-rides-9",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/76/89/76899e3f-b3bb-4b0a-b93d-213193babf82/041914_carousel_birthday_party_c_paul_martinka_008-scaled.jpg",
+        "id": 4079,
+        "extension": "jpg",
+        "width": 2560,
+        "height": 1704,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 200,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/76/89/76899e3f-b3bb-4b0a-b93d-213193babf82/041914_carousel_birthday_party_c_paul_martinka_008-300x200.jpg"
+          },
+          "large": {
+            "width": 1024,
+            "height": 682,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/76/89/76899e3f-b3bb-4b0a-b93d-213193babf82/041914_carousel_birthday_party_c_paul_martinka_008-1024x682.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/76/89/76899e3f-b3bb-4b0a-b93d-213193babf82/041914_carousel_birthday_party_c_paul_martinka_008-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 511,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/76/89/76899e3f-b3bb-4b0a-b93d-213193babf82/041914_carousel_birthday_party_c_paul_martinka_008-768x511.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 1022,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/76/89/76899e3f-b3bb-4b0a-b93d-213193babf82/041914_carousel_birthday_party_c_paul_martinka_008-1536x1022.jpg"
+          },
+          "2048x2048": {
+            "width": 2048,
+            "height": 1363,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/76/89/76899e3f-b3bb-4b0a-b93d-213193babf82/041914_carousel_birthday_party_c_paul_martinka_008-2048x1363.jpg"
+          }
+        },
+        "original_image": "041914_carousel_birthday_party_c_paul_martinka_008.jpg"
+      },
+      "all_day": false,
+      "start_date": "2026-06-11 12:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-11 17:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "17",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-11 16:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-11 21:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "$3 – $13",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "3",
+          "5",
+          "13"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Carousel",
+          "slug": "carousel",
+          "term_group": 0,
+          "term_taxonomy_id": 131,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 64,
+          "filter": "raw",
+          "id": 131,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/131",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Kids",
+          "slug": "kids",
+          "term_group": 0,
+          "term_taxonomy_id": 124,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 316,
+          "filter": "raw",
+          "id": 124,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/124",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10022138,
+      "global_id": "www.prospectpark.org?id=10022138",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=10022138"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-03-02 10:26:36",
+      "date_utc": "2026-03-02 15:26:36",
+      "modified": "2026-04-21 12:54:31",
+      "modified_utc": "2026-04-21 16:54:31",
+      "url": "https://www.prospectpark.org/event/reimagine-lefferts-open-hours-10/2026-06-13/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/10022138",
+      "title": "Lefferts Historic House Open Hours",
+      "description": "<p>Visit the Lefferts Historic House for family friendly outdoor and indoor exhibits, activities, workshops, and special programs that explore the legacies of resistance and resilience of the Indigenous peoples of Lenapehoking, whose unceded lands the park and house rests upon, and the Africans enslaved by the Lefferts family.</p>\n<p>View the first ever ReImagine Lefferts Artist in Residence, Adama Delphine Fawundu’s site-specific work, <a href=\"https://www.prospectpark.org/alliance-debuts-adama-delphine-fawundus-ancestral-whispers/\" target=\"_blank\" rel=\"noopener\"><strong>Ancestral Whispers</strong></a> featuring 25 fabric banners that transform the house’s Flatbush Avenue facade, inspired by and honoring the heroism of the 25 Africans enslaved by the Lefferts family, informed by Prospect Park Alliance’s research into the lives of Africans enslaved by the Lefferts family.</p>\n<p><span style=\"font-weight: 400;\"><a href=\"https://www.prospectpark.org/visit-the-park/places-to-go/lefferts-historic-house/\" target=\"_blank\" rel=\"noopener\"><strong>Learn more about Prospect Park Alliance&#8217;s ReImagine Lefferts initiative.</strong></a></span></p>",
+      "excerpt": "",
+      "slug": "reimagine-lefferts-open-hours-10",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/2024/06/DSC07671.jpg",
+        "id": 27227,
+        "extension": "jpg",
+        "width": 1200,
+        "height": 800,
+        "filesize": 315990,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 200,
+            "mime-type": "image/jpeg",
+            "filesize": 31727,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/06/DSC07671-300x200.jpg"
+          },
+          "large": {
+            "width": 1024,
+            "height": 683,
+            "mime-type": "image/jpeg",
+            "filesize": 223933,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/06/DSC07671-1024x683.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 20330,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/06/DSC07671-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 512,
+            "mime-type": "image/jpeg",
+            "filesize": 131950,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/06/DSC07671-768x512.jpg"
+          },
+          "homepage-slider": {
+            "width": 1200,
+            "height": 550,
+            "mime-type": "image/jpeg",
+            "filesize": 225827,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/06/DSC07671-1200x550.jpg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-13 12:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-13 17:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "17",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-13 16:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-13 21:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "Free",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "free"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Free",
+          "slug": "free",
+          "term_group": 0,
+          "term_taxonomy_id": 123,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 581,
+          "filter": "raw",
+          "id": 123,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/123",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Kids",
+          "slug": "kids",
+          "term_group": 0,
+          "term_taxonomy_id": 124,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 316,
+          "filter": "raw",
+          "id": 124,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/124",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Lefferts Historic House",
+          "slug": "lefferts-historic-house",
+          "term_group": 0,
+          "term_taxonomy_id": 143,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 160,
+          "filter": "raw",
+          "id": 143,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/143",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 36922,
+      "global_id": "www.prospectpark.org?id=36922",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=36922"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-06-06 06:52:32",
+      "date_utc": "2026-06-06 10:52:32",
+      "modified": "2026-06-06 06:52:32",
+      "modified_utc": "2026-06-06 10:52:32",
+      "url": "https://www.prospectpark.org/event/alfredas-cinema-brooklyn-boheme-2011/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/36922",
+      "title": "Alfreda&#8217;s Cinema, Brooklyn Boheme (2011)",
+      "description": "<p><span style=\"font-weight: 400;\">Join Prospect Park Alliance and Alfreda’s Cinema  for an open-air screening of <em>Brooklyn Boheme (2011)</em></span><span style=\"font-weight: 400;\">, an intimate portrait of the black arts movement that exploded in Fort Greene from the mid 1980s through the 90s as told by writer, historian and Brooklyn resident Nelson George.</span></p>\n<p><a href=\"https://www.eventbrite.com/e/alfredas-cinema-brooklyn-boheme-2011-lefferts-tickets-1989799621231?aff=ebdsoporgprofile\"><img loading=\"lazy\" decoding=\"async\" class=\"alignnone wp-image-35126 size-full\" src=\"https://www.prospectpark.org/wp-content/uploads/2025/12/PPA_Web-ButtonsRSVP.png\" alt=\"\" width=\"84\" height=\"40\" /></a></p>",
+      "excerpt": "",
+      "slug": "alfredas-cinema-brooklyn-boheme-2011",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/2026/06/image.webp",
+        "id": 36923,
+        "extension": "webp",
+        "width": 500,
+        "height": 740,
+        "filesize": 54962,
+        "sizes": {
+          "medium": {
+            "width": 203,
+            "height": 300,
+            "mime-type": "image/webp",
+            "filesize": 15020,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2026/06/image-203x300.webp"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/webp",
+            "filesize": 6490,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2026/06/image-150x150.webp"
+          },
+          "homepage-slider": {
+            "width": 500,
+            "height": 550,
+            "mime-type": "image/webp",
+            "filesize": 58972,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2026/06/image-500x550.webp"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-11 20:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-11 22:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "22",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-12 00:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "12",
+        "hour": "00",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-12 02:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "12",
+        "hour": "02",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "Free, RSVP",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "free-rsvp"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Film",
+          "slug": "film",
+          "term_group": 0,
+          "term_taxonomy_id": 206,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 4,
+          "filter": "raw",
+          "id": 206,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/206",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Free",
+          "slug": "free",
+          "term_group": 0,
+          "term_taxonomy_id": 123,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 581,
+          "filter": "raw",
+          "id": 123,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/123",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "History",
+          "slug": "history",
+          "term_group": 0,
+          "term_taxonomy_id": 196,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 30,
+          "filter": "raw",
+          "id": 196,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/196",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Lefferts Historic House",
+          "slug": "lefferts-historic-house",
+          "term_group": 0,
+          "term_taxonomy_id": 143,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 160,
+          "filter": "raw",
+          "id": 143,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/143",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Performing Arts",
+          "slug": "performing-arts",
+          "term_group": 0,
+          "term_taxonomy_id": 125,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 60,
+          "filter": "raw",
+          "id": 125,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/125",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 36187,
+      "global_id": "www.prospectpark.org?id=36187",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=36187"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-04-30 11:41:51",
+      "date_utc": "2026-04-30 15:41:51",
+      "modified": "2026-05-29 09:55:10",
+      "modified_utc": "2026-05-29 13:55:10",
+      "url": "https://www.prospectpark.org/event/ogemdi-ude-major-juneteenth-performance/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/36187",
+      "title": "Ogemdi Ude: MAJOR: Juneteenth Performance",
+      "description": "<p data-path-to-node=\"1\"><span style=\"font-weight: 400;\">Prospect Park Alliance and Danspace Project present MAJOR: Ogemdi Ude‘s dance project exploring the physicality, history, and interiority of majorette dance. </span> These Black femme teams accompanied by marching bands created a movement style that requires master showmanship with allegiance to count, undulation, groove, and sensual yet strong performativity.</p>\n<p data-path-to-node=\"2\"><a href=\"https://ci.ovationtix.com/2742/production/1272453?performanceId=11795811\"><img loading=\"lazy\" decoding=\"async\" class=\"alignnone wp-image-35126 size-full\" src=\"https://www.prospectpark.org/wp-content/uploads/2025/12/PPA_Web-ButtonsRSVP.png\" alt=\"\" width=\"84\" height=\"40\" /></a></p>\n<p data-path-to-node=\"2\">This celebratory Juneteenth performance is a co-presentation between <a href=\"https://danspaceproject.org/calendar/ws26-secret-gardens/\">Danspace Project’s Platform 2026: Secret Gardens</a> and <strong><a href=\"https://www.prospectpark.org/visit-the-park/places-to-go/lefferts-historic-house/\">Prospect Park Alliance’s ReImagine Lefferts</a><a href=\"https://www.prospectpark.org/visit-the-park/places-to-go/lefferts-historic-house/\"> initiative</a></strong>. This outdoor iteration kicks off MAJOR‘s summer tour of outdoor performances that delve into how technique, effort, and mastery can be attempted, achieved, and abandoned in pursuit of cultural belonging. Ude’s cast of all Black femme dancers and collaborators embraces majorettes as a form and fundamental relic of Black girlhood. Together they pursue the intimate journey of returning to bodies that they thought were lost. A fierce investigation of physical memory, sexuality, sensuality, and community, MAJOR is a nuanced love letter to the folks who taught the team how to be proudly Black and proudly femme. The Chord Archive is showcased alongside performances, a physical and digital documentation of the creative process and personal historical accounts from former majorette dancers. MAJOR had its NYC premiere at New York Live Arts in January 2026.</p>\n<p data-path-to-node=\"3\"><a href=\"https://ci.ovationtix.com/2742/production/1272453?performanceId=11795811\"><img loading=\"lazy\" decoding=\"async\" class=\"alignnone wp-image-35126 size-full\" src=\"https://www.prospectpark.org/wp-content/uploads/2025/12/PPA_Web-ButtonsRSVP.png\" alt=\"\" width=\"84\" height=\"40\" /></a></p>",
+      "excerpt": "",
+      "slug": "ogemdi-ude-major-juneteenth-performance",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/2026/04/MAJOR-Composite-1024x819-1.jpg",
+        "id": 36188,
+        "extension": "jpg",
+        "width": 1024,
+        "height": 819,
+        "filesize": 147154,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 240,
+            "mime-type": "image/jpeg",
+            "filesize": 17280,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2026/04/MAJOR-Composite-1024x819-1-300x240.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 6812,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2026/04/MAJOR-Composite-1024x819-1-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 614,
+            "mime-type": "image/jpeg",
+            "filesize": 82150,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2026/04/MAJOR-Composite-1024x819-1-768x614.jpg"
+          },
+          "homepage-slider": {
+            "width": 1024,
+            "height": 550,
+            "mime-type": "image/jpeg",
+            "filesize": 106218,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2026/04/MAJOR-Composite-1024x819-1-1024x550.jpg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-19 18:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "19",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-19 20:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "19",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-19 22:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "19",
+        "hour": "22",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-20 00:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "00",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": []
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Audubon Center",
+          "slug": "audubon-center",
+          "term_group": 0,
+          "term_taxonomy_id": 121,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 209,
+          "filter": "raw",
+          "id": 121,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/121",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Community Engagement",
+          "slug": "community-engagement",
+          "term_group": 0,
+          "term_taxonomy_id": 130,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 200,
+          "filter": "raw",
+          "id": 130,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/130",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Free",
+          "slug": "free",
+          "term_group": 0,
+          "term_taxonomy_id": 123,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 581,
+          "filter": "raw",
+          "id": 123,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/123",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Holiday",
+          "slug": "holiday",
+          "term_group": 0,
+          "term_taxonomy_id": 194,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 26,
+          "filter": "raw",
+          "id": 194,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/194",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Lefferts Historic House",
+          "slug": "lefferts-historic-house",
+          "term_group": 0,
+          "term_taxonomy_id": 143,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 160,
+          "filter": "raw",
+          "id": 143,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/143",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Music",
+          "slug": "music",
+          "term_group": 0,
+          "term_taxonomy_id": 195,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 22,
+          "filter": "raw",
+          "id": 195,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/195",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Performing Arts",
+          "slug": "performing-arts",
+          "term_group": 0,
+          "term_taxonomy_id": 125,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 60,
+          "filter": "raw",
+          "id": 125,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/125",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10023948,
+      "global_id": "www.prospectpark.org?id=10023948",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=10023948"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-05-29 10:41:34",
+      "date_utc": "2026-05-29 14:41:34",
+      "modified": "2026-05-29 10:41:34",
+      "modified_utc": "2026-05-29 14:41:34",
+      "url": "https://www.prospectpark.org/event/prospect-park-yoga/2026-06-11/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/10023948",
+      "title": "Prospect Park Yoga",
+      "description": "<p><span style=\"font-weight: 400;\">Brooklyn’s most beloved outdoor yoga series is back in Prospect Park! Brooklyn Flow and Prospect Park Alliance present free, outdoor yoga on the Long Meadow. Brooklyn’s finest yoga teachers lead free, outdoor group yoga classes in a low-pressure, beautiful environment. Join hundreds of Brooklynites each week to celebrate yoga and wellness in our treasured Prospect Park.</span></p>\n<p><span style=\"font-weight: 400;\">Bring your own mat or towel, a bottle of water and friends. All levels are welcome. </span></p>\n<p><b>Please RSVP and sign the waiver prior to your first class: </b><a href=\"http://brooklynflow.com/prospectparkyoga\"><b>brooklynflow.com/prospectparkyoga</b></a><b>.</b></p>\n<p><a href=\"https://brooklynflow.com/prospectparkyoga\" target=\"_blank\" rel=\"noopener\"><img loading=\"lazy\" decoding=\"async\" class=\"alignnone wp-image-19654\" src=\"https://www.prospectpark.org/wp-content/uploads/2022/10/rsvp-btn-orange4-01-1.png\" alt=\"\" width=\"96\" height=\"43\" /></a></p>\n<p><span style=\"font-weight: 400;\">This outdoor yoga series is sponsored by NewYork-Presbyterian.</span></p>\n<p><img loading=\"lazy\" decoding=\"async\" class=\"alignnone wp-image-32568\" src=\"https://www.prospectpark.org/wp-content/uploads/2025/05/0-300x300.jpg\" alt=\"\" width=\"133\" height=\"133\" srcset=\"https://www.prospectpark.org/wp-content/uploads/2025/05/0-300x300.jpg 300w, https://www.prospectpark.org/wp-content/uploads/2025/05/0-1024x1024.jpg 1024w, https://www.prospectpark.org/wp-content/uploads/2025/05/0-150x150.jpg 150w, https://www.prospectpark.org/wp-content/uploads/2025/05/0-768x768.jpg 768w, https://www.prospectpark.org/wp-content/uploads/2025/05/0.jpg 1336w\" sizes=\"auto, (max-width: 133px) 100vw, 133px\" /></p>",
+      "excerpt": "",
+      "slug": "prospect-park-yoga",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/45/3a/453a832c-87e7-4e3c-a477-1cf7c086f7e2/150611parkyoga_021.jpg",
+        "id": 5947,
+        "extension": "jpg",
+        "width": 1000,
+        "height": 667,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 200,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/45/3a/453a832c-87e7-4e3c-a477-1cf7c086f7e2/150611parkyoga_021-300x200.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/45/3a/453a832c-87e7-4e3c-a477-1cf7c086f7e2/150611parkyoga_021-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 512,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/45/3a/453a832c-87e7-4e3c-a477-1cf7c086f7e2/150611parkyoga_021-768x512.jpg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-11 19:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-11 20:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-11 23:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "11",
+        "hour": "23",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-12 00:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "12",
+        "hour": "00",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "Free, RSVP!",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "free-rsvp"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Fitness",
+          "slug": "fitness",
+          "term_group": 0,
+          "term_taxonomy_id": 149,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 42,
+          "filter": "raw",
+          "id": 149,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/149",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Free",
+          "slug": "free",
+          "term_group": 0,
+          "term_taxonomy_id": 123,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 581,
+          "filter": "raw",
+          "id": 123,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/123",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Wellness",
+          "slug": "wellness",
+          "term_group": 0,
+          "term_taxonomy_id": 148,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 106,
+          "filter": "raw",
+          "id": 148,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/148",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Yoga",
+          "slug": "yoga",
+          "term_group": 0,
+          "term_taxonomy_id": 138,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 13,
+          "filter": "raw",
+          "id": 138,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/138",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10000742,
+      "global_id": "www.prospectpark.org?id=10000742",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=10000742"
+      ],
+      "author": "14",
+      "status": "publish",
+      "date": "2023-04-26 12:19:58",
+      "date_utc": "2023-04-26 16:19:58",
+      "modified": "2025-12-08 10:45:10",
+      "modified_utc": "2025-12-08 15:45:10",
+      "url": "https://www.prospectpark.org/event/wednesday-greenmarket-at-bartel-pritchard-square/2026-06-10/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/10000742",
+      "title": "Wednesday Greenmarket at Bartel-Pritchard Square",
+      "description": "<p><span style=\"font-weight: 400;\">Nestled inside Prospect Park&#8217;s tree-shaded southwest corner, this much-loved market is where South Slope and Windsor Terrace residents stock up on locally grown staples. The offerings range from a selection of vegetables, fruits, baked goods, plants and flowers to fresh-caught fish and organic baked goods. </span></p>\n<p><a href=\"https://www.grownyc.org/greenmarket/brooklyn/bartel-pritchard-square-wed\" target=\"_blank\" rel=\"noopener\"><img loading=\"lazy\" decoding=\"async\" class=\"alignnone wp-image-19655\" src=\"https://www.prospectpark.org/wp-content/uploads/2022/11/Learn-More-btn-orange-02-300x83.png\" alt=\"\" width=\"141\" height=\"39\" /></a></p>\n<p><a href=\"https://www.grownyc.org/greenmarket/brooklyn/bartel-pritchard-square-wed\"><b>For a full calendar of events and a list of sellers, visit the GrowNYC website.</b></a></p>\n<p><strong><a href=\"https://www.grownyc.org/greenmarket/ebt/nutritionprograms\">Learn about all Nutrition Benefit Programs accepted at GrowNYC Markets</a></strong></p>",
+      "excerpt": "",
+      "slug": "wednesday-greenmarket-at-bartel-pritchard-square",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/bc/e9/bce94562-9695-40f8-9cf3-c7124c2d64b4/greenmarket_c_martin_seck-scaled.jpg",
+        "id": 3765,
+        "extension": "jpg",
+        "width": 2560,
+        "height": 1721,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 202,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/bc/e9/bce94562-9695-40f8-9cf3-c7124c2d64b4/greenmarket_c_martin_seck-300x202.jpg"
+          },
+          "large": {
+            "width": 1024,
+            "height": 688,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/bc/e9/bce94562-9695-40f8-9cf3-c7124c2d64b4/greenmarket_c_martin_seck-1024x688.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/bc/e9/bce94562-9695-40f8-9cf3-c7124c2d64b4/greenmarket_c_martin_seck-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 516,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/bc/e9/bce94562-9695-40f8-9cf3-c7124c2d64b4/greenmarket_c_martin_seck-768x516.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 1032,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/bc/e9/bce94562-9695-40f8-9cf3-c7124c2d64b4/greenmarket_c_martin_seck-1536x1032.jpg"
+          },
+          "2048x2048": {
+            "width": 2048,
+            "height": 1376,
+            "mime-type": "image/jpeg",
+            "url": "https://www.prospectpark.org/wp-content/uploads/filer_public/bc/e9/bce94562-9695-40f8-9cf3-c7124c2d64b4/greenmarket_c_martin_seck-2048x1376.jpg"
+          }
+        },
+        "original_image": "greenmarket_c_martin_seck.jpg"
+      },
+      "all_day": false,
+      "start_date": "2026-06-10 08:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "10",
+        "hour": "08",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-10 14:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "10",
+        "hour": "14",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-10 12:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "10",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-10 18:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "10",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EST",
+      "cost": "Free",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "free"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Food",
+          "slug": "food",
+          "term_group": 0,
+          "term_taxonomy_id": 129,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 34,
+          "filter": "raw",
+          "id": 129,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/129",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Free",
+          "slug": "free",
+          "term_group": 0,
+          "term_taxonomy_id": 123,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 581,
+          "filter": "raw",
+          "id": 123,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/123",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Wellness",
+          "slug": "wellness",
+          "term_group": 0,
+          "term_taxonomy_id": 148,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 106,
+          "filter": "raw",
+          "id": 148,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/148",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 36581,
+      "global_id": "www.prospectpark.org?id=36581",
+      "global_id_lineage": [
+        "www.prospectpark.org?id=36581"
+      ],
+      "author": "24",
+      "status": "publish",
+      "date": "2026-05-15 16:29:23",
+      "date_utc": "2026-05-15 20:29:23",
+      "modified": "2026-05-15 16:29:23",
+      "modified_utc": "2026-05-15 20:29:23",
+      "url": "https://www.prospectpark.org/event/brooklyn-pride-5k-run-walk-3/",
+      "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events/36581",
+      "title": "Brooklyn Pride 5K Run/Walk",
+      "description": "<p>Begin your Pride celebration in Prospect Park with your fellow revelers for the annual Brooklyn Pride LGBTQIA+ 5K! And if running just isn’t your thing, check out more ways to <strong><a href=\"https://brooklynpride.org/events/2026-5k\" target=\"_blank\" rel=\"noopener\">get involved in Brooklyn Pride Week in 2025.</a></strong></p>\n<p><em>The race is sponsored by Brooklyn Pride, in partnership with Front Runners New York, and presented by Maimonides Medical Center.</em></p>\n<p><a href=\"https://brooklynpride.org/events/2026-5k\"><strong>Learn more and get involved.</strong></a></p>",
+      "excerpt": "",
+      "slug": "brooklyn-pride-5k-run-walk-3",
+      "image": {
+        "url": "https://www.prospectpark.org/wp-content/uploads/2024/03/RS7233_016.jpg",
+        "id": 24638,
+        "extension": "jpg",
+        "width": 1200,
+        "height": 801,
+        "filesize": 632574,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 200,
+            "mime-type": "image/jpeg",
+            "filesize": 37350,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/03/RS7233_016-300x200.jpg"
+          },
+          "large": {
+            "width": 1024,
+            "height": 684,
+            "mime-type": "image/jpeg",
+            "filesize": 278266,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/03/RS7233_016-1024x684.jpg"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 21234,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/03/RS7233_016-150x150.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 513,
+            "mime-type": "image/jpeg",
+            "filesize": 169469,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/03/RS7233_016-768x513.jpg"
+          },
+          "homepage-slider": {
+            "width": 1200,
+            "height": 550,
+            "mime-type": "image/jpeg",
+            "filesize": 269697,
+            "url": "https://www.prospectpark.org/wp-content/uploads/2024/03/RS7233_016-1200x550.jpg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-13 10:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "10",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-13 12:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-13 14:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "14",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-13 16:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "13",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "Prices Vary",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "prices-vary"
+        ]
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Running + Walking",
+          "slug": "running-walking",
+          "term_group": 0,
+          "term_taxonomy_id": 150,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 60,
+          "filter": "raw",
+          "id": 150,
+          "urls": {
+            "self": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories/150",
+            "collection": "https://www.prospectpark.org/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    }
+  ],
+  "rest_url": "https://www.prospectpark.org/wp-json/tribe/events/v1/events?page=1&per_page=50",
+  "total": 456,
+  "total_pages": 10
+}
