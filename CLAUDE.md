@@ -104,7 +104,10 @@ These have all cost us real time. Don't relearn:
   rows with NULL `expires_at` are grandfathered (still valid until manual delete).
 - Redirect-URI allowlist gates `/authorize` GET and POST. Default:
   `https://claude.ai/api/mcp/auth_callback`, `http://localhost`, `http://127.0.0.1`.
-  Override via `OAUTH_REDIRECT_URI_ALLOWLIST` env (comma-separated prefixes).
+  Override via `OAUTH_REDIRECT_URI_ALLOWLIST` env (comma-separated entries).
+  Matching is by URL components (exact scheme + hostname, port if the entry
+  pins one, path prefix if present), NOT string prefix — so
+  `http://localhost.attacker.com` does not match the `http://localhost` entry.
 
 ## Stable ID semantics
 

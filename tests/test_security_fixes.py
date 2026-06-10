@@ -43,6 +43,27 @@ def test_redirect_uri_allowlist_blocks_attacker_domains():
     assert not _redirect_uri_allowed("")
 
 
+def test_redirect_uri_allowlist_blocks_hostname_prefix_bypass():
+    # A bare-origin allowlist entry ("http://localhost") must not accept a
+    # hostname that merely *starts with* the allowed host.
+    assert not _redirect_uri_allowed("http://localhost.attacker.com/steal")
+    assert not _redirect_uri_allowed("http://127.0.0.1.evil.tld/cb")
+    assert not _redirect_uri_allowed("http://localhostx:8080/callback")
+
+
+def test_redirect_uri_allowlist_requires_scheme_match():
+    # The claude.ai entry is https; an http downgrade must not pass.
+    assert not _redirect_uri_allowed("http://claude.ai/api/mcp/auth_callback")
+    # localhost entries are http; https://localhost isn't allowlisted.
+    assert not _redirect_uri_allowed("https://localhost:8080/callback")
+
+
+def test_redirect_uri_allowlist_rejects_malformed_uris():
+    assert not _redirect_uri_allowed("not a url")
+    assert not _redirect_uri_allowed("http://localhost:notaport/cb")
+    assert not _redirect_uri_allowed("//localhost/cb")  # scheme-relative
+
+
 # ---- Fix #4: consent page security headers ----------------------------------
 
 
