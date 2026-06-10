@@ -15,7 +15,7 @@ import time as _time
 from collections import deque
 from datetime import UTC, datetime, time, timedelta
 from typing import Any
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlparse
 from zoneinfo import ZoneInfo
 
 import uvicorn
@@ -53,11 +53,13 @@ PORT = int(os.environ.get("PORT", "8765"))
 # OAuth discovery JSON.
 FORWARDED_ALLOW_IPS = os.environ.get("FORWARDED_ALLOW_IPS", "127.0.0.1")
 
-# Comma-separated prefix allowlist for OAuth redirect_uri values. Without
-# this, /authorize will redirect the auth code to ANY URL, enabling a
-# phishing flow that lures the user into typing the master token while
-# the code lands at an attacker-controlled URL. Defaults cover claude.ai
-# and local mcp-inspector clients.
+# Comma-separated allowlist for OAuth redirect_uri values. Each entry is
+# matched by URL components (exact scheme + hostname, port if pinned, path
+# prefix if present) — see _redirect_uri_allowed. Without this, /authorize
+# will redirect the auth code to ANY URL, enabling a phishing flow that
+# lures the user into typing the master token while the code lands at an
+# attacker-controlled URL. Defaults cover claude.ai and local
+# mcp-inspector clients.
 _DEFAULT_REDIRECT_PREFIXES = (
     "https://claude.ai/api/mcp/auth_callback",
     "http://localhost",
@@ -119,7 +121,34 @@ def _rate_limit(request: Request, endpoint: str) -> Response | None:
 
 
 def _redirect_uri_allowed(uri: str) -> bool:
-    return any(uri.startswith(prefix) for prefix in OAUTH_REDIRECT_URI_ALLOWLIST)
+    """Match against the allowlist by URL components, not string prefix.
+
+    Naive startswith() on a bare-origin entry like "http://localhost" would
+    also accept "http://localhost.attacker.com/steal". Instead: scheme and
+    hostname must match the entry exactly; port must match if the entry
+    pins one; path must prefix-match if the entry has one (so any port and
+    path are fine for the localhost entries, while the claude.ai entry
+    stays pinned to its callback path).
+    """
+    try:
+        parsed = urlparse(uri)
+        parsed_port = parsed.port  # property access can raise on bad ports
+    except ValueError:
+        return False
+    if not parsed.scheme or not parsed.hostname:
+        return False
+    for entry in OAUTH_REDIRECT_URI_ALLOWLIST:
+        allowed = urlparse(entry)
+        if parsed.scheme != allowed.scheme:
+            continue
+        if parsed.hostname != allowed.hostname:
+            continue
+        if allowed.port is not None and parsed_port != allowed.port:
+            continue
+        if allowed.path and not parsed.path.startswith(allowed.path):
+            continue
+        return True
+    return False
 
 # streamable_http_path="/": claude.ai treats the pasted connector URL as the
 # MCP endpoint itself (it does NOT append /mcp); its initial probe goes to
@@ -283,6 +312,19 @@ def search_events(
     return [_event_summary(e) for e in events]
 
 
+def _weekend_window(now: datetime) -> tuple[datetime, datetime]:
+    """Window for events_this_weekend: Saturday 00:00 through Sunday 23:59
+    local of the current/upcoming weekend. If `now` is already inside the
+    weekend, the window starts at `now` — never earlier, never midweek."""
+    days_to_sunday = (6 - now.weekday()) % 7  # weekday: Mon=0..Sun=6
+    sunday = (now + timedelta(days=days_to_sunday)).date()
+    saturday_start = datetime.combine(
+        sunday - timedelta(days=1), time(0, 0), NYC_TZ
+    )
+    sunday_end = datetime.combine(sunday, time(23, 59, 59), NYC_TZ)
+    return max(now, saturday_start), sunday_end
+
+
 @mcp.tool()
 def events_this_weekend(
     borough: str | None = None,
@@ -292,9 +334,9 @@ def events_this_weekend(
 ) -> list[dict[str, Any]]:
     """Events happening THIS weekend in NYC.
 
-    Window: now (local) through the upcoming Sunday at 23:59 local.
-    If today is Saturday or Sunday, includes today. If Monday–Friday,
-    looks ahead to the upcoming Saturday/Sunday.
+    Window: Saturday 00:00 through Sunday 23:59 local of the current or
+    upcoming weekend. If today is Saturday or Sunday, the window starts
+    now (includes the rest of today). Weekday events are never included.
 
     Args:
         borough: Manhattan, Brooklyn, Queens, Bronx, or Staten Island.
@@ -303,17 +345,14 @@ def events_this_weekend(
         limit: max events to return (default 10). Use
             get_event_detail(event_id) to drill into a specific result.
     """
-    now = datetime.now(NYC_TZ)
-    days_to_sunday = (6 - now.weekday()) % 7  # weekday: Mon=0..Sun=6
-    sunday = (now + timedelta(days=days_to_sunday)).date()
-    sunday_end = datetime.combine(sunday, time(23, 59, 59), NYC_TZ)
+    window_start, sunday_end = _weekend_window(datetime.now(NYC_TZ))
     with db.connect_events(DB_PATH) as conn:
         events = db.search(
             conn,
             borough=_normalize_borough(borough),
             age=age,
             free_only=free_only,
-            start_after=now.astimezone(UTC),
+            start_after=window_start.astimezone(UTC),
             start_before=sunday_end.astimezone(UTC),
             limit=limit,
         )
