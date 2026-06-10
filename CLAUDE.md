@@ -195,7 +195,7 @@ deleted. Four layers prevent a fetch blip from mass-flagging a source:
    the stamp is > 30h old (`_MISSING_GRACE_HOURS`), i.e. the event was
    missed by two consecutive nightly runs.
 
-Participation is opt-in via `Source.window_days` (set by the five
+Participation is opt-in via `Source.window_days` (set by the six
 full-window sources). **`mommy_poppins` must stay excluded** — its sitemap
 lastmod discovery is incremental, so an unmodified event page legitimately
 drops out of a run while the event is still on. Apply the same caution to
@@ -240,7 +240,7 @@ Known accepted residuals (see `git log` for the security-audit commit):
 - **Phase 2 (in progress):** editorial scrapers — real descriptions, URLs,
   age ranges. See `.claude/agents/source-adder.md` for the recipe.
   - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood
-    Cemetery, Prospect Park Alliance.
+    Cemetery, Prospect Park Alliance, New York Transit Museum.
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
@@ -257,10 +257,6 @@ Known accepted residuals (see `git log` for the security-audit commit):
     5. Brooklyn Army Terminal — Drupal, single-page HTML, 27 events.
        Needs `curl_cffi`. Filter out "Live Music Concert" events (adult EDM,
        21+) — ~13 of 27. ~14 kid-relevant community events remain.
-    6. New York Transit Museum — third Tribe Events REST instance
-       (copy-adapt `prospect_park.py`). ~10-12 kid events / 60 days
-       (Transit Tots, Nostalgia Rides). Per-event venue object — some
-       programs are off-site. Needs `curl_cffi`.
   - **Deprioritized — no structured feed found:**
     5. Industry City — custom headless CMS, JS-rendered, no API surface.
     6. Domino Park — Sanity CMS, no public feed confirmed.

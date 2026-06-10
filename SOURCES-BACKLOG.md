@@ -231,38 +231,45 @@ Revisit in Phase 3+ if a simpler path turns up.
 
 ---
 
-### 6. New York Transit Museum
+### 6. New York Transit Museum — ✅ BUILT (live)
 
-- **Status:** CONFIRMED (probed 2026-06-10, from a cloud Claude session —
-  this domain is reachable from the sandbox, unlike most on this list)
+- **Status:** BUILT — shipped as source `ny_transit_museum`
+  (`src/nyc_events/sources/ny_transit_museum.py`).
 - **Source:** WordPress + The Events Calendar REST API (same Tribe plugin
-  as Green-Wood and Prospect Park — third confirmed instance)
+  as Green-Wood and Prospect Park — third instance, copy-adapt of
+  `prospect_park.py`)
 - **Endpoint:** `https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events`
-- **Auth:** plain fetchers 403 (default-UA urllib blocked); curl with a
-  Chrome User-Agent succeeds. Use `curl_cffi` (`impersonate="chrome"`) per
-  project precedent.
 - **Pagination:** `?per_page=50&page=N` + `start_date`/`end_date` params,
   follow `next_rest_url`. Small calendar: 26 events / 60-day window —
-  single page in practice.
-- **Data shape:** standard Tribe record (`title`, `utc_start_date`,
-  `cost`, `description` HTML, `categories`), with two differences from
-  Prospect Park:
-  - `venue` is a real per-event object, NOT an empty list — e.g.
-    "New York Transit Museum, Brooklyn" vs "Off-Site" (subway tours meet
-    in Manhattan, e.g. Old City Hall station). Don't hardcode venue;
-    map it per-row, borough Brooklyn for the museum itself.
-  - `cost` is populated ("$40", "$10 – $20", "$50").
-- **IDs:** per-occurrence confirmed live (two occurrences of the same tour
-  → distinct ids 93098 / 93102). `external_id = str(id)`, no date suffix.
-- **Filtering:** category allowlist. Live 60-day counts: Family Programs=8
-  (Transit Tots — toddler program, Movers and Makers family workshop),
-  Nostalgia Rides=2 (vintage subway rides, very kid-friendly), Special
-  Event=2. Exclude "Members-Only Programs" (3) and "Virtual Programs" (3);
-  the adult Tours/Lectures fall out of the allowlist naturally.
-- **Volume:** modest (~10-12 kid-relevant / 60 days) but high-quality and
-  uniquely on-theme — transit-obsessed kids are a core audience. Cheap to
-  build: copy-adapt `prospect_park.py`, swap the category list, add the
-  per-row venue mapping.
+  single page in practice; pagination loop kept.
+- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — plain default-UA
+  fetchers get 403.
+- **As-built notes (verified live 2026-06-10 during the build):**
+  - **`external_id = str(id)`** — re-verified against the captured window:
+    26 events → 26 distinct ids; recurring programs (Transit Tots ×7,
+    Old City Hall tour ×3, anniversary shuttle rides ×2) each get a
+    distinct id and dated URL slug per occurrence. No date suffix.
+  - **Venue is a real per-event object** as researched. Live values:
+    "New York Transit Museum, Brooklyn" (13 — city="Brooklyn",
+    geo_lat/geo_lng populated, so lat/lng ARE set for museum events),
+    "Off-Site" (10 — no city, no geo → borough/lat/lng None, no
+    guessing), "Virtual" (3 — excluded by category anyway). Borough is
+    mapped from the venue `city` field via a city→Borough lookup.
+  - **Category allowlist {Family Programs, Nostalgia Rides}**; hard
+    exclusion {Members-Only Programs, Virtual Programs} wins over any
+    allowlist overlap. "Special Event" (2) was NOT added: both live
+    instances also carried "Nostalgia Rides", so it adds nothing.
+  - **Known dropped kid-relevant edge cases (deliberate):**
+    "Subway Simulator Sunday" ships with `categories=[]` and "Special Day"
+    (sensory-friendly program for children with disabilities) is
+    categorized only "Access Programs" — both fall outside the allowlist.
+    Widen the allowlist later if these matter.
+  - `description` is empty on the list endpoint; text lives in `excerpt`.
+  - `cost` populated: "$40", "$35 – $40", "$10 – $20", "Free", and
+    "Included with Museum admission" (mapped to PAID — admission is paid).
+  - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
+  - No age fields upstream (Transit Tots is toddler-aimed but unstructured).
+  - 10 kid-relevant of 26 total in a 60-day window (verified live).
 
 ---
 

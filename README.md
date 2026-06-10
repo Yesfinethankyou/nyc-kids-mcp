@@ -11,9 +11,9 @@ tools — designed for use from the Claude mobile app while out with a kid.
 - Checkpoint D ✅ Dockerfile + docker-compose + GHCR + Watchtower + GH Actions multi-arch publish.
 - Phase 2 🚧 editorial scrapers. **Shipped:** Mommy Poppins NYC (~233 events/run),
   Brooklyn Public Library, Brooklyn Children's Museum, Green-Wood Cemetery
-  (~104 events/60d), Prospect Park Alliance (~307 events/60d) — real
-  descriptions, URLs, and (where upstream provides them) age ranges,
-  coordinates, prices. Time Out NY Kids rejected (no event feed without a
+  (~104 events/60d), Prospect Park Alliance (~307 events/60d), New York
+  Transit Museum (~10 events/60d) — real descriptions, URLs, and (where
+  upstream provides them) age ranges, coordinates, prices. Time Out NY Kids rejected (no event feed without a
   headless browser). More venues in `SOURCES-BACKLOG.md`.
 
 **Why "Permitted Events" and not "Parks":** the spec originally named the
@@ -24,8 +24,8 @@ ingest filters to `event_agency='Parks Department'`, a kid-friendly event
 type allowlist, a title blocklist (drops Eid/load-in/RC-plane noise), and
 finally a kid-keyword filter (must match at least one tag). Phase 2 editorial
 sources add higher-curated signal alongside this baseline — Mommy Poppins NYC,
-BPL, Brooklyn Children's Museum, Green-Wood Cemetery, and Prospect Park
-Alliance are live.
+BPL, Brooklyn Children's Museum, Green-Wood Cemetery, Prospect Park
+Alliance, and the New York Transit Museum are live.
 
 ## Architecture
 
@@ -38,7 +38,7 @@ RSS / ICS / SODA / scrapers  →  ingest (nightly cron)  →  SQLite (FTS5)  →
 - SQLite + FTS5 for text search
 - `httpx` for most fetching; `curl_cffi` (Chrome impersonation) for sources
   behind Cloudflare TLS-fingerprinting (Mommy Poppins, Green-Wood Cemetery,
-  Prospect Park Alliance)
+  Prospect Park Alliance, New York Transit Museum)
 - **Auth:** minimal single-user OAuth 2.1 + PKCE shim (claude.ai web requires it; bare bearer
   isn't an option). Master token also still works directly for curl testing.
 - Docker target: Synology NAS; public HTTPS via Tailscale Funnel
@@ -295,6 +295,10 @@ Adapters with real descriptions, URLs, age ranges:
 - ✅ **Prospect Park Alliance** — *shipped.* Same Tribe Events REST API,
   category-filtered (Kids, Audubon, Carousel, Lefferts, Nature Programs,
   Film, Performing Arts, Education); ~307 events/60 days.
+- ✅ **New York Transit Museum** — *shipped.* Third Tribe Events REST API
+  instance, category-filtered (Family Programs, Nostalgia Rides; members-only
+  and virtual programs excluded); ~10 events/60 days — Transit Tots, family
+  workshops, vintage-train rides.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
 
@@ -326,6 +330,7 @@ nyc-events-mcp/
 │       ├── bk_childrens_museum.py    # Brooklyn Children's Mus. (Phase 2, shipped)
 │       ├── greenwood_cemetery.py     # Tribe Events REST        (Phase 2, shipped)
 │       ├── prospect_park.py          # Tribe Events REST        (Phase 2, shipped)
+│       ├── ny_transit_museum.py      # Tribe Events REST        (Phase 2, shipped)
 │       └── timeout_nykids.py         # stub                     (rejected — no feed)
 ├── data/                 # SQLite lives here; gitignored
 ├── SOURCES-BACKLOG.md    # researched candidate sources

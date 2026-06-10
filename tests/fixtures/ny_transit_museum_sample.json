@@ -1,0 +1,2002 @@
+{
+ "events": [
+  {
+   "id": 94346,
+   "global_id": "www.nytransitmuseum.org?id=94346",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=94346"
+   ],
+   "author": "47",
+   "status": "publish",
+   "date": "2026-04-26 14:52:45",
+   "date_utc": "2026-04-26 18:52:45",
+   "modified": "2026-04-26 14:52:45",
+   "modified_utc": "2026-04-26 18:52:45",
+   "url": "https://www.nytransitmuseum.org/program/transit-tots-14jun/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/94346",
+   "title": "Transit Tots",
+   "description": "",
+   "excerpt": "<p>Join us on select Sundays for an early morning hour of story-time, crafts, imaginative play.</p>",
+   "slug": "transit-tots-14jun",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3.jpg",
+    "id": 25873,
+    "extension": "jpg",
+    "width": 2048,
+    "height": 1366,
+    "filesize": 986773,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 200,
+      "mime-type": "image/jpeg",
+      "filesize": 25119,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-300x200.jpg"
+     },
+     "large": {
+      "width": 1200,
+      "height": 800,
+      "mime-type": "image/jpeg",
+      "filesize": 251853,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-1200x800.jpg"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 10127,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-150x100.jpg"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1025,
+      "mime-type": "image/jpeg",
+      "filesize": 382711,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-1536x1025.jpg"
+     },
+     "banner": {
+      "width": 1619,
+      "height": 1080,
+      "mime-type": "image/jpeg",
+      "filesize": 418326,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-1619x1080.jpg"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-06-14 09:30:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "14",
+    "hour": "09",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "end_date": "2026-06-14 10:30:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "14",
+    "hour": "10",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-06-14 13:30:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "14",
+    "hour": "13",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-06-14 14:30:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "14",
+    "hour": "14",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "$40",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "40"
+    ]
+   },
+   "website": "https://www.nytransitmuseum.org/program/transit-tots-14june",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Family Programs",
+     "slug": "family-programs",
+     "term_group": 0,
+     "term_taxonomy_id": 8,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 1295,
+     "filter": "raw",
+     "id": 8,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/8",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 85,
+    "author": "3",
+    "status": "publish",
+    "date": "2016-05-10 15:38:19",
+    "date_utc": "2016-05-10 19:38:19",
+    "modified": "2025-11-20 11:38:19",
+    "modified_utc": "2025-11-20 16:38:19",
+    "url": "https://www.nytransitmuseum.org/location/transit-museum/",
+    "venue": "New York Transit Museum, Brooklyn",
+    "slug": "transit-museum",
+    "address": "Corner of Boerum Place & Schermerhorn Street",
+    "city": "Brooklyn",
+    "country": "United States",
+    "phone": "718-694-1600",
+    "geo_lat": 40.6903327,
+    "geo_lng": -73.9896449,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=85",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=85"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 94344,
+   "global_id": "www.nytransitmuseum.org?id=94344",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=94344"
+   ],
+   "author": "47",
+   "status": "publish",
+   "date": "2026-04-26 14:48:50",
+   "date_utc": "2026-04-26 18:48:50",
+   "modified": "2026-04-26 14:48:50",
+   "modified_utc": "2026-04-26 18:48:50",
+   "url": "https://www.nytransitmuseum.org/program/transit-tots-28june/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/94344",
+   "title": "Transit Tots",
+   "description": "",
+   "excerpt": "<p>Join us on select Sundays for an early morning hour of story-time, crafts, imaginative play.</p>",
+   "slug": "transit-tots-28june",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3.jpg",
+    "id": 25873,
+    "extension": "jpg",
+    "width": 2048,
+    "height": 1366,
+    "filesize": 986773,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 200,
+      "mime-type": "image/jpeg",
+      "filesize": 25119,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-300x200.jpg"
+     },
+     "large": {
+      "width": 1200,
+      "height": 800,
+      "mime-type": "image/jpeg",
+      "filesize": 251853,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-1200x800.jpg"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 10127,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-150x100.jpg"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1025,
+      "mime-type": "image/jpeg",
+      "filesize": 382711,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-1536x1025.jpg"
+     },
+     "banner": {
+      "width": 1619,
+      "height": 1080,
+      "mime-type": "image/jpeg",
+      "filesize": 418326,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/08/Filip-Wolak-3-1619x1080.jpg"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-06-28 09:30:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "28",
+    "hour": "09",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "end_date": "2026-06-28 10:30:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "28",
+    "hour": "10",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-06-28 13:30:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "28",
+    "hour": "13",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-06-28 14:30:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "28",
+    "hour": "14",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "$40",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "40"
+    ]
+   },
+   "website": "https://www.nytransitmuseum.org/program/transit-tots-28june",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Family Programs",
+     "slug": "family-programs",
+     "term_group": 0,
+     "term_taxonomy_id": 8,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 1295,
+     "filter": "raw",
+     "id": 8,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/8",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 85,
+    "author": "3",
+    "status": "publish",
+    "date": "2016-05-10 15:38:19",
+    "date_utc": "2016-05-10 19:38:19",
+    "modified": "2025-11-20 11:38:19",
+    "modified_utc": "2025-11-20 16:38:19",
+    "url": "https://www.nytransitmuseum.org/location/transit-museum/",
+    "venue": "New York Transit Museum, Brooklyn",
+    "slug": "transit-museum",
+    "address": "Corner of Boerum Place & Schermerhorn Street",
+    "city": "Brooklyn",
+    "country": "United States",
+    "phone": "718-694-1600",
+    "geo_lat": 40.6903327,
+    "geo_lng": -73.9896449,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=85",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=85"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 92415,
+   "global_id": "www.nytransitmuseum.org?id=92415",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=92415"
+   ],
+   "author": "47",
+   "status": "publish",
+   "date": "2025-12-18 11:13:05",
+   "date_utc": "2025-12-18 16:13:05",
+   "modified": "2026-06-03 10:42:41",
+   "modified_utc": "2026-06-03 14:42:41",
+   "url": "https://www.nytransitmuseum.org/program/movers-and-makers-family-tour-and-workshop-6/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/92415",
+   "title": "Movers and Makers: Family Tour and Workshop",
+   "description": "",
+   "excerpt": "<p>Join us the second Sunday of each month for a family tour and workshop.</p>",
+   "slug": "movers-and-makers-family-tour-and-workshop-6",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/07/Party-on-Wheels-for-Movers-and-Makers.jpg",
+    "id": 25437,
+    "extension": "jpg",
+    "width": 2048,
+    "height": 1365,
+    "filesize": 661121,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 200,
+      "mime-type": "image/jpeg",
+      "filesize": 26904,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/07/Party-on-Wheels-for-Movers-and-Makers-300x200.jpg"
+     },
+     "large": {
+      "width": 1200,
+      "height": 800,
+      "mime-type": "image/jpeg",
+      "filesize": 232781,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/07/Party-on-Wheels-for-Movers-and-Makers-1200x800.jpg"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 10784,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/07/Party-on-Wheels-for-Movers-and-Makers-150x100.jpg"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1024,
+      "mime-type": "image/jpeg",
+      "filesize": 343636,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/07/Party-on-Wheels-for-Movers-and-Makers-1536x1024.jpg"
+     },
+     "banner": {
+      "width": 1620,
+      "height": 1080,
+      "mime-type": "image/jpeg",
+      "filesize": 374302,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/07/Party-on-Wheels-for-Movers-and-Makers-1620x1080.jpg"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-06-14 14:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "14",
+    "hour": "14",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-06-14 15:30:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "14",
+    "hour": "15",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-06-14 18:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "14",
+    "hour": "18",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-06-14 19:30:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "14",
+    "hour": "19",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "$10 \u2013 $20",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "10",
+     "20"
+    ]
+   },
+   "website": "https://www.nytransitmuseum.org/program/movers-makers-jun-14/",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Family Programs",
+     "slug": "family-programs",
+     "term_group": 0,
+     "term_taxonomy_id": 8,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 1295,
+     "filter": "raw",
+     "id": 8,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/8",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 85,
+    "author": "3",
+    "status": "publish",
+    "date": "2016-05-10 15:38:19",
+    "date_utc": "2016-05-10 19:38:19",
+    "modified": "2025-11-20 11:38:19",
+    "modified_utc": "2025-11-20 16:38:19",
+    "url": "https://www.nytransitmuseum.org/location/transit-museum/",
+    "venue": "New York Transit Museum, Brooklyn",
+    "slug": "transit-museum",
+    "address": "Corner of Boerum Place & Schermerhorn Street",
+    "city": "Brooklyn",
+    "country": "United States",
+    "phone": "718-694-1600",
+    "geo_lat": 40.6903327,
+    "geo_lng": -73.9896449,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=85",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=85"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 10013796,
+   "global_id": "www.nytransitmuseum.org?id=10013796",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=10013796"
+   ],
+   "author": "3",
+   "status": "publish",
+   "date": "2026-04-03 17:04:16",
+   "date_utc": "2026-04-03 21:04:16",
+   "modified": "2026-06-02 14:46:35",
+   "modified_utc": "2026-06-02 18:46:35",
+   "url": "https://www.nytransitmuseum.org/program/anniversary-weekend-rides/2026-07-04/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/10013796",
+   "title": "50th Anniversary Weekend Shuttle Rides",
+   "description": "",
+   "excerpt": "<p>Our vintage cars revive the spirit of the original HH Shuttle, the short shuttle service that once ran between Court Street and Hoyt\u2013Schermerhorn.</p>",
+   "slug": "anniversary-weekend-rides",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/03/468434448_10161151896128843_6072939065538560056_n.webp",
+    "id": 93791,
+    "extension": "webp",
+    "width": 1500,
+    "height": 999,
+    "filesize": 127640,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 200,
+      "mime-type": "image/webp",
+      "filesize": 16626,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/03/468434448_10161151896128843_6072939065538560056_n-300x200.webp"
+     },
+     "large": {
+      "width": 1200,
+      "height": 799,
+      "mime-type": "image/webp",
+      "filesize": 126720,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/03/468434448_10161151896128843_6072939065538560056_n-1200x799.webp"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/webp",
+      "filesize": 5734,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/03/468434448_10161151896128843_6072939065538560056_n-150x100.webp"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-04 10:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "04",
+    "hour": "10",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-04 16:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "04",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-04 14:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "04",
+    "hour": "14",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-04 20:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "04",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Included with Museum admission",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "included-with-museum-admission"
+    ]
+   },
+   "website": "",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Nostalgia Rides",
+     "slug": "nostalgia-rides",
+     "term_group": 0,
+     "term_taxonomy_id": 13,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 41,
+     "filter": "raw",
+     "id": 13,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/13",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Special Event",
+     "slug": "special-event",
+     "term_group": 0,
+     "term_taxonomy_id": 52,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 3,
+     "filter": "raw",
+     "id": 52,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/52",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 85,
+    "author": "3",
+    "status": "publish",
+    "date": "2016-05-10 15:38:19",
+    "date_utc": "2016-05-10 19:38:19",
+    "modified": "2025-11-20 11:38:19",
+    "modified_utc": "2025-11-20 16:38:19",
+    "url": "https://www.nytransitmuseum.org/location/transit-museum/",
+    "venue": "New York Transit Museum, Brooklyn",
+    "slug": "transit-museum",
+    "address": "Corner of Boerum Place & Schermerhorn Street",
+    "city": "Brooklyn",
+    "country": "United States",
+    "phone": "718-694-1600",
+    "geo_lat": 40.6903327,
+    "geo_lng": -73.9896449,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=85",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=85"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 10013797,
+   "global_id": "www.nytransitmuseum.org?id=10013797",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=10013797"
+   ],
+   "author": "3",
+   "status": "publish",
+   "date": "2026-04-03 17:04:16",
+   "date_utc": "2026-04-03 21:04:16",
+   "modified": "2026-06-02 14:46:35",
+   "modified_utc": "2026-06-02 18:46:35",
+   "url": "https://www.nytransitmuseum.org/program/anniversary-weekend-rides/2026-07-05/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/10013797",
+   "title": "50th Anniversary Weekend Shuttle Rides",
+   "description": "",
+   "excerpt": "<p>Our vintage cars revive the spirit of the original HH Shuttle, the short shuttle service that once ran between Court Street and Hoyt\u2013Schermerhorn.</p>",
+   "slug": "anniversary-weekend-rides",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/03/468434448_10161151896128843_6072939065538560056_n.webp",
+    "id": 93791,
+    "extension": "webp",
+    "width": 1500,
+    "height": 999,
+    "filesize": 127640,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 200,
+      "mime-type": "image/webp",
+      "filesize": 16626,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/03/468434448_10161151896128843_6072939065538560056_n-300x200.webp"
+     },
+     "large": {
+      "width": 1200,
+      "height": 799,
+      "mime-type": "image/webp",
+      "filesize": 126720,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/03/468434448_10161151896128843_6072939065538560056_n-1200x799.webp"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/webp",
+      "filesize": 5734,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/03/468434448_10161151896128843_6072939065538560056_n-150x100.webp"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-05 10:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "05",
+    "hour": "10",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-05 16:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "05",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-05 14:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "05",
+    "hour": "14",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-05 20:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "05",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Included with Museum admission",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "included-with-museum-admission"
+    ]
+   },
+   "website": "",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Nostalgia Rides",
+     "slug": "nostalgia-rides",
+     "term_group": 0,
+     "term_taxonomy_id": 13,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 41,
+     "filter": "raw",
+     "id": 13,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/13",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Special Event",
+     "slug": "special-event",
+     "term_group": 0,
+     "term_taxonomy_id": 52,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 3,
+     "filter": "raw",
+     "id": 52,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/52",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 85,
+    "author": "3",
+    "status": "publish",
+    "date": "2016-05-10 15:38:19",
+    "date_utc": "2016-05-10 19:38:19",
+    "modified": "2025-11-20 11:38:19",
+    "modified_utc": "2025-11-20 16:38:19",
+    "url": "https://www.nytransitmuseum.org/location/transit-museum/",
+    "venue": "New York Transit Museum, Brooklyn",
+    "slug": "transit-museum",
+    "address": "Corner of Boerum Place & Schermerhorn Street",
+    "city": "Brooklyn",
+    "country": "United States",
+    "phone": "718-694-1600",
+    "geo_lat": 40.6903327,
+    "geo_lng": -73.9896449,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=85",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=85"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 93098,
+   "global_id": "www.nytransitmuseum.org?id=93098",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=93098"
+   ],
+   "author": "36",
+   "status": "publish",
+   "date": "2026-02-04 11:48:10",
+   "date_utc": "2026-02-04 16:48:10",
+   "modified": "2026-04-01 10:22:09",
+   "modified_utc": "2026-04-01 14:22:09",
+   "url": "https://www.nytransitmuseum.org/program/cityhall-6-10/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/93098",
+   "title": "Jewel in the Crown: Old City Hall Station",
+   "description": "",
+   "excerpt": "<p>Museum members have the opportunity to explore this New York landmark through exclusive guided tours.</p>",
+   "slug": "cityhall-6-10",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n.jpg",
+    "id": 22204,
+    "extension": "jpg",
+    "width": 1732,
+    "height": 1154,
+    "filesize": 325274,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 200,
+      "mime-type": "image/jpeg",
+      "filesize": 14811,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-300x200.jpg"
+     },
+     "large": {
+      "width": 1200,
+      "height": 800,
+      "mime-type": "image/jpeg",
+      "filesize": 127075,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-1200x800.jpg"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 6862,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-150x100.jpg"
+     },
+     "medium_large": {
+      "width": 1024,
+      "height": 683,
+      "mime-type": "image/jpeg",
+      "filesize": 97723,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-1024x683.jpg"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1023,
+      "mime-type": "image/jpeg",
+      "filesize": 194336,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-1536x1023.jpg"
+     },
+     "post-thumbnail": {
+      "width": 370,
+      "height": 247,
+      "mime-type": "image/jpeg",
+      "filesize": 20000,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-370x247.jpg"
+     },
+     "deviox-thumb-huge": {
+      "width": 1170,
+      "height": 658,
+      "mime-type": "image/jpeg",
+      "filesize": 107345,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-1170x658.jpg"
+     },
+     "deviox-thumb-big": {
+      "width": 760,
+      "height": 428,
+      "mime-type": "image/jpeg",
+      "filesize": 52839,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-760x428.jpg"
+     },
+     "deviox-thumb-med": {
+      "width": 640,
+      "height": 465,
+      "mime-type": "image/jpeg",
+      "filesize": 49390,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-640x465.jpg"
+     },
+     "deviox-thumb-tiny": {
+      "width": 90,
+      "height": 90,
+      "mime-type": "image/jpeg",
+      "filesize": 5575,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-90x90.jpg"
+     },
+     "deviox-thumb-masonry-big": {
+      "width": 760,
+      "height": 506,
+      "mime-type": "image/jpeg",
+      "filesize": 59726,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-760x506.jpg"
+     },
+     "deviox-thumb-masonry": {
+      "width": 370,
+      "height": 247,
+      "mime-type": "image/jpeg",
+      "filesize": 20000,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-370x247.jpg"
+     },
+     "deviox-thumb-cub": {
+      "width": 500,
+      "height": 500,
+      "mime-type": "image/jpeg",
+      "filesize": 44930,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-500x500.jpg"
+     },
+     "responsive-100": {
+      "width": 100,
+      "height": 50,
+      "mime-type": "image/jpeg",
+      "filesize": 4916,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-100x50.jpg"
+     },
+     "responsive-150": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 6862,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-150x100.jpg"
+     },
+     "responsive-200": {
+      "width": 200,
+      "height": 133,
+      "mime-type": "image/jpeg",
+      "filesize": 9032,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-200x133.jpg"
+     },
+     "responsive-300": {
+      "width": 300,
+      "height": 200,
+      "mime-type": "image/jpeg",
+      "filesize": 14810,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-300x200.jpg"
+     },
+     "responsive-450": {
+      "width": 450,
+      "height": 300,
+      "mime-type": "image/jpeg",
+      "filesize": 26613,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-450x300.jpg"
+     },
+     "responsive-600": {
+      "width": 640,
+      "height": 480,
+      "mime-type": "image/jpeg",
+      "filesize": 50709,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-640x480.jpg"
+     },
+     "responsive-900": {
+      "width": 960,
+      "height": 640,
+      "mime-type": "image/jpeg",
+      "filesize": 87263,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-960x640.jpg"
+     },
+     "fpw_square": {
+      "width": 200,
+      "height": 200,
+      "mime-type": "image/jpeg",
+      "filesize": 11794,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-200x200.jpg"
+     },
+     "fpw_banner": {
+      "width": 400,
+      "height": 150,
+      "mime-type": "image/jpeg",
+      "filesize": 15211,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-400x150.jpg"
+     },
+     "fpw_big": {
+      "width": 400,
+      "height": 267,
+      "mime-type": "image/jpeg",
+      "filesize": 22253,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-400x267.jpg"
+     },
+     "trx_addons-thumb-small": {
+      "width": 270,
+      "height": 152,
+      "mime-type": "image/jpeg",
+      "filesize": 11839,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-270x152.jpg"
+     },
+     "trx_addons-thumb-portrait": {
+      "width": 370,
+      "height": 493,
+      "mime-type": "image/jpeg",
+      "filesize": 35189,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-370x493.jpg"
+     },
+     "trx_addons-thumb-avatar": {
+      "width": 370,
+      "height": 370,
+      "mime-type": "image/jpeg",
+      "filesize": 28225,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2023/06/48172381_10156257703758843_7769872103645380608_n-370x370.jpg"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-06-10 11:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "10",
+    "hour": "11",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-06-10 12:30:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "10",
+    "hour": "12",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-06-10 15:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "10",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-06-10 16:30:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "10",
+    "hour": "16",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "$50",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "50"
+    ]
+   },
+   "website": "",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Members-Only Programs",
+     "slug": "members-only",
+     "term_group": 0,
+     "term_taxonomy_id": 10,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 236,
+     "filter": "raw",
+     "id": 10,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/10",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Public Programs",
+     "slug": "public-programs",
+     "term_group": 0,
+     "term_taxonomy_id": 6,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 452,
+     "filter": "raw",
+     "id": 6,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/6",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Tours",
+     "slug": "tours",
+     "term_group": 0,
+     "term_taxonomy_id": 7,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 6,
+     "count": 277,
+     "filter": "raw",
+     "id": 7,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/7",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories",
+      "up": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/6"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 92334,
+    "author": "37",
+    "status": "publish",
+    "date": "2025-11-26 16:03:02",
+    "date_utc": "2025-11-26 21:03:02",
+    "modified": "2025-11-26 16:03:02",
+    "modified_utc": "2025-11-26 21:03:02",
+    "url": "https://www.nytransitmuseum.org/location/off-site/",
+    "venue": "Off-Site",
+    "slug": "off-site",
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=92334",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=92334"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 94428,
+   "global_id": "www.nytransitmuseum.org?id=94428",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=94428"
+   ],
+   "author": "36",
+   "status": "publish",
+   "date": "2026-05-14 12:20:05",
+   "date_utc": "2026-05-14 16:20:05",
+   "modified": "2026-05-15 15:35:42",
+   "modified_utc": "2026-05-15 19:35:42",
+   "url": "https://www.nytransitmuseum.org/program/sophie-rivera/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/94428",
+   "title": "Curator Talk: Transit in Sophie Rivera&#8217;s Photography",
+   "description": "",
+   "excerpt": "<p>Learn about Sophie Rivera&#8217;s transit inspired photography from the 1970s-1990s.</p>",
+   "slug": "sophie-rivera",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/05/260420_EMdB_SophieRivera_Installs_G4_05-1-scaled-e1778871280834.jpg",
+    "id": 94451,
+    "extension": "jpg",
+    "width": 752,
+    "height": 475,
+    "filesize": 38062,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 189,
+      "mime-type": "image/jpeg",
+      "filesize": 17430,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/05/260420_EMdB_SophieRivera_Installs_G4_05-1-scaled-e1778871280834-300x189.jpg"
+     },
+     "large": {
+      "width": 1200,
+      "height": 900,
+      "mime-type": "image/jpeg",
+      "filesize": 95320,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/05/260420_EMdB_SophieRivera_Installs_G4_05-1-1200x900.jpg"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 14149,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/05/260420_EMdB_SophieRivera_Installs_G4_05-1-scaled-e1778871280834-150x100.jpg"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1152,
+      "mime-type": "image/jpeg",
+      "filesize": 161105,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/05/260420_EMdB_SophieRivera_Installs_G4_05-1-1536x1152.jpg"
+     },
+     "2048x2048": {
+      "width": 2048,
+      "height": 1536,
+      "mime-type": "image/jpeg",
+      "filesize": 224542,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/05/260420_EMdB_SophieRivera_Installs_G4_05-1-2048x1536.jpg"
+     },
+     "banner": {
+      "width": 1440,
+      "height": 1080,
+      "mime-type": "image/jpeg",
+      "filesize": 126819,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/05/260420_EMdB_SophieRivera_Installs_G4_05-1-1440x1080.jpg"
+     }
+    },
+    "original_image": "260420_EMdB_SophieRivera_Installs_G4_05-1.jpg"
+   },
+   "all_day": false,
+   "start_date": "2026-06-30 14:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "30",
+    "hour": "14",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-06-30 15:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "30",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-06-30 18:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "30",
+    "hour": "18",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-06-30 19:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "30",
+    "hour": "19",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Free",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "0"
+    ]
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": true,
+   "categories": [
+    {
+     "name": "Public Programs",
+     "slug": "public-programs",
+     "term_group": 0,
+     "term_taxonomy_id": 6,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 452,
+     "filter": "raw",
+     "id": 6,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/6",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Virtual Programs",
+     "slug": "virtual-programs",
+     "term_group": 0,
+     "term_taxonomy_id": 16,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 6,
+     "count": 92,
+     "filter": "raw",
+     "id": 16,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/16",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories",
+      "up": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/6"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 18278,
+    "author": "37",
+    "status": "publish",
+    "date": "2020-04-10 11:17:21",
+    "date_utc": "2020-04-10 15:17:21",
+    "modified": "2025-11-19 13:44:08",
+    "modified_utc": "2025-11-19 18:44:08",
+    "url": "https://www.nytransitmuseum.org/location/online/",
+    "venue": "Virtual",
+    "slug": "online",
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=18278",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=18278"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 93034,
+   "global_id": "www.nytransitmuseum.org?id=93034",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=93034"
+   ],
+   "author": "36",
+   "status": "publish",
+   "date": "2026-02-03 16:46:24",
+   "date_utc": "2026-02-03 21:46:24",
+   "modified": "2026-04-21 14:15:45",
+   "modified_utc": "2026-04-21 18:15:45",
+   "url": "https://www.nytransitmuseum.org/program/brooklyn-6-17/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/93034",
+   "title": "Transit Walk: Downtown Brooklyn",
+   "description": "",
+   "excerpt": "<p>On this walking tour, trace the transit evolution of Downtown Brooklyn from ferries to subways.</p>",
+   "slug": "brooklyn-6-17",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/11/2010.20.1.3-9-e1764183914661.jpg",
+    "id": 92330,
+    "extension": "jpg",
+    "width": 850,
+    "height": 686,
+    "filesize": 189186,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 242,
+      "mime-type": "image/jpeg",
+      "filesize": 21393,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/11/2010.20.1.3-9-e1764183914661-300x242.jpg"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 4892,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2025/11/2010.20.1.3-9-e1764183914661-150x100.jpg"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-06-17 11:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "17",
+    "hour": "11",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-06-17 12:30:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "17",
+    "hour": "12",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-06-17 15:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "17",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-06-17 16:30:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "17",
+    "hour": "16",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "$35 \u2013 $40",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "35",
+     "40"
+    ]
+   },
+   "website": "",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": true,
+   "categories": [
+    {
+     "name": "Public Programs",
+     "slug": "public-programs",
+     "term_group": 0,
+     "term_taxonomy_id": 6,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 452,
+     "filter": "raw",
+     "id": 6,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/6",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Tours",
+     "slug": "tours",
+     "term_group": 0,
+     "term_taxonomy_id": 7,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 6,
+     "count": 277,
+     "filter": "raw",
+     "id": 7,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/7",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories",
+      "up": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/6"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 92334,
+    "author": "37",
+    "status": "publish",
+    "date": "2025-11-26 16:03:02",
+    "date_utc": "2025-11-26 21:03:02",
+    "modified": "2025-11-26 16:03:02",
+    "modified_utc": "2025-11-26 21:03:02",
+    "url": "https://www.nytransitmuseum.org/location/off-site/",
+    "venue": "Off-Site",
+    "slug": "off-site",
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=92334",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=92334"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 94436,
+   "global_id": "www.nytransitmuseum.org?id=94436",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=94436"
+   ],
+   "author": "47",
+   "status": "publish",
+   "date": "2026-05-14 13:34:43",
+   "date_utc": "2026-05-14 17:34:43",
+   "modified": "2026-05-14 13:34:43",
+   "modified_utc": "2026-05-14 17:34:43",
+   "url": "https://www.nytransitmuseum.org/program/subway-simulator-sunday-28june/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/94436",
+   "title": "Subway Simulator Sunday",
+   "description": "",
+   "excerpt": "<p>Take a turn at being a Train Operator and experience the NYC subway from a new point of view. </p>",
+   "slug": "subway-simulator-sunday-28june",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-scaled.jpg",
+    "id": 23387,
+    "extension": "jpg",
+    "width": 2560,
+    "height": 1928,
+    "filesize": 360004,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 226,
+      "mime-type": "image/jpeg",
+      "filesize": 35950,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-300x226.jpg"
+     },
+     "large": {
+      "width": 1200,
+      "height": 904,
+      "mime-type": "image/jpeg",
+      "filesize": 115942,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-1200x904.jpg"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 30100,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-150x100.jpg"
+     },
+     "medium_large": {
+      "width": 1024,
+      "height": 683,
+      "mime-type": "image/jpeg",
+      "filesize": 87525,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-1024x683.jpg"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1157,
+      "mime-type": "image/jpeg",
+      "filesize": 164592,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-1536x1157.jpg"
+     },
+     "2048x2048": {
+      "width": 2048,
+      "height": 1542,
+      "mime-type": "image/jpeg",
+      "filesize": 254946,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-2048x1542.jpg"
+     },
+     "post-thumbnail": {
+      "width": 370,
+      "height": 279,
+      "mime-type": "image/jpeg",
+      "filesize": 39219,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-370x279.jpg"
+     },
+     "deviox-thumb-huge": {
+      "width": 1170,
+      "height": 658,
+      "mime-type": "image/jpeg",
+      "filesize": 98618,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-1170x658.jpg"
+     },
+     "deviox-thumb-big": {
+      "width": 760,
+      "height": 428,
+      "mime-type": "image/jpeg",
+      "filesize": 59484,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-760x428.jpg"
+     },
+     "deviox-thumb-med": {
+      "width": 640,
+      "height": 465,
+      "mime-type": "image/jpeg",
+      "filesize": 55384,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-640x465.jpg"
+     },
+     "deviox-thumb-tiny": {
+      "width": 90,
+      "height": 90,
+      "mime-type": "image/jpeg",
+      "filesize": 29068,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-90x90.jpg"
+     },
+     "deviox-thumb-masonry-big": {
+      "width": 760,
+      "height": 572,
+      "mime-type": "image/jpeg",
+      "filesize": 66513,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-760x572.jpg"
+     },
+     "deviox-thumb-masonry": {
+      "width": 370,
+      "height": 279,
+      "mime-type": "image/jpeg",
+      "filesize": 39219,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-370x279.jpg"
+     },
+     "deviox-thumb-cub": {
+      "width": 500,
+      "height": 500,
+      "mime-type": "image/jpeg",
+      "filesize": 52603,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-500x500.jpg"
+     },
+     "responsive-100": {
+      "width": 100,
+      "height": 50,
+      "mime-type": "image/jpeg",
+      "filesize": 28613,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-100x50.jpg"
+     },
+     "responsive-150": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 30023,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-150x100.jpg"
+     },
+     "responsive-200": {
+      "width": 200,
+      "height": 133,
+      "mime-type": "image/jpeg",
+      "filesize": 31471,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-200x133.jpg"
+     },
+     "responsive-300": {
+      "width": 300,
+      "height": 200,
+      "mime-type": "image/jpeg",
+      "filesize": 34915,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-300x200.jpg"
+     },
+     "responsive-450": {
+      "width": 450,
+      "height": 300,
+      "mime-type": "image/jpeg",
+      "filesize": 41696,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-450x300.jpg"
+     },
+     "responsive-600": {
+      "width": 640,
+      "height": 480,
+      "mime-type": "image/jpeg",
+      "filesize": 55662,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-640x480.jpg"
+     },
+     "responsive-900": {
+      "width": 960,
+      "height": 640,
+      "mime-type": "image/jpeg",
+      "filesize": 80744,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-960x640.jpg"
+     },
+     "fpw_square": {
+      "width": 200,
+      "height": 200,
+      "mime-type": "image/jpeg",
+      "filesize": 32988,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-200x200.jpg"
+     },
+     "fpw_banner": {
+      "width": 400,
+      "height": 150,
+      "mime-type": "image/jpeg",
+      "filesize": 34984,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-400x150.jpg"
+     },
+     "fpw_big": {
+      "width": 400,
+      "height": 301,
+      "mime-type": "image/jpeg",
+      "filesize": 40621,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-400x301.jpg"
+     },
+     "trx_addons-thumb-small": {
+      "width": 270,
+      "height": 152,
+      "mime-type": "image/jpeg",
+      "filesize": 33127,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-270x152.jpg"
+     },
+     "trx_addons-thumb-portrait": {
+      "width": 370,
+      "height": 493,
+      "mime-type": "image/jpeg",
+      "filesize": 46681,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-370x493.jpg"
+     },
+     "trx_addons-thumb-avatar": {
+      "width": 370,
+      "height": 370,
+      "mime-type": "image/jpeg",
+      "filesize": 42696,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2024/04/NYTM-Subway-Simulator-Video-Game-1-OpenBVE-370x370.jpg"
+     }
+    },
+    "original_image": "NYTM-Subway-Simulator-Video-Game-1-OpenBVE.jpg"
+   },
+   "all_day": false,
+   "start_date": "2026-06-28 11:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "28",
+    "hour": "11",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-06-28 15:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "28",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-06-28 15:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "28",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-06-28 19:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "28",
+    "hour": "19",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Free",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "0"
+    ]
+   },
+   "website": "",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [],
+   "tags": [],
+   "venue": {
+    "id": 85,
+    "author": "3",
+    "status": "publish",
+    "date": "2016-05-10 15:38:19",
+    "date_utc": "2016-05-10 19:38:19",
+    "modified": "2025-11-20 11:38:19",
+    "modified_utc": "2025-11-20 16:38:19",
+    "url": "https://www.nytransitmuseum.org/location/transit-museum/",
+    "venue": "New York Transit Museum, Brooklyn",
+    "slug": "transit-museum",
+    "address": "Corner of Boerum Place & Schermerhorn Street",
+    "city": "Brooklyn",
+    "country": "United States",
+    "phone": "718-694-1600",
+    "geo_lat": 40.6903327,
+    "geo_lng": -73.9896449,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=85",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=85"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 94409,
+   "global_id": "www.nytransitmuseum.org?id=94409",
+   "global_id_lineage": [
+    "www.nytransitmuseum.org?id=94409"
+   ],
+   "author": "47",
+   "status": "publish",
+   "date": "2026-05-20 10:48:16",
+   "date_utc": "2026-05-20 14:48:16",
+   "modified": "2026-05-20 10:48:16",
+   "modified_utc": "2026-05-20 14:48:16",
+   "url": "https://www.nytransitmuseum.org/program/special-day-june-20/",
+   "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/94409",
+   "title": "Special Day",
+   "description": "",
+   "excerpt": "<p>Children with developmental disabilities or autism are invited to join us with their families.</p>",
+   "slug": "special-day-june-20",
+   "image": {
+    "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/02/Music-3.23.25-scaled-e1770755362405.jpg",
+    "id": 93177,
+    "extension": "jpg",
+    "width": 1000,
+    "height": 750,
+    "filesize": 177246,
+    "sizes": {
+     "medium": {
+      "width": 300,
+      "height": 225,
+      "mime-type": "image/jpeg",
+      "filesize": 21191,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/02/Music-3.23.25-300x225.jpg"
+     },
+     "large": {
+      "width": 1200,
+      "height": 900,
+      "mime-type": "image/jpeg",
+      "filesize": 252121,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/02/Music-3.23.25-1200x900.jpg"
+     },
+     "thumbnail": {
+      "width": 150,
+      "height": 100,
+      "mime-type": "image/jpeg",
+      "filesize": 5912,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/02/Music-3.23.25-150x100.jpg"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1152,
+      "mime-type": "image/jpeg",
+      "filesize": 388036,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/02/Music-3.23.25-1536x1152.jpg"
+     },
+     "2048x2048": {
+      "width": 2048,
+      "height": 1536,
+      "mime-type": "image/jpeg",
+      "filesize": 637680,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/02/Music-3.23.25-2048x1536.jpg"
+     },
+     "banner": {
+      "width": 1440,
+      "height": 1080,
+      "mime-type": "image/jpeg",
+      "filesize": 346639,
+      "url": "https://www.nytransitmuseum.org/wp-content/uploads/2026/02/Music-3.23.25-1440x1080.jpg"
+     }
+    },
+    "original_image": "Music-3.23.25.jpg"
+   },
+   "all_day": false,
+   "start_date": "2026-06-20 09:30:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "20",
+    "hour": "09",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "end_date": "2026-06-20 11:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "20",
+    "hour": "11",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-06-20 13:30:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "20",
+    "hour": "13",
+    "minutes": "30",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-06-20 15:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "06",
+    "day": "20",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Free",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": [
+     "0"
+    ]
+   },
+   "website": "https://www.nytransitmuseum.org/program/special-day-summer2026",
+   "show_map": false,
+   "show_map_link": false,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Access Programs",
+     "slug": "access-program",
+     "term_group": 0,
+     "term_taxonomy_id": 12,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 32,
+     "filter": "raw",
+     "id": 12,
+     "urls": {
+      "self": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories/12",
+      "collection": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [],
+   "venue": {
+    "id": 85,
+    "author": "3",
+    "status": "publish",
+    "date": "2016-05-10 15:38:19",
+    "date_utc": "2016-05-10 19:38:19",
+    "modified": "2025-11-20 11:38:19",
+    "modified_utc": "2025-11-20 16:38:19",
+    "url": "https://www.nytransitmuseum.org/location/transit-museum/",
+    "venue": "New York Transit Museum, Brooklyn",
+    "slug": "transit-museum",
+    "address": "Corner of Boerum Place & Schermerhorn Street",
+    "city": "Brooklyn",
+    "country": "United States",
+    "phone": "718-694-1600",
+    "geo_lat": 40.6903327,
+    "geo_lng": -73.9896449,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "www.nytransitmuseum.org?id=85",
+    "global_id_lineage": [
+     "www.nytransitmuseum.org?id=85"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  }
+ ],
+ "rest_url": "https://www.nytransitmuseum.org/wp-json/tribe/events/v1/events/",
+ "total": 26,
+ "total_pages": 1
+}
