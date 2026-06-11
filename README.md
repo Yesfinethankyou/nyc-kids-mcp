@@ -301,10 +301,13 @@ Adapters with real descriptions, URLs, age ranges:
   workshops, vintage-train rides.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
+- ❌ **Coney Island USA** — *rejected.* Working Squarespace feed, but the
+  calendar is adult programming (burlesque/sideshow) and the Mermaid
+  Parade isn't published through it.
 
 See `SOURCES-BACKLOG.md` for additional candidate venues under research
-(Brooklyn Cyclones, Coney Island USA, Brooklyn Army Terminal, Domino Park,
-Industry City, Governors Island).
+(Brooklyn Cyclones, Brooklyn Army Terminal, Domino Park, Industry City,
+Governors Island).
 
 These land alongside `nyc_permitted_events` rather than replace it; permit
 data is a useful denominator even with its thinness.

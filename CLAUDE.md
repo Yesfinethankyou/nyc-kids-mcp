@@ -244,6 +244,11 @@ Known accepted residuals (see `git log` for the security-audit commit):
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
+  - **Rejected — feed works, content isn't kid-relevant:** Coney Island USA.
+    Squarespace JSON confirmed working, but the calendar is adult
+    programming wholesale (burlesque/sideshow/drag; ~2% historical kid
+    yield) and the Mermaid Parade is published outside the event feed.
+    See SOURCES-BACKLOG.md § 3 for the evidence and revisit conditions.
 - **Phase 2 backlog — venue sources (see `SOURCES-BACKLOG.md` for full
   probe instructions and data shapes):**
   - **CONFIRMED — ready to build (priority order):**
@@ -251,8 +256,6 @@ Known accepted residuals (see `git log` for the security-audit commit):
        Game schedule confirmed; themed nights (Star Wars Night etc.) are NOT
        in the Stats API — stored in Contentful CMS, only JS-rendered. Needs
        research before building (see SOURCES-BACKLOG.md § "The themed-night problem").
-    2. Coney Island USA — Squarespace `?format=json`, `upcoming` array,
-       epoch-ms timestamps. Reuses Mommy Poppins JSON-LD path.
   - **CONFIRMED — ready to build (continued):**
     5. Brooklyn Army Terminal — Drupal, single-page HTML, 27 events.
        Needs `curl_cffi`. Filter out "Live Music Concert" events (adult EDM,

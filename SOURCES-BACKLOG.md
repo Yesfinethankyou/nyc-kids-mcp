@@ -136,23 +136,31 @@ Revisit in Phase 3+ if a simpler path turns up.
     hard exclude that overrides any allowlist hit.
   - ~104 kid-relevant events in a 60-day window (verified live).
 
-### 3. Coney Island USA
+### 3. Coney Island USA — ❌ REJECTED (feed works; content isn't kid-relevant)
 
-- **Status:** CONFIRMED
+- **Status:** REJECTED 2026-06-10 after full content review. The endpoint is
+  technically fine — this is a content rejection, not a technical one.
 - **Source:** Squarespace — `https://www.coneyisland.com/event?format=json`
-- **Format:** Squarespace JSON, `upcoming` array (not `items`)
-- **Data shape:** each item has `title`, `startDate` (epoch ms), `location`
-  (string "1208 Surf Avenue, Brooklyn, NY, 11224"), `fullUrl` (relative slug),
-  `body` / `excerpt` for description.
-- **Fetch:**
-  ```bash
-  curl -s "https://www.coneyisland.com/event?format=json"
-  ```
-- **Build notes:** `external_id` = item `id` or slug. Convert epoch-ms to
-  datetime. Prefix `fullUrl` with `https://www.coneyisland.com` for absolute URL.
-  Venue = "Coney Island USA", borough = Brooklyn.
-- **Note:** This is **Coney Island USA** (sideshow, Mermaid Parade, film fest).
-  Not Luna Park (park hours only, not events).
+- **What the probe found (live capture, 20 upcoming + 30 past events):**
+  - **Zero kid-relevant events upcoming** (June–Sept window): the calendar
+    is Burlesque at the Beach, Prideshow at the Sideshow, adult variety,
+    drag film nights, sideshow classes, and lectures — wholesale.
+  - Past 30 events: same profile. Exactly one kids' item ("Congress of
+    Curious Peoples: Curious Kids Workshop") and one CANCELED youth show.
+    ~2% historical kid yield.
+  - **The Mermaid Parade is NOT in this feed** — absent from both arrays
+    nine days before the 2026 parade. The flagship family event is
+    published elsewhere on the site, so "build it and the parade will
+    flow in" does not hold.
+- **Corrections to the original research, if ever revisited:** `location`
+  is an object (mapLat/mapLng/addressTitle), not a string; venue varies
+  per-event (Coney Island Museum / Coney Island USA / Freak Bar);
+  Squarespace `id` is per-occurrence (recurring titles get distinct ids);
+  plain curl with a browser UA works — no curl_cffi strictly needed.
+- **Revisit if:** they start publishing family programming (Curious Kids,
+  all-ages matinees) regularly, or the Mermaid Parade/film festival move
+  into the event collection. A strict title/category allowlist version is
+  ~20 minutes of work on top of the Squarespace fast-path if that happens.
 
 ### 4. Prospect Park Alliance — ✅ BUILT (live)
 
