@@ -1,15 +1,16 @@
 # Future source backlog (candidates — verify before building)
 
-Research notes for NYC venues proposed for future Phase 2 integration.
-Before any CANDIDATE becomes a real source, run the verification probe
-**from outside the sandbox** (your laptop or the NAS) and update its
-status to `CONFIRMED` or `REJECTED`. Only then run the `source-adder` recipe.
+Research notes for NYC venues proposed for Phase 2 integration. Probe a
+CANDIDATE, confirm its format + endpoint, then run the `source-adder` recipe.
+Entries are grouped by status: **Ready to build**, **Low confidence**,
+**Built** (as-built notes), and **Rejected**.
 
 ## Status legend
 
-- `CANDIDATE` — plausible source found, format guessed or partially confirmed in-sandbox.
-- `CONFIRMED` — probed from outside the sandbox; format + endpoint verified.
-- `REJECTED` — probed, no usable structured source.
+- `CANDIDATE` — plausible source found, format guessed or partially confirmed.
+- `CONFIRMED` — probed; format + endpoint verified.
+- `BUILT` — shipped as an enabled source; entry kept for as-built history.
+- `REJECTED` — probed, but no usable feed OR the content isn't kid-relevant.
 
 ## Cross-cutting notes
 
@@ -18,10 +19,14 @@ Governors Island, Coney Island, Brooklyn Army Terminal) return 403 to plain
 fetchers — expect to need `curl_cffi` (`impersonate="chrome"`) for all of
 them. The MLB Stats API is the sole exception (it's a JSON API, not a page).
 
-**Sandbox egress.** Cloud/web Claude sessions can't reach most of these
-domains — capture fixtures on your laptop or NAS, then bring them in.
+**Sandbox egress varies — try first, don't assume.** Earlier guidance here
+said cloud/web sessions can't reach these domains. That's been wrong in
+practice: green-wood.com, prospectpark.org, nytransitmuseum.org, and
+coneyisland.com were all probed and fixture-captured directly from a web
+session. Try the probe from the sandbox first; only fall back to capturing
+on your laptop/NAS if a specific domain is actually blocked.
 
-## How to verify (run OUTSIDE the sandbox)
+## How to verify
 
 ```python
 # pip install curl_cffi
@@ -50,9 +55,9 @@ for u in [
 
 ---
 
-## Priority 1 — CONFIRMED, ready to build
+## Ready to build
 
-### 1. Brooklyn Cyclones
+### Brooklyn Cyclones
 
 - **Status:** CONFIRMED (game schedule only) / NEEDS RESEARCH (themed nights)
 - **Source:** MLB Stats API — `https://statsapi.mlb.com/api/v1/schedule`
@@ -116,88 +121,7 @@ Revisit in Phase 3+ if a simpler path turns up.
   Delivery API (`cdn.contentful.com/spaces/{space}/entries?content_type=promotion&...`)
   is the cleanest structured path.
 
-### 2. Green-Wood Cemetery — ✅ BUILT (live)
-
-- **Status:** BUILT — shipped as source `greenwood_cemetery`
-  (`src/nyc_events/sources/greenwood_cemetery.py`).
-- **Source:** WordPress + The Events Calendar REST API
-- **Endpoint:** `https://www.green-wood.com/wp-json/tribe/events/v1/events`
-- **Pagination:** `?per_page=50&page=N`, follow `next_rest_url` until absent.
-- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — plain httpx would 403.
-- **As-built notes (differ from original research):**
-  - `cost` is **always empty** on both the list and single-event endpoints
-    (`cost_details.values` is `[]`), so price is `UNKNOWN` for all events.
-    Pricing lives in a ticketing widget the API doesn't expose. The
-    cost→Price mapping is kept for when/if upstream populates it.
-  - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
-  - Kid-relevance: keyword allowlist (family, nature, music, storytelling,
-    holidays, film, tour, etc.) + soft blocklist (gala, cocktail, donor,
-    adults only). `members only` / `members-only` in the **title** is a
-    hard exclude that overrides any allowlist hit.
-  - ~104 kid-relevant events in a 60-day window (verified live).
-
-### 3. Coney Island USA — ❌ REJECTED (feed works; content isn't kid-relevant)
-
-- **Status:** REJECTED 2026-06-10 after full content review. The endpoint is
-  technically fine — this is a content rejection, not a technical one.
-- **Source:** Squarespace — `https://www.coneyisland.com/event?format=json`
-- **What the probe found (live capture, 20 upcoming + 30 past events):**
-  - **Zero kid-relevant events upcoming** (June–Sept window): the calendar
-    is Burlesque at the Beach, Prideshow at the Sideshow, adult variety,
-    drag film nights, sideshow classes, and lectures — wholesale.
-  - Past 30 events: same profile. Exactly one kids' item ("Congress of
-    Curious Peoples: Curious Kids Workshop") and one CANCELED youth show.
-    ~2% historical kid yield.
-  - **The Mermaid Parade is NOT in this feed** — absent from both arrays
-    nine days before the 2026 parade. The flagship family event is
-    published elsewhere on the site, so "build it and the parade will
-    flow in" does not hold.
-- **Corrections to the original research, if ever revisited:** `location`
-  is an object (mapLat/mapLng/addressTitle), not a string; venue varies
-  per-event (Coney Island Museum / Coney Island USA / Freak Bar);
-  Squarespace `id` is per-occurrence (recurring titles get distinct ids);
-  plain curl with a browser UA works — no curl_cffi strictly needed.
-- **Revisit if:** they start publishing family programming (Curious Kids,
-  all-ages matinees) regularly, or the Mermaid Parade/film festival move
-  into the event collection. A strict title/category allowlist version is
-  ~20 minutes of work on top of the Squarespace fast-path if that happens.
-
-### 4. Prospect Park Alliance — ✅ BUILT (live)
-
-- **Status:** BUILT — shipped as source `prospect_park`
-  (`src/nyc_events/sources/prospect_park.py`).
-- **Source:** WordPress + The Events Calendar REST API
-- **Endpoint:** `https://www.prospectpark.org/wp-json/tribe/events/v1/events`
-- **Pagination:** `?per_page=50&page=N`, follow `next_rest_url` until absent.
-- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — Cloudflare blocks plain
-  fetchers.
-- **As-built notes (differ from original research):**
-  - **`external_id = str(id)`, NOT slug-from-url.** The original research
-    claimed recurring events share a Tribe `id`; live verification
-    (2026-06, 456 events / 60-day window) showed the Tribe `id` IS
-    per-occurrence — 456 distinct ids and 456 distinct dated URL slugs.
-    Recurring events get a new id per occurrence (e.g. Wednesday
-    Greenmarket: 10000742, 10000743, …). No `:start.isoformat()` suffix
-    needed.
-  - Category filter as researched: "Kids", "Audubon Center", "Carousel",
-    "Lefferts Historic House", "Nature Programs", "Film",
-    "Performing Arts", "Education" — all names verified live (Kids=124,
-    Audubon=176, Nature=95, Lefferts=107, Carousel=17, Education=18,
-    Performing Arts=8, Film=4 in a 60-day window; counts are
-    per-occurrence, much higher than the original per-series counts).
-  - Defensive title hard-exclude ("21+", "adults only", "members only")
-    overrides any included category. No live events currently trigger it —
-    the included categories are clean (checked for adult-content leakage).
-  - `cost` is populated (unlike Green-Wood): "Free" variants → FREE,
-    `$` → PAID, "Prices Vary"/empty → UNKNOWN.
-  - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
-  - Venue always empty upstream as researched — hardcoded
-    venue = "Prospect Park", borough = BROOKLYN. No lat/lng, no age range.
-  - ~307 kid-relevant events of 456 total in a 60-day window (verified live).
-
----
-
-### 5. Brooklyn Army Terminal
+### Brooklyn Army Terminal
 
 - **Status:** CONFIRMED
 - **Source:** Drupal (NYCEDC site) — `https://brooklynarmyterminal.com/events`
@@ -236,10 +160,109 @@ Revisit in Phase 3+ if a simpler path turns up.
   borough = BROOKLYN. All community events are free; concerts are PAID —
   set price based on whether the external link is to dice.fm/posh.vip.
   Fetch: `curl_cffi` GET of the single events page, parse with selectolax.
+  Full-window single-page fetch → set `window_days` for missing-detection.
 
 ---
 
-### 6. New York Transit Museum — ✅ BUILT (live)
+## Low confidence — no structured feed found, deprioritized
+
+### Industry City
+
+- **Status:** CANDIDATE (low — custom headless CMS)
+- **Source:** `https://industrycity.com/events/`
+- **Finding (in-sandbox probe):** custom-built site by Streetsense design firm.
+  Not WordPress, not Squarespace. JS-rendered event list with a "Load more"
+  button. No wp-json, no iCal, no structured feed detected.
+- **Verify:** run the generic probe; check if there's a hidden XHR endpoint
+  the JS calls (inspect Network tab in browser devtools).
+- **Outlook:** likely requires scraping rendered HTML or reverse-engineering
+  an internal API. Fragile. Deprioritize unless the XHR API turns up.
+
+### Domino Park
+
+- **Status:** CANDIDATE (low — Sanity headless CMS)
+- **Source:** `https://www.dominopark.com/events`
+- **Finding:** Sanity CMS (CDN: `sanity-prod-domino-park.b-cdn.net`). Events
+  server-rendered but no public structured feed or iCal found. Sanity has a
+  public GROQ API but only if the project allows anonymous reads — unconfirmed.
+- **Verify:** check if `https://www.dominopark.com/api/events` or similar
+  exists; look for Sanity project ID in page source to attempt GROQ query.
+- **Outlook:** likely requires HTML scraping.
+
+### Governors Island
+
+- **Status:** CANDIDATE (low — custom/unknown CMS)
+- **Source:** `https://govisland.com/calendar`
+- **Finding:** custom site (S3-hosted assets, built by Reflexions design firm).
+  No WordPress, no Squarespace, no JSON-LD, no iCal link visible.
+  Events may be server-rendered but no API surface found.
+- **Verify:** inspect Network tab in browser devtools for XHR calls; check
+  `govisland.com/wp-json/` (unlikely but worth a try); check doNYC mirror
+  (`donyc.com/venues/governors-island`) as an aggregator fallback.
+- **Outlook:** likely scraping only. Heavy public/family programming makes it
+  worth one more verification pass before giving up.
+
+---
+
+## Built — research vs. as-built
+
+Shipped sources, kept here for the "research said X, reality was Y" record.
+Source code is authoritative; these notes capture the surprises.
+
+### Green-Wood Cemetery — ✅ BUILT (live)
+
+- **Status:** BUILT — shipped as source `greenwood_cemetery`
+  (`src/nyc_events/sources/greenwood_cemetery.py`).
+- **Source:** WordPress + The Events Calendar REST API
+- **Endpoint:** `https://www.green-wood.com/wp-json/tribe/events/v1/events`
+- **Pagination:** `?per_page=50&page=N`, follow `next_rest_url` until absent.
+- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — plain httpx would 403.
+- **As-built notes (differ from original research):**
+  - `cost` is **always empty** on both the list and single-event endpoints
+    (`cost_details.values` is `[]`), so price is `UNKNOWN` for all events.
+    Pricing lives in a ticketing widget the API doesn't expose. The
+    cost→Price mapping is kept for when/if upstream populates it.
+  - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
+  - Kid-relevance: keyword allowlist (family, nature, music, storytelling,
+    holidays, film, tour, etc.) + soft blocklist (gala, cocktail, donor,
+    adults only). `members only` / `members-only` in the **title** is a
+    hard exclude that overrides any allowlist hit.
+  - ~104 kid-relevant events in a 60-day window (verified live).
+
+### Prospect Park Alliance — ✅ BUILT (live)
+
+- **Status:** BUILT — shipped as source `prospect_park`
+  (`src/nyc_events/sources/prospect_park.py`).
+- **Source:** WordPress + The Events Calendar REST API
+- **Endpoint:** `https://www.prospectpark.org/wp-json/tribe/events/v1/events`
+- **Pagination:** `?per_page=50&page=N`, follow `next_rest_url` until absent.
+- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — Cloudflare blocks plain
+  fetchers.
+- **As-built notes (differ from original research):**
+  - **`external_id = str(id)`, NOT slug-from-url.** The original research
+    claimed recurring events share a Tribe `id`; live verification
+    (2026-06, 456 events / 60-day window) showed the Tribe `id` IS
+    per-occurrence — 456 distinct ids and 456 distinct dated URL slugs.
+    Recurring events get a new id per occurrence (e.g. Wednesday
+    Greenmarket: 10000742, 10000743, …). No `:start.isoformat()` suffix
+    needed.
+  - Category filter as researched: "Kids", "Audubon Center", "Carousel",
+    "Lefferts Historic House", "Nature Programs", "Film",
+    "Performing Arts", "Education" — all names verified live (Kids=124,
+    Audubon=176, Nature=95, Lefferts=107, Carousel=17, Education=18,
+    Performing Arts=8, Film=4 in a 60-day window; counts are
+    per-occurrence, much higher than the original per-series counts).
+  - Defensive title hard-exclude ("21+", "adults only", "members only")
+    overrides any included category. No live events currently trigger it —
+    the included categories are clean (checked for adult-content leakage).
+  - `cost` is populated (unlike Green-Wood): "Free" variants → FREE,
+    `$` → PAID, "Prices Vary"/empty → UNKNOWN.
+  - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
+  - Venue always empty upstream as researched — hardcoded
+    venue = "Prospect Park", borough = BROOKLYN. No lat/lng, no age range.
+  - ~307 kid-relevant events of 456 total in a 60-day window (verified live).
+
+### New York Transit Museum — ✅ BUILT (live)
 
 - **Status:** BUILT — shipped as source `ny_transit_museum`
   (`src/nyc_events/sources/ny_transit_museum.py`).
@@ -281,40 +304,37 @@ Revisit in Phase 3+ if a simpler path turns up.
 
 ---
 
-## Priority 3 — Low confidence, deprioritize
+## Rejected
 
-### 5. Industry City
+### Coney Island USA — ❌ REJECTED (feed works; content isn't kid-relevant)
 
-- **Status:** CANDIDATE (low — custom headless CMS)
-- **Source:** `https://industrycity.com/events/`
-- **Finding (in-sandbox probe):** custom-built site by Streetsense design firm.
-  Not WordPress, not Squarespace. JS-rendered event list with a "Load more"
-  button. No wp-json, no iCal, no structured feed detected.
-- **Verify:** run the generic probe; check if there's a hidden XHR endpoint
-  the JS calls (inspect Network tab in browser devtools).
-- **Outlook:** likely requires scraping rendered HTML or reverse-engineering
-  an internal API. Fragile. Deprioritize unless the XHR API turns up.
+- **Status:** REJECTED 2026-06-10 after full content review. The endpoint is
+  technically fine — this is a content rejection, not a technical one.
+- **Source:** Squarespace — `https://www.coneyisland.com/event?format=json`
+- **What the probe found (live capture, 20 upcoming + 30 past events):**
+  - **Zero kid-relevant events upcoming** (June–Sept window): the calendar
+    is Burlesque at the Beach, Prideshow at the Sideshow, adult variety,
+    drag film nights, sideshow classes, and lectures — wholesale.
+  - Past 30 events: same profile. Exactly one kids' item ("Congress of
+    Curious Peoples: Curious Kids Workshop") and one CANCELED youth show.
+    ~2% historical kid yield.
+  - **The Mermaid Parade is NOT in this feed** — absent from both arrays
+    nine days before the 2026 parade. The flagship family event is
+    published elsewhere on the site, so "build it and the parade will
+    flow in" does not hold.
+- **Corrections to the original research, if ever revisited:** `location`
+  is an object (mapLat/mapLng/addressTitle), not a string; venue varies
+  per-event (Coney Island Museum / Coney Island USA / Freak Bar);
+  Squarespace `id` is per-occurrence (recurring titles get distinct ids);
+  plain curl with a browser UA works — no curl_cffi strictly needed.
+- **Revisit if:** they start publishing family programming (Curious Kids,
+  all-ages matinees) regularly, or the Mermaid Parade/film festival move
+  into the event collection. A strict title/category allowlist version is
+  ~20 minutes of work on top of the Squarespace fast-path if that happens.
 
-### 6. Domino Park
+### Time Out NY Kids — ❌ REJECTED (no structured feed)
 
-- **Status:** CANDIDATE (low — Sanity headless CMS)
-- **Source:** `https://www.dominopark.com/events`
-- **Finding:** Sanity CMS (CDN: `sanity-prod-domino-park.b-cdn.net`). Events
-  server-rendered but no public structured feed or iCal found. Sanity has a
-  public GROQ API but only if the project allows anonymous reads — unconfirmed.
-- **Verify:** check if `https://www.dominopark.com/api/events` or similar
-  exists; look for Sanity project ID in page source to attempt GROQ query.
-- **Outlook:** likely requires HTML scraping. Lower priority than Priority 2.
-
-### 7. Governors Island
-
-- **Status:** CANDIDATE (low — custom/unknown CMS)
-- **Source:** `https://govisland.com/calendar`
-- **Finding:** custom site (S3-hosted assets, built by Reflexions design firm).
-  No WordPress, no Squarespace, no JSON-LD, no iCal link visible.
-  Events may be server-rendered but no API surface found.
-- **Verify:** inspect Network tab in browser devtools for XHR calls; check
-  `govisland.com/wp-json/` (unlikely but worth a try); check doNYC mirror
-  (`donyc.com/venues/governors-island`) as an aggregator fallback.
-- **Outlook:** likely scraping only. Heavy public/family programming makes it
-  worth one more verification pass before giving up.
+- **Status:** REJECTED. JS-rendered editorial site: no JSON-LD, no API, no
+  sitemap with events. Would need a headless browser — out of scope for
+  Phase 2. Stub kept at `src/nyc_events/sources/timeout_nykids.py` as a
+  tombstone (raises `NotImplementedError`); don't implement or delete it.

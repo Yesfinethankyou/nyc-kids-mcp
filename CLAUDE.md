@@ -248,7 +248,8 @@ Known accepted residuals (see `git log` for the security-audit commit):
     Squarespace JSON confirmed working, but the calendar is adult
     programming wholesale (burlesque/sideshow/drag; ~2% historical kid
     yield) and the Mermaid Parade is published outside the event feed.
-    See SOURCES-BACKLOG.md § 3 for the evidence and revisit conditions.
+    See the Coney Island USA entry in SOURCES-BACKLOG.md (Rejected section)
+    for the evidence and revisit conditions.
 - **Phase 2 backlog — venue sources (see `SOURCES-BACKLOG.md` for full
   probe instructions and data shapes):**
   - **CONFIRMED — ready to build (priority order):**

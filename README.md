@@ -13,8 +13,10 @@ tools — designed for use from the Claude mobile app while out with a kid.
   Brooklyn Public Library, Brooklyn Children's Museum, Green-Wood Cemetery
   (~104 events/60d), Prospect Park Alliance (~307 events/60d), New York
   Transit Museum (~10 events/60d) — real descriptions, URLs, and (where
-  upstream provides them) age ranges, coordinates, prices. Time Out NY Kids rejected (no event feed without a
-  headless browser). More venues in `SOURCES-BACKLOG.md`.
+  upstream provides them) age ranges, coordinates, prices. Rejected: Time
+  Out NY Kids (no event feed without a headless browser) and Coney Island
+  USA (feed works, but the calendar is adult programming). More venues in
+  `SOURCES-BACKLOG.md`.
 
 **Why "Permitted Events" and not "Parks":** the spec originally named the
 NYC Parks Events Listing (`fudw-fgrp`) SODA dataset, but it's been frozen
