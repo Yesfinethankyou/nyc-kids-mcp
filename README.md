@@ -314,9 +314,10 @@ Adapters with real descriptions, URLs, age ranges:
   calendar is adult programming (burlesque/sideshow) and the Mermaid
   Parade isn't published through it.
 
-See `SOURCES-BACKLOG.md` for additional candidate venues under research
-(Brooklyn Cyclones, Brooklyn Army Terminal, Domino Park, Industry City,
-Governors Island).
+See `SOURCES-BACKLOG.md` for additional candidate venues. The remaining ones
+(Domino Park, Industry City, Governors Island) are deprioritized for lack of
+a structured feed; Brooklyn Cyclones is deferred to Phase 3 (its themed-night
+data needs a headless browser).
 
 These land alongside `nyc_permitted_events` rather than replace it; permit
 data is a useful denominator even with its thinness.
