@@ -44,10 +44,14 @@ def main() -> int:
             try:
                 events = list(src.fetch())
             except Exception as exc:  # noqa: BLE001 — surface the failure, keep going
-                failures.append(f"{src.name}: {exc!r}")
+                failures.append(f"{src.name}: fetch failed: {exc!r}")
                 continue
-            baseline = db.count_future_events(conn, src.name, run_start)
-            ins, upd = db.upsert_events(conn, events)
+            try:
+                baseline = db.count_future_events(conn, src.name, run_start)
+                ins, upd = db.upsert_events(conn, events)
+            except Exception as exc:  # noqa: BLE001 — one bad source must not abort the run
+                failures.append(f"{src.name}: upsert failed: {exc!r}")
+                continue
             total_in += ins
             total_up += upd
             print(f"{src.name}: {ins} inserted, {upd} updated ({len(events)} fetched)")
