@@ -223,4 +223,4 @@ def test_full_window_sources_opt_in():
         if cls is not MommyPoppinsSource
     }
     assert all(days == 60 for days in opted_in.values()), opted_in
-    assert len(opted_in) == 6
+    assert len(opted_in) == 7

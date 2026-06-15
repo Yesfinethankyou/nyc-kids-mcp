@@ -240,7 +240,8 @@ Known accepted residuals (see `git log` for the security-audit commit):
 - **Phase 2 (in progress):** editorial scrapers — real descriptions, URLs,
   age ranges. See `.claude/agents/source-adder.md` for the recipe.
   - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood
-    Cemetery, Prospect Park Alliance, New York Transit Museum.
+    Cemetery, Prospect Park Alliance, New York Transit Museum, Brooklyn
+    Army Terminal.
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
@@ -257,10 +258,10 @@ Known accepted residuals (see `git log` for the security-audit commit):
        Game schedule confirmed; themed nights (Star Wars Night etc.) are NOT
        in the Stats API — stored in Contentful CMS, only JS-rendered. Needs
        research before building (see SOURCES-BACKLOG.md § "The themed-night problem").
-  - **CONFIRMED — ready to build (continued):**
-    5. Brooklyn Army Terminal — Drupal, single-page HTML, 27 events.
-       Needs `curl_cffi`. Filter out "Live Music Concert" events (adult EDM,
-       21+) — ~13 of 27. ~14 kid-relevant community events remain.
+  - **BUILT (live):** Brooklyn Army Terminal — single-page HTML scrape via
+    `curl_cffi`. Filters out "Live Music Concert" 21+ EDM shows. As built
+    (2026-06-15): 24 cards → 12 dropped, 12 kept kid-relevant community
+    events. See SOURCES-BACKLOG.md as-built block.
   - **Deprioritized — no structured feed found:**
     5. Industry City — custom headless CMS, JS-rendered, no API surface.
     6. Domino Park — Sanity CMS, no public feed confirmed.

@@ -123,7 +123,9 @@ Revisit in Phase 3+ if a simpler path turns up.
 
 ### Brooklyn Army Terminal
 
-- **Status:** CONFIRMED
+- **Status:** BUILT — shipped as source `brooklyn_army_terminal`
+  (`src/nyc_events/sources/brooklyn_army_terminal.py`). See the as-built
+  block under "Built — research vs. as-built" below.
 - **Source:** Drupal (NYCEDC site) — `https://brooklynarmyterminal.com/events`
 - **Auth:** Requires `curl_cffi` (`impersonate="chrome"`) — Cloudflare blocks
   plain httpx/curl.
@@ -301,6 +303,43 @@ Source code is authoritative; these notes capture the surprises.
   - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
   - No age fields upstream (Transit Tots is toddler-aimed but unstructured).
   - 10 kid-relevant of 26 total in a 60-day window (verified live).
+
+### Brooklyn Army Terminal — ✅ BUILT (live)
+
+- **Status:** BUILT — shipped as source `brooklyn_army_terminal`
+  (`src/nyc_events/sources/brooklyn_army_terminal.py`).
+- **Source:** Single-page server-rendered HTML —
+  `https://brooklynarmyterminal.com/events`. No pagination.
+- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — Cloudflare blocks plain
+  fetchers. The `www.` host 403s; the non-www host is correct.
+- **Parse:** selectolax on `.events-full-width__grid-card` cards. Date from
+  `.day` / `.month` / `.year`; start time from `.time`; title from
+  `.card__title`; description from `.card__subtitle`; URL from the card's
+  `<a href>` when present.
+- **As-built notes (verified live 2026-06-15 during the build):**
+  - **Counts:** 24 cards on the captured page (matches live), **12 dropped**
+    "Live Music Concert" 21+ EDM shows, **12 kept** community/family events —
+    NOT the ~27-total / ~14-kept the original research estimated (the page
+    shrank between 2026-06-06 research and the 2026-06-15 build). The
+    filter rule (title startswith "Live Music Concert") is unchanged.
+  - **`external_id = None`** as researched — there is no per-event id and
+    most cards have no detail URL, so `compute_id` falls back to
+    `title|venue|date`. Verified the 12 kept events produce 12 distinct ids
+    (no two kept community events share a date+title on the captured page).
+  - **`url`** is the card's external `<a href>` when present (Rooftop Films
+    calendar, a Facebook page, artbuilt.org) and `None` otherwise. The
+    dice.fm / posh.vip links only appear on the dropped concert cards.
+  - **Price:** all 12 kept events are `FREE`. The dice.fm/posh.vip → `PAID`
+    rule is kept defensively but never fires on a kept card after filtering.
+  - **Time parsing:** `.time` is a range like "1:00-7:00pm" /
+    "10:00am-2:00pm"; we parse the START only and borrow am/pm from the end
+    of the range when the start omits it. Unparseable/empty time → 00:00
+    (all-day). Times stored naive (page wall-clock, America/New_York).
+  - **`window_days = 60`** — full-window single-page re-fetch every run, so
+    it opts into missing-event (possible-cancellation) detection.
+  - Venue = "Brooklyn Army Terminal", borough = BROOKLYN (hardcoded). No
+    lat/lng, no age range, no end time (`end_dt = None`). Tags inferred from
+    title keywords (always includes "family").
 
 ---
 

@@ -12,7 +12,8 @@ tools — designed for use from the Claude mobile app while out with a kid.
 - Phase 2 🚧 editorial scrapers. **Shipped:** Mommy Poppins NYC (~233 events/run),
   Brooklyn Public Library, Brooklyn Children's Museum, Green-Wood Cemetery
   (~104 events/60d), Prospect Park Alliance (~307 events/60d), New York
-  Transit Museum (~10 events/60d) — real descriptions, URLs, and (where
+  Transit Museum (~10 events/60d), Brooklyn Army Terminal (~12 events/60d)
+  — real descriptions, URLs, and (where
   upstream provides them) age ranges, coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser) and Coney Island
   USA (feed works, but the calendar is adult programming). More venues in
@@ -27,7 +28,8 @@ type allowlist, a title blocklist (drops Eid/load-in/RC-plane noise), and
 finally a kid-keyword filter (must match at least one tag). Phase 2 editorial
 sources add higher-curated signal alongside this baseline — Mommy Poppins NYC,
 BPL, Brooklyn Children's Museum, Green-Wood Cemetery, Prospect Park
-Alliance, and the New York Transit Museum are live.
+Alliance, the New York Transit Museum, and the Brooklyn Army Terminal are
+live.
 
 ## Architecture
 
@@ -301,6 +303,11 @@ Adapters with real descriptions, URLs, age ranges:
   instance, category-filtered (Family Programs, Nostalgia Rides; members-only
   and virtual programs excluded); ~10 events/60 days — Transit Tots, family
   workshops, vintage-train rides.
+- ✅ **Brooklyn Army Terminal** — *shipped.* Single-page HTML scrape
+  (`curl_cffi` + selectolax); drops "Live Music Concert" 21+ EDM shows,
+  keeps free community/family programming (Summer at the Terminal markets
+  and food fests, cultural festivals, Rooftop Films, Día de Los Muertos);
+  ~12 events/60 days.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
 - ❌ **Coney Island USA** — *rejected.* Working Squarespace feed, but the
@@ -336,6 +343,7 @@ nyc-events-mcp/
 │       ├── greenwood_cemetery.py     # Tribe Events REST        (Phase 2, shipped)
 │       ├── prospect_park.py          # Tribe Events REST        (Phase 2, shipped)
 │       ├── ny_transit_museum.py      # Tribe Events REST        (Phase 2, shipped)
+│       ├── brooklyn_army_terminal.py # single-page HTML scrape  (Phase 2, shipped)
 │       └── timeout_nykids.py         # stub                     (rejected — no feed)
 ├── data/                 # SQLite lives here; gitignored
 ├── SOURCES-BACKLOG.md    # researched candidate sources
