@@ -55,11 +55,19 @@ for u in [
 
 ---
 
-## Ready to build
+## Deferred to Phase 3+ (headless browser required)
+
+The Phase 2 editorial-source backlog is otherwise built or rejected. Brooklyn
+Cyclones — the one remaining CONFIRMED venue — is deferred to Phase 3 because
+the themed-night data that makes it worth shipping needs a headless browser
+(a new dependency, drawn as the Phase 2 boundary). See "The themed-night
+problem" below.
 
 ### Brooklyn Cyclones
 
-- **Status:** CONFIRMED (game schedule only) / NEEDS RESEARCH (themed nights)
+- **Status:** DEFERRED to Phase 3+ — the game schedule is CONFIRMED and
+  buildable today, but the themed nights that give it family-planning value
+  need a headless browser (see "The themed-night problem").
 - **Source:** MLB Stats API — `https://statsapi.mlb.com/api/v1/schedule`
 - **Format:** public JSON API, no key, no anti-bot
 - **Team:** `teamId=453`, venue "Maimonides Park" (Coney Island)
@@ -120,6 +128,10 @@ Revisit in Phase 3+ if a simpler path turns up.
   bundles (the space ID is `iiozhi00a8lc`). If found, the Contentful
   Delivery API (`cdn.contentful.com/spaces/{space}/entries?content_type=promotion&...`)
   is the cleanest structured path.
+
+---
+
+## Built — original build spec (reference)
 
 ### Brooklyn Army Terminal
 
@@ -334,7 +346,10 @@ Source code is authoritative; these notes capture the surprises.
   - **Time parsing:** `.time` is a range like "1:00-7:00pm" /
     "10:00am-2:00pm"; we parse the START only and borrow am/pm from the end
     of the range when the start omits it. Unparseable/empty time → 00:00
-    (all-day). Times stored naive (page wall-clock, America/New_York).
+    (all-day). Times are NY wall-clock; we attach America/New_York so the
+    Event is tz-aware (db._iso normalizes to UTC on write and rejects naive
+    datetimes — the initial build stored them naive, which crashed ingest;
+    fixed 2026-06-15).
   - **`window_days = 60`** — full-window single-page re-fetch every run, so
     it opts into missing-event (possible-cancellation) detection.
   - Venue = "Brooklyn Army Terminal", borough = BROOKLYN (hardcoded). No

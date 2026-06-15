@@ -252,22 +252,23 @@ Known accepted residuals (see `git log` for the security-audit commit):
     See the Coney Island USA entry in SOURCES-BACKLOG.md (Rejected section)
     for the evidence and revisit conditions.
 - **Phase 2 backlog — venue sources (see `SOURCES-BACKLOG.md` for full
-  probe instructions and data shapes):**
-  - **CONFIRMED — ready to build (priority order):**
-    1. Brooklyn Cyclones — MLB Stats API, `teamId=453`, public JSON, no auth.
-       Game schedule confirmed; themed nights (Star Wars Night etc.) are NOT
-       in the Stats API — stored in Contentful CMS, only JS-rendered. Needs
-       research before building (see SOURCES-BACKLOG.md § "The themed-night problem").
+  probe instructions and data shapes):** the buildable backlog is now clear —
+  every CONFIRMED venue is built, rejected, or deferred to Phase 3.
   - **BUILT (live):** Brooklyn Army Terminal — single-page HTML scrape via
     `curl_cffi`. Filters out "Live Music Concert" 21+ EDM shows. As built
     (2026-06-15): 24 cards → 12 dropped, 12 kept kid-relevant community
     events. See SOURCES-BACKLOG.md as-built block.
-  - **Deprioritized — no structured feed found:**
-    5. Industry City — custom headless CMS, JS-rendered, no API surface.
-    6. Domino Park — Sanity CMS, no public feed confirmed.
-    7. Governors Island — custom CMS (S3/Reflexions), no JSON-LD/iCal found.
+  - **Deprioritized — no structured feed found (need a headless browser):**
+    1. Industry City — custom headless CMS, JS-rendered, no API surface.
+    2. Domino Park — Sanity CMS, no public feed confirmed.
+    3. Governors Island — custom CMS (S3/Reflexions), no JSON-LD/iCal found.
 - **Phase 3+ (speculative):** geocoding + distance-from-home, weather,
-  subway routing, email digest. Not designed yet.
+  subway routing, email digest. Not designed yet. **Brooklyn Cyclones** is
+  parked here too: the MLB Stats API (`teamId=453`, public JSON, no auth)
+  gives the game schedule cheaply, but the themed nights (Star Wars Night
+  etc.) that make it worth shipping live in Contentful CMS, JS-rendered only —
+  a headless browser, drawn as the Phase 2 boundary. See SOURCES-BACKLOG.md
+  § "The themed-night problem".
 
 ## Out-of-scope (deliberate)
 
