@@ -114,6 +114,25 @@ def test_ids_unique(events):
     assert len({e.id for e in events}) == len(events)
 
 
+def test_start_dt_is_tz_aware(events):
+    # db._iso rejects naive datetimes, so every Event must carry tzinfo.
+    assert events  # guard against an empty parse silently passing
+    assert all(e.start_dt.tzinfo is not None for e in events)
+
+
+def test_events_survive_db_upsert(events, tmp_path):
+    # Regression: parser tests alone never crossed the DB boundary, so a
+    # naive start_dt (rejected by db._iso) crashed the whole ingest unseen.
+    from nyc_events import db
+
+    db_path = str(tmp_path / "events.db")
+    with db.connect_events(db_path) as conn:
+        ins, _ = db.upsert_events(conn, events)
+        assert ins == len(events)
+        stored = db.search(conn, limit=100)
+    assert len(stored) == len(events)
+
+
 @pytest.mark.parametrize(
     ("time_str", "expected"),
     [

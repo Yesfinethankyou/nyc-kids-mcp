@@ -37,8 +37,10 @@ Quirks (verified live, 2026-06-15):
     card links to a ticketing host (dice.fm / posh.vip) → Price.PAID. After
     filtering out "Live Music Concert", no kept card on the captured page
     links to a ticketing host, but the rule is kept defensively.
-  - Times are naive local (America/New_York); we store them as naive (no
-    tz attached), matching the page's wall-clock semantics.
+  - The page's times are local wall-clock; we attach America/New_York so the
+    stored datetime is tz-aware (db._iso normalizes to UTC on write and
+    rejects naive datetimes). compute_id still keys off the NY-local calendar
+    date, which is the human-meaningful one.
 """
 
 from __future__ import annotations
@@ -47,12 +49,15 @@ import logging
 import re
 from collections.abc import Iterable
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from curl_cffi import requests as cffi_requests
 from selectolax.parser import HTMLParser
 
 from ..models import Borough, Event, Price, compute_id
 from .base import Source
+
+NYC_TZ = ZoneInfo("America/New_York")
 
 logger = logging.getLogger(__name__)
 
@@ -205,7 +210,7 @@ def _parse_card(card) -> Event | None:
     hour, minute = _parse_start_time(_clean_text(time_node))
 
     try:
-        start_dt = datetime(year, month, day, hour, minute)
+        start_dt = datetime(year, month, day, hour, minute, tzinfo=NYC_TZ)
     except ValueError:
         logger.debug("brooklyn_army_terminal: skipping %r — invalid date components", title)
         return None
