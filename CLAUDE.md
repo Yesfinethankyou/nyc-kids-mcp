@@ -237,8 +237,10 @@ Known accepted residuals (see `git log` for the security-audit commit):
 
 - **Phase 1 (done):** `tvpp-9vvx` only. Permit data, no descriptions, all
   ingested rows `low_confidence: true`. ~700 events / 60-day window.
-- **Phase 2 (in progress):** editorial scrapers — real descriptions, URLs,
-  age ranges. See `.claude/agents/source-adder.md` for the recipe.
+- **Phase 2 (done):** editorial scrapers — real descriptions, URLs,
+  age ranges. The buildable backlog is cleared (every CONFIRMED venue is
+  built, rejected, or deferred to Phase 3 — see below). Adding more sources
+  still follows `.claude/agents/source-adder.md`.
   - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood
     Cemetery, Prospect Park Alliance, New York Transit Museum, Brooklyn
     Army Terminal.
@@ -262,9 +264,12 @@ Known accepted residuals (see `git log` for the security-audit commit):
     1. Industry City — custom headless CMS, JS-rendered, no API surface.
     2. Domino Park — Sanity CMS, no public feed confirmed.
     3. Governors Island — custom CMS (S3/Reflexions), no JSON-LD/iCal found.
-- **Phase 3+ (speculative):** geocoding + distance-from-home, weather,
-  subway routing, email digest. Not designed yet. **Brooklyn Cyclones** is
-  parked here too: the MLB Stats API (`teamId=453`, public JSON, no auth)
+- **Phase 3 (planned — see `PHASE-3-PLAN.md`):** location-awareness
+  (geocoding + neighborhood + distance-from-home filter), weather on outdoor
+  events, an indoor/outdoor heuristic flag, more venue sources, and deferred
+  tech debt (issues #4/#5/#6). Designed but not yet implemented — AI/LLM
+  enrichment is explicitly out of scope for this phase. **Brooklyn Cyclones**
+  is parked here too: the MLB Stats API (`teamId=453`, public JSON, no auth)
   gives the game schedule cheaply, but the themed nights (Star Wars Night
   etc.) that make it worth shipping live in Contentful CMS, JS-rendered only —
   a headless browser, drawn as the Phase 2 boundary. See SOURCES-BACKLOG.md
