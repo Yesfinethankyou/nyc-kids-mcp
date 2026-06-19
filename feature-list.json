@@ -1,6 +1,7 @@
 {
   "project": "nyc-kids-mcp",
   "description": "Single-user MCP server that ingests NYC family-friendly events into SQLite + FTS5 and exposes them as MCP tools over streamable HTTP, gated by an OAuth 2.1 + PKCE shim. See CLAUDE.md for architecture and README.md for setup.",
+  "canonical_status_source": "CLAUDE.md '## Phase roadmap' is the single source of truth for phase status. This file is a derived session-tracker snapshot — when a phase ships, update CLAUDE.md first, then reconcile this file and progress.md to match.",
   "features": [
     {
       "id": "feat-001",

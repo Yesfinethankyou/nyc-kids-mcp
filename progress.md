@@ -5,6 +5,10 @@
 **Last Updated:** 2026-06-19
 **Active Feature:** feat-007 — Session-handoff harness tooling
 
+> **Canonical phase status:** CLAUDE.md `## Phase roadmap` is the source of
+> truth. This log and `feature-list.json` are derived snapshots — when a phase
+> ships, update CLAUDE.md first, then reconcile these to match.
+
 ## Status
 
 ### What's Done
