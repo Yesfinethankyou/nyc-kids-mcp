@@ -39,7 +39,12 @@ logger = logging.getLogger(__name__)
 SITEMAP_INDEX_URL = "https://mommypoppins.com/sitemap.xml"
 NYC_EVENT_URL_PREFIX = "https://mommypoppins.com/new-york-city-kids/event/"
 DEFAULT_LOOKBACK_DAYS = 90
-REQUEST_DELAY_SECONDS = 1.5
+# ~700 NYC event pages are crawled one-by-one with this delay between each, so
+# the constant dominates the source's runtime: at 1.5s it added ~17 min of pure
+# sleeping and made mommy_poppins a >20 min single source that starved the rest
+# of the nightly ingest. 0.5s is still polite for a personal-scale scraper and
+# cuts ~12 min off the run.
+REQUEST_DELAY_SECONDS = 0.5
 # Sitemap XML namespace
 _SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 
