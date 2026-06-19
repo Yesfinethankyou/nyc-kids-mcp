@@ -44,20 +44,60 @@
       "evidence": "Dockerfile, docker-compose.yml, docker-compose.dev.yml, .github/workflows/docker-publish.yml; see CLAUDE.md 'Docker conventions'."
     },
     {
-      "id": "feat-006",
-      "name": "Phase 3 — location enrichment, venue expansion, tech debt",
-      "description": "Make events location-aware (geocoding + neighborhood backfill, distance-from-home filter), attach weather to upcoming outdoor events, add an indoor/outdoor heuristic flag, expand the Phase-3 venue list, and close deferred issues #4/#5/#6. Enrichment runs as a second nightly pass with caching; fetch() stays simple. Playwright adopted only as a fallback render tool (split ingest image). AI/LLM enrichment is explicitly out of scope.",
-      "dependencies": ["feat-005"],
-      "status": "not-started",
-      "evidence": "Plan only — see PHASE-3-PLAN.md. No implementation started."
-    },
-    {
       "id": "feat-007",
       "name": "Session-handoff harness tooling",
       "description": "Repo-tailored init.sh, feature-list.json, progress.md, and session-handoff.md so web/remote sessions can bootstrap, verify, and hand off cleanly. Replaces the default Claude templates with project-specific content.",
       "dependencies": [],
-      "status": "in-progress",
-      "evidence": "init.sh runs pytest + ruff via .venv; this file, progress.md, and session-handoff.md populated from existing root docs."
+      "status": "done",
+      "evidence": "init.sh runs pytest + ruff via .venv; feature-list.json, progress.md, session-handoff.md tailored from the root docs. Merged to main via PR #13."
+    },
+    {
+      "id": "feat-006",
+      "name": "Phase 3 — enrichment pipeline scaffold + caching layer",
+      "description": "Second nightly pass that runs after ingest and enriches rows without complicating source fetch(). Adds a geocode cache (stable, no TTL, keyed by lookup string) and a weather cache (short TTL, keyed by NWS gridpoint), leaning toward new namespaced tables in events.db. Foundational for geocoding and weather. See PHASE-3-PLAN.md 'Architecture: second nightly pass + caching layer'.",
+      "dependencies": ["feat-005"],
+      "status": "not-started",
+      "evidence": "Plan only — PHASE-3-PLAN.md. Sequencing step 1, alongside tech debt."
+    },
+    {
+      "id": "feat-008",
+      "name": "Phase 3 — tech-debt bundle (#4/#5/#6)",
+      "description": "Server-touching cleanup done in one pass: #4 FTS5 VACUUM footgun (operational/doc), #5 split the consent password from the master bearer (decouple the one-env-var/two-roles MCP_AUTH_TOKEN), #6 efficiency/hygiene grab-bag. Bundled because the read-path enrichment work is already in server.py. See PHASE-3-PLAN.md Workstream C.",
+      "dependencies": ["feat-002"],
+      "status": "not-started",
+      "evidence": "Plan only — PHASE-3-PLAN.md Workstream C. Issues #4/#5/#6."
+    },
+    {
+      "id": "feat-009",
+      "name": "Phase 3 — geocoding, neighborhood, distance-from-home",
+      "description": "Backfill lat/lng for rows lacking coords (US Census geocoder primary, Nominatim fallback; geocode by venue_name + borough + 'NY', cached). Map to Event.neighborhood via NYC NTA / borough+ZIP. Add a near_me / sort-by-distance search affordance once a home location is configured (env or config row). See PHASE-3-PLAN.md A1.",
+      "dependencies": ["feat-006"],
+      "status": "not-started",
+      "evidence": "Plan only — PHASE-3-PLAN.md A1. Sequencing step 2."
+    },
+    {
+      "id": "feat-010",
+      "name": "Phase 3 — indoor/outdoor flag (heuristic)",
+      "description": "New nullable enum column (indoor/outdoor/mixed/unknown) via idempotent ALTER TABLE migration. Per-source default (museums/libraries indoor; zoos/gardens/parks outdoor; mixed venues unknown) plus a keyword override on title/description. Explicitly heuristic, NOT AI-derived. See PHASE-3-PLAN.md A2.",
+      "dependencies": ["feat-006"],
+      "status": "not-started",
+      "evidence": "Plan only — PHASE-3-PLAN.md A2. Sequencing step 3."
+    },
+    {
+      "id": "feat-011",
+      "name": "Phase 3 — weather on outdoor events",
+      "description": "Attach a compact forecast (temp range + precip/condition) to upcoming outdoor events within the ~7-day window via NWS api.weather.gov (free, no key). Needs coords (feat-009) and the indoor/outdoor flag (feat-010); cache forecasts by NWS gridpoint with a short TTL. See PHASE-3-PLAN.md A3.",
+      "dependencies": ["feat-009", "feat-010"],
+      "status": "not-started",
+      "evidence": "Plan only — PHASE-3-PLAN.md A3. Sequencing step 4."
+    },
+    {
+      "id": "feat-012",
+      "name": "Phase 3 — venue expansion (Workstream B)",
+      "description": "Add venue sources via the source-adder recipe with window_days opt-in and an indoor/outdoor default per source: WCS zoos + aquarium, museums (Intrepid, Brooklyn/Queens Museum, SI Children's, NYSCI), Brooklyn Botanic Garden, NYPL + Queens Public Library, parks programming (City Parks Foundation/SummerStage Kids, Hudson River Park). Adopt a Playwright headless _render fallback (separate ingest image) only for probed sources with no structured feed. Brooklyn Cyclones parked here. See PHASE-3-PLAN.md Workstream B.",
+      "dependencies": ["feat-005"],
+      "status": "not-started",
+      "evidence": "Plan only — PHASE-3-PLAN.md Workstream B. Sequencing step 5."
     }
   ]
 }
