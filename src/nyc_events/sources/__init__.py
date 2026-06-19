@@ -13,13 +13,20 @@ from .prospect_park import ProspectParkSource
 # Phase 1 + Phase 2 sources. Time Out NY Kids (timeout_nykids.py) is a
 # JS-rendered editorial site with no event feed — not buildable without a
 # headless browser; stub left in place but not enabled.
+#
+# Order matters: the loop in ingest.py is strictly sequential with no
+# per-source time budget, so a slow source starves everything after it. We
+# run the cheap sources (seconds each) first and the expensive crawls last,
+# so an interrupted run (Watchtower restart, killed `docker exec`) still gets
+# the quick wins in. mommy_poppins is last: it crawls ~700 detail pages and
+# is by far the longest single source.
 ENABLED_SOURCES: list[type[Source]] = [
-    NYCPermittedEventsSource,
-    MommyPoppinsSource,
-    BPLSource,
+    NYTransitMuseumSource,
+    BrooklynArmyTerminalSource,
     BrooklynChildrensMuseumSource,
     GreenWoodCemeterySource,
     ProspectParkSource,
-    NYTransitMuseumSource,
-    BrooklynArmyTerminalSource,
+    NYCPermittedEventsSource,
+    BPLSource,
+    MommyPoppinsSource,
 ]
