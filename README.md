@@ -9,15 +9,18 @@ tools — designed for use from the Claude mobile app while out with a kid.
 - Checkpoint B ✅ NYC Permitted Events (tvpp-9vvx) ingest, ~700 kid-relevant events / 60 days.
 - Checkpoint C ✅ security audit + bundle B fixes (rate limiter, redirect allowlist, consent CSP, OAuth expiry).
 - Checkpoint D ✅ Dockerfile + docker-compose + GHCR + Watchtower + GH Actions multi-arch publish.
-- Phase 2 🚧 editorial scrapers. **Shipped:** Mommy Poppins NYC (~233 events/run),
-  Brooklyn Public Library, Brooklyn Children's Museum, Green-Wood Cemetery
-  (~104 events/60d), Prospect Park Alliance (~307 events/60d), New York
-  Transit Museum (~10 events/60d), Brooklyn Army Terminal (~12 events/60d)
-  — real descriptions, URLs, and (where
+- Phase 2 ✅ editorial scrapers — buildable backlog cleared. **Shipped:** Mommy
+  Poppins NYC (~233 events/run), Brooklyn Public Library, Brooklyn Children's
+  Museum, Green-Wood Cemetery (~104 events/60d), Prospect Park Alliance
+  (~307 events/60d), New York Transit Museum (~10 events/60d), Brooklyn Army
+  Terminal (~12 events/60d) — real descriptions, URLs, and (where
   upstream provides them) age ranges, coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser) and Coney Island
   USA (feed works, but the calendar is adult programming). More venues in
   `SOURCES-BACKLOG.md`.
+- Phase 3 📋 planned (not yet implemented) — location-awareness (geocoding +
+  distance-from-home), weather on outdoor events, an indoor/outdoor flag, and
+  more venue sources. Design in `PHASE-3-PLAN.md`.
 
 **Why "Permitted Events" and not "Parks":** the spec originally named the
 NYC Parks Events Listing (`fudw-fgrp`) SODA dataset, but it's been frozen
@@ -245,8 +248,9 @@ small per-event "summary" dict (default `limit=10`, description truncated to
 ## Data sources and their limits
 
 This project deliberately starts with a Phase-1 source whose data is broad,
-noisy, and structurally thin. Phase-2 sources will add richer editorial signal.
-Knowing the difference avoids "why is the data so weak" surprise.
+noisy, and structurally thin. The Phase-2 editorial sources add richer
+editorial signal alongside it. Knowing the difference avoids "why is the data
+so weak" surprise.
 
 ### Phase 1: `nyc_permitted_events` (NYC Open Data `tvpp-9vvx`)
 
@@ -281,10 +285,10 @@ Hard limits of this source:
   rain-date string in the title.
 
 If you ask "why is the data so thin / why is everything `low_confidence`",
-that's the adapter behaving correctly — the upstream is thin. Phase 2
-sources will fix the descriptive gap.
+that's the adapter behaving correctly — the upstream is thin. The Phase 2
+editorial sources fill the descriptive gap for venues they cover.
 
-### Phase 2 (in progress): curated editorial sources
+### Phase 2 (shipped): curated editorial sources
 
 Adapters with real descriptions, URLs, age ranges:
 
