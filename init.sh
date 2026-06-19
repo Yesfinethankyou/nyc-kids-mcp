@@ -1,75 +1,37 @@
 #!/bin/bash
 set -e
 
-echo "=== Harness Initialization ==="
+echo "=== Harness Initialization: nyc-kids-mcp ==="
 
-if [ -f package.json ]; then
-  if [ -f pnpm-lock.yaml ]; then
-    PM="pnpm"
-  elif [ -f yarn.lock ]; then
-    PM="yarn"
-  elif [ -f bun.lock ] || [ -f bun.lockb ]; then
-    PM="bun"
-  else
-    PM="npm"
-  fi
+# This repo ships a committed virtualenv at .venv (Python >=3.11). All project
+# commands run through it — see CLAUDE.md "Commands". If .venv is missing
+# (fresh clone in a new environment), create it and install the package with
+# its dev extras before running verification.
+PY=".venv/bin/python"
+RUFF=".venv/bin/ruff"
 
-  echo "=== Installing dependencies with $PM ==="
-  if [ "$PM" = "npm" ]; then
-    npm install
-  else
-    "$PM" install
-  fi
-
-  node -e "const s=require('./package.json').scripts||{}; process.exit(s.check||s.typecheck||s['type-check']?0:1)" && {
-    if node -e "const s=require('./package.json').scripts||{}; process.exit(s.check?0:1)"; then
-      [ "$PM" = "npm" ] && npm run check || "$PM" run check
-    elif node -e "const s=require('./package.json').scripts||{}; process.exit(s.typecheck?0:1)"; then
-      [ "$PM" = "npm" ] && npm run typecheck || "$PM" run typecheck
-    else
-      [ "$PM" = "npm" ] && npm run type-check || "$PM" run type-check
-    fi
-  }
-
-  node -e "const s=require('./package.json').scripts||{}; process.exit(s.lint?0:1)" && {
-    [ "$PM" = "npm" ] && npm run lint || "$PM" run lint
-  }
-
-  node -e "const s=require('./package.json').scripts||{}; process.exit(s.test?0:1)" && {
-    [ "$PM" = "npm" ] && npm test || "$PM" test
-  }
-
-  node -e "const s=require('./package.json').scripts||{}; process.exit(s.build?0:1)" && {
-    [ "$PM" = "npm" ] && npm run build || "$PM" run build
-  }
-elif [ -f pyproject.toml ] || [ -f requirements.txt ]; then
-  echo "=== Running Python verification ==="
-  python -m pytest
-  python -m compileall .
-elif [ -f go.mod ]; then
-  echo "=== Running Go verification ==="
-  go test ./...
-elif [ -f Cargo.toml ]; then
-  echo "=== Running Rust verification ==="
-  cargo test
-elif [ -f pom.xml ]; then
-  echo "=== Running Maven verification ==="
-  mvn test
-elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then
-  echo "=== Running Gradle verification ==="
-  ./gradlew test
-elif ls *.csproj *.sln >/dev/null 2>&1; then
-  echo "=== Running .NET verification ==="
-  dotnet test
-else
-  echo "No recognized package manifest detected."
-  echo "Replace this section with the project's verification commands."
+if [ ! -x "$PY" ]; then
+  echo "=== .venv not found — creating and installing (editable + dev extras) ==="
+  python3 -m venv .venv
+  "$PY" -m pip install --upgrade pip
+  "$PY" -m pip install -e ".[dev]"
 fi
+
+echo "=== Running test suite (should always be green) ==="
+"$PY" -m pytest tests/ -q
+
+echo "=== Lint ==="
+"$RUFF" check
 
 echo "=== Verification Complete ==="
 echo ""
 echo "Next steps:"
-echo "1. Read feature_list.json to see current feature state"
-echo "2. Pick ONE unfinished feature to work on"
-echo "3. Implement only that feature"
-echo "4. Re-run verification before claiming done"
+echo "1. Read CLAUDE.md (project guide) and feature-list.json (current feature state)."
+echo "2. Review session-handoff.md and progress.md for where the last session left off."
+echo "3. Pick ONE unfinished feature to work on; implement only that feature."
+echo "4. Re-run this script (or 'pytest tests/ -q' + 'ruff check') before claiming done."
+echo ""
+echo "Other useful commands (see CLAUDE.md):"
+echo "  $PY -m nyc_events.ingest      # one-shot ingest from ENABLED_SOURCES"
+echo "  $PY -m nyc_events.server      # run HTTP MCP server (needs MCP_AUTH_TOKEN)"
+echo "  $PY -m nyc_events.seed_fake   # populate fake events for connector smoke-testing"

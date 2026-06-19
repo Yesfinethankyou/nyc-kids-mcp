@@ -2,50 +2,69 @@
 
 ## Current State
 
-**Last Updated:** YYYY-MM-DD HH:MM
-**Session ID:** [optional]
-**Active Feature:** [feat-XXX - Feature Name]
+**Last Updated:** 2026-06-19
+**Active Feature:** feat-007 — Session-handoff harness tooling
 
 ## Status
 
 ### What's Done
 
-- [x] [Completed item 1]
-- [x] [Completed item 2]
+- [x] feat-001 — Phase 1 NYC permit ingest core (model, compute_id, split SQLite + FTS5, `nyc_permitted_events`)
+- [x] feat-002 — MCP server + OAuth 2.1/PKCE shim + Checkpoint C HTTP security baseline
+- [x] feat-003 — Missing-event detection (possible-cancellation flagging, four guard layers)
+- [x] feat-004 — Phase 2 editorial scrapers (8 sources live; buildable backlog cleared)
+- [x] feat-005 — Docker packaging + deploy (Checkpoint D: multi-arch GHCR image, non-root, Funnel)
 
 ### What's In Progress
 
-- [ ] [Current work item]
-  - Details: [specific task]
-  - Blockers: [if any]
+- [ ] feat-007 — Session-handoff harness tooling
+  - Details: replace the default Claude templates (`init.sh`, `feature-list.json`,
+    `progress.md`, `session-handoff.md`) with content tailored to this repo,
+    drawn from CLAUDE.md / README.md / PHASE-3-PLAN.md / SOURCES-BACKLOG.md.
+  - Blockers: none.
 
 ### What's Next
 
-1. [Next action item]
-2. [Following action item]
+1. Commit and push the harness-tooling updates to `claude/elegant-cray-bvto16`.
+2. When Phase 3 work starts, flip feat-006 to `in-progress` and work it per
+   PHASE-3-PLAN.md (geocoding first, then weather, then indoor/outdoor flag,
+   then the Phase-3 venue list, then deferred issues #4/#5/#6).
 
 ## Blockers / Risks
 
-- [ ] [Blocker 1]: [description, impact]
-- [ ] [Risk 1]: [description, mitigation]
+- [ ] Risk: `data/*.db*`, `.env`, and `.venv/` must never be committed
+  (gitignored). Stop and ask if any are proposed for `git add`.
+- [ ] Risk: Phase 3 Playwright adoption adds ~300–450 MB to the image — keep it
+  in a separate ingest image so the always-on server stays lean/hardened
+  (PHASE-3-PLAN.md).
 
 ## Decisions Made
 
-- **[Decision 1]**: [description]
-  - Context: [why this decision was made]
-  - Alternatives considered: [what else was discussed]
+- **Harness files tailored, not generic**: `init.sh` runs `.venv/bin/python -m
+  pytest tests/ -q` + `.venv/bin/ruff check` instead of the template's bare
+  `python -m pytest` / `compileall`, matching CLAUDE.md "Commands".
+  - Context: this repo ships a committed `.venv` and gates all commands through it.
+- **session-handoff.md points at CLAUDE.md, not AGENTS.md**: this project's
+  guide lives in CLAUDE.md; there is no AGENTS.md.
 
 ## Files Modified This Session
 
-- `path/to/file1.ts` - [brief description of change]
-- `path/to/file2.ts` - [brief description of change]
+- `init.sh` — repo-specific verification (venv pytest + ruff) and next-steps.
+- `feature-list.json` — real Phase 1–3 feature roadmap with status + evidence.
+- `progress.md` — this log.
+- `session-handoff.md` — populated handoff for the next session.
 
 ## Evidence of Completion
 
-- [ ] Tests pass: `[command and output]`
-- [ ] Type check clean: `[command and output]`
-- [ ] Manual verification: `[what was tested]`
+- [x] Tests pass: `.venv/bin/python -m pytest tests/ -q` → `332 passed in 2.36s`
+- [x] Lint clean: `.venv/bin/ruff check` → `All checks passed!`
+- [ ] Manual verification: n/a — docs/tooling change only.
 
 ## Notes for Next Session
 
-[Free-form notes that will help the next session pick up context]
+Phases 1, 2 and Checkpoint C/D are done and the suite is green. The only open
+implementation track is Phase 3 (feat-006), which is planned but not started —
+read PHASE-3-PLAN.md before touching it. `server.py` is a single big module; if
+it grows past ~600 lines, split the OAuth handlers out first (CLAUDE.md). New
+sources follow the source-adder recipe in `.claude/agents/source-adder.md` and
+must add a real-response fixture under `tests/fixtures/`.
