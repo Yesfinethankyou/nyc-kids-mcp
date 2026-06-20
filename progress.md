@@ -16,7 +16,7 @@
 - [x] feat-001 — Phase 1 NYC permit ingest core (model, compute_id, split SQLite + FTS5, `nyc_permitted_events`)
 - [x] feat-002 — MCP server + OAuth 2.1/PKCE shim + Checkpoint C HTTP security baseline
 - [x] feat-003 — Missing-event detection (possible-cancellation flagging, four guard layers)
-- [x] feat-004 — Phase 2 editorial scrapers (8 sources live; buildable backlog cleared)
+- [x] feat-004 — Phase 2 editorial scrapers (9 sources live incl. Industry City; buildable backlog cleared)
 - [x] feat-005 — Docker packaging + deploy (Checkpoint D: multi-arch GHCR image, non-root, Funnel)
 - [x] feat-007 — Session-handoff harness tooling (init.sh + feature-list.json + progress.md + session-handoff.md; merged via PR #13)
 

@@ -30,10 +30,10 @@
     {
       "id": "feat-004",
       "name": "Phase 2 — editorial scrapers",
-      "description": "Real descriptions, URLs, and age ranges from venue sources via the source-adder recipe (fixture -> parser -> registry -> parser test -> docs). Live: Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood Cemetery, Prospect Park Alliance, NY Transit Museum, Brooklyn Army Terminal. Buildable backlog cleared.",
+      "description": "Real descriptions, URLs, and age ranges from venue sources via the source-adder recipe (fixture -> parser -> registry -> parser test -> docs). Live: Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood Cemetery, Prospect Park Alliance, NY Transit Museum, Brooklyn Army Terminal, Industry City. Buildable backlog cleared.",
       "dependencies": ["feat-002", "feat-003"],
       "status": "done",
-      "evidence": "Eight sources in ENABLED_SOURCES with matching test_<source>_parse.py fixtures; SOURCES-BACKLOG.md statuses synced. Rejected: Time Out NY Kids, Coney Island USA."
+      "evidence": "Nine sources in ENABLED_SOURCES with matching test_<source>_parse.py fixtures; SOURCES-BACKLOG.md statuses synced. Industry City added after a curl_cffi re-probe corrected a false 'headless CMS' rejection. Rejected: Time Out NY Kids, Coney Island USA. Domino Park / Governors Island flagged NEEDS RE-PROBE."
     },
     {
       "id": "feat-005",
