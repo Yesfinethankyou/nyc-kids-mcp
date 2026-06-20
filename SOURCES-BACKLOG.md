@@ -30,21 +30,15 @@ on your laptop/NAS if a specific domain is actually blocked.
 
 **Review filter lists for all sources.** Each source has grown its own
 kid-relevance filter (allowlist / blocklist / hard-exclude keywords, category
-filters, race/alcohol regexes) independently, and they've drifted apart:
-Green-Wood, Industry City, and Governors Island each carry overlapping but
-non-identical adult/alcohol blocklists; the permit source (`nyc_permitted_events`)
-has its own aggressive agency/title-regex stack. Audit all of them together for:
-- **False negatives** — legit kid events dropped by an over-broad blocklist or
-  a too-narrow allowlist (e.g. keyword-less items like "Slide Hill").
-- **False positives** — adult content slipping through (cross-check each
-  source's blocklist against the others; e.g. does every source that needs it
-  exclude `21+` / `burlesque` / `drag` / alcohol tastings?).
-- **Consolidation** — whether the shared adult/alcohol/`no children` terms
-  should move to a single reusable constant in `sources/base.py` (or a small
-  `sources/_filters.py`) instead of being copy-pasted per source, so a fix in
-  one place fixes all. Weigh against the per-source customization each still
-  needs (categories, venue-specific quirks).
-Do this as one focused pass with fresh live fetches per source, not piecemeal.
+filters, race/alcohol regexes) independently, and they've drifted apart. The
+full inventory — every source's inclusion gate, lists, and a set of flagged
+inconsistencies (blocklist drift, hyphen/space variants, Green-Wood's likely
+dead blocklist, bare-substring tag false positives) — is compiled in
+**`FILTER-REVIEW.md`** for a human review pass. **Owner: the maintainer is
+reviewing the filters personally**; that doc is the starting point and includes
+a one-liner to re-introspect the live constants. Don't change filters
+pre-emptively — wait for the review's decisions, then apply as one focused pass
+with fresh live fetches per touched source.
 
 ## How to verify
 

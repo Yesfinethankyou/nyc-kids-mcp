@@ -153,6 +153,16 @@ The `_clean_row(row)` helper applies BEFORE field extraction AND BEFORE
 cleaned input. Strict-raw semantics would require restructuring (`raw_payload
 = json.dumps(row)` before `_clean_row` mutates it).
 
+**Each editorial source carries its own kid-relevance filter** — strategies
+vary by venue (allowlist-required, inclusive+blocklist, category-allowlist,
+age-band). `FILTER-REVIEW.md` is the cross-source inventory: every inclusion
+gate, the actual keyword/category lists, and known inconsistencies (blocklist
+drift, dead Green-Wood blocklist, bare-substring tag false positives). A
+filter-consolidation pass is pending maintainer review (see `SOURCES-BACKLOG.md`
+→ Tech debt). When adding a source, pick the matching strategy — don't add a
+filter to a curated kids feed (`mommy_poppins`, `bk_childrens_museum` have none
+by design).
+
 ## Tool output shape
 
 Listing tools (`search_events`, `events_this_weekend`, `events_on_date`)
