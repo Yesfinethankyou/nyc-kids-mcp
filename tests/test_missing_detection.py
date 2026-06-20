@@ -20,7 +20,16 @@ from nyc_events.ingest import _fetch_looks_complete
 from nyc_events.models import Borough, Event, Price, compute_id
 from nyc_events.server import _possibly_cancelled
 from nyc_events.sources import ENABLED_SOURCES
+from nyc_events.sources.governors_island import GovernorsIslandSource
 from nyc_events.sources.mommy_poppins import MommyPoppinsSource
+
+# Sources that intentionally opt OUT of missing-detection (window_days is None)
+# because a fetch is not a guaranteed full re-fetch of the window:
+#   - MommyPoppins: incremental sitemap-lastmod discovery (unseen != cancelled).
+#   - GovernorsIsland: feed hard-caps at 100 rows ordered id-asc with no
+#     pagination, so newer events can scroll past the cap rather than being
+#     cancelled.
+_MISSING_DETECTION_EXCLUDED = (MommyPoppinsSource, GovernorsIslandSource)
 
 UTC = UTC
 
@@ -216,11 +225,18 @@ def test_mommy_poppins_is_excluded():
     assert MommyPoppinsSource().window_days is None
 
 
+def test_governors_island_is_excluded():
+    # The things-to-do feed hard-caps at 100 rows ordered id-asc with no
+    # pagination, so a fetch is not a guaranteed full window re-fetch — newer
+    # events can scroll past the cap. Opting in would falsely flag them.
+    assert GovernorsIslandSource().window_days is None
+
+
 def test_full_window_sources_opt_in():
     opted_in = {
         cls.__name__: cls().window_days
         for cls in ENABLED_SOURCES
-        if cls is not MommyPoppinsSource
+        if cls not in _MISSING_DETECTION_EXCLUDED
     }
     assert all(days == 60 for days in opted_in.values()), opted_in
-    assert len(opted_in) == 8
+    assert len(opted_in) == 9

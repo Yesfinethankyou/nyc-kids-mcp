@@ -153,6 +153,16 @@ The `_clean_row(row)` helper applies BEFORE field extraction AND BEFORE
 cleaned input. Strict-raw semantics would require restructuring (`raw_payload
 = json.dumps(row)` before `_clean_row` mutates it).
 
+**Each editorial source carries its own kid-relevance filter** — strategies
+vary by venue (allowlist-required, inclusive+blocklist, category-allowlist,
+age-band). `FILTER-REVIEW.md` is the cross-source inventory: every inclusion
+gate, the actual keyword/category lists, and known inconsistencies (blocklist
+drift, dead Green-Wood blocklist, bare-substring tag false positives). A
+filter-consolidation pass is pending maintainer review (see `SOURCES-BACKLOG.md`
+→ Tech debt). When adding a source, pick the matching strategy — don't add a
+filter to a curated kids feed (`mommy_poppins`, `bk_childrens_museum` have none
+by design).
+
 ## Tool output shape
 
 Listing tools (`search_events`, `events_this_weekend`, `events_on_date`)
@@ -243,7 +253,7 @@ Known accepted residuals (see `git log` for the security-audit commit):
   still follows `.claude/agents/source-adder.md`.
   - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood
     Cemetery, Prospect Park Alliance, New York Transit Museum, Brooklyn
-    Army Terminal, Industry City.
+    Army Terminal, Industry City, Governors Island, Domino Park.
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
@@ -271,11 +281,36 @@ Known accepted residuals (see `git log` for the security-audit commit):
     outdoor World Cup watch parties). `cost`/`venue` always empty upstream →
     price UNKNOWN, venue/borough hardcoded Industry City / Brooklyn, no
     lat/lng/age. See SOURCES-BACKLOG.md as-built block.
-  - **Needs re-probe — prior "no feed" verdict is suspect:** Domino Park and
-    Governors Island were both rejected by the same non-impersonating probe
-    that wrong-flagged Industry City. Their "no structured feed" conclusions
-    are unverified; re-fetch with `curl_cffi` before trusting them. (These
-    may still be headless-only, but that's no longer established.)
+  - **BUILT (live):** Governors Island — the prior "custom CMS, no API
+    surface" verdict was a non-impersonating-probe artifact (same failure mode
+    as Industry City). It has a clean custom Craft CMS / Solspace-Calendar JSON
+    feed at `/things-to-do.json` (NOT WordPress/Tribe). Inclusive + blocklist
+    filtering: GI skews family, so include by default and drop only clearly
+    adult content (galas, 7AM NYCRUNS road races) and non-event amenities (bike
+    rentals, the QC NY spa, the digital guide). As built (2026-06-20): a live
+    fetch returned 100 rows → 15 dropped, 85 kept. Dates are "floating" local
+    wall-time mislabeled `Z` (parsed as America/New_York). `cost` absent → price
+    UNKNOWN; venue/borough hardcoded Governors Island / Manhattan; no
+    lat/lng/age. **Opted OUT of missing-detection** (`window_days=None`): the
+    feed hard-caps at 100 rows ordered id-asc with no pagination, so newer
+    events can scroll past the cap rather than being cancelled. See
+    SOURCES-BACKLOG.md as-built block.
+  - **BUILT (live):** Domino Park — the "Sanity headless, no public feed"
+    verdict was a non-impersonating-probe artifact. The `production` dataset on
+    Sanity project `4shd8slw` allows anonymous reads, so we query the public
+    GROQ API directly (`*[_type=="event"]{...}`, `curl_cffi`) — no scraping, no
+    headless browser. Inclusive + light blocklist (it's a curated family-park
+    feed, tags dominated by "Family & Education"). **Recurrence is keyed off
+    the `variant` field, NOT `frequency`:** `reoccurring` docs are expanded via
+    frequency/interval into per-occurrence rows (`external_id=f"{_id}:{date}"`);
+    `single-day`/`multi-day` docs are one event each and their leftover
+    frequency/endDate is vestigial template data (must be ignored or rows
+    double-count). Free-text `startHour`/`endHour` parsed leniently; dates are
+    local wall-time → America/New_York. Has lat/lng + descriptions + tags; no
+    price → UNKNOWN; venue/borough hardcoded Domino Park / Brooklyn. Opted INTO
+    missing-detection (`window_days=60`, full GROQ re-fetch, deterministic
+    occurrence ids). As built (2026-06-20): 125 docs → 104 events over a 60-day
+    window. See SOURCES-BACKLOG.md as-built block.
 - **Phase 3 (planned — see `PHASE-3-PLAN.md`):** location-awareness
   (geocoding + neighborhood + distance-from-home filter), weather on outdoor
   events, an indoor/outdoor heuristic flag, more venue sources, and deferred

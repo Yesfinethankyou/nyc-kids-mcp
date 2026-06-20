@@ -1,0 +1,414 @@
+{
+  "result": [
+    {
+      "_createdAt": "2026-06-09T16:29:08Z",
+      "_id": "77288b2a-a2a4-403d-bb42-b3b4e4c2fe6a",
+      "_type": "event",
+      "_updatedAt": "2026-06-18T16:38:30Z",
+      "address": {
+        "state": "NY"
+      },
+      "description": "Stop by the kiosk to grab a selection of locally grown flowers from the family-owned Ranchos Hermanos Luna. ",
+      "endDate": "2026-10-03",
+      "endHour": "3:00 pm",
+      "frequency": "weekly",
+      "interval": 1,
+      "latitude": 40.7149,
+      "location": "Kiosk at Domino Square ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "flowers-at-the-kiosk-with-ranchos-hermanos-luna"
+      },
+      "startDate": "2026-06-20",
+      "startHour": "7:30 am",
+      "swapped": false,
+      "tags": [
+        "Movement & Wellness"
+      ],
+      "title": "Flowers at the Kiosk with Rancho Hermanos Luna ",
+      "variant": "reoccurring"
+    },
+    {
+      "_createdAt": "2026-04-16T18:44:20Z",
+      "_id": "2bc78b10-9ef2-4487-aaf5-01b4fe42960e",
+      "_type": "event",
+      "_updatedAt": "2026-06-18T16:38:56Z",
+      "address": {
+        "_type": "object",
+        "address1": "15 River St",
+        "address2": "15 River St",
+        "city": "Brooklyn",
+        "state": "NY",
+        "zip": "11249"
+      },
+      "description": "Join us for Craft Nights, happening twice a month on the 2nd and last Monday - a creative space to unwind, explore, and make something with your hands.\n\nWe\u2019ll alternate between two partners: Nelise Bey\u2019s natural dye workshops, where you can experiment with indigo and other plant-based colors, and Kimberly Lewis\u2019s guided artmaking sessions. Kimberly\u2019s approach invites you to reconnect with yourself through creating, offering hands-on projects that encourage experimentation, storytelling, and letting go of perfection.\n",
+      "endDate": "2026-09-28",
+      "endHour": "9 pm",
+      "frequency": "weekly",
+      "interval": 2,
+      "latitude": 40.7149,
+      "location": "Domino Square",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "craft-night"
+      },
+      "startDate": "2026-06-29",
+      "startHour": "6 pm",
+      "swapped": false,
+      "tags": [
+        "Arts, Creativity & Community"
+      ],
+      "title": "Craft Nights",
+      "variant": "reoccurring"
+    },
+    {
+      "_createdAt": "2026-05-07T16:31:56Z",
+      "_id": "1451a838-3d21-4a64-b0f1-f11155ab855b",
+      "_type": "event",
+      "_updatedAt": "2026-06-02T23:00:44Z",
+      "address": {
+        "address1": "12 S 3rd Street",
+        "city": "Brooklyn",
+        "state": "NY",
+        "zip": "11249"
+      },
+      "description": "On the first Thursday of the month, bring your crew or join new friends for a lively game (or two!) of dominoes. Presented by Capicu!. ",
+      "endDate": "2026-09-03",
+      "endHour": "9 pm",
+      "frequency": "monthly",
+      "interval": 1,
+      "latitude": 40.7149,
+      "location": "Domino Square ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "dominoes-socials-1"
+      },
+      "startDate": "2026-07-02",
+      "startHour": "6 pm",
+      "swapped": false,
+      "tags": [
+        "Arts, Creativity & Community"
+      ],
+      "title": "Dominoes Socials presented by Capicu!",
+      "variant": "reoccurring"
+    },
+    {
+      "_createdAt": "2024-09-17T15:53:22Z",
+      "_id": "ef86da5b-eb90-43cf-b07d-3e33a4ea3821",
+      "_type": "event",
+      "_updatedAt": "2026-06-18T16:39:30Z",
+      "address": {
+        "address1": "Domino Park ",
+        "city": "Brooklyn",
+        "state": "NY",
+        "zip": "11249"
+      },
+      "description": "The Domino Park Greenmarket, organized by GrowNYC, is a Sunday staple, featuring local farmers and producers offering a variety of fruits, vegetables, mushrooms, fresh cut flowers, plants, and more. Runs June 14 - November 22. ",
+      "endDate": "2026-11-22",
+      "endHour": "3:00 pm",
+      "frequency": "weekly",
+      "interval": 1,
+      "latitude": null,
+      "location": "River Street, between S 3rd and S 4th Sts",
+      "longitude": null,
+      "slug": {
+        "_type": "slug",
+        "current": "greenmarket"
+      },
+      "startDate": "2026-06-21",
+      "startHour": "8:00 am ",
+      "swapped": null,
+      "tags": [
+        "Movement & Wellness"
+      ],
+      "title": "Greenmarket ",
+      "variant": "reoccurring"
+    },
+    {
+      "_createdAt": "2026-04-16T14:51:57Z",
+      "_id": "39ac6944-da4d-4b4d-9bb3-d12680b72680",
+      "_type": "event",
+      "_updatedAt": "2026-06-18T16:37:36Z",
+      "address": {
+        "address1": "12 South 3rd Street",
+        "address2": "12 South 3rd Street",
+        "city": "Brooklyn",
+        "state": "NY",
+        "zip": "11211"
+      },
+      "description": "Every other Sunday morning on the Flex Field, join us for an invigorating outdoor yoga session. This class offers the perfect start to a relaxing Sunday. ",
+      "endDate": "2026-08-30",
+      "endHour": "11:00 AM",
+      "frequency": "weekly",
+      "interval": 2,
+      "latitude": 40.7149,
+      "location": "Flex Field ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "sunday-yoga-series"
+      },
+      "startDate": "2026-06-28",
+      "startHour": "10:00 AM",
+      "swapped": false,
+      "tags": [
+        "Movement & Wellness"
+      ],
+      "title": "Sunday Yoga Series Presented by Farm Rio",
+      "variant": "reoccurring"
+    },
+    {
+      "_createdAt": "2025-06-23T23:20:52Z",
+      "_id": "f1286771-ceae-45a4-934c-f7fdcd6f7251",
+      "_type": "event",
+      "_updatedAt": "2026-06-12T14:48:39Z",
+      "address": {
+        "_type": "object",
+        "address1": "12 South 3rd Street",
+        "address2": "12 South 3rd Street",
+        "city": "Brooklyn",
+        "state": "NY",
+        "zip": "11249"
+      },
+      "description": "Twice monthly, bring the family for a fun-filled Sunday afternoon, featuring programming by local, talented children's performers and educators. Sunday mornings feature two events hosted by our partners, one at 12 pm, and one at 2pm. Stick around the whole slate of programming and head over to the Greenmarket (and the Fountain!) to make a whole day out of it. \n\n",
+      "endDate": "2026-09-27",
+      "endHour": "3 pm",
+      "frequency": "weekly",
+      "interval": 2,
+      "latitude": 40.7149,
+      "location": "Domino Square ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "play-in-the-square-7"
+      },
+      "startDate": "2026-06-21",
+      "startHour": "12 pm",
+      "swapped": false,
+      "tags": [
+        "Family & Education"
+      ],
+      "title": "Play in the Square!",
+      "variant": "reoccurring"
+    },
+    {
+      "_createdAt": "2026-02-09T17:36:04Z",
+      "_id": "123a2dad-44a8-4293-a0f6-490764a38492",
+      "_type": "event",
+      "_updatedAt": "2026-05-18T19:19:22Z",
+      "address": {
+        "_type": "object",
+        "address1": "12 South 3rd Street",
+        "state": "NY"
+      },
+      "description": "Join A Rosie Day for one final Winter Workshop at the SKATE at Domino Park hospitality tent for cozy - Olympic-themed - crafting for families. All ages welcome, come create with us!\n",
+      "endDate": "2026-02-18",
+      "endHour": "4:30 pm",
+      "frequency": "daily",
+      "interval": 1,
+      "latitude": 40.7149,
+      "location": "SKATE at Domino Park ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "winter-workshops-4"
+      },
+      "startDate": "2026-02-18",
+      "startHour": "2:30 pm",
+      "swapped": false,
+      "tags": [
+        "Family & Education"
+      ],
+      "title": "Winter Workshops ",
+      "variant": "single-day"
+    },
+    {
+      "_createdAt": "2026-04-16T18:51:40Z",
+      "_id": "a12a4c19-7687-42d9-8382-36053a6df957",
+      "_type": "event",
+      "_updatedAt": "2026-06-12T14:57:31Z",
+      "address": {
+        "address1": "12 South 3rd Street",
+        "address2": "15 River St",
+        "city": "Brooklyn",
+        "state": "NY",
+        "zip": "11249"
+      },
+      "description": "To celebrate the special Juneberry harvest at the park, join us for a festival featuring live music, food and beverages from local vendors highlighting the berry, plant-based craft workshops, and more. And, of course, come to learn about and taste the rare berry for yourself!  ",
+      "endDate": null,
+      "endHour": "5 pm",
+      "frequency": null,
+      "interval": null,
+      "latitude": 40.7149,
+      "location": "Domino Square ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "juneberry-festival"
+      },
+      "startDate": "2026-06-20",
+      "startHour": "1 pm",
+      "swapped": false,
+      "tags": [
+        "Arts, Creativity & Community"
+      ],
+      "title": "Juneberry Festival",
+      "variant": "single-day"
+    },
+    {
+      "_createdAt": "2026-05-07T16:05:15Z",
+      "_id": "08ba94cf-8a33-4aba-814d-5e72ecb5c494",
+      "_type": "event",
+      "_updatedAt": "2026-05-26T15:02:23Z",
+      "address": {
+        "state": "NY"
+      },
+      "description": "Longevity Stick is a fun and gentle exercise routine perfect for people of all ages and mobility levels! Using a lightweight stick, you'll move through easy, flowing stretches that help improve balance, flexibility, and energy \u2014 without putting strain on your body. This relaxing practice is great for anyone looking for a simple way to feel better and move more freely.",
+      "endDate": "2026-09-06",
+      "endHour": "11:00 AM",
+      "frequency": "weekly",
+      "interval": 2,
+      "latitude": 40.7149,
+      "location": "Flex Field ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "longevity-stick-2"
+      },
+      "startDate": "2026-06-21",
+      "startHour": "10:00 am",
+      "swapped": false,
+      "tags": [
+        "Movement & Wellness"
+      ],
+      "title": "Longevity Stick",
+      "variant": "single-day"
+    },
+    {
+      "_createdAt": "2026-04-16T18:54:45Z",
+      "_id": "ca6200bb-b942-43bf-bb3d-b181db4ca6bc",
+      "_type": "event",
+      "_updatedAt": "2026-05-10T01:01:42Z",
+      "address": {
+        "state": "NY"
+      },
+      "description": "Through a special telescope guided by Astro5, catch an up-close look of the moon as the sun sets. ",
+      "endDate": null,
+      "endHour": "9 pm",
+      "frequency": null,
+      "interval": null,
+      "latitude": 40.7149,
+      "location": "Domino Square ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "lunar-gazing"
+      },
+      "startDate": "2026-06-26",
+      "startHour": "7 pm",
+      "swapped": false,
+      "tags": [
+        "Family & Education"
+      ],
+      "title": "Lunar Gazing",
+      "variant": "single-day"
+    },
+    {
+      "_createdAt": "2026-04-16T18:53:06Z",
+      "_id": "8a98fb47-ece8-4974-b4cb-cc2ae56c3234",
+      "_type": "event",
+      "_updatedAt": "2026-06-09T20:00:05Z",
+      "address": {
+        "address1": "12 S 3rd Street",
+        "city": "Brooklyn",
+        "state": "NY",
+        "zip": "11249"
+      },
+      "description": "Domino Park is partnering with The Moth for two special storytelling events this summer! On Sunday, June 28th (2-4pm) we\u2019ll host a storytelling workshop where experienced instructors will introduce the basics of Moth-style storytelling and help participants begin crafting their own personal story.\n\nThen, on Wednesday, July 8th at 7:00pm, join us at Domino Square stage for an open-mic Moth StorySLAM! Come to enjoy the show or for the chance to put your name in the hat to tell a 5-minute story on our theme, You Know the Place - stories about the places that bring us together and keep us coming back. Stories begin at 7:00pm ET.\n\nThe Moth Community StorySLAM is a project of the Moth Community Engagement Program, meant to create a welcoming space for hearing and sharing stories. Registration is free and stories are not judged or scored. \n\n\n",
+      "endDate": null,
+      "endHour": "4 pm",
+      "frequency": null,
+      "interval": null,
+      "latitude": 40.7149,
+      "location": "Domino Square ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "the-moth-workshop"
+      },
+      "startDate": "2026-06-28",
+      "startHour": "2 pm",
+      "swapped": false,
+      "tags": [
+        "Music, Dance & Theater"
+      ],
+      "title": "The Moth Storytelling Workshop",
+      "variant": "single-day"
+    },
+    {
+      "_createdAt": "2026-04-03T15:48:14Z",
+      "_id": "1d5bddd5-0c5c-4503-b503-5bb8697cb06e",
+      "_type": "event",
+      "_updatedAt": "2026-05-18T16:06:49Z",
+      "address": {
+        "address1": "12 S 3rd Street",
+        "city": "Brooklyn",
+        "state": "NY"
+      },
+      "description": "Shared Evening: Julia Antinozzi + Isa Spector",
+      "endDate": "2026-06-11",
+      "endHour": null,
+      "frequency": null,
+      "interval": null,
+      "latitude": 40.7149,
+      "location": "Domino Square ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "julia-antinozzi-isa-spector"
+      },
+      "startDate": "2026-06-10",
+      "startHour": "7 pm ",
+      "swapped": false,
+      "tags": [
+        "Sugar-Sugar"
+      ],
+      "title": "Julia Antinozzi / Isa Spector",
+      "variant": "multi-day"
+    },
+    {
+      "_createdAt": "2026-04-03T15:49:03Z",
+      "_id": "454c0067-0832-409a-8128-6f6cb9e982e7",
+      "_type": "event",
+      "_updatedAt": "2026-05-13T22:39:49Z",
+      "address": {
+        "address1": "12 S 3rd Street",
+        "city": "Brooklyn",
+        "state": "NY"
+      },
+      "description": "HOLE PICS",
+      "endDate": "2026-06-18",
+      "endHour": null,
+      "frequency": null,
+      "interval": null,
+      "latitude": 40.7149,
+      "location": "Domino Square ",
+      "longitude": -73.967778,
+      "slug": {
+        "_type": "slug",
+        "current": "hole-pics"
+      },
+      "startDate": "2026-06-17",
+      "startHour": "7 pm ",
+      "swapped": false,
+      "tags": [
+        "Sugar-Sugar"
+      ],
+      "title": "HOLE PICS",
+      "variant": "multi-day"
+    }
+  ]
+}
