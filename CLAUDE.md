@@ -136,6 +136,12 @@ isn't per-occurrence.
 - Two SQLite files: `data/events.db` (data) and `data/oauth.db` (tokens).
   They have separate schemas. Do not cross-reference.
 - Precedents: `events.raw_payload TEXT`, `oauth_tokens.expires_at TEXT`.
+- **Never run `VACUUM` on `data/events.db` without immediately rebuilding the
+  FTS index.** `events` has a TEXT primary key (no `INTEGER PRIMARY KEY` alias),
+  so SQLite may renumber its implicit rowids on VACUUM. `events_fts` is an
+  external-content FTS5 table keyed on those rowids; after a renumber the
+  full-text index silently desynchronizes and returns wrong results. Fix with:
+  `INSERT INTO events_fts(events_fts) VALUES('rebuild');`
 
 ## Source-data hygiene philosophy
 
