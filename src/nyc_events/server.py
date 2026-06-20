@@ -728,6 +728,7 @@ async def authorize_post(request: Request) -> Response:
     form = await request.form()
     presented = form.get("token", "") or ""
     master = os.environ.get("MCP_AUTH_TOKEN", "")
+    consent_pw = os.environ.get("MCP_CONSENT_PASSWORD") or master
     params = {k: form.get(k, "") for k in (
         "client_id", "redirect_uri", "code_challenge",
         "code_challenge_method", "state", "scope",
@@ -739,7 +740,7 @@ async def authorize_post(request: Request) -> Response:
         return PlainTextResponse(
             "redirect_uri not in allowlist", status_code=400
         )
-    if not (master and secrets.compare_digest(presented, master)):
+    if not (consent_pw and secrets.compare_digest(presented, consent_pw)):
         return _render_consent(params, error="Invalid token.")
 
     code = oauth.issue_auth_code(

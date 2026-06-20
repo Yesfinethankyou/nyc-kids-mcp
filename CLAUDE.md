@@ -95,7 +95,11 @@ These have all cost us real time. Don't relearn:
 
 ## OAuth model
 
-- `MCP_AUTH_TOKEN` = master bearer **AND** consent-page password. One env var, two roles.
+- `MCP_AUTH_TOKEN` = master bearer AND fallback consent-page password.
+- `MCP_CONSENT_PASSWORD` = optional separate consent-page password for `/authorize` POST.
+  When set, the browser form accepts this instead of `MCP_AUTH_TOKEN`, so the master
+  bearer is never typed into a browser. Falls back to `MCP_AUTH_TOKEN` when unset
+  (original single-var behaviour). The two credentials can be rotated independently.
 - `oauth_tokens` table = OAuth-issued access tokens. Lives in `data/oauth.db`,
   intentionally separate from `data/events.db` so wiping events during dev
   does not log claude.ai out.
