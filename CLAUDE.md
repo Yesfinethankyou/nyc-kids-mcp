@@ -243,7 +243,7 @@ Known accepted residuals (see `git log` for the security-audit commit):
   still follows `.claude/agents/source-adder.md`.
   - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood
     Cemetery, Prospect Park Alliance, New York Transit Museum, Brooklyn
-    Army Terminal.
+    Army Terminal, Industry City.
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
@@ -259,12 +259,18 @@ Known accepted residuals (see `git log` for the security-audit commit):
     `curl_cffi`. Filters out "Live Music Concert" 21+ EDM shows. As built
     (2026-06-15): 24 cards → 12 dropped, 12 kept kid-relevant community
     events. See SOURCES-BACKLOG.md as-built block.
-  - **CONFIRMED, ready to build:** Industry City — WordPress + The Events
-    Calendar (Tribe), the same fast-path as Green-Wood / Prospect Park / NY
-    Transit (`wp-json/tribe/events/v1/events`, ~195 events, no headless
-    needed). The earlier "custom headless CMS, no wp-json" verdict was a
-    probe artifact — a `curl_cffi` (`impersonate="chrome"`) re-probe found
-    the standard Tribe API. See SOURCES-BACKLOG.md "Ready to build".
+  - **BUILT (live):** Industry City — WordPress + The Events Calendar (Tribe),
+    the same fast-path as Green-Wood / Prospect Park / NY Transit
+    (`wp-json/tribe/events/v1/events`, `curl_cffi` impersonate=chrome). The
+    earlier "custom headless CMS, no wp-json" verdict was a probe artifact.
+    Categories aren't kid-curated, so filtering is title/description
+    keyword-driven with `Nightlife` as a hard-exclude category and an
+    adult/alcohol blocklist (21+, burlesque, drag, sake/whiskey/cocktail
+    tastings, "no strollers / children under the age"). As built (2026-06-20):
+    a live 60-day fetch returned 29 rows → 21 dropped, 8 kept (workshops,
+    Puppetworks, Zine Club). `cost`/`venue` always empty upstream → price
+    UNKNOWN, venue/borough hardcoded Industry City / Brooklyn, no lat/lng/age.
+    See SOURCES-BACKLOG.md as-built block.
   - **Needs re-probe — prior "no feed" verdict is suspect:** Domino Park and
     Governors Island were both rejected by the same non-impersonating probe
     that wrong-flagged Industry City. Their "no structured feed" conclusions

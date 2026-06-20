@@ -180,6 +180,38 @@ Revisit in Phase 3+ if a simpler path turns up.
 
 ## Ready to build — confirmed structured feed
 
+### Industry City — ✅ BUILT (live) — Tribe REST API
+
+- **As built (2026-06-20):** slug `industry_city`, `IndustryCitySource`,
+  copy-adapted from `prospect_park.py` / `ny_transit_museum.py`. Registered in
+  `ENABLED_SOURCES` among the fast Tribe REST sources (after Prospect Park,
+  before the permit source). Fixture `tests/fixtures/industry_city_sample.json`
+  drives `tests/test_industry_city_parse.py` (24 tests). `window_days = 60`,
+  opted into missing-detection.
+  - **Real built numbers:** a live 60-day fetch (2026-06-20) returned **29 rows
+    → 21 dropped, 8 kept** (T-Shirt Yarn Workshop, BCR Mending Circle,
+    Puppetworks KIDS + Community Reception, Zine Club ×4). Note: the larger
+    "~195 events / total_pages=13" probe used a ~2-year window; the production
+    60-day window is much smaller (~29 rows, ~8 kept). The 15-row fixture
+    (`per_page=15` page 1) yields 4 kept under the same filter.
+  - **Confirmed vs. research:** `external_id = str(id)` held — the gourmet tour
+    appears twice in the fixture with distinct ids (10051523 / 10051524) and
+    dated URL slugs, so the Tribe-per-occurrence precedent is confirmed; no
+    `:start.isoformat()` suffix. `cost` and `venue` were empty across every
+    surveyed row, as predicted → price UNKNOWN for all, venue/borough hardcoded
+    Industry City / Brooklyn, no lat/lng/age.
+  - **Filter as built:** keyword allowlist on title+description+excerpt (kids,
+    family, workshop, craft, puppet, market, etc.); `Nightlife` category is a
+    hard-exclude; a hard-exclude blocklist (21+, 18+, burlesque, drag, late
+    night, cocktail/whiskey/sake/brewery/distillery tastings) wins over the
+    allowlist and drops the adult "gourmet food and drinks" tour and the sake
+    class. **Added beyond the research:** the outdoor World Cup watch parties
+    say "NO STROLLERS or children under the age of 3" — the bare word
+    "children" in that exclusion clause was matching the allowlist, so the
+    phrases "no strollers" / "children under the age" / "no children" were
+    added to the hard-exclude list. Without that, all six watch-party rows
+    leaked through.
+
 ### Industry City — ✅ CONFIRMED (Tribe REST API — the prior "headless CMS" finding was wrong)
 
 - **Status:** CONFIRMED 2026-06-20. The earlier "custom Streetsense headless

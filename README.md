@@ -13,7 +13,8 @@ tools — designed for use from the Claude mobile app while out with a kid.
   Poppins NYC (~233 events/run), Brooklyn Public Library, Brooklyn Children's
   Museum, Green-Wood Cemetery (~104 events/60d), Prospect Park Alliance
   (~307 events/60d), New York Transit Museum (~10 events/60d), Brooklyn Army
-  Terminal (~12 events/60d) — real descriptions, URLs, and (where
+  Terminal (~12 events/60d), Industry City (~8 events/60d) — real
+  descriptions, URLs, and (where
   upstream provides them) age ranges, coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser) and Coney Island
   USA (feed works, but the calendar is adult programming). More venues in
@@ -45,7 +46,7 @@ RSS / ICS / SODA / scrapers  →  ingest (nightly cron)  →  SQLite (FTS5)  →
 - SQLite + FTS5 for text search
 - `httpx` for most fetching; `curl_cffi` (Chrome impersonation) for sources
   behind Cloudflare TLS-fingerprinting (Mommy Poppins, Green-Wood Cemetery,
-  Prospect Park Alliance, New York Transit Museum)
+  Prospect Park Alliance, New York Transit Museum, Industry City)
 - **Auth:** minimal single-user OAuth 2.1 + PKCE shim (claude.ai web requires it; bare bearer
   isn't an option). Master token also still works directly for curl testing.
 - Docker target: Synology NAS; public HTTPS via Tailscale Funnel
@@ -312,6 +313,13 @@ Adapters with real descriptions, URLs, age ranges:
   keeps free community/family programming (Summer at the Terminal markets
   and food fests, cultural festivals, Rooftop Films, Día de Los Muertos);
   ~12 events/60 days.
+- ✅ **Industry City** — *shipped.* Fourth Tribe Events REST API instance
+  (`curl_cffi`); categories aren't kid-curated, so filtering is
+  title/description keyword-driven with `Nightlife` hard-excluded and an
+  adult/alcohol blocklist (21+, burlesque, drag, sake/whiskey/cocktail
+  tastings). Keeps maker/craft workshops, Puppetworks, Zine Club; `cost` and
+  `venue` always empty upstream → price unknown, venue/borough hardcoded.
+  ~8 events/60 days.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
 - ❌ **Coney Island USA** — *rejected.* Working Squarespace feed, but the
@@ -351,6 +359,7 @@ nyc-events-mcp/
 │       ├── prospect_park.py          # Tribe Events REST        (Phase 2, shipped)
 │       ├── ny_transit_museum.py      # Tribe Events REST        (Phase 2, shipped)
 │       ├── brooklyn_army_terminal.py # single-page HTML scrape  (Phase 2, shipped)
+│       ├── industry_city.py          # Tribe Events REST        (Phase 2, shipped)
 │       └── timeout_nykids.py         # stub                     (rejected — no feed)
 ├── data/                 # SQLite lives here; gitignored
 ├── SOURCES-BACKLOG.md    # researched candidate sources
