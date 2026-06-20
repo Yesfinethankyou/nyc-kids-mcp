@@ -318,10 +318,12 @@ Adapters with real descriptions, URLs, age ranges:
   calendar is adult programming (burlesque/sideshow) and the Mermaid
   Parade isn't published through it.
 
-See `SOURCES-BACKLOG.md` for additional candidate venues. The remaining ones
-(Domino Park, Industry City, Governors Island) are deprioritized for lack of
-a structured feed; Brooklyn Cyclones is deferred to Phase 3 (its themed-night
-data needs a headless browser).
+See `SOURCES-BACKLOG.md` for additional candidate venues. Industry City is
+CONFIRMED (WordPress + Tribe REST API — its earlier "no feed" verdict was a
+probe artifact) and queued to build. Domino Park and Governors Island were
+rejected by that same flawed probe, so their "no structured feed" verdicts
+are flagged for re-probe rather than trusted. Brooklyn Cyclones is deferred to
+Phase 3 (its themed-night data needs a headless browser).
 
 These land alongside `nyc_permitted_events` rather than replace it; permit
 data is a useful denominator even with its thinness.

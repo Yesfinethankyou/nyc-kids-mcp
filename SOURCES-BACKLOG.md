@@ -225,31 +225,46 @@ Revisit in Phase 3+ if a simpler path turns up.
   `per_page=15` page 1; auth-free public endpoint, no headers stripped needed).
 - **Next step:** run `source-adder` for Industry City (slug `industry_city`).
 
-## Low confidence — no structured feed found, deprioritized
+## Needs re-probe — prior "no feed" verdict is unreliable
+
+> **⚠️ These two were rejected by the same probe method that wrong-flagged
+> Industry City.** Industry City was called a "custom headless CMS, no wp-json"
+> and turned out to be a plain WordPress + Tribe REST API once re-probed with
+> `curl_cffi` (`impersonate="chrome"`). The Domino Park and Governors Island
+> findings below predate that correction and likely used a non-impersonating
+> fetcher that ate a 403 / bot-block. **Treat their "no structured feed"
+> conclusions as unverified — re-probe both with `curl_cffi` before trusting
+> the rejection.** Status downgraded from "deprioritized" to NEEDS RE-PROBE.
 
 ### Domino Park
 
-- **Status:** CANDIDATE (low — Sanity headless CMS)
+- **Status:** NEEDS RE-PROBE (prior verdict suspect — see warning above).
+  Earlier "Sanity headless CMS, no public feed" finding may be a bot-block
+  artifact; re-probe with `curl_cffi` impersonation before deprioritizing.
 - **Source:** `https://www.dominopark.com/events`
-- **Finding:** Sanity CMS (CDN: `sanity-prod-domino-park.b-cdn.net`). Events
-  server-rendered but no public structured feed or iCal found. Sanity has a
-  public GROQ API but only if the project allows anonymous reads — unconfirmed.
-- **Verify:** check if `https://www.dominopark.com/api/events` or similar
-  exists; look for Sanity project ID in page source to attempt GROQ query.
-- **Outlook:** likely requires HTML scraping.
+- **Finding (unverified):** Sanity CMS (CDN: `sanity-prod-domino-park.b-cdn.net`).
+  Events server-rendered but no public structured feed or iCal found. Sanity has
+  a public GROQ API but only if the project allows anonymous reads — unconfirmed.
+- **Verify:** re-fetch with `curl_cffi` (`impersonate="chrome"`) first; then
+  check if `https://www.dominopark.com/api/events` or `/wp-json/` exists; look
+  for a Sanity project ID in page source to attempt a GROQ query.
+- **Outlook:** likely requires HTML scraping if the re-probe confirms no feed.
 
 ### Governors Island
 
-- **Status:** CANDIDATE (low — custom/unknown CMS)
+- **Status:** NEEDS RE-PROBE (prior verdict suspect — see warning above).
+  Earlier "custom CMS, no API surface" finding may be a bot-block artifact;
+  re-probe with `curl_cffi` impersonation before deprioritizing.
 - **Source:** `https://govisland.com/calendar`
-- **Finding:** custom site (S3-hosted assets, built by Reflexions design firm).
-  No WordPress, no Squarespace, no JSON-LD, no iCal link visible.
+- **Finding (unverified):** custom site (S3-hosted assets, built by Reflexions
+  design firm). No WordPress, no Squarespace, no JSON-LD, no iCal link visible.
   Events may be server-rendered but no API surface found.
-- **Verify:** inspect Network tab in browser devtools for XHR calls; check
-  `govisland.com/wp-json/` (unlikely but worth a try); check doNYC mirror
-  (`donyc.com/venues/governors-island`) as an aggregator fallback.
-- **Outlook:** likely scraping only. Heavy public/family programming makes it
-  worth one more verification pass before giving up.
+- **Verify:** re-fetch with `curl_cffi` (`impersonate="chrome"`) first; inspect
+  for XHR calls; check `govisland.com/wp-json/` (unlikely but worth a try); check
+  the doNYC mirror (`donyc.com/venues/governors-island`) as an aggregator
+  fallback.
+- **Outlook:** likely scraping only if the re-probe confirms no feed. Heavy
+  public/family programming makes it worth one more verification pass.
 
 ---
 
