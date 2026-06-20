@@ -27,6 +27,7 @@ Quirks:
 
 from __future__ import annotations
 
+import html
 import json
 import logging
 import re
@@ -132,7 +133,7 @@ def _strip_html(raw: str | None) -> str:
     if not raw:
         return ""
     text = _HTML_TAG_RX.sub(" ", raw)
-    text = text.replace("&nbsp;", " ").replace("&amp;", "&").replace("&#8217;", "'")
+    text = html.unescape(text).replace("\xa0", " ")
     return _WS_RX.sub(" ", text).strip()
 
 

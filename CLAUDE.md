@@ -95,7 +95,11 @@ These have all cost us real time. Don't relearn:
 
 ## OAuth model
 
-- `MCP_AUTH_TOKEN` = master bearer **AND** consent-page password. One env var, two roles.
+- `MCP_AUTH_TOKEN` = master bearer AND fallback consent-page password.
+- `MCP_CONSENT_PASSWORD` = optional separate consent-page password for `/authorize` POST.
+  When set, the browser form accepts this instead of `MCP_AUTH_TOKEN`, so the master
+  bearer is never typed into a browser. Falls back to `MCP_AUTH_TOKEN` when unset
+  (original single-var behaviour). The two credentials can be rotated independently.
 - `oauth_tokens` table = OAuth-issued access tokens. Lives in `data/oauth.db`,
   intentionally separate from `data/events.db` so wiping events during dev
   does not log claude.ai out.
@@ -136,6 +140,12 @@ isn't per-occurrence.
 - Two SQLite files: `data/events.db` (data) and `data/oauth.db` (tokens).
   They have separate schemas. Do not cross-reference.
 - Precedents: `events.raw_payload TEXT`, `oauth_tokens.expires_at TEXT`.
+- **Never run `VACUUM` on `data/events.db` without immediately rebuilding the
+  FTS index.** `events` has a TEXT primary key (no `INTEGER PRIMARY KEY` alias),
+  so SQLite may renumber its implicit rowids on VACUUM. `events_fts` is an
+  external-content FTS5 table keyed on those rowids; after a renumber the
+  full-text index silently desynchronizes and returns wrong results. Fix with:
+  `INSERT INTO events_fts(events_fts) VALUES('rebuild');`
 
 ## Source-data hygiene philosophy
 

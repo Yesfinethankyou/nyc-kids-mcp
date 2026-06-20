@@ -20,8 +20,6 @@ from nyc_events.server import (
     _render_consent,
 )
 
-UTC = UTC
-
 
 # ---- Fix #1: redirect_uri allowlist -----------------------------------------
 

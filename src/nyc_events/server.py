@@ -9,6 +9,7 @@ still works (the middleware accepts master token OR an OAuth-issued token).
 from __future__ import annotations
 
 import html
+import json
 import os
 import secrets
 import time as _time
@@ -38,7 +39,6 @@ from . import db, oauth
 from .models import Event
 
 NYC_TZ = ZoneInfo("America/New_York")
-UTC = UTC
 DB_PATH = os.environ.get("DB_PATH", "data/events.db")
 # OAuth state in a separate SQLite file so wiping events.db during dev
 # doesn't blow away access tokens claude.ai has cached.
@@ -85,6 +85,11 @@ OAUTH_TOKEN_TTL_DAYS = int(os.environ.get("OAUTH_TOKEN_TTL_DAYS", "90"))
 # proxy_headers=True so request.client.host reflects X-Forwarded-For.
 
 _rate_state: dict[tuple[str, str], deque[float]] = {}
+# Short-lived in-memory cache of validated OAuth tokens (token → monotonic
+# expiry). Avoids opening oauth.db on every MCP call. Tolerable revocation
+# lag: up to _OAUTH_CACHE_TTL seconds before a deleted token stops working.
+_oauth_token_cache: dict[str, float] = {}
+_OAUTH_CACHE_TTL = 300  # seconds
 _RATE_LIMITS: dict[str, tuple[int, int]] = {
     # endpoint -> (max_requests, window_seconds)
     "authorize_post": (5, 10),
@@ -105,17 +110,24 @@ def _rate_limit(request: Request, endpoint: str) -> Response | None:
     limit, window = _RATE_LIMITS[endpoint]
     ip = _client_ip(request)
     key = (ip, endpoint)
-    bucket = _rate_state.setdefault(key, deque())
     now = _time.time()
-    while bucket and bucket[0] < now - window:
-        bucket.popleft()
-    if len(bucket) >= limit:
+    bucket = _rate_state.get(key)
+    if bucket is not None:
+        while bucket and bucket[0] < now - window:
+            bucket.popleft()
+        if not bucket:
+            del _rate_state[key]
+            bucket = None
+    if bucket is not None and len(bucket) >= limit:
         retry_after = max(1, int(window - (now - bucket[0])) + 1)
         return PlainTextResponse(
             "rate limit exceeded",
             status_code=429,
             headers={"Retry-After": str(retry_after)},
         )
+    if bucket is None:
+        bucket = deque()
+        _rate_state[key] = bucket
     bucket.append(now)
     return None
 
@@ -311,10 +323,13 @@ def search_events(
         age: kid's age in years. Returns events whose [age_min, age_max]
             window includes this age, plus events without a declared range.
         free_only: if True, only events explicitly flagged free.
-        days_ahead: window starts now and ends N days from today (default 14).
-        limit: max events to return (default 10). Use
+        days_ahead: window starts now and ends N days from today (default 14,
+            max 365).
+        limit: max events to return (default 10, max 50). Use
             get_event_detail(event_id) to drill into a specific result.
     """
+    days_ahead = min(days_ahead, 365)
+    limit = min(limit, 50)
     now = datetime.now(NYC_TZ)
     until = now + timedelta(days=days_ahead)
     with db.connect_events(DB_PATH) as conn:
@@ -361,9 +376,10 @@ def events_this_weekend(
         borough: Manhattan, Brooklyn, Queens, Bronx, or Staten Island.
         age: kid's age in years (see search_events for matching semantics).
         free_only: if True, only events explicitly flagged free.
-        limit: max events to return (default 10). Use
+        limit: max events to return (default 10, max 50). Use
             get_event_detail(event_id) to drill into a specific result.
     """
+    limit = min(limit, 50)
     window_start, sunday_end = _weekend_window(datetime.now(NYC_TZ))
     with db.connect_events(DB_PATH) as conn:
         events = db.search(
@@ -393,9 +409,10 @@ def events_on_date(
         borough: Manhattan, Brooklyn, Queens, Bronx, or Staten Island.
         age: kid's age in years.
         free_only: if True, only events explicitly flagged free.
-        limit: max events to return (default 10). Use
+        limit: max events to return (default 10, max 50). Use
             get_event_detail(event_id) to drill into a specific result.
     """
+    limit = min(limit, 50)
     try:
         d = datetime.strptime(date, "%Y-%m-%d").date()
     except ValueError as exc:
@@ -449,14 +466,13 @@ def get_event_raw(event_id: str) -> dict[str, Any] | None:
     existed (older rows will gain a payload on the next nightly re-ingest
     while they're still in the upstream window).
     """
-    import json as _json
     with db.connect_events(DB_PATH) as conn:
         ev = db.get_event_by_id(conn, event_id)
     if ev is None or ev.raw_payload is None:
         return None
     try:
-        return _json.loads(ev.raw_payload)
-    except _json.JSONDecodeError:
+        return json.loads(ev.raw_payload)
+    except json.JSONDecodeError:
         return None
 
 
@@ -507,8 +523,16 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
         if scheme.lower() == "bearer" and presented:
             if secrets.compare_digest(presented, self._master):
                 return await call_next(request)
+            mono = _time.monotonic()
+            if _oauth_token_cache.get(presented, 0.0) > mono:
+                return await call_next(request)
             with db.connect_oauth(self._oauth_db_path) as conn:
                 if db.is_valid_oauth_token(conn, presented):
+                    _oauth_token_cache[presented] = mono + _OAUTH_CACHE_TTL
+                    if len(_oauth_token_cache) > 200:
+                        stale = [k for k, v in _oauth_token_cache.items() if v <= mono]
+                        for k in stale:
+                            del _oauth_token_cache[k]
                     return await call_next(request)
 
         meta = f"{_base_url(request)}/.well-known/oauth-protected-resource"
@@ -704,6 +728,7 @@ async def authorize_post(request: Request) -> Response:
     form = await request.form()
     presented = form.get("token", "") or ""
     master = os.environ.get("MCP_AUTH_TOKEN", "")
+    consent_pw = os.environ.get("MCP_CONSENT_PASSWORD") or master
     params = {k: form.get(k, "") for k in (
         "client_id", "redirect_uri", "code_challenge",
         "code_challenge_method", "state", "scope",
@@ -715,7 +740,7 @@ async def authorize_post(request: Request) -> Response:
         return PlainTextResponse(
             "redirect_uri not in allowlist", status_code=400
         )
-    if not (master and secrets.compare_digest(presented, master)):
+    if not (consent_pw and secrets.compare_digest(presented, consent_pw)):
         return _render_consent(params, error="Invalid token.")
 
     code = oauth.issue_auth_code(
