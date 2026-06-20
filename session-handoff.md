@@ -1,91 +1,88 @@
 # Session Handoff
 
-## Current Objective
+## What was done (last two sessions)
 
-- Goal: Close the three open GitHub issues (#4, #5, #6) from the June 10
-  architecture review.
-- Current status: All three closed and merged into a PR (#19) on branch
-  `claude/review-open-issues-bzeumn`. Suite green (405 passed).
+### Session: Issues #4 / #5 / #6 (merged in PR #19)
 
-## Completed This Session
-
-- [x] **Issue #4 — FTS5 VACUUM footgun (doc fix):** Added warning to CLAUDE.md
-      "DB migrations" section: never run `VACUUM` on `events.db` without
-      immediately rebuilding the FTS5 index (`INSERT INTO events_fts(events_fts)
-      VALUES('rebuild')`). The `events` table has a TEXT primary key (no
-      `INTEGER PRIMARY KEY` alias), so SQLite may renumber implicit rowids on
-      VACUUM, silently desynchronizing the external-content FTS5 index.
+- [x] **Issue #4 — FTS5 VACUUM footgun (doc fix):** CLAUDE.md "DB migrations"
+      section now warns never to run `VACUUM` on `events.db` without
+      immediately rebuilding the FTS5 index. The `events` table has a TEXT
+      primary key, so SQLite may renumber implicit rowids on VACUUM and silently
+      desynchronize the external-content FTS5 index.
 - [x] **Issue #5 — Split consent password from master bearer:** Added optional
-      `MCP_CONSENT_PASSWORD` env var. `/authorize` POST now checks it first,
-      falling back to `MCP_AUTH_TOKEN` when unset. With it set, the browser
-      consent form never touches the master bearer; the two credentials rotate
-      independently. Zero migration cost. `.env.example` and CLAUDE.md OAuth
-      model section updated.
-- [x] **Issue #6 — Grab-bag hygiene (all four items):**
-      - **OAuth DB churn:** `BearerAuthMiddleware` now checks a 5-minute
-        in-memory `_oauth_token_cache` dict before opening `oauth.db`. Lazy
-        eviction when the cache exceeds 200 entries.
-      - **Rate limiter eviction:** `_rate_limit` now deletes `_rate_state` keys
-        when buckets drain empty during the sliding-window sweep, preventing
-        monotonic memory growth.
-      - **Unclamped tool args:** `limit` clamped to ≤ 50, `days_ahead` to
-        ≤ 365 across all three listing tools. Docstrings updated.
-      - **Nits:** `UTC = UTC` no-ops removed from `server.py` and
-        `test_security_fixes.py`; `import json` moved to module level; Green-Wood
-        `_strip_html` now uses `html.unescape()` instead of three hand-rolled
-        entity substitutions.
-- [x] GitHub issues #4, #5, #6 closed as completed.
-- [x] PR #19 opened.
+      `MCP_CONSENT_PASSWORD` env var. `/authorize` POST checks it first, falling
+      back to `MCP_AUTH_TOKEN`. With it set, the browser consent form never
+      touches the master bearer; the two credentials rotate independently.
+      `.env.example` and CLAUDE.md updated.
+- [x] **Issue #6 — Hygiene grab-bag:** OAuth DB churn reduced (5-min in-memory
+      token cache in `BearerAuthMiddleware`); rate-limiter buckets now evict
+      when empty; tool args clamped (`limit ≤ 50`, `days_ahead ≤ 365`);
+      `UTC = UTC` no-ops removed; `import json` moved to module level;
+      Green-Wood `_strip_html` now uses `html.unescape()`.
 
-## Verification Evidence
+### Session: Agents / skills / hooks review (this PR)
 
-| Check | Command | Result |
-|---|---|---|
-| Tests | `.venv/bin/python -m pytest tests/ -q` | 405 passed |
-| Lint | `.venv/bin/ruff check` | clean |
+- [x] **Agent fixes:** `source-verifier` had Industry City / Domino Park /
+      Governors Island listed as REJECTED "no structured surface" precedents —
+      all three are live sources; each rejection was a non-impersonating-probe
+      artifact. Corrected to Time Out NY Kids. Added explicit warning never to
+      reject on a plain (non-impersonating) probe.
+- [x] **New fast-paths in both agents:** Sanity GROQ API (Domino Park precedent)
+      and Craft CMS / Solspace Calendar JSON (Governors Island precedent) added
+      to `source-adder`'s "Platform fast paths" and `source-verifier`'s
+      classify step.
+- [x] **`source-fixer` agent:** New agent owns repair of broken EXISTING
+      scrapers — the workflow that fell between `source-adder` (new sources only)
+      and the diagnose-only `ingest-health` skill. `ingest-health` now hands
+      off to `source-fixer`.
+- [x] **`guard-commit` PreToolUse hook:** Blocks `git add` of `.env`,
+      `.venv/`, and `data/*.db*`, plus `git add --force`. Scoped to `git add`
+      only; strips `-m` message text to avoid false positives. Verified with
+      13 true/false-positive cases.
+- [x] **`db-maintenance` skill:** Safe VACUUM + mandatory FTS rebuild procedure.
+      Wraps the issue #4 VACUUM footgun with backup, before/after baseline,
+      rebuild, and `PRAGMA integrity_check`. SQL validated against a seeded DB.
+- [x] **CI workflow (`test.yml`):** `pytest` + `ruff` on every PR and push to
+      main. Added to main manually (OAuth app in this environment lacks
+      `workflow` scope for git push).
+- [x] **Lint fix:** Stray double blank line in `tests/test_security_fixes.py`
+      left by the issues session's `UTC = UTC` removal.
 
-## Files Changed (this branch)
+## Current state
 
-- `CLAUDE.md` — VACUUM warning in "DB migrations"; `MCP_CONSENT_PASSWORD` in
-  OAuth model section.
-- `src/nyc_events/server.py` — OAuth token cache, rate limiter eviction,
-  tool arg clamping, `UTC = UTC` removed, `json` import moved, `MCP_CONSENT_PASSWORD`
-  support in `authorize_post`.
-- `src/nyc_events/sources/greenwood_cemetery.py` — `html.unescape()` in
-  `_strip_html`.
-- `tests/test_security_fixes.py` — `UTC = UTC` no-op removed.
-- `.env.example` — `MCP_CONSENT_PASSWORD` documented.
+Suite: **405 passed**, ruff: **clean**. All changes on
+`claude/review-open-issues-bzeumn`, PR open against main.
 
-## Decisions Made
+## Decisions made
 
-- **5-minute OAuth token cache TTL.** Acceptable revocation lag at personal
-  scale (single user, single connector). A deleted token stays valid for up
-  to 5 minutes. To revoke immediately: restart the server.
-- **Rate limiter eviction on drain, not on creation.** Buckets are only
-  removed when the sweep empties them, not when they're first created — avoids
-  churn on IPs that are actively bursting.
-- **`MCP_CONSENT_PASSWORD` falls back to `MCP_AUTH_TOKEN`.** Single-var
-  deployments require no changes; the new var is purely additive.
+- **5-min OAuth token cache TTL.** A revoked token stays valid up to 5 minutes.
+  To revoke immediately: restart the server.
+- **Rate-limiter eviction on drain**, not on creation.
+- **`MCP_CONSENT_PASSWORD` falls back to `MCP_AUTH_TOKEN`.** Additive only;
+  single-var deployments need no changes.
+- **`source-fixer` is a separate agent**, not a widened `source-adder`. Keeps
+  each agent's scope narrow and description accurate.
 
-## Blockers / Risks
+## Blockers / risks
 
-- Standing rule: never `git add` `data/*.db*`, `.env`, or `.venv/` (gitignored).
-- OAuth token cache means a revoked token (row deleted from `oauth.db`) stays
-  valid for up to 5 minutes in a running server. Only relevant if actively
-  revoking a compromise mid-session; server restart clears the cache immediately.
+- **`guard-commit` hook** is active this session: any `git add` whose command
+  text contains `.env`, `.venv`, or `data/*.db` is blocked. If unexpectedly
+  blocked, check the hook — it strips `-m` messages to avoid false positives.
+- **OAuth token cache** means a revoked token (row deleted from `oauth.db`)
+  stays valid for up to 5 min in a running server.
 
-## Next Session Startup
+## Next session startup
 
 1. Read `CLAUDE.md` (project guide — hard-won quirks, security baseline).
 2. Read `progress.md` for current feature state.
-3. Run `pytest tests/ -q` + `ruff check` before editing — suite should be green.
+3. Run `pytest tests/ -q` + `ruff check` — suite should be green.
 
-## Recommended Next Step
+## Recommended next steps
 
-- Merge PR #19.
-- If `MCP_CONSENT_PASSWORD` is desirable, generate a second token and add it
-  to the NAS `.env` before the next connector approval.
-- Phase 3 remains queued (`PHASE-3-PLAN.md`): geocoding/distance is the
+- Merge the open PR (agents/skills/hooks improvements).
+- If `MCP_CONSENT_PASSWORD` is desirable on the NAS, generate a second token
+  and add it to `.env` before the next connector approval.
+- Phase 3 remains queued (`PHASE-3-PLAN.md`): geocoding / distance is the
   high-value first step.
-- Filter consolidation pass (`FILTER-REVIEW.md`) is still pending maintainer
-  review — no filters were changed in this session.
+- Filter consolidation pass (`FILTER-REVIEW.md`) still pending maintainer
+  review — no filters were changed in either session.
