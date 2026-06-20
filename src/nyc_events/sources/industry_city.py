@@ -37,9 +37,12 @@ Quirks (verified live + against the captured fixture, 2026-06-20):
     drop kid events, so kid-relevance is decided by title/description keywords.
   - Adult programming (21+ band nights, burlesque/drag, alcohol-tasting tours
     like the sake/whiskey "gourmet drinks tour") is dropped via the hard-exclude
-    blocklist, which wins over any allowlist hit. "World Cup Watch Party" rows
-    are drink-focused and explicitly "NO STROLLERS or children under 3" — they
-    carry no kid keyword, so they fall out naturally.
+    blocklist, which wins over any allowlist hit. The outdoor "World Cup Watch
+    Party" rows say "NO STROLLERS or children under 3"; the word "children"
+    matches the allowlist, so they are KEPT as family-friendly outdoor events.
+    We deliberately do NOT blocklist "no strollers" / "children under the age"
+    — those phrasings also catch legit kid events that merely ban strollers or
+    price admission by age.
   - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
   - `window_days = 60` (full-window re-fetch → opted into missing-detection).
 """
@@ -118,12 +121,12 @@ _HARD_EXCLUDE: tuple[str, ...] = (
     "wine tasting",
     "beer tasting",
     "happy hour",
-    # "children"/"family" sometimes appear only in an EXCLUSION clause (the
-    # outdoor watch parties say "NO STROLLERS or children under the age of 3").
-    # Treat those phrasings as adult-only signals so the allowlist "children"
-    # hit doesn't pull the event back in.
-    "no strollers",
-    "children under the age",
+    # An explicit "no children" in the copy is an adult-only signal — keep it.
+    # (The weaker "no strollers" / "children under the age" phrasings were
+    # removed: they wrongly dropped legitimate kid events that merely ban
+    # strollers or price admission by age. Net effect: the outdoor World Cup
+    # watch parties, whose copy reads "NO STROLLERS or children under the age
+    # of 3", are no longer filtered on that basis.)
     "no children",
 )
 

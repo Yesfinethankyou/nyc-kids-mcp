@@ -189,11 +189,12 @@ Revisit in Phase 3+ if a simpler path turns up.
   drives `tests/test_industry_city_parse.py` (24 tests). `window_days = 60`,
   opted into missing-detection.
   - **Real built numbers:** a live 60-day fetch (2026-06-20) returned **29 rows
-    → 21 dropped, 8 kept** (T-Shirt Yarn Workshop, BCR Mending Circle,
-    Puppetworks KIDS + Community Reception, Zine Club ×4). Note: the larger
-    "~195 events / total_pages=13" probe used a ~2-year window; the production
-    60-day window is much smaller (~29 rows, ~8 kept). The 15-row fixture
-    (`per_page=15` page 1) yields 4 kept under the same filter.
+    → 16 dropped, 13 kept** (T-Shirt Yarn Workshop, BCR Mending Circle,
+    Puppetworks KIDS + Community Reception, Zine Club ×4, and the 5 outdoor
+    World Cup watch parties). Note: the larger "~195 events / total_pages=13"
+    probe used a ~2-year window; the production 60-day window is much smaller
+    (~29 rows). The 15-row fixture (`per_page=15` page 1) yields 9 kept under
+    the same filter.
   - **Confirmed vs. research:** `external_id = str(id)` held — the gourmet tour
     appears twice in the fixture with distinct ids (10051523 / 10051524) and
     dated URL slugs, so the Tribe-per-occurrence precedent is confirmed; no
@@ -205,57 +206,13 @@ Revisit in Phase 3+ if a simpler path turns up.
     hard-exclude; a hard-exclude blocklist (21+, 18+, burlesque, drag, late
     night, cocktail/whiskey/sake/brewery/distillery tastings) wins over the
     allowlist and drops the adult "gourmet food and drinks" tour and the sake
-    class. **Added beyond the research:** the outdoor World Cup watch parties
-    say "NO STROLLERS or children under the age of 3" — the bare word
-    "children" in that exclusion clause was matching the allowlist, so the
-    phrases "no strollers" / "children under the age" / "no children" were
-    added to the hard-exclude list. Without that, all six watch-party rows
-    leaked through.
-
-### Industry City — ✅ CONFIRMED (Tribe REST API — the prior "headless CMS" finding was wrong)
-
-- **Status:** CONFIRMED 2026-06-20. The earlier "custom Streetsense headless
-  CMS, no wp-json" finding did not survive a `curl_cffi` re-probe — the page is
-  **WordPress + The Events Calendar (Tribe)**, the same fast-path as Green-Wood,
-  Prospect Park, and NY Transit Museum. **No headless browser needed.** The
-  Streetsense theme overlays a JS "Load more" widget, but the underlying data
-  is a plain Tribe REST endpoint.
-- **Source:** `https://industrycity.com/events/`
-- **Confirmed endpoint:** `https://industrycity.com/wp-json/tribe/events/v1/events`
-  - `?per_page=50&page=N`, paginate via `next_rest_url` until absent (standard).
-  - Live re-probe (2026-06-20): `total=195`, `total_pages=4` at per_page=50.
-- **Re-probe evidence (in-sandbox, `impersonate="chrome"`):** events page is
-  HTTP 200 (387 KB) with `tribe-events` ×251, `/wp-json` ×5, `.ics`/`ical`
-  tells, and exposed bases `wp-json/tribe/events/v1/`, `wp-json/tribe/tickets/v1/`,
-  `wp-json/tribe/views/v2/html`, `wp-admin/admin-ajax.php`. The Tribe v2 HTML
-  view endpoint is what the "Load more" button calls; the JSON `events/v1`
-  endpoint is the clean build target. Direct GET of the v1 endpoint returns the
-  full structured shape (`events[]`, `rest_url`, `next_rest_url`, `total`,
-  `total_pages`) — HTTP 200.
-- **Data shape (live):** identical to the other Tribe sources — `id`, `title`
-  (HTML entities, e.g. `Father&#8217;s Day`), `start_date`/`end_date`,
-  `utc_start_date`/`utc_end_date`, `url`, `description` (HTML), `excerpt`,
-  `cost`, `categories`, `venue`, `tags`.
-- **As-built caveats for source-adder (surveyed 100 live events):**
-  - **`cost` is always empty** (like Green-Wood) → price `UNKNOWN` for all.
-  - **`venue` is always empty** → hardcode venue="Industry City",
-    borough=BROOKLYN. No per-event lat/lng, no age range.
-  - **Categories are sparse and not kid-curated:** observed only
-    `Ticketed Events` (50), `Workshops` (28), `Nightlife` (11), `Tours` (1),
-    and **`<none>` (10)** — many events are uncategorized. A category allowlist
-    alone would drop real kid events (the "Puppetworks: Behind the Curtain
-    KIDS!" show is uncategorized). **Filter on title/description keywords**
-    (kids, family, workshop, puppet, tour, market, craft, art) with
-    **`Nightlife` as a hard-exclude category** (21+ adult programming) plus a
-    title blocklist (21+, adults only, burlesque, drag, late night). Expect a
-    lot of "Outdoor World Cup Watch Party" rows — borderline, decide at build.
-  - **`external_id = str(id)`** — re-verify per-occurrence per the Tribe
-    precedent (Prospect Park / NY Transit confirmed Tribe `id` is per-occurrence;
-    no date suffix expected). Use `utc_start_date`/`utc_end_date` directly.
-  - `window_days = 60` (full-window re-fetch → opt into missing-detection).
-- **Fixture:** `tests/fixtures/industry_city_sample.json` (15-event slice from
-  `per_page=15` page 1; auth-free public endpoint, no headers stripped needed).
-- **Next step:** run `source-adder` for Industry City (slug `industry_city`).
+    class. Only an explicit **"no children"** is treated as an adult-only
+    signal. The outdoor World Cup watch parties say "NO STROLLERS or children
+    under the age of 3"; the bare word "children" matches the allowlist, so
+    they are **kept** as kid-friendly outdoor events. (An earlier build also
+    blocklisted "no strollers" / "children under the age" to drop them, but
+    those phrasings wrongly catch legit kid events that merely ban strollers
+    or price by age, so they were removed.)
 
 ## Needs re-probe — prior "no feed" verdict is unreliable
 

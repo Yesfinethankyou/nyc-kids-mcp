@@ -70,8 +70,8 @@ def test_uncategorized_event_can_still_pass_on_keywords():
 
 def test_event_with_no_kid_keyword_filtered_out():
     row = _row(
-        title="Outdoor World Cup Watch Party at Industry City 6/20",
-        description="<p>Watch the matches on a 15-foot screen. NO STROLLERS.</p>",
+        title="Commercial Leasing Info Session",
+        description="<p>Inquire about available office space at the complex.</p>",
         excerpt="",
         categories=[],
     )
@@ -182,14 +182,21 @@ def test_recurring_tour_occurrences_get_distinct_ids():
 
 
 def test_fixture_kept_count():
-    # Of the 15-row slice: yarn workshop, mending circle, Puppetworks KIDS,
-    # and the Puppetworks community reception are kid-relevant; everything else
-    # (World Cup watch parties, 21+ band, alcohol tours/classes) is dropped.
+    # Of the 15-row slice: yarn workshop, mending circle, Puppetworks KIDS, the
+    # Puppetworks community reception, and the outdoor World Cup watch parties
+    # are kid-relevant; the 21+ band and alcohol tours/classes are dropped.
+    # (Watch parties match the "children" allowlist keyword and are no longer
+    # excluded on their "NO STROLLERS / children under the age of 3" copy.)
     kept = [_parse_row(e) for e in _load_events()]
     kept = [ev for ev in kept if ev is not None]
     titles = sorted(ev.title for ev in kept)
     assert titles == [
         "Brooklyn Creative Reuse Mending Circle",
+        "Mexico v Czechia Outdoor World Cup Watch Party",
+        "Outdoor World Cup Watch Party at Industry City 6/20",
+        "Outdoor World Cup Watch Party at Industry City 6/21",
+        "Outdoor World Cup Watch Party at Industry City 6/26",
+        "Outdoor World Cup Watch Party at Industry City 6/27",
         "Puppetworks: Behind the Curtain KIDS!",
         "Puppetworks: Behind the Curtain — Community Reception & Future Home Preview",
         "T-Shirt Yarn Workshop",

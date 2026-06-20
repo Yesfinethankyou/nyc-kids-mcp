@@ -266,11 +266,11 @@ Known accepted residuals (see `git log` for the security-audit commit):
     Categories aren't kid-curated, so filtering is title/description
     keyword-driven with `Nightlife` as a hard-exclude category and an
     adult/alcohol blocklist (21+, burlesque, drag, sake/whiskey/cocktail
-    tastings, "no strollers / children under the age"). As built (2026-06-20):
-    a live 60-day fetch returned 29 rows → 21 dropped, 8 kept (workshops,
-    Puppetworks, Zine Club). `cost`/`venue` always empty upstream → price
-    UNKNOWN, venue/borough hardcoded Industry City / Brooklyn, no lat/lng/age.
-    See SOURCES-BACKLOG.md as-built block.
+    tastings, "no children"). As built (2026-06-20): a live 60-day fetch
+    returned 29 rows → 16 dropped, 13 kept (workshops, Puppetworks, Zine Club,
+    outdoor World Cup watch parties). `cost`/`venue` always empty upstream →
+    price UNKNOWN, venue/borough hardcoded Industry City / Brooklyn, no
+    lat/lng/age. See SOURCES-BACKLOG.md as-built block.
   - **Needs re-probe — prior "no feed" verdict is suspect:** Domino Park and
     Governors Island were both rejected by the same non-impersonating probe
     that wrong-flagged Industry City. Their "no structured feed" conclusions
