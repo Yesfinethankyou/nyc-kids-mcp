@@ -79,9 +79,26 @@ Map what the probe found into the fast-paths source-adder already documents:
 - **JSON-LD in server-rendered HTML** (`application/ld+json` tells) → the
   Mommy Poppins path: capture rendered HTML, parser extracts the JSON-LD block.
 - **iCal / RSS feed** (`.ics` / `ical` / RSS-alternate tells) → a feed source.
-- **No structured surface** (custom/headless CMS, JS-rendered, no API, no feed)
-  → recommend **REJECTED**. Precedent: Industry City, Domino Park,
-  Governors Island.
+- **Sanity headless CMS** (`sanity` / `cdn.sanity.io` / `apicdn.sanity.io`
+  tells, or a JS bundle referencing a Sanity `projectId`) → many Sanity sites
+  leave the `production` dataset open to anonymous reads. Try the public GROQ
+  API directly: `https://{projectId}.apicdn.sanity.io/v2021-10-21/data/query/production?query=*[_type=="event"]`.
+  No scraping, no headless browser. Precedent: Domino Park (project `4shd8slw`).
+- **Craft CMS / Solspace Calendar JSON** (`craft` tells, or a `.json` twin of
+  an events page) → some Craft sites expose a clean calendar feed at a
+  `<page>.json` URL. Precedent: Governors Island (`/things-to-do.json` — a
+  custom Craft/Solspace feed, NOT WordPress/Tribe).
+- **No structured surface** (JS-rendered with no API, no feed, nothing behind
+  an impersonating probe) → recommend **REJECTED**. Precedent: Time Out NY Kids
+  (JS-rendered editorial, no JSON-LD/API/sitemap-with-events).
+
+> **Do not call a site REJECTED on the strength of a plain (non-impersonating)
+> probe.** Industry City (WordPress/Tribe), Governors Island (Craft/Solspace
+> JSON), and Domino Park (Sanity GROQ) were each *initially* rejected as
+> "custom/headless CMS, no API" — every one of those verdicts was a
+> non-impersonating-probe artifact, and all three are now live sources. Always
+> probe with `curl_cffi` `impersonate="chrome"` (and try the platform's JSON
+> twin) before concluding there's no surface.
 
 ## Step 4 — capture the fixture (CONFIRMED only)
 

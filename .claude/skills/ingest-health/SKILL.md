@@ -78,6 +78,6 @@ everything is OK, say so in one line.
 
 ## Out of scope
 
-- Don't edit source files or "fix" a broken scraper here — that's a
-  `source-adder` follow-up. This skill only diagnoses and reports.
+- Don't edit source files or "fix" a broken scraper here — hand a flagged
+  source to the `source-fixer` agent. This skill only diagnoses and reports.
 - Don't touch `models.py`, `db.py`, or `server.py`.
