@@ -178,43 +178,82 @@ Revisit in Phase 3+ if a simpler path turns up.
 
 ---
 
-## Low confidence — no structured feed found, deprioritized
+## Ready to build — confirmed structured feed
 
-### Industry City
+### Industry City — ✅ BUILT (live) — Tribe REST API
 
-- **Status:** CANDIDATE (low — custom headless CMS)
-- **Source:** `https://industrycity.com/events/`
-- **Finding (in-sandbox probe):** custom-built site by Streetsense design firm.
-  Not WordPress, not Squarespace. JS-rendered event list with a "Load more"
-  button. No wp-json, no iCal, no structured feed detected.
-- **Verify:** run the generic probe; check if there's a hidden XHR endpoint
-  the JS calls (inspect Network tab in browser devtools).
-- **Outlook:** likely requires scraping rendered HTML or reverse-engineering
-  an internal API. Fragile. Deprioritize unless the XHR API turns up.
+- **As built (2026-06-20):** slug `industry_city`, `IndustryCitySource`,
+  copy-adapted from `prospect_park.py` / `ny_transit_museum.py`. Registered in
+  `ENABLED_SOURCES` among the fast Tribe REST sources (after Prospect Park,
+  before the permit source). Fixture `tests/fixtures/industry_city_sample.json`
+  drives `tests/test_industry_city_parse.py` (24 tests). `window_days = 60`,
+  opted into missing-detection.
+  - **Real built numbers:** a live 60-day fetch (2026-06-20) returned **29 rows
+    → 16 dropped, 13 kept** (T-Shirt Yarn Workshop, BCR Mending Circle,
+    Puppetworks KIDS + Community Reception, Zine Club ×4, and the 5 outdoor
+    World Cup watch parties). Note: the larger "~195 events / total_pages=13"
+    probe used a ~2-year window; the production 60-day window is much smaller
+    (~29 rows). The 15-row fixture (`per_page=15` page 1) yields 9 kept under
+    the same filter.
+  - **Confirmed vs. research:** `external_id = str(id)` held — the gourmet tour
+    appears twice in the fixture with distinct ids (10051523 / 10051524) and
+    dated URL slugs, so the Tribe-per-occurrence precedent is confirmed; no
+    `:start.isoformat()` suffix. `cost` and `venue` were empty across every
+    surveyed row, as predicted → price UNKNOWN for all, venue/borough hardcoded
+    Industry City / Brooklyn, no lat/lng/age.
+  - **Filter as built:** keyword allowlist on title+description+excerpt (kids,
+    family, workshop, craft, puppet, market, etc.); `Nightlife` category is a
+    hard-exclude; a hard-exclude blocklist (21+, 18+, burlesque, drag, late
+    night, cocktail/whiskey/sake/brewery/distillery tastings) wins over the
+    allowlist and drops the adult "gourmet food and drinks" tour and the sake
+    class. Only an explicit **"no children"** is treated as an adult-only
+    signal. The outdoor World Cup watch parties say "NO STROLLERS or children
+    under the age of 3"; the bare word "children" matches the allowlist, so
+    they are **kept** as kid-friendly outdoor events. (An earlier build also
+    blocklisted "no strollers" / "children under the age" to drop them, but
+    those phrasings wrongly catch legit kid events that merely ban strollers
+    or price by age, so they were removed.)
+
+## Needs re-probe — prior "no feed" verdict is unreliable
+
+> **⚠️ These two were rejected by the same probe method that wrong-flagged
+> Industry City.** Industry City was called a "custom headless CMS, no wp-json"
+> and turned out to be a plain WordPress + Tribe REST API once re-probed with
+> `curl_cffi` (`impersonate="chrome"`). The Domino Park and Governors Island
+> findings below predate that correction and likely used a non-impersonating
+> fetcher that ate a 403 / bot-block. **Treat their "no structured feed"
+> conclusions as unverified — re-probe both with `curl_cffi` before trusting
+> the rejection.** Status downgraded from "deprioritized" to NEEDS RE-PROBE.
 
 ### Domino Park
 
-- **Status:** CANDIDATE (low — Sanity headless CMS)
+- **Status:** NEEDS RE-PROBE (prior verdict suspect — see warning above).
+  Earlier "Sanity headless CMS, no public feed" finding may be a bot-block
+  artifact; re-probe with `curl_cffi` impersonation before deprioritizing.
 - **Source:** `https://www.dominopark.com/events`
-- **Finding:** Sanity CMS (CDN: `sanity-prod-domino-park.b-cdn.net`). Events
-  server-rendered but no public structured feed or iCal found. Sanity has a
-  public GROQ API but only if the project allows anonymous reads — unconfirmed.
-- **Verify:** check if `https://www.dominopark.com/api/events` or similar
-  exists; look for Sanity project ID in page source to attempt GROQ query.
-- **Outlook:** likely requires HTML scraping.
+- **Finding (unverified):** Sanity CMS (CDN: `sanity-prod-domino-park.b-cdn.net`).
+  Events server-rendered but no public structured feed or iCal found. Sanity has
+  a public GROQ API but only if the project allows anonymous reads — unconfirmed.
+- **Verify:** re-fetch with `curl_cffi` (`impersonate="chrome"`) first; then
+  check if `https://www.dominopark.com/api/events` or `/wp-json/` exists; look
+  for a Sanity project ID in page source to attempt a GROQ query.
+- **Outlook:** likely requires HTML scraping if the re-probe confirms no feed.
 
 ### Governors Island
 
-- **Status:** CANDIDATE (low — custom/unknown CMS)
+- **Status:** NEEDS RE-PROBE (prior verdict suspect — see warning above).
+  Earlier "custom CMS, no API surface" finding may be a bot-block artifact;
+  re-probe with `curl_cffi` impersonation before deprioritizing.
 - **Source:** `https://govisland.com/calendar`
-- **Finding:** custom site (S3-hosted assets, built by Reflexions design firm).
-  No WordPress, no Squarespace, no JSON-LD, no iCal link visible.
+- **Finding (unverified):** custom site (S3-hosted assets, built by Reflexions
+  design firm). No WordPress, no Squarespace, no JSON-LD, no iCal link visible.
   Events may be server-rendered but no API surface found.
-- **Verify:** inspect Network tab in browser devtools for XHR calls; check
-  `govisland.com/wp-json/` (unlikely but worth a try); check doNYC mirror
-  (`donyc.com/venues/governors-island`) as an aggregator fallback.
-- **Outlook:** likely scraping only. Heavy public/family programming makes it
-  worth one more verification pass before giving up.
+- **Verify:** re-fetch with `curl_cffi` (`impersonate="chrome"`) first; inspect
+  for XHR calls; check `govisland.com/wp-json/` (unlikely but worth a try); check
+  the doNYC mirror (`donyc.com/venues/governors-island`) as an aggregator
+  fallback.
+- **Outlook:** likely scraping only if the re-probe confirms no feed. Heavy
+  public/family programming makes it worth one more verification pass.
 
 ---
 

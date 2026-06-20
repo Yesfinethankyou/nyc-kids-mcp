@@ -1,0 +1,1992 @@
+{
+  "events": [
+    {
+      "id": 20406,
+      "global_id": "industrycity.com?id=20406",
+      "global_id_lineage": [
+        "industrycity.com?id=20406"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-19 17:39:26",
+      "date_utc": "2026-06-19 17:39:26",
+      "modified": "2026-06-19 17:40:38",
+      "modified_utc": "2026-06-19 17:40:38",
+      "url": "https://industrycity.com/event/outdoor-world-cup-watch-party-at-industry-city/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20406",
+      "title": "Outdoor World Cup Watch Party at Industry City 6/20",
+      "description": "<p>Come watch all of the June 20 matches on our 15-foot wide screen!</p>\n<p>Come watch group World Cup competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>\n<p>This event requires a $5 RSVP, which includes a $6 discount on your first order at our venue bar.</p>\n<p>There will be drink specials but don&#8217;t forget to take advantage of the 2-for-1 drink ticket when you check out! Space is limited and RSVP doesn&#8217;t guarantee entry. Buying advanced drink tickets guarantees entry!</p>\n<p>NO STROLLERS or children under the age of 3.</p>\n<p>Limited seating (about 100 seats), tons of standing room. SO THAT WE MAY INCLUDE AS MANY PEOPLE AS POSSIBLE AND FOR YOUR SAFETY, PLEASE DO NOT BRING YOUR OWN CHAIRS. Trust us, the second the game starts everybody is up and cheering anyway!</p>\n<p>While we do our best to gauge the number of RSVPs, entry is still on a first-come, first-served basis, so please arrive early! Once we hit capacity, we won&#8217;t be able to let anyone else in.</p>\n<p>No outside beverages. There will be drink specials all day long from our courtyard bar. Feel free to bring in food from the adjoining food hall!</p>\n<p>Event Info</p>\n<p>Date: June 20, 2026</p>\n<p>Doors: 12pm</p>\n<p>Address: Industry City Bandshell Stage, Courtyard 1/2 at Industry City in Brooklyn New York between 36th and 37th street and 2nd and 3rd Avenues.</p>\n<p>ENTER 238 36th Street, Brooklyn, NY on your GPS device</p>\n<p>The venue is located in an open-air courtyard featuring a full concert sound stage. Fans can get affordable drinks from the venue&#8217;s bar and order food from over 17 options inside the adjoining food hall.</p>\n<p>How to get here:</p>\n<p>Take the D, N, R lines to 36th street station in Brooklyn and walk west one block to Industry City. 3 stops from Manhattan. 30 minutes from Herald Square.</p>\n<p>From Long Island, take the LIRR to Atlantic Terminal then take the D, N or R train to 36th street.</p>",
+      "excerpt": "<p>Come watch all of the June 20 matches on our 15-foot wide screen! Come watch group World Cup competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn. This event requires a $5 RSVP, which includes a $6 discount on your first order at our venue bar.</p>",
+      "slug": "outdoor-world-cup-watch-party-at-industry-city",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM.png",
+        "id": 20407,
+        "extension": "png",
+        "width": 1027,
+        "height": 997,
+        "filesize": 1315357,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 951,
+            "mime-type": "image/png",
+            "filesize": 1160954,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-980x951.png"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/png",
+            "filesize": 156113,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-300x300.png"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 746,
+            "mime-type": "image/png",
+            "filesize": 786137,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-768x746.png"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/png",
+            "filesize": 274554,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-410x410.png"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 835,
+            "mime-type": "image/png",
+            "filesize": 944343,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-860x835.png"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-20 12:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-20 23:30:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-20 12:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-20 23:30:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://wl.eventim.us/event/world-cup-watch-party-at-industry-city/695863?afflky=Getitrightthefirsttime",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20368,
+      "global_id": "industrycity.com?id=20368",
+      "global_id_lineage": [
+        "industrycity.com?id=20368"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-10 16:04:50",
+      "date_utc": "2026-06-10 16:04:50",
+      "modified": "2026-06-10 16:04:50",
+      "modified_utc": "2026-06-10 16:04:50",
+      "url": "https://industrycity.com/event/birriachi-pop-up-standard-wormwood/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20368",
+      "title": "Birriachi Pop-up @ Standard Wormwood",
+      "description": "<p>Birria reimagined from @birriachi_nyc with tacos going late. Cocktails and tacos &#8211; party on!</p>",
+      "excerpt": "",
+      "slug": "birriachi-pop-up-standard-wormwood",
+      "image": false,
+      "all_day": false,
+      "start_date": "2026-06-20 16:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-20 21:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-20 16:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-20 21:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10051523,
+      "global_id": "industrycity.com?id=10051523",
+      "global_id_lineage": [
+        "industrycity.com?id=10051523"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-02-03 16:11:54",
+      "date_utc": "2026-02-03 16:11:54",
+      "modified": "2026-02-03 16:11:54",
+      "modified_utc": "2026-02-03 16:11:54",
+      "url": "https://industrycity.com/event/industry-city-gourmet-food-and-drinks-tour/2026-06-20/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/10051523",
+      "title": "Industry City Gourmet Food and Drinks Tour",
+      "description": "<p>Set against the iconic backdrop of Sunset Park\u2019s historic waterfront, the massive, revitalized structures of Industry City form a breathtaking stage for an exclusive culinary journey. This premium food and cocktail tour is a curated exploration of taste and craft, transforming an evening into a memorable, high-end experience.</p>\n<p>Your adventure begins with artistic bonbons at Lilac Chocolates, explores gourmet imports at Sahadi\u2019s, and includes a refined whiskey tasting at Fort Hamilton Distillery, followed by a sophisticated sake flight. Savor additional artisanal discoveries within the awe-inspiring industrial halls.</p>\n<p>Perfect as a distinctive date night, this tour is also fully customizable for private groups and corporate retreats. We specialize in tailoring this engaging experience for team-building and client entertainment, making it an ideal one-day corporate outing. A sophisticated mini-vacation for locals and a profound discovery for visitors.</p>",
+      "excerpt": "<p>Set against the iconic backdrop of Sunset Park\u2019s historic waterfront, the massive, revitalized structures of Industry City form a breathtaking stage for an exclusive culinary journey. This premium food and cocktail tour is a curated exploration of taste and craft, transforming an evening into a memorable, high-end experience.</p>",
+      "slug": "industry-city-gourmet-food-and-drinks-tour",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953.jpeg",
+        "id": 19571,
+        "extension": "jpeg",
+        "width": 1199,
+        "height": 791,
+        "filesize": 125996,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 647,
+            "mime-type": "image/jpeg",
+            "filesize": 63126,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-980x647.jpeg"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "filesize": 15303,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-300x300.jpeg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 507,
+            "mime-type": "image/jpeg",
+            "filesize": 44407,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-768x507.jpeg"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/jpeg",
+            "filesize": 23230,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-410x410.jpeg"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 567,
+            "mime-type": "image/jpeg",
+            "filesize": 52425,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-860x567.jpeg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-20 16:30:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "16",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-20 19:30:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "19",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-20 16:30:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "16",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-20 19:30:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "19",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": []
+      },
+      "website": "https://www.eatnyc.tours/tour/industry-city-gourmet-food-and-drinks-tour",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Ticketed Events",
+          "slug": "ticketed-events",
+          "term_group": 0,
+          "term_taxonomy_id": 134,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 15,
+          "filter": "raw",
+          "term_order": "0",
+          "id": 134,
+          "urls": {
+            "self": "https://industrycity.com/wp-json/tribe/events/v1/categories/134",
+            "collection": "https://industrycity.com/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20324,
+      "global_id": "industrycity.com?id=20324",
+      "global_id_lineage": [
+        "industrycity.com?id=20324"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-02 15:52:16",
+      "date_utc": "2026-06-02 15:52:16",
+      "modified": "2026-06-02 15:52:16",
+      "modified_utc": "2026-06-02 15:52:16",
+      "url": "https://industrycity.com/event/t-shirt-yarn-workshop/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20324",
+      "title": "T-Shirt Yarn Workshop",
+      "description": "<p>In this hands-on workshop, you&#8217;ll turn old t-shirts into yarn that you can crochet, weave, and braid! \ud83d\udc55\ud83e\uddf6</p>\n<p>Bring 2-5 of your own old t-shirts to use during the workshop, or use the extras provided.</p>\n<p>This workshop is taught by Catie Kobland at Brooklyn Creative Reuse, June 20th 6pm-8pm. BCR is located at 254 36th Street, 2nd Floor, Space C244.</p>",
+      "excerpt": "<p>In this hands-on workshop, you&#8217;ll turn old t-shirts into yarn that you can crochet, weave, and braid! Bring 2-5 of your own old t-shirts to use during the workshop, or use the extras provided. This workshop is taught by Catie Kobland at Brooklyn Creative Reuse, June 20th 6pm-8pm. BCR is located at 254 36th Street, 2nd Floor, Space C244.</p>",
+      "slug": "t-shirt-yarn-workshop",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop.jpg",
+        "id": 20325,
+        "extension": "jpg",
+        "width": 2400,
+        "height": 1350,
+        "filesize": 341499,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 551,
+            "mime-type": "image/jpeg",
+            "filesize": 35436,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-980x551.jpg"
+          },
+          "large": {
+            "width": 2000,
+            "height": 1125,
+            "mime-type": "image/jpeg",
+            "filesize": 81572,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-2000x1125.jpg"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "filesize": 16682,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-300x300.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 432,
+            "mime-type": "image/jpeg",
+            "filesize": 26541,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-768x432.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 864,
+            "mime-type": "image/jpeg",
+            "filesize": 59993,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-1536x864.jpg"
+          },
+          "2048x2048": {
+            "width": 2048,
+            "height": 1152,
+            "mime-type": "image/jpeg",
+            "filesize": 83950,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-2048x1152.jpg"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/jpeg",
+            "filesize": 23776,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-410x410.jpg"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 484,
+            "mime-type": "image/jpeg",
+            "filesize": 30486,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-860x484.jpg"
+          },
+          "full-hero-size": {
+            "width": 1920,
+            "height": 1080,
+            "mime-type": "image/jpeg",
+            "filesize": 77562,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/yarnworkshop-1920x1080.jpg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-20 18:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-20 20:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-20 18:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-20 20:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://www.zeffy.com/en-US/ticketing/t-shirt-yarn-workshop",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Workshops",
+          "slug": "workshops",
+          "term_group": 0,
+          "term_taxonomy_id": 58,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 24,
+          "filter": "raw",
+          "term_order": "0",
+          "id": 58,
+          "urls": {
+            "self": "https://industrycity.com/wp-json/tribe/events/v1/categories/58",
+            "collection": "https://industrycity.com/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20386,
+      "global_id": "industrycity.com?id=20386",
+      "global_id_lineage": [
+        "industrycity.com?id=20386"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-15 14:17:54",
+      "date_utc": "2026-06-15 14:17:54",
+      "modified": "2026-06-16 17:56:23",
+      "modified_utc": "2026-06-16 17:56:23",
+      "url": "https://industrycity.com/event/poppyseeds-hifi-provisions-2/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20386",
+      "title": "Poppyseeds @ Hifi Provisions",
+      "description": "<p>The Poppyseeds are a rising, multitalented NYC Garage Goth band, playing alongside Duul Suns and Idaho Green, featuring a special DJ set by Poppyseed\u2019s Lead Drummer Joe (@pilspectre)</p>\n<p>21+ ONLY<br />\nJune 20th<br />\nDoors: 6 PM \u2014 Show: 6:30 PM</p>\n<p>All tickets will have a $1 fee that goes directly towards Hifi Provisions. All seats are first-come, first-served. Tickets can be purchased in person or online. A valid ID will need to be presented if drinking alcoholic beverages.</p>",
+      "excerpt": "<p>The Poppyseeds are a rising, multitalented NYC Garage Goth band, playing alongside Duul Suns and Idaho Green, featuring a special DJ set by Poppyseed\u2019s Lead Drummer Joe (@pilspectre). All tickets will have a $1 fee that goes directly towards Hifi Provisions. All seats are first-come, first-served. Tickets can be purchased in person or online. A valid ID will need to be presented if drinking alcoholic beverages.</p>",
+      "slug": "poppyseeds-hifi-provisions-2",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/portrait-1-1.png",
+        "id": 20387,
+        "extension": "png",
+        "width": 1536,
+        "height": 864,
+        "filesize": 583027,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 551,
+            "mime-type": "image/png",
+            "filesize": 358939,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/portrait-1-1-980x551.png"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/png",
+            "filesize": 94986,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/portrait-1-1-300x300.png"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 432,
+            "mime-type": "image/png",
+            "filesize": 209063,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/portrait-1-1-768x432.png"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/png",
+            "filesize": 145909,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/portrait-1-1-410x410.png"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 484,
+            "mime-type": "image/png",
+            "filesize": 301397,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/portrait-1-1-860x484.png"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-20 18:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-20 20:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-20 18:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-20 20:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "20",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://hifiprovisions.com/products/poppyseeds-hifi-provisions",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20408,
+      "global_id": "industrycity.com?id=20408",
+      "global_id_lineage": [
+        "industrycity.com?id=20408"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-19 17:43:34",
+      "date_utc": "2026-06-19 17:43:34",
+      "modified": "2026-06-19 17:43:34",
+      "modified_utc": "2026-06-19 17:43:34",
+      "url": "https://industrycity.com/event/outdoor-world-cup-watch-party-at-industry-city-6-21/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20408",
+      "title": "Outdoor World Cup Watch Party at Industry City 6/21",
+      "description": "<p>Come watch all of the June 21 matches on our 15-foot wide screen!</p>\n<p>Come watch group World Cup competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>\n<p>Schedule: Noon &#8211; Spain Saudi Arabia, 3pm &#8211; Belgium Iran, 6pm &#8211; Uruguay Cabo Verde, 9pm &#8211; New Zealand Egypt</p>\n<p>This event requires a $5 RSVP, which includes a $6 discount on your first order at our venue bar.</p>\n<p>There will be drink specials but don&#8217;t forget to take advantage of the 2-for-1 drink ticket when you check out! Space is limited and RSVP doesn&#8217;t guarantee entry. Buying advanced drink tickets guarantees entry!</p>\n<p>NO STROLLERS or children under the age of 3.</p>\n<p>Limited seating (about 100 seats), tons of standing room. SO THAT WE MAY INCLUDE AS MANY PEOPLE AS POSSIBLE AND FOR YOUR SAFETY, PLEASE DO NOT BRING YOUR OWN CHAIRS. Trust us, the second the game starts everybody is up and cheering anyway!</p>\n<p>While we do our best to gauge the number of RSVPs, entry is still on a first-come, first-served basis, so please arrive early! Once we hit capacity, we won&#8217;t be able to let anyone else in.</p>\n<p>No outside beverages. There will be drink specials all day long from our courtyard bar. Feel free to bring in food from the adjoining food hall!</p>\n<p>Event Info</p>\n<p>Date: June 21, 2026</p>\n<p>Doors: 12pm</p>\n<p>Address: Industry City Bandshell Stage, Courtyard 1/2 at Industry City in Brooklyn New York between 36th and 37th street and 2nd and 3rd Avenues.</p>\n<p>ENTER 238 36th Street, Brooklyn, NY on your GPS device</p>\n<p>The venue is located in an open-air courtyard featuring a full concert sound stage. Fans can get affordable drinks from the venue&#8217;s bar and order food from over 17 options inside the adjoining food hall.</p>\n<p>How to get here:</p>\n<p>Take the D, N, R lines to 36th street station in Brooklyn and walk west one block to Industry City. 3 stops from Manhattan. 30 minutes from Herald Square.</p>\n<p>From Long Island, take the LIRR to Atlantic Terminal then take the D, N or R train to 36th street.</p>",
+      "excerpt": "<p>Come watch all of the June 21 matches on our 15-foot wide screen! Come watch group World Cup competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn. Schedule: Noon &#8211; Spain Saudi Arabia, 3pm &#8211; Belgium Iran, 6pm &#8211; Uruguay Cabo Verde, 9pm &#8211; New Zealand Egypt</p>",
+      "slug": "outdoor-world-cup-watch-party-at-industry-city-6-21",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM.png",
+        "id": 20407,
+        "extension": "png",
+        "width": 1027,
+        "height": 997,
+        "filesize": 1315357,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 951,
+            "mime-type": "image/png",
+            "filesize": 1160954,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-980x951.png"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/png",
+            "filesize": 156113,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-300x300.png"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 746,
+            "mime-type": "image/png",
+            "filesize": 786137,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-768x746.png"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/png",
+            "filesize": 274554,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-410x410.png"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 835,
+            "mime-type": "image/png",
+            "filesize": 944343,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-860x835.png"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-21 12:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-21 23:30:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-21 12:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "12",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-21 23:30:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://wl.eventim.us/event/sunday-world-cup-watch-party-at-industry-city/695865?afflky=Getitrightthefirsttime",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20329,
+      "global_id": "industrycity.com?id=20329",
+      "global_id_lineage": [
+        "industrycity.com?id=20329"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-02 17:48:20",
+      "date_utc": "2026-06-02 17:48:20",
+      "modified": "2026-06-16 17:58:16",
+      "modified_utc": "2026-06-16 17:58:16",
+      "url": "https://industrycity.com/event/fathers-day-intro-to-sake-class-and-brewery-tour/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20329",
+      "title": "Father&#8217;s Day Intro to Sake Class and Brewery Tour",
+      "description": "<p>Looking for the perfect Father\u2019s Day experience? This Introduction to Sake tasting class is the ultimate gift for dads who love great drinks and great stories! Join us in person at the Sake Studies Center at Brooklyn Kura in NYC to learn the basics of sake and enjoy a guided tasting of the most delicious sakes. Whether you\u2019re treating Dad or celebrating as a family, we invite you to taste and learn about sake where sake is made! Get a guided brewery tour, taste and explore a set of 5 premium sakes including some fresh from the press \u2014 because Dad deserves the good stuff. Let\u2019s level up your sake knowledge and have fun doing it!</p>\n<p>What\u2019s included:</p>\n<p>A welcome sake to get you started!<br />\nSake 101 presentation to cover all the basics<br />\nGuided Tasting of 4 Brooklyn Kura craft sakes as well as a premium sake from Japan<br />\nHandouts so you can bring your sake knowledge home<br />\nTasting some sake fresh from the press!<br />\nGuided tour through our new Sake Brewery<br />\nSome nibbles to pair with your sakes</p>",
+      "excerpt": "<p>Looking for the perfect Father\u2019s Day experience? This Introduction to Sake tasting class is the ultimate gift for dads who love great drinks and great stories! Join us in person at the Sake Studies Center at Brooklyn Kura in NYC to learn the basics of sake and enjoy a guided tasting of the most delicious sakes. Whether you\u2019re treating Dad or celebrating as a family, we invite you to taste and learn about sake where sake is made! Get a guided brewery tour, taste and explore a set of 5 premium sakes including some fresh from the press \u2014 because Dad deserves the good stuff. Let\u2019s level up your sake knowledge and have fun doing it!</p>",
+      "slug": "fathers-day-intro-to-sake-class-and-brewery-tour",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-03-20-at-12.05.17-PM-1.png",
+        "id": 20330,
+        "extension": "png",
+        "width": 1982,
+        "height": 1312,
+        "filesize": 4553586,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 649,
+            "mime-type": "image/png",
+            "filesize": 928394,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-03-20-at-12.05.17-PM-1-980x649.png"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/png",
+            "filesize": 143347,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-03-20-at-12.05.17-PM-1-300x300.png"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 508,
+            "mime-type": "image/png",
+            "filesize": 586745,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-03-20-at-12.05.17-PM-1-768x508.png"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 1017,
+            "mime-type": "image/png",
+            "filesize": 2093132,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-03-20-at-12.05.17-PM-1-1536x1017.png"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/png",
+            "filesize": 254631,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-03-20-at-12.05.17-PM-1-410x410.png"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 569,
+            "mime-type": "image/png",
+            "filesize": 726579,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-03-20-at-12.05.17-PM-1-860x569.png"
+          },
+          "full-hero-size": {
+            "width": 1920,
+            "height": 1271,
+            "mime-type": "image/png",
+            "filesize": 3047651,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-03-20-at-12.05.17-PM-1-1920x1271.png"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-21 16:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-21 17:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "17",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-21 16:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-21 17:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "17",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://www.sakestudiescenter.com/courses#id=introduction-to-sake",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Workshops",
+          "slug": "workshops",
+          "term_group": 0,
+          "term_taxonomy_id": 58,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 24,
+          "filter": "raw",
+          "term_order": "0",
+          "id": 58,
+          "urls": {
+            "self": "https://industrycity.com/wp-json/tribe/events/v1/categories/58",
+            "collection": "https://industrycity.com/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20369,
+      "global_id": "industrycity.com?id=20369",
+      "global_id_lineage": [
+        "industrycity.com?id=20369"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-10 16:28:47",
+      "date_utc": "2026-06-10 16:28:47",
+      "modified": "2026-06-10 16:28:47",
+      "modified_utc": "2026-06-10 16:28:47",
+      "url": "https://industrycity.com/event/brooklyn-creative-reuse-mending-circle/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20369",
+      "title": "Brooklyn Creative Reuse Mending Circle",
+      "description": "<p>Join Brooklyn Creative Reuse for our first ever Mending Circle! Bring your mending project, learn from your neighbors, or work on your current craft! End your Saturday with a craft, snacks, and good vibes. There will be extra supplies available if needed!</p>\n<p>The Mending Circle Series is sponsored by, in part, by the Citizens Committee of New York City&#8217;s Community Leaders Grant.</p>",
+      "excerpt": "",
+      "slug": "brooklyn-creative-reuse-mending-circle",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/BCRMENDING.jpg",
+        "id": 20370,
+        "extension": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "filesize": 246289,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 551,
+            "mime-type": "image/jpeg",
+            "filesize": 34503,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/BCRMENDING-980x551.jpg"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "filesize": 15694,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/BCRMENDING-300x300.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 432,
+            "mime-type": "image/jpeg",
+            "filesize": 24674,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/BCRMENDING-768x432.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 864,
+            "mime-type": "image/jpeg",
+            "filesize": 58766,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/BCRMENDING-1536x864.jpg"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/jpeg",
+            "filesize": 22130,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/BCRMENDING-410x410.jpg"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 484,
+            "mime-type": "image/jpeg",
+            "filesize": 29161,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/BCRMENDING-860x484.jpg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-21 18:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-21 20:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-21 18:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-21 20:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "21",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://www.zeffy.com/en-US/ticketing/brooklyn-creative-reuses-mending-circle",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Workshops",
+          "slug": "workshops",
+          "term_group": 0,
+          "term_taxonomy_id": 58,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 24,
+          "filter": "raw",
+          "term_order": "0",
+          "id": 58,
+          "urls": {
+            "self": "https://industrycity.com/wp-json/tribe/events/v1/categories/58",
+            "collection": "https://industrycity.com/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20409,
+      "global_id": "industrycity.com?id=20409",
+      "global_id_lineage": [
+        "industrycity.com?id=20409"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-19 17:47:01",
+      "date_utc": "2026-06-19 17:47:01",
+      "modified": "2026-06-19 17:47:01",
+      "modified_utc": "2026-06-19 17:47:01",
+      "url": "https://industrycity.com/event/mexico-v-czechia-outdoor-world-cup-watch-party/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20409",
+      "title": "Mexico v Czechia Outdoor World Cup Watch Party",
+      "description": "<p>Come watch these two countries face each other on our 15-foot wide screen!</p>\n<p>Come watch Mexico take on Czechia in group match competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>\n<p>This event requires a $5 RSVP, which includes a $6 discount on your first order at our venue bar.</p>\n<p>There will be drink specials but don&#8217;t forget to take advantage of the 2-for-1 drink ticket when you check out! Space is limited and RSVP doesn&#8217;t guarantee entry. Buying advanced drink tickets guarantees entry!</p>\n<p>NO STROLLERS or children under the age of 3.</p>\n<p>Limited seating (about 100 seats), tons of standing room. SO THAT WE MAY INCLUDE AS MANY PEOPLE AS POSSIBLE AND FOR YOUR SAFETY, PLEASE DO NOT BRING YOUR OWN CHAIRS. Trust us, the second the game starts everybody is up and cheering anyway!</p>\n<p>While we do our best to gauge the number of RSVPs, entry is still on a first-come, first-served basis, so please arrive early! Once we hit capacity, we won&#8217;t be able to let anyone else in.</p>\n<p>No outside beverages. There will be drink specials all day long from our courtyard bar. Feel free to bring in food from the adjoining food hall!</p>\n<p>Event Info</p>\n<p>Date: June 24, 2026</p>\n<p>Doors: 8:00pm</p>\n<p>Address: Industry City Bandshell Stage, Courtyard 1/2 at Industry City in Brooklyn New York between 36th and 37th street and 2nd and 3rd Avenues.</p>\n<p>ENTER 238 36th Street, Brooklyn, NY on your GPS device.</p>\n<p>The venue is located in an open-air courtyard featuring a full concert sound stage. Fans can get affordable drinks from the venue&#8217;s bar and order food from over 17 options inside the adjoining food hall.</p>\n<p>How to get here:</p>\n<p>Take the D, N, R lines to 36th street station in Brooklyn and walk west one block to Industry City. 3 stops from Manhattan. 30 minutes from Herald Square.</p>\n<p>From Long Island, take the LIRR to Atlantic Terminal then take the D, N or R train to 36th street.</p>",
+      "excerpt": "<p>Come watch these two countries face each other on our 15-foot wide screen! Come watch Mexico take on Czechia in group match competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>",
+      "slug": "mexico-v-czechia-outdoor-world-cup-watch-party",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM.png",
+        "id": 20407,
+        "extension": "png",
+        "width": 1027,
+        "height": 997,
+        "filesize": 1315357,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 951,
+            "mime-type": "image/png",
+            "filesize": 1160954,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-980x951.png"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/png",
+            "filesize": 156113,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-300x300.png"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 746,
+            "mime-type": "image/png",
+            "filesize": 786137,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-768x746.png"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/png",
+            "filesize": 274554,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-410x410.png"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 835,
+            "mime-type": "image/png",
+            "filesize": 944343,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-860x835.png"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-24 20:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "24",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-24 23:30:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "24",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-24 20:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "24",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-24 23:30:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "24",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://wl.eventim.us/event/mexico-v-czechia-world-cup-watch-party/696092?afflky=Getitrightthefirsttime",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20410,
+      "global_id": "industrycity.com?id=20410",
+      "global_id_lineage": [
+        "industrycity.com?id=20410"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-19 17:52:46",
+      "date_utc": "2026-06-19 17:52:46",
+      "modified": "2026-06-19 17:52:46",
+      "modified_utc": "2026-06-19 17:52:46",
+      "url": "https://industrycity.com/event/team-usa-vs-turkiye-world-cup-watch-party/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20410",
+      "title": "Team USA vs. Turkiye World Cup Watch Party",
+      "description": "<p>Come watch the USA vs. Turkiye Third Group Stage Match of the World Cup on our 14-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>\n<p>Fans who purchase the 2-for-1 drink special will be guaranteed entry!</p>\n<p>This event requires a $5 RSVP, which includes a $6 discount on your first order at our venue bar.</p>\n<p>There will be drink specials, but don&#8217;t forget to take advantage of the 2-for-1 drink ticket when you check out! Space is limited and RSVP doesn&#8217;t guarantee entry. Buying advanced drink tickets guarantees entry!</p>\n<p>Limited seating (about 100 seats), tons of standing room. (And once the game starts everyone is standing.)</p>\n<p>No outside chairs allowed. No strollers.</p>\n<p>No outside beverages. There will be drink specials all night long from our courtyard bar.</p>\n<p>While we do our best to gauge the number of RSVPs, entry is still on a first-come, first-served basis, so please arrive early! Once we hit capacity, we will only let pe ople in on an in and out basis! Fans who purchase the 2-for-1 drink special at check-out will be guaranteed entry!</p>\n<p>Event Info</p>\n<p>Date: June 25, 2026</p>\n<p>Doors: 9:45pm</p>\n<p>Address: Industry City Bandshell Stage, Courtyard 1/2 at Industry City in Brooklyn, New York between 36th and 37th street and 2nd and 3rd Avenues.</p>\n<p>ENTER 238 36th Street, Brooklyn, NY on your GPS device</p>\n<p>The venue is located in an open-air courtyard featuring a full concert sound stage. Fans can get affordable drinks from the venue&#8217;s bar and order food from over 17 options inside the adjoining food hall.</p>\n<p>How to get here:</p>\n<p>Take the D, N, R lines to 36th street station in Brooklyn and walk west one block to Industry City. 3 stops from Manhattan. 30 minutes from Herald Square.</p>\n<p>From Long Island, take the LIRR to Atlantic Terminal then take the D, N or R train to 36th street.</p>",
+      "excerpt": "<p>Come watch the USA vs. Turkiye Third Group Stage Match of the World Cup on our 14-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn. Fans who purchase the 2-for-1 drink special will be guaranteed entry!</p>",
+      "slug": "team-usa-vs-turkiye-world-cup-watch-party",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM.png",
+        "id": 20407,
+        "extension": "png",
+        "width": 1027,
+        "height": 997,
+        "filesize": 1315357,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 951,
+            "mime-type": "image/png",
+            "filesize": 1160954,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-980x951.png"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/png",
+            "filesize": 156113,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-300x300.png"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 746,
+            "mime-type": "image/png",
+            "filesize": 786137,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-768x746.png"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/png",
+            "filesize": 274554,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-410x410.png"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 835,
+            "mime-type": "image/png",
+            "filesize": 944343,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-860x835.png"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-25 21:30:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "25",
+        "hour": "21",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-26 00:30:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "00",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-25 21:30:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "25",
+        "hour": "21",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-26 00:30:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "00",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://wl.eventim.us/event/team-usa-vs-turkiye-world-cup-watch-party/696086?afflky=Getitrightthefirsttime",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20388,
+      "global_id": "industrycity.com?id=20388",
+      "global_id_lineage": [
+        "industrycity.com?id=20388"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-16 17:52:40",
+      "date_utc": "2026-06-16 17:52:40",
+      "modified": "2026-06-16 17:52:40",
+      "modified_utc": "2026-06-16 17:52:40",
+      "url": "https://industrycity.com/event/puppetworks-behind-the-curtain-kids/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20388",
+      "title": "Puppetworks: Behind the Curtain KIDS!",
+      "description": "<p>Celebrate the magic of Puppetworks at this special family-friendly event as Brooklyn&#8217;s beloved marionette theatre prepares to open its new home at Industry City.</p>\n<p>Children and families are invited to enjoy an afternoon of interactive puppet activities, creative workshops, hands-on crafts, special displays, and opportunities to meet Puppetworks artists and performers. Discover the artistry behind puppetry, explore the world of storytelling, and help celebrate nearly 50 years of imagination and live theatre that have inspired generations of Brooklyn families.</p>\n<p>Perfect for children of all ages, this free community event offers a fun and memorable way to experience the wonder of Puppetworks and get a first look at its exciting future at Industry City.</p>\n<p>Friday, June 26, 2026 | 4:00 PM \u2013 6:00 PM<br />\nThe Tom Kane Theatre at brooklynONE productions, Industry City</p>",
+      "excerpt": "<p>Celebrate the magic of Puppetworks at this special family-friendly event as Brooklyn&#8217;s beloved marionette theatre prepares to open its new home at Industry City. Children and families are invited to enjoy an afternoon of interactive puppet activities, creative workshops, hands-on crafts, special displays, and opportunities to meet Puppetworks artists and performers. Discover the artistry behind puppetry, explore the world of storytelling, and help celebrate nearly 50 years of imagination and live theatre that have inspired generations of Brooklyn families.</p>",
+      "slug": "puppetworks-behind-the-curtain-kids",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks.jpg",
+        "id": 20389,
+        "extension": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "filesize": 445451,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 551,
+            "mime-type": "image/jpeg",
+            "filesize": 57726,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-980x551.jpg"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "filesize": 24712,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-300x300.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 432,
+            "mime-type": "image/jpeg",
+            "filesize": 40599,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-768x432.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 864,
+            "mime-type": "image/jpeg",
+            "filesize": 105336,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-1536x864.jpg"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/jpeg",
+            "filesize": 37299,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-410x410.jpg"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 484,
+            "mime-type": "image/jpeg",
+            "filesize": 48237,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-860x484.jpg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-26 16:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-26 18:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-26 16:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-26 18:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "http://www.bkone.org/tix",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20390,
+      "global_id": "industrycity.com?id=20390",
+      "global_id_lineage": [
+        "industrycity.com?id=20390"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-16 17:55:18",
+      "date_utc": "2026-06-16 17:55:18",
+      "modified": "2026-06-16 17:56:49",
+      "modified_utc": "2026-06-16 17:56:49",
+      "url": "https://industrycity.com/event/puppetworks-behind-the-curtain-community-reception-future-home-preview/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20390",
+      "title": "Puppetworks: Behind the Curtain \u2014 Community Reception &#038; Future Home Preview",
+      "description": "<p>Join Industry City, brooklynONE productions, and Puppetworks for a special evening celebrating one of Brooklyn\u2019s most beloved cultural institutions as it prepares to begin its next chapter at Industry City.<br />\nThis community reception will feature wine and light refreshments, special presentations, community storytelling, a live puppet performance, and an exclusive preview of Puppetworks\u2019 future home. Guests will have the opportunity to tour the new theatre and educational space, hear reflections from artists and supporters, and help commemorate nearly 50 years of imagination, education, and live performance that have touched generations of Brooklyn families.<br />\nWhether you grew up attending Puppetworks performances, have supported its mission, or simply believe in the importance of preserving Brooklyn\u2019s cultural institutions, this event offers a unique opportunity to celebrate its legacy and future.<br />\nFriday, June 26, 2026 | 7:00 PM \u2013 9:00 PM<br />\nThe Tom Kane Theatre at brooklynONE productions, Industry City</p>",
+      "excerpt": "<p>Join Industry City, brooklynONE productions, and Puppetworks for a special evening celebrating one of Brooklyn\u2019s most beloved cultural institutions as it prepares to begin its next chapter at Industry City. This community reception will feature wine and light refreshments, special presentations, community storytelling, a live puppet performance, and an exclusive preview of Puppetworks\u2019 future home. Guests will have the opportunity to tour the new theatre and educational space, hear reflections from artists and supporters, and help commemorate nearly 50 years of imagination, education, and live performance that have touched generations of Brooklyn families.</p>",
+      "slug": "puppetworks-behind-the-curtain-community-reception-future-home-preview",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-1.jpg",
+        "id": 20391,
+        "extension": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "filesize": 445451,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 551,
+            "mime-type": "image/jpeg",
+            "filesize": 57726,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-1-980x551.jpg"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "filesize": 24712,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-1-300x300.jpg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 432,
+            "mime-type": "image/jpeg",
+            "filesize": 40599,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-1-768x432.jpg"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 864,
+            "mime-type": "image/jpeg",
+            "filesize": 105336,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-1-1536x864.jpg"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/jpeg",
+            "filesize": 37299,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-1-410x410.jpg"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 484,
+            "mime-type": "image/jpeg",
+            "filesize": 48237,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/puppetworks-1-860x484.jpg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-26 19:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-26 21:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-26 19:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-26 21:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "www.bkONE.org/tix",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20411,
+      "global_id": "industrycity.com?id=20411",
+      "global_id_lineage": [
+        "industrycity.com?id=20411"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-19 17:59:05",
+      "date_utc": "2026-06-19 17:59:05",
+      "modified": "2026-06-19 17:59:05",
+      "modified_utc": "2026-06-19 17:59:05",
+      "url": "https://industrycity.com/event/outdoor-world-cup-watch-party-at-industry-city-6-26/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20411",
+      "title": "Outdoor World Cup Watch Party at Industry City 6/26",
+      "description": "<p>Schedule:</p>\n<p>8:00pm Cape Verde v Saudi Arabia / Uruguay v Spain</p>\n<p>11:00pm Egypt v Iran / New Zealand v Belgium</p>\n<p>Watch group World Cup competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>\n<p>This event requires a $5 RSVP, which includes a $6 discount on your first order at our venue bar.</p>\n<p>There will be drink specials but don&#8217;t forget to take advantage of the 2-for-1 drink ticket when you check out! Space is limited and RSVP doesn&#8217;t guarantee entry. Buying advanced drink tickets guarantees entry!</p>\n<p>NO STROLLERS or children under the age of 3.</p>\n<p>Limited seating (about 100 seats), tons of standing room. SO THAT WE MAY INCLUDE AS MANY PEOPLE AS POSSIBLE AND FOR YOUR SAFETY, PLEASE DO NOT BRING YOUR OWN CHAIRS. Trust us, the second the game starts everybody is up and cheering anyway!</p>\n<p>While we do our best to gauge the number of RSVPs, entry is still on a first-come, first-served basis, so please arrive early! Once we hit capacity, we won&#8217;t be able to let anyone else in.</p>\n<p>No outside beverages. There will be drink specials all day long from our courtyard bar. Feel free to bring in food from the adjoining food hall!</p>\n<p>Event Info</p>\n<p>Date: June 26, 2026</p>\n<p>Doors: 7pm</p>\n<p>Address: Industry City Bandshell Stage, Courtyard 1/2 at Industry City in Brooklyn New York between 36th and 37th street and 2nd and 3rd Avenues.</p>\n<p>ENTER 238 36th Street, Brooklyn, NY on your GPS device</p>\n<p>The venue is located in an open-air courtyard featuring a full concert sound stage. Fans can get affordable drinks from the venue&#8217;s bar and order food from over 17 options inside the adjoining food hall.</p>\n<p>How to get here:</p>\n<p>Take the D, N, R lines to 36th street station in Brooklyn and walk west one block to Industry City. 3 stops from Manhattan. 30 minutes from Herald Square.</p>\n<p>From Long Island, take the LIRR to Atlantic Terminal then take the D, N or R train to 36th street.</p>",
+      "excerpt": "<p>Schedule: 8:00pm Cape Verde v Saudi Arabia / Uruguay v Spain 11:00pm Egypt v Iran / New Zealand v Belgium Watch group World Cup competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>",
+      "slug": "outdoor-world-cup-watch-party-at-industry-city-6-26",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM.png",
+        "id": 20407,
+        "extension": "png",
+        "width": 1027,
+        "height": 997,
+        "filesize": 1315357,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 951,
+            "mime-type": "image/png",
+            "filesize": 1160954,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-980x951.png"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/png",
+            "filesize": 156113,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-300x300.png"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 746,
+            "mime-type": "image/png",
+            "filesize": 786137,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-768x746.png"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/png",
+            "filesize": 274554,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-410x410.png"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 835,
+            "mime-type": "image/png",
+            "filesize": 944343,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-860x835.png"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-26 19:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-27 01:00:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "01",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-26 19:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "26",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-27 01:00:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "01",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://wl.eventim.us/event/world-cup-watch-party-at-industry-city/696097?afflky=Getitrightthefirsttime",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 20412,
+      "global_id": "industrycity.com?id=20412",
+      "global_id_lineage": [
+        "industrycity.com?id=20412"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-06-19 18:01:54",
+      "date_utc": "2026-06-19 18:01:54",
+      "modified": "2026-06-19 18:01:54",
+      "modified_utc": "2026-06-19 18:01:54",
+      "url": "https://industrycity.com/event/outdoor-world-cup-watch-party-at-industry-city-6-27/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/20412",
+      "title": "Outdoor World Cup Watch Party at Industry City 6/27",
+      "description": "<p>Schedule:</p>\n<p>5:00pm Panama v England / Croatia v Ghana a</p>\n<p>7:30pm Colombia v Portugal / Congo DR v Uzbekistan</p>\n<p>10:00pm Jordan v Argentina / Algeria v Austria</p>\n<p>Watch group World Cup competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>\n<p>This event requires a $5 RSVP, which includes a $6 discount on your first order at our venue bar.</p>\n<p>There will be drink specials but don&#8217;t forget to take advantage of the 2-for-1 drink ticket when you check out! Space is limited and RSVP doesn&#8217;t guarantee entry. Buying advanced drink tickets guarantees entry!</p>\n<p>NO STROLLERS or children under the age of 3.</p>\n<p>Limited seating (about 100 seats), tons of standing room. SO THAT WE MAY INCLUDE AS MANY PEOPLE AS POSSIBLE AND FOR YOUR SAFETY, PLEASE DO NOT BRING YOUR OWN CHAIRS. Trust us, the second the game starts everybody is up and cheering anyway!</p>\n<p>While we do our best to gauge the number of RSVPs, entry is still on a first-come, first-served basis, so please arrive early! Once we hit capacity, we won&#8217;t be able to let anyone else in.</p>\n<p>No outside beverages. There will be drink specials all day long from our courtyard bar. Feel free to bring in food from the adjoining food hall!</p>\n<p>Event Info</p>\n<p>Date: June 27, 2026</p>\n<p>Doors: 4pm</p>\n<p>Address: Industry City Bandshell Stage, Courtyard 1/2 at Industry City in Brooklyn New York between 36th and 37th street and 2nd and 3rd Avenues.</p>\n<p>ENTER 238 36th Street, Brooklyn, NY on your GPS device</p>\n<p>The venue is located in an open-air courtyard featuring a full concert sound stage. Fans can get affordable drinks from the venue&#8217;s bar and order food from over 17 options inside the adjoining food hall.</p>\n<p>How to get here:</p>\n<p>Take the D, N, R lines to 36th street station in Brooklyn and walk west one block to Industry City. 3 stops from Manhattan. 30 minutes from Herald Square.</p>\n<p>From Long Island, take the LIRR to Atlantic Terminal then take the D, N or R train to 36th street.</p>",
+      "excerpt": "<p>Schedule: 5:00pm Panama v England / Croatia v Ghana 7:30pm Colombia v Portugal / Congo DR v Uzbekistan 10:00pm Jordan v Argentina / Algeria v Austria Watch group World Cup competition on our 15-foot wide projection screen and listen to the game in full concert sound under the stars in Sunset Park, Brooklyn.</p>",
+      "slug": "outdoor-world-cup-watch-party-at-industry-city-6-27",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM.png",
+        "id": 20407,
+        "extension": "png",
+        "width": 1027,
+        "height": 997,
+        "filesize": 1315357,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 951,
+            "mime-type": "image/png",
+            "filesize": 1160954,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-980x951.png"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/png",
+            "filesize": 156113,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-300x300.png"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 746,
+            "mime-type": "image/png",
+            "filesize": 786137,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-768x746.png"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/png",
+            "filesize": 274554,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-410x410.png"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 835,
+            "mime-type": "image/png",
+            "filesize": 944343,
+            "url": "https://industrycity.com/wp-content/uploads/2026/06/Screenshot-2026-06-19-10.42.14-AM-860x835.png"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-27 16:00:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-27 23:30:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-27 16:00:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "16",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-27 23:30:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "https://wl.eventim.us/event/world-cup-watch-party-at-industry-city/696104?afflky=Getitrightthefirsttime",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10051524,
+      "global_id": "industrycity.com?id=10051524",
+      "global_id_lineage": [
+        "industrycity.com?id=10051524"
+      ],
+      "author": "19",
+      "status": "publish",
+      "date": "2026-02-03 16:11:54",
+      "date_utc": "2026-02-03 16:11:54",
+      "modified": "2026-02-03 16:11:54",
+      "modified_utc": "2026-02-03 16:11:54",
+      "url": "https://industrycity.com/event/industry-city-gourmet-food-and-drinks-tour/2026-06-27/",
+      "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/10051524",
+      "title": "Industry City Gourmet Food and Drinks Tour",
+      "description": "<p>Set against the iconic backdrop of Sunset Park\u2019s historic waterfront, the massive, revitalized structures of Industry City form a breathtaking stage for an exclusive culinary journey. This premium food and cocktail tour is a curated exploration of taste and craft, transforming an evening into a memorable, high-end experience.</p>\n<p>Your adventure begins with artistic bonbons at Lilac Chocolates, explores gourmet imports at Sahadi\u2019s, and includes a refined whiskey tasting at Fort Hamilton Distillery, followed by a sophisticated sake flight. Savor additional artisanal discoveries within the awe-inspiring industrial halls.</p>\n<p>Perfect as a distinctive date night, this tour is also fully customizable for private groups and corporate retreats. We specialize in tailoring this engaging experience for team-building and client entertainment, making it an ideal one-day corporate outing. A sophisticated mini-vacation for locals and a profound discovery for visitors.</p>",
+      "excerpt": "<p>Set against the iconic backdrop of Sunset Park\u2019s historic waterfront, the massive, revitalized structures of Industry City form a breathtaking stage for an exclusive culinary journey. This premium food and cocktail tour is a curated exploration of taste and craft, transforming an evening into a memorable, high-end experience.</p>",
+      "slug": "industry-city-gourmet-food-and-drinks-tour",
+      "image": {
+        "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953.jpeg",
+        "id": 19571,
+        "extension": "jpeg",
+        "width": 1199,
+        "height": 791,
+        "filesize": 125996,
+        "sizes": {
+          "medium": {
+            "width": 980,
+            "height": 647,
+            "mime-type": "image/jpeg",
+            "filesize": 63126,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-980x647.jpeg"
+          },
+          "thumbnail": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "filesize": 15303,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-300x300.jpeg"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 507,
+            "mime-type": "image/jpeg",
+            "filesize": 44407,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-768x507.jpeg"
+          },
+          "blog-thumb": {
+            "width": 410,
+            "height": 410,
+            "mime-type": "image/jpeg",
+            "filesize": 23230,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-410x410.jpeg"
+          },
+          "half-content": {
+            "width": 860,
+            "height": 567,
+            "mime-type": "image/jpeg",
+            "filesize": 52425,
+            "url": "https://industrycity.com/wp-content/uploads/2026/02/IMG_9953-860x567.jpeg"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2026-06-27 16:30:00",
+      "start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "16",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "end_date": "2026-06-27 19:30:00",
+      "end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "19",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_start_date": "2026-06-27 16:30:00",
+      "utc_start_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "16",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_end_date": "2026-06-27 19:30:00",
+      "utc_end_date_details": {
+        "year": "2026",
+        "month": "06",
+        "day": "27",
+        "hour": "19",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "timezone": "UTC+0",
+      "timezone_abbr": "UTC+0",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": []
+      },
+      "website": "https://www.eatnyc.tours/tour/industry-city-gourmet-food-and-drinks-tour",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Ticketed Events",
+          "slug": "ticketed-events",
+          "term_group": 0,
+          "term_taxonomy_id": 134,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 15,
+          "filter": "raw",
+          "term_order": "0",
+          "id": 134,
+          "urls": {
+            "self": "https://industrycity.com/wp-json/tribe/events/v1/categories/134",
+            "collection": "https://industrycity.com/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": [],
+      "organizer": [],
+      "custom_fields": [],
+      "ticketed": false,
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    }
+  ],
+  "rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/?page=1&per_page=15&start_date=2026-06-20 00:00:00&end_date=2028-06-20 23:59:59&status=publish",
+  "next_rest_url": "https://industrycity.com/wp-json/tribe/events/v1/events/?per_page=15&start_date=2026-06-20+00%3A00%3A00&end_date=2028-06-20+23%3A59%3A59&status=publish&page=2",
+  "total": 195,
+  "total_pages": 13
+}
