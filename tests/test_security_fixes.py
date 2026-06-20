@@ -20,7 +20,6 @@ from nyc_events.server import (
     _render_consent,
 )
 
-
 # ---- Fix #1: redirect_uri allowlist -----------------------------------------
 
 
