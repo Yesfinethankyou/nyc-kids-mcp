@@ -3,7 +3,7 @@
 ## Current State
 
 **Last Updated:** 2026-06-19
-**Active Feature:** feat-007 — Session-handoff harness tooling
+**Active Feature:** none — Phase 1–2 shipped; Phase 3 (feat-006, feat-008–012) planned, not started
 
 > **Canonical phase status:** CLAUDE.md `## Phase roadmap` is the source of
 > truth. This log and `feature-list.json` are derived snapshots — when a phase
@@ -16,23 +16,25 @@
 - [x] feat-001 — Phase 1 NYC permit ingest core (model, compute_id, split SQLite + FTS5, `nyc_permitted_events`)
 - [x] feat-002 — MCP server + OAuth 2.1/PKCE shim + Checkpoint C HTTP security baseline
 - [x] feat-003 — Missing-event detection (possible-cancellation flagging, four guard layers)
-- [x] feat-004 — Phase 2 editorial scrapers (8 sources live; buildable backlog cleared)
+- [x] feat-004 — Phase 2 editorial scrapers (9 sources live incl. Industry City; buildable backlog cleared)
 - [x] feat-005 — Docker packaging + deploy (Checkpoint D: multi-arch GHCR image, non-root, Funnel)
+- [x] feat-007 — Session-handoff harness tooling (init.sh + feature-list.json + progress.md + session-handoff.md; merged via PR #13)
 
 ### What's In Progress
 
-- [ ] feat-007 — Session-handoff harness tooling
-  - Details: replace the default Claude templates (`init.sh`, `feature-list.json`,
-    `progress.md`, `session-handoff.md`) with content tailored to this repo,
-    drawn from CLAUDE.md / README.md / PHASE-3-PLAN.md / SOURCES-BACKLOG.md.
-  - Blockers: none.
+- Nothing in flight. Phase 3 is planned but not started.
 
 ### What's Next
 
-1. Commit and push the harness-tooling updates to `claude/elegant-cray-bvto16`.
-2. When Phase 3 work starts, flip feat-006 to `in-progress` and work it per
-   PHASE-3-PLAN.md (geocoding first, then weather, then indoor/outdoor flag,
-   then the Phase-3 venue list, then deferred issues #4/#5/#6).
+Phase 3, in the PHASE-3-PLAN.md sequencing order (now broken out as separate
+features in `feature-list.json`):
+
+1. feat-006 — enrichment pipeline scaffold + caching layer (foundational).
+2. feat-008 — tech-debt bundle #4/#5/#6 (server-touching; do alongside #1).
+3. feat-009 — geocoding + neighborhood + distance-from-home.
+4. feat-010 — indoor/outdoor heuristic flag.
+5. feat-011 — weather on outdoor events (needs feat-009 + feat-010).
+6. feat-012 — venue expansion (Workstream B; Playwright fallback only if a probe needs it).
 
 ## Blockers / Risks
 
@@ -67,8 +69,9 @@
 ## Notes for Next Session
 
 Phases 1, 2 and Checkpoint C/D are done and the suite is green. The only open
-implementation track is Phase 3 (feat-006), which is planned but not started —
-read PHASE-3-PLAN.md before touching it. `server.py` is a single big module; if
+implementation track is Phase 3 — now broken into feat-006 (scaffold) and
+feat-008–012, all not-started; read PHASE-3-PLAN.md before touching any of
+them. `server.py` is a single big module; if
 it grows past ~600 lines, split the OAuth handlers out first (CLAUDE.md). New
 sources follow the source-adder recipe in `.claude/agents/source-adder.md` and
 must add a real-response fixture under `tests/fixtures/`.
