@@ -4,6 +4,7 @@ from .base import Source
 from .bk_childrens_museum import BrooklynChildrensMuseumSource
 from .bpl import BPLSource
 from .brooklyn_army_terminal import BrooklynArmyTerminalSource
+from .governors_island import GovernorsIslandSource
 from .greenwood_cemetery import GreenWoodCemeterySource
 from .industry_city import IndustryCitySource
 from .mommy_poppins import MommyPoppinsSource
@@ -28,6 +29,7 @@ ENABLED_SOURCES: list[type[Source]] = [
     GreenWoodCemeterySource,
     ProspectParkSource,
     IndustryCitySource,
+    GovernorsIslandSource,
     NYCPermittedEventsSource,
     BPLSource,
     MommyPoppinsSource,

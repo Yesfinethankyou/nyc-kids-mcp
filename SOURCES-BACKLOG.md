@@ -216,14 +216,15 @@ Revisit in Phase 3+ if a simpler path turns up.
 
 ## Needs re-probe — prior "no feed" verdict is unreliable
 
-> **⚠️ These two were rejected by the same probe method that wrong-flagged
-> Industry City.** Industry City was called a "custom headless CMS, no wp-json"
-> and turned out to be a plain WordPress + Tribe REST API once re-probed with
-> `curl_cffi` (`impersonate="chrome"`). The Domino Park and Governors Island
-> findings below predate that correction and likely used a non-impersonating
-> fetcher that ate a 403 / bot-block. **Treat their "no structured feed"
-> conclusions as unverified — re-probe both with `curl_cffi` before trusting
-> the rejection.** Status downgraded from "deprioritized" to NEEDS RE-PROBE.
+> **⚠️ Rejected by the same probe method that wrong-flagged Industry City.**
+> Industry City was called a "custom headless CMS, no wp-json" and turned out
+> to be a plain WordPress + Tribe REST API once re-probed with `curl_cffi`
+> (`impersonate="chrome"`). **Governors Island** was likewise re-probed and is
+> now BUILT (custom Craft CMS JSON feed — see the Built section). The Domino
+> Park finding below predates that correction and likely used a
+> non-impersonating fetcher that ate a 403 / bot-block. **Treat its "no
+> structured feed" conclusion as unverified — re-probe with `curl_cffi` before
+> trusting the rejection.**
 
 ### Domino Park
 
@@ -239,21 +240,48 @@ Revisit in Phase 3+ if a simpler path turns up.
   for a Sanity project ID in page source to attempt a GROQ query.
 - **Outlook:** likely requires HTML scraping if the re-probe confirms no feed.
 
-### Governors Island
+### Governors Island — ✅ BUILT (live)
 
-- **Status:** NEEDS RE-PROBE (prior verdict suspect — see warning above).
-  Earlier "custom CMS, no API surface" finding may be a bot-block artifact;
-  re-probe with `curl_cffi` impersonation before deprioritizing.
-- **Source:** `https://govisland.com/calendar`
-- **Finding (unverified):** custom site (S3-hosted assets, built by Reflexions
-  design firm). No WordPress, no Squarespace, no JSON-LD, no iCal link visible.
-  Events may be server-rendered but no API surface found.
-- **Verify:** re-fetch with `curl_cffi` (`impersonate="chrome"`) first; inspect
-  for XHR calls; check `govisland.com/wp-json/` (unlikely but worth a try); check
-  the doNYC mirror (`donyc.com/venues/governors-island`) as an aggregator
-  fallback.
-- **Outlook:** likely scraping only if the re-probe confirms no feed. Heavy
-  public/family programming makes it worth one more verification pass.
+- **Status:** BUILT — shipped as source `governors_island`
+  (`src/nyc_events/sources/governors_island.py`). The prior "custom CMS, no
+  API surface" verdict was a non-impersonating-probe artifact (same failure
+  mode that wrong-flagged Industry City). There IS a clean JSON feed.
+- **Source:** `https://www.govisland.com/things-to-do.json`
+- **Platform:** custom Craft CMS / Solspace-Calendar controller (NOT WordPress
+  + Tribe — `/wp-json/...` returns the bot-block HTML page). The page's Vue
+  `eventsApp` bundle calls `GET /things-to-do.json`; that's the endpoint.
+- **Fetch:** `curl_cffi` (`impersonate="chrome"`) — plain fetchers get a
+  bot-block HTML page even on `/wp-json` paths.
+- **As-built notes (differ from original research):**
+  - Returns `{"data": [...], "meta": {...}}`; each row is one event entry
+    carrying its NEXT upcoming occurrence (`meta.criteria` =
+    `loadOccurrences:next, rangeStart:now, orderBy:id asc`).
+  - **Dates are "floating" local wall-time mislabeled as UTC.** `startDate`
+    reads e.g. `2026-07-25T12:00:00.000000Z` but the event is noon *local*
+    (calendar `icsTimezone` = "floating"). We strip the bogus `Z`, parse naive,
+    and attach `America/New_York`. Treating it as UTC would shift every event.
+  - `id` is per-event and unique (100 distinct ids in a 100-row fetch);
+    recurring events surface only their next occurrence, so
+    `external_id = str(id)` — no `:start.isoformat()` suffix.
+  - **The feed hard-caps at 100 rows ordered `id asc`** — no pagination param
+    works (`?limit`/`?per_page`/`?page`/`?offset` all ignored). Because the cap
+    is id-ascending, newer (higher-id) listings fall off the end if total > 100.
+    So a fetch is NOT a guaranteed full window re-fetch → **opted OUT of
+    missing-detection** (`window_days=None`, same caution as mommy_poppins).
+  - Filtering is **inclusive + blocklist**: GI skews family, so include by
+    default and drop only a focused blocklist — adult-only signals (21+,
+    burlesque), title-level adult/non-event terms (gala, beach club,
+    after-party, alcohol tastings, bike rentals, the QC NY spa, the digital
+    guide), and competitive road races (NYCRUNS 5K/10K/marathon). An allowlist
+    was rejected: it would drop keyword-less kid gold ("Slide Hill", "Hammock
+    Grove Play Area").
+  - `cost` absent upstream → price UNKNOWN. No lat/lng, no age range.
+    venue/borough hardcoded "Governors Island" / Manhattan (the island is part
+    of the Borough of Manhattan); per-event `locations[].locationName` kept
+    only in `raw_payload`.
+  - As built (2026-06-20): a live fetch returned 100 rows → 15 dropped, 85
+    kept across four calendars (Events, Ongoing Programs, Recreation, Public
+    Art).
 
 ---
 
