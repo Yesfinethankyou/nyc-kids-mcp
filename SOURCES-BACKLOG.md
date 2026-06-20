@@ -178,19 +178,54 @@ Revisit in Phase 3+ if a simpler path turns up.
 
 ---
 
-## Low confidence — no structured feed found, deprioritized
+## Ready to build — confirmed structured feed
 
-### Industry City
+### Industry City — ✅ CONFIRMED (Tribe REST API — the prior "headless CMS" finding was wrong)
 
-- **Status:** CANDIDATE (low — custom headless CMS)
+- **Status:** CONFIRMED 2026-06-20. The earlier "custom Streetsense headless
+  CMS, no wp-json" finding did not survive a `curl_cffi` re-probe — the page is
+  **WordPress + The Events Calendar (Tribe)**, the same fast-path as Green-Wood,
+  Prospect Park, and NY Transit Museum. **No headless browser needed.** The
+  Streetsense theme overlays a JS "Load more" widget, but the underlying data
+  is a plain Tribe REST endpoint.
 - **Source:** `https://industrycity.com/events/`
-- **Finding (in-sandbox probe):** custom-built site by Streetsense design firm.
-  Not WordPress, not Squarespace. JS-rendered event list with a "Load more"
-  button. No wp-json, no iCal, no structured feed detected.
-- **Verify:** run the generic probe; check if there's a hidden XHR endpoint
-  the JS calls (inspect Network tab in browser devtools).
-- **Outlook:** likely requires scraping rendered HTML or reverse-engineering
-  an internal API. Fragile. Deprioritize unless the XHR API turns up.
+- **Confirmed endpoint:** `https://industrycity.com/wp-json/tribe/events/v1/events`
+  - `?per_page=50&page=N`, paginate via `next_rest_url` until absent (standard).
+  - Live re-probe (2026-06-20): `total=195`, `total_pages=4` at per_page=50.
+- **Re-probe evidence (in-sandbox, `impersonate="chrome"`):** events page is
+  HTTP 200 (387 KB) with `tribe-events` ×251, `/wp-json` ×5, `.ics`/`ical`
+  tells, and exposed bases `wp-json/tribe/events/v1/`, `wp-json/tribe/tickets/v1/`,
+  `wp-json/tribe/views/v2/html`, `wp-admin/admin-ajax.php`. The Tribe v2 HTML
+  view endpoint is what the "Load more" button calls; the JSON `events/v1`
+  endpoint is the clean build target. Direct GET of the v1 endpoint returns the
+  full structured shape (`events[]`, `rest_url`, `next_rest_url`, `total`,
+  `total_pages`) — HTTP 200.
+- **Data shape (live):** identical to the other Tribe sources — `id`, `title`
+  (HTML entities, e.g. `Father&#8217;s Day`), `start_date`/`end_date`,
+  `utc_start_date`/`utc_end_date`, `url`, `description` (HTML), `excerpt`,
+  `cost`, `categories`, `venue`, `tags`.
+- **As-built caveats for source-adder (surveyed 100 live events):**
+  - **`cost` is always empty** (like Green-Wood) → price `UNKNOWN` for all.
+  - **`venue` is always empty** → hardcode venue="Industry City",
+    borough=BROOKLYN. No per-event lat/lng, no age range.
+  - **Categories are sparse and not kid-curated:** observed only
+    `Ticketed Events` (50), `Workshops` (28), `Nightlife` (11), `Tours` (1),
+    and **`<none>` (10)** — many events are uncategorized. A category allowlist
+    alone would drop real kid events (the "Puppetworks: Behind the Curtain
+    KIDS!" show is uncategorized). **Filter on title/description keywords**
+    (kids, family, workshop, puppet, tour, market, craft, art) with
+    **`Nightlife` as a hard-exclude category** (21+ adult programming) plus a
+    title blocklist (21+, adults only, burlesque, drag, late night). Expect a
+    lot of "Outdoor World Cup Watch Party" rows — borderline, decide at build.
+  - **`external_id = str(id)`** — re-verify per-occurrence per the Tribe
+    precedent (Prospect Park / NY Transit confirmed Tribe `id` is per-occurrence;
+    no date suffix expected). Use `utc_start_date`/`utc_end_date` directly.
+  - `window_days = 60` (full-window re-fetch → opt into missing-detection).
+- **Fixture:** `tests/fixtures/industry_city_sample.json` (15-event slice from
+  `per_page=15` page 1; auth-free public endpoint, no headers stripped needed).
+- **Next step:** run `source-adder` for Industry City (slug `industry_city`).
+
+## Low confidence — no structured feed found, deprioritized
 
 ### Domino Park
 
