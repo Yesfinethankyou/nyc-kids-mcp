@@ -138,6 +138,26 @@ Check for these before assuming you need to scrape HTML:
   `gameDate` (UTC ISO). Brooklyn Cyclones is `teamId=453`. Filter to
   home games only (`teams.home.team.id == 453`).
 
+- **Sanity GROQ API** — many Sanity-backed sites leave the `production`
+  dataset open to anonymous reads, so you can query the public GROQ API
+  directly instead of scraping: `https://{projectId}.apicdn.sanity.io/v2021-10-21/data/query/production?query=*[_type=="event"]{...}`.
+  Returns the raw documents. Domino Park is the confirmed example (project
+  `4shd8slw`). **Recurrence gotcha:** key expansion off the document's own
+  variant/type field (Domino Park uses `variant`: `reoccurring` docs expand
+  via frequency/interval into per-occurrence rows with
+  `external_id=f"{_id}:{date}"`; `single-day`/`multi-day` docs are one event
+  each and their leftover frequency/endDate is vestigial template data — ignore
+  it or rows double-count).
+
+- **Craft CMS / Solspace Calendar JSON** — some Craft sites expose a clean
+  calendar feed at a `.json` twin of the events page (NOT WordPress/Tribe,
+  NOT Sanity). Governors Island is the confirmed example: `/things-to-do.json`
+  returns event rows directly. Watch for "floating" local wall-times
+  mislabeled `Z` (parse as America/New_York, not UTC), and for a hard row cap
+  with no pagination (Governors Island caps at 100 rows id-asc — that means
+  newer events scroll past the cap, so it is opted OUT of missing-detection,
+  `window_days=None`).
+
 ## When the source is a scraper (HTML)
 
 - Use `curl_cffi` + `selectolax`. Not httpx + BeautifulSoup.

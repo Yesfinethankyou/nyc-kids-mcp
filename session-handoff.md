@@ -1,99 +1,88 @@
 # Session Handoff
 
-## Current Objective
+## What was done (last two sessions)
 
-- Goal: Re-probe and build the two suspect "no feed" venue sources (Governors
-  Island, Domino Park), and stand up a filter-review tech-debt item for the
-  maintainer to action personally.
-- Current status: Both sources built, enabled, and green. Filter inventory
-  compiled in `FILTER-REVIEW.md` for a human review pass (no filter changes
-  made). Suite green (405 passed).
-- Branch / PR: `claude/jolly-mccarthy-w53ajo` (pushed; no PR opened yet).
+### Session: Issues #4 / #5 / #6 (merged in PR #19)
 
-## Completed This Session
+- [x] **Issue #4 — FTS5 VACUUM footgun (doc fix):** CLAUDE.md "DB migrations"
+      section now warns never to run `VACUUM` on `events.db` without
+      immediately rebuilding the FTS5 index. The `events` table has a TEXT
+      primary key, so SQLite may renumber implicit rowids on VACUUM and silently
+      desynchronize the external-content FTS5 index.
+- [x] **Issue #5 — Split consent password from master bearer:** Added optional
+      `MCP_CONSENT_PASSWORD` env var. `/authorize` POST checks it first, falling
+      back to `MCP_AUTH_TOKEN`. With it set, the browser consent form never
+      touches the master bearer; the two credentials rotate independently.
+      `.env.example` and CLAUDE.md updated.
+- [x] **Issue #6 — Hygiene grab-bag:** OAuth DB churn reduced (5-min in-memory
+      token cache in `BearerAuthMiddleware`); rate-limiter buckets now evict
+      when empty; tool args clamped (`limit ≤ 50`, `days_ahead ≤ 365`);
+      `UTC = UTC` no-ops removed; `import json` moved to module level;
+      Green-Wood `_strip_html` now uses `html.unescape()`.
 
-- [x] **Governors Island source** (`governors_island`) — re-probed with
-      `curl_cffi`; prior "no API surface" verdict was a non-impersonating-probe
-      artifact. Custom Craft CMS / Solspace-Calendar JSON feed at
-      `/things-to-do.json` (NOT WordPress/Tribe). Inclusive + blocklist. Dates
-      are floating local wall-time mislabeled `Z` → parsed as America/New_York.
-      Opted OUT of missing-detection (feed caps at 100 rows, id-asc). 100 rows
-      → 85 kept. 22 parser tests.
-- [x] **Domino Park source** (`domino_park`) — re-probed; "Sanity headless, no
-      feed" verdict was also a probe artifact. Public Sanity GROQ API (project
-      `4shd8slw`, anonymous reads). **`variant` is the authoritative recurrence
-      switch, not `frequency`**: `reoccurring` docs expand per-occurrence;
-      `single-day`/`multi-day` are one event each (their leftover frequency is
-      vestigial). Opted INTO missing-detection (full GROQ re-fetch). 125 docs →
-      104 events / 60-day window. 26 parser tests.
-- [x] **Filter-review tech debt** — added the "review filter lists for all
-      sources" item and compiled `FILTER-REVIEW.md` (per-source inclusion gates
-      + lists + flagged inconsistencies). Maintainer is reviewing personally;
-      no filters changed.
-- [x] Docs updated: `CLAUDE.md` (roadmap → both live; hygiene section points to
-      `FILTER-REVIEW.md`), `SOURCES-BACKLOG.md` (both BUILT blocks + the
-      resolved "non-impersonating probe" lesson + tech-debt note), `README.md`
-      (shipped lists, layout tree).
+### Session: Agents / skills / hooks review (this PR)
 
-## Verification Evidence
+- [x] **Agent fixes:** `source-verifier` had Industry City / Domino Park /
+      Governors Island listed as REJECTED "no structured surface" precedents —
+      all three are live sources; each rejection was a non-impersonating-probe
+      artifact. Corrected to Time Out NY Kids. Added explicit warning never to
+      reject on a plain (non-impersonating) probe.
+- [x] **New fast-paths in both agents:** Sanity GROQ API (Domino Park precedent)
+      and Craft CMS / Solspace Calendar JSON (Governors Island precedent) added
+      to `source-adder`'s "Platform fast paths" and `source-verifier`'s
+      classify step.
+- [x] **`source-fixer` agent:** New agent owns repair of broken EXISTING
+      scrapers — the workflow that fell between `source-adder` (new sources only)
+      and the diagnose-only `ingest-health` skill. `ingest-health` now hands
+      off to `source-fixer`.
+- [x] **`guard-commit` PreToolUse hook:** Blocks `git add` of `.env`,
+      `.venv/`, and `data/*.db*`, plus `git add --force`. Scoped to `git add`
+      only; strips `-m` message text to avoid false positives. Verified with
+      13 true/false-positive cases.
+- [x] **`db-maintenance` skill:** Safe VACUUM + mandatory FTS rebuild procedure.
+      Wraps the issue #4 VACUUM footgun with backup, before/after baseline,
+      rebuild, and `PRAGMA integrity_check`. SQL validated against a seeded DB.
+- [x] **CI workflow (`test.yml`):** `pytest` + `ruff` on every PR and push to
+      main. Added to main manually (OAuth app in this environment lacks
+      `workflow` scope for git push).
+- [x] **Lint fix:** Stray double blank line in `tests/test_security_fixes.py`
+      left by the issues session's `UTC = UTC` removal.
 
-| Check | Command | Result | Notes |
-|---|---|---|---|
-| Tests | `.venv/bin/python -m pytest tests/ -q` | 405 passed | full suite |
-| Lint | `.venv/bin/ruff check` | All checks passed! | clean |
-| GovIsland dry-run | `list(GovernorsIslandSource().fetch())` | 85 events | 100 rows → 15 dropped |
-| Domino dry-run | `list(DominoParkSource().fetch())` | 104 events | 125 docs, 60-day window |
-| Registry | `python -c "from nyc_events.sources import ENABLED_SOURCES; ..."` | 11 sources | both new sources wired |
+## Current state
 
-## Files Changed (this branch)
+Suite: **405 passed**, ruff: **clean**. All changes on
+`claude/review-open-issues-bzeumn`, PR open against main.
 
-- `src/nyc_events/sources/governors_island.py` — new source.
-- `src/nyc_events/sources/domino_park.py` — new source.
-- `src/nyc_events/sources/__init__.py` — both wired into `ENABLED_SOURCES`.
-- `tests/test_governors_island_parse.py`, `tests/test_domino_park_parse.py` — new.
-- `tests/fixtures/governors_island_sample.json`, `tests/fixtures/domino_park_sample.json` — new.
-- `tests/test_missing_detection.py` — Governors Island excluded from
-  missing-detection; opt-in count 8 → 9 (Domino added).
-- `FILTER-REVIEW.md` — new filter inventory.
-- `CLAUDE.md`, `SOURCES-BACKLOG.md`, `README.md` — doc updates.
+## Decisions made
 
-## Decisions Made
+- **5-min OAuth token cache TTL.** A revoked token stays valid up to 5 minutes.
+  To revoke immediately: restart the server.
+- **Rate-limiter eviction on drain**, not on creation.
+- **`MCP_CONSENT_PASSWORD` falls back to `MCP_AUTH_TOKEN`.** Additive only;
+  single-var deployments need no changes.
+- **`source-fixer` is a separate agent**, not a widened `source-adder`. Keeps
+  each agent's scope narrow and description accurate.
 
-- **`variant` over `frequency` for Domino recurrence.** Upstream stores some
-  recurring series as one `reoccurring` doc and others as several `single-day`
-  docs carrying vestigial (sometimes negative-span) `frequency`/`endDate`.
-  Trusting `frequency` would double-count and emit garbage dates; trusting
-  `variant` matches the upstream's own rendering intent.
-- **Missing-detection opt-in is per-feed, not per-source-type.** Domino's GROQ
-  query is a true full re-fetch → opted in. Governors Island's feed hard-caps
-  at 100 rows ordered id-asc (newer events scroll off) → opted out, same
-  caution as `mommy_poppins`.
-- **Filters are not consolidated yet — by request.** The maintainer wants to
-  review them personally; `FILTER-REVIEW.md` is the inventory + flagged issues,
-  and nothing was changed pre-emptively.
-- **Always probe with `curl_cffi` impersonation.** Three sources (Industry
-  City, Governors Island, Domino Park) were each falsely rejected by a
-  non-impersonating probe that ate a 403. Lesson recorded in `SOURCES-BACKLOG.md`.
+## Blockers / risks
 
-## Blockers / Risks
+- **`guard-commit` hook** is active this session: any `git add` whose command
+  text contains `.env`, `.venv`, or `data/*.db` is blocked. If unexpectedly
+  blocked, check the hook — it strips `-m` messages to avoid false positives.
+- **OAuth token cache** means a revoked token (row deleted from `oauth.db`)
+  stays valid for up to 5 min in a running server.
 
-- Standing rule: never `git add` `data/*.db*`, `.env`, or `.venv/` (gitignored).
-- `FILTER-REVIEW.md` is a point-in-time extract — re-run its introspection
-  snippet before acting; source code is authoritative.
-
-## Next Session Startup
+## Next session startup
 
 1. Read `CLAUDE.md` (project guide — hard-won quirks, security baseline).
-2. Read `feature-list.json` and `progress.md` for current feature state.
-3. Review this handoff and `FILTER-REVIEW.md`.
-4. Run `pytest tests/ -q` + `ruff check` before editing — suite should be green.
+2. Read `progress.md` for current feature state.
+3. Run `pytest tests/ -q` + `ruff check` — suite should be green.
 
-## Recommended Next Step
+## Recommended next steps
 
-- **Maintainer:** do the filter review using `FILTER-REVIEW.md`; hand back the
-  decisions (canonical blocklist, where it lives, which tag keywords to
-  word-boundary) and a follow-up session can apply them as one pass.
-- Open a PR for this branch if desired (none opened yet).
-- Phase 3 remains queued (`PHASE-3-PLAN.md`): geocoding/distance is the
-  high-value first step. Domino Park already ships lat/lng, so it's ready for
-  the distance filter.
+- Merge the open PR (agents/skills/hooks improvements).
+- If `MCP_CONSENT_PASSWORD` is desirable on the NAS, generate a second token
+  and add it to `.env` before the next connector approval.
+- Phase 3 remains queued (`PHASE-3-PLAN.md`): geocoding / distance is the
+  high-value first step.
+- Filter consolidation pass (`FILTER-REVIEW.md`) still pending maintainer
+  review — no filters were changed in either session.
