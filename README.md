@@ -14,7 +14,7 @@ tools — designed for use from the Claude mobile app while out with a kid.
   Museum, Green-Wood Cemetery (~104 events/60d), Prospect Park Alliance
   (~307 events/60d), New York Transit Museum (~10 events/60d), Brooklyn Army
   Terminal (~12 events/60d), Industry City (~8 events/60d), Governors Island
-  (~85 events/run) — real
+  (~85 events/run), Domino Park (~104 events/60d) — real
   descriptions, URLs, and (where
   upstream provides them) age ranges, coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser) and Coney Island
@@ -47,7 +47,8 @@ RSS / ICS / SODA / scrapers  →  ingest (nightly cron)  →  SQLite (FTS5)  →
 - SQLite + FTS5 for text search
 - `httpx` for most fetching; `curl_cffi` (Chrome impersonation) for sources
   behind Cloudflare TLS-fingerprinting (Mommy Poppins, Green-Wood Cemetery,
-  Prospect Park Alliance, New York Transit Museum, Industry City, Governors Island)
+  Prospect Park Alliance, New York Transit Museum, Industry City, Governors
+  Island, Domino Park)
 - **Auth:** minimal single-user OAuth 2.1 + PKCE shim (claude.ai web requires it; bare bearer
   isn't an option). Master token also still works directly for curl testing.
 - Docker target: Synology NAS; public HTTPS via Tailscale Funnel
@@ -329,17 +330,25 @@ Adapters with real descriptions, URLs, age ranges:
   wall-time; `cost` absent → price unknown, venue/borough hardcoded Governors
   Island / Manhattan. Opted out of missing-detection (feed caps at 100 rows,
   id-asc). ~85 events/run.
+- ✅ **Domino Park** — *shipped.* Public Sanity GROQ API (project `4shd8slw`,
+  anonymous reads; `curl_cffi`) — the "Sanity headless, no feed" verdict was a
+  probe artifact. Recurrence keyed off the `variant` field (`reoccurring` docs
+  expanded per-occurrence; `single-day`/`multi-day` kept as one event, their
+  leftover frequency ignored). Inclusive + light blocklist (curated
+  family-park feed). Has lat/lng + descriptions; no price → unknown,
+  venue/borough hardcoded Domino Park / Brooklyn. ~104 events/60 days.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
 - ❌ **Coney Island USA** — *rejected.* Working Squarespace feed, but the
   calendar is adult programming (burlesque/sideshow) and the Mermaid
   Parade isn't published through it.
 
-See `SOURCES-BACKLOG.md` for additional candidate venues. Domino Park was
-rejected by the same flawed probe that wrong-flagged Industry City and
-Governors Island (both since built), so its "no structured feed" verdict is
-flagged for re-probe rather than trusted. Brooklyn Cyclones is deferred to
-Phase 3 (its themed-night data needs a headless browser).
+See `SOURCES-BACKLOG.md` for additional candidate venues. Industry City,
+Governors Island, and Domino Park were all originally rejected by a probe that
+didn't impersonate a browser (ate a 403) and have since been re-probed and
+built — the lesson, now recorded in the backlog, is to always probe with
+`curl_cffi` impersonation before concluding "no feed." Brooklyn Cyclones is
+deferred to Phase 3 (its themed-night data needs a headless browser).
 
 These land alongside `nyc_permitted_events` rather than replace it; permit
 data is a useful denominator even with its thinness.
@@ -369,6 +378,7 @@ nyc-events-mcp/
 │       ├── brooklyn_army_terminal.py # single-page HTML scrape  (Phase 2, shipped)
 │       ├── industry_city.py          # Tribe Events REST        (Phase 2, shipped)
 │       ├── governors_island.py       # Craft CMS JSON feed      (Phase 2, shipped)
+│       ├── domino_park.py            # Sanity GROQ API          (Phase 2, shipped)
 │       └── timeout_nykids.py         # stub                     (rejected — no feed)
 ├── data/                 # SQLite lives here; gitignored
 ├── SOURCES-BACKLOG.md    # researched candidate sources

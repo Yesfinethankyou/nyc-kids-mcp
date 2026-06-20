@@ -26,6 +26,26 @@ coneyisland.com were all probed and fixture-captured directly from a web
 session. Try the probe from the sandbox first; only fall back to capturing
 on your laptop/NAS if a specific domain is actually blocked.
 
+## Tech debt / TODO
+
+**Review filter lists for all sources.** Each source has grown its own
+kid-relevance filter (allowlist / blocklist / hard-exclude keywords, category
+filters, race/alcohol regexes) independently, and they've drifted apart:
+Green-Wood, Industry City, and Governors Island each carry overlapping but
+non-identical adult/alcohol blocklists; the permit source (`nyc_permitted_events`)
+has its own aggressive agency/title-regex stack. Audit all of them together for:
+- **False negatives** — legit kid events dropped by an over-broad blocklist or
+  a too-narrow allowlist (e.g. keyword-less items like "Slide Hill").
+- **False positives** — adult content slipping through (cross-check each
+  source's blocklist against the others; e.g. does every source that needs it
+  exclude `21+` / `burlesque` / `drag` / alcohol tastings?).
+- **Consolidation** — whether the shared adult/alcohol/`no children` terms
+  should move to a single reusable constant in `sources/base.py` (or a small
+  `sources/_filters.py`) instead of being copy-pasted per source, so a fix in
+  one place fixes all. Weigh against the per-source customization each still
+  needs (categories, venue-specific quirks).
+Do this as one focused pass with fresh live fetches per source, not piecemeal.
+
 ## How to verify
 
 ```python
@@ -214,31 +234,55 @@ Revisit in Phase 3+ if a simpler path turns up.
     those phrasings wrongly catch legit kid events that merely ban strollers
     or price by age, so they were removed.)
 
-## Needs re-probe — prior "no feed" verdict is unreliable
+## The "non-impersonating probe" lesson (resolved)
 
-> **⚠️ Rejected by the same probe method that wrong-flagged Industry City.**
-> Industry City was called a "custom headless CMS, no wp-json" and turned out
-> to be a plain WordPress + Tribe REST API once re-probed with `curl_cffi`
-> (`impersonate="chrome"`). **Governors Island** was likewise re-probed and is
-> now BUILT (custom Craft CMS JSON feed — see the Built section). The Domino
-> Park finding below predates that correction and likely used a
-> non-impersonating fetcher that ate a 403 / bot-block. **Treat its "no
-> structured feed" conclusion as unverified — re-probe with `curl_cffi` before
-> trusting the rejection.**
+> Three sources — **Industry City**, **Governors Island**, and **Domino
+> Park** — were each rejected with a "headless CMS, no public feed" verdict
+> that turned out to be a bot-block artifact: the original probe didn't
+> impersonate a browser, ate a 403, and never reached the real feed. All
+> three were re-probed with `curl_cffi` (`impersonate="chrome"`) and BUILT
+> (see the Built section). **Lesson: always probe candidate sources with
+> `curl_cffi` impersonation before concluding "no feed."** No backlog
+> candidates currently carry an unverified rejection.
 
-### Domino Park
+### Domino Park — ✅ BUILT (live)
 
-- **Status:** NEEDS RE-PROBE (prior verdict suspect — see warning above).
-  Earlier "Sanity headless CMS, no public feed" finding may be a bot-block
-  artifact; re-probe with `curl_cffi` impersonation before deprioritizing.
-- **Source:** `https://www.dominopark.com/events`
-- **Finding (unverified):** Sanity CMS (CDN: `sanity-prod-domino-park.b-cdn.net`).
-  Events server-rendered but no public structured feed or iCal found. Sanity has
-  a public GROQ API but only if the project allows anonymous reads — unconfirmed.
-- **Verify:** re-fetch with `curl_cffi` (`impersonate="chrome"`) first; then
-  check if `https://www.dominopark.com/api/events` or `/wp-json/` exists; look
-  for a Sanity project ID in page source to attempt a GROQ query.
-- **Outlook:** likely requires HTML scraping if the re-probe confirms no feed.
+- **Status:** BUILT — shipped as source `domino_park`
+  (`src/nyc_events/sources/domino_park.py`). The "Sanity headless, no public
+  feed" verdict was a non-impersonating-probe artifact.
+- **Source:** `https://www.dominopark.com/events` (Next.js App Router + Sanity).
+- **Platform:** Sanity CMS. The `production` dataset on project `4shd8slw`
+  allows anonymous reads, so we query the public GROQ API directly — no HTML
+  scraping, no headless browser.
+- **Endpoint:** `https://4shd8slw.apicdn.sanity.io/v2021-10-21/data/query/production`
+  with GROQ `*[_type=="event"]{...}`. `curl_cffi` (`impersonate="chrome"`); the
+  apex domain bot-blocks plain fetchers.
+- **As-built notes:**
+  - **`variant` is the authoritative recurrence switch, NOT `frequency`.**
+    `reoccurring` docs are a single series → expanded via `frequency`
+    (weekly/monthly/daily) + `interval` (every-N) bounded by
+    `startDate`..`endDate`, one row per occurrence
+    (`external_id=f"{_id}:{date}"`). `single-day`/`multi-day` docs are one
+    event each; they OFTEN carry leftover `frequency`/`interval`/`endDate` from
+    a template (e.g. "Longevity Stick" and "Horticulture Tours" each exist as
+    several single-day docs, some with `endDate` < `startDate`) — that data is
+    VESTIGIAL and must be ignored, or rows both double-count and emit garbage
+    dates. The two representations don't overlap upstream.
+  - `startHour`/`endHour` are free-text ("6 pm", "10:00 AM", "7:30 pm ",
+    "8:00am") parsed leniently; unparseable → midnight. Times are local
+    wall-clock → America/New_York.
+  - Rich: `description` (plain text), `latitude`/`longitude` (~98% of docs),
+    `tags` (category labels mapped to our tags), `slug` (→ `/events/{slug}`).
+    No price field → UNKNOWN. Venue/borough hardcoded "Domino Park" / Brooklyn
+    (Williamsburg waterfront); per-event `location` kept in `raw_payload`.
+  - Inclusive + light blocklist (curated family-park feed; tags dominated by
+    "Family & Education"). Only strong adult signals dropped (21+, burlesque,
+    "drag show"/"drag brunch", alcohol tastings); bare "drag" is NOT blocked
+    (catches family throwback/skate nights).
+  - Opted INTO missing-detection (`window_days=60`): the GROQ query returns the
+    full event collection each run and occurrence ids are deterministic, so a
+    fetch is a true full-window re-fetch.
+  - As built (2026-06-20): 125 docs → 104 events over a 60-day window.
 
 ### Governors Island — ✅ BUILT (live)
 

@@ -239,4 +239,4 @@ def test_full_window_sources_opt_in():
         if cls not in _MISSING_DETECTION_EXCLUDED
     }
     assert all(days == 60 for days in opted_in.values()), opted_in
-    assert len(opted_in) == 8
+    assert len(opted_in) == 9
