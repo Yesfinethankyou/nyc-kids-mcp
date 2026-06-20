@@ -1,0 +1,33 @@
+name: Test and lint
+
+# Enforces the "suite should always be green" rule on every PR and on pushes
+# to main, so a red suite or lint break can't merge and get baked into the
+# image that docker-publish.yml builds from main.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install (package + dev deps)
+        run: pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check
+
+      - name: Test
+        run: python -m pytest tests/ -q
