@@ -39,6 +39,7 @@ from typing import Any
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
+from ._filters import ADULT_BLOCKLIST, MEMBERS_ONLY, contains_any
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -80,11 +81,12 @@ _ALLOWLIST_KEYWORDS: tuple[str, ...] = (
     "winter festival", "spring festival",
 )
 
-# An event is dropped unconditionally if its title contains any of these,
-# even when an allowlist keyword also matches. Members-only events are not
-# bookable by the public, so a "birding" or "tour" allowlist hit must not
-# pull them back in. "adults only" is a genuine adult-only signal (matches the
-# other sources' hard-exclude lists) and must override the allowlist too.
+# An event is dropped unconditionally if its title hits the shared adult
+# blocklist or the members-only signal, even when an allowlist keyword also
+# matches. Members-only events aren't bookable by the public, so a "birding" or
+# "tour" allowlist hit must not pull them back in; "adults only" is a genuine
+# adult-only signal that must override the allowlist too ("adults only" also
+# covers "for adults only" via substring).
 #
 # A former soft `_BLOCKLIST_KEYWORDS` list (gala/donor/cocktail/adults only) was
 # removed: it was dead code. The allowlist is checked first and short-circuits
@@ -92,13 +94,8 @@ _ALLOWLIST_KEYWORDS: tuple[str, ...] = (
 # blocklist term was only ever reached on a row that had no allowlist hit —
 # already dropped by the default. "gala"/"donor" therefore drop via the default
 # (a "Family Gala" with an allowlist hit was kept before and still is), and the
-# two real adult-only signals were promoted here so they actually take effect.
-_HARD_EXCLUDE_TITLE: tuple[str, ...] = (
-    "members only",
-    "members-only",
-    "adults only",
-    "for adults only",
-)
+# real adult-only signals moved to the shared `ADULT_BLOCKLIST` so they take
+# effect.
 
 # ---------------------------------------------------------------------------
 # Tag inference
@@ -171,9 +168,8 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
     haystack = f"{title} {excerpt} {description} {cats}"
 
     # Hard exclusions on title win over the allowlist.
-    for kw in _HARD_EXCLUDE_TITLE:
-        if kw in title:
-            return False
+    if contains_any(title, ADULT_BLOCKLIST) or contains_any(title, MEMBERS_ONLY):
+        return False
 
     # Check allowlist first.
     for kw in _ALLOWLIST_KEYWORDS:

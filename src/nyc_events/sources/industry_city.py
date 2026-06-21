@@ -61,6 +61,7 @@ from typing import Any
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
+from ._filters import ADULT_BLOCKLIST, contains_any
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -99,30 +100,17 @@ _ALLOWLIST_KEYWORDS: tuple[str, ...] = (
     "market", "flea", "garden", "open studio",
 )
 
-# Hard exclusions — win over any allowlist hit. These flag adult-only content
-# (21+ shows, burlesque/drag, late-night programming) that would otherwise be
+# Hard exclusions — win over any allowlist hit. The shared `ADULT_BLOCKLIST`
+# (21+, burlesque, drag show/brunch, "no children", etc.) plus this source's
+# only local extra, "late night", flag adult content that would otherwise be
 # pulled back in by a "tour"/"class"/"workshop" match. Alcohol-tasting terms
 # (cocktail/whiskey/sake/brewery/distillery/wine-or-beer tasting/happy hour)
 # were intentionally removed: alcohol at a venue is not by itself an adult-only
-# signal, and they dropped legitimate family events (e.g. food-and-drink markets).
-_HARD_EXCLUDE: tuple[str, ...] = (
-    "21+",
-    "adults only",
-    "adults-only",
-    "18+",
-    "burlesque",
-    "drag show",
-    "drag brunch",
-    "late night",
-    "late-night",
-    # An explicit "no children" in the copy is an adult-only signal — keep it.
-    # (The weaker "no strollers" / "children under the age" phrasings were
-    # removed: they wrongly dropped legitimate kid events that merely ban
-    # strollers or price admission by age. Net effect: the outdoor World Cup
-    # watch parties, whose copy reads "NO STROLLERS or children under the age
-    # of 3", are no longer filtered on that basis.)
-    "no children",
-)
+# signal, and they dropped legitimate family events (e.g. food-and-drink
+# markets). "no children" is the only "no …" phrasing kept — the weaker "no
+# strollers" / "children under the age" wrongly dropped legit kid events (the
+# outdoor World Cup watch parties read "NO STROLLERS or children under … 3").
+_LOCAL_EXCLUDE: tuple[str, ...] = ("late night",)
 
 # Upstream categories that are hard-exclude regardless of keywords.
 _EXCLUDE_CATEGORIES: frozenset[str] = frozenset({"Nightlife"})
@@ -195,9 +183,8 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
 
     if _EXCLUDE_CATEGORIES & _category_names(row):
         return False
-    for kw in _HARD_EXCLUDE:
-        if kw in haystack:
-            return False
+    if contains_any(haystack, ADULT_BLOCKLIST) or contains_any(haystack, _LOCAL_EXCLUDE):
+        return False
     return any(kw in haystack for kw in _ALLOWLIST_KEYWORDS)
 
 

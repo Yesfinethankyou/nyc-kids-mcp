@@ -28,17 +28,22 @@ on your laptop/NAS if a specific domain is actually blocked.
 
 ## Tech debt / TODO
 
-**Review filter lists for all sources.** Each source has grown its own
-kid-relevance filter (allowlist / blocklist / hard-exclude keywords, category
-filters, race/alcohol regexes) independently, and they've drifted apart. The
-full inventory — every source's inclusion gate, lists, and a set of flagged
-inconsistencies (blocklist drift, hyphen/space variants, Green-Wood's likely
-dead blocklist, bare-substring tag false positives) — is compiled in
-**`FILTER-REVIEW.md`** for a human review pass. **Owner: the maintainer is
-reviewing the filters personally**; that doc is the starting point and includes
-a one-liner to re-introspect the live constants. Don't change filters
-pre-emptively — wait for the review's decisions, then apply as one focused pass
-with fresh live fetches per touched source.
+**Review filter lists for all sources — DONE (maintainer review, 2026-06).**
+The full inventory lives in **`FILTER-REVIEW.md`**; the review's decisions were
+applied as a focused pass with fresh live fetches per touched source:
+- Alcohol-tasting terms dropped from every blocklist (alcohol alone isn't an
+  adult-only signal).
+- Shared adult signals hoisted into `src/nyc_events/sources/_filters.py`
+  (`ADULT_BLOCKLIST` / `MEMBERS_ONLY` + a `normalize()` that collapses
+  hyphen/space variants), imported by the six editorial sources; per-source
+  extras stay local.
+- Green-Wood's dead soft-blocklist removed; its adult terms promoted to the
+  hard-exclude.
+- Tag inference word-boundary-matched in the flagged sources so short keywords
+  stop matching mid-word.
+Remaining easy follow-ups (not blocking): apply the same tag word-boundary fix
+to `domino_park`/`ny_transit`, and decide whether `drag show`/`drag brunch`
+should stay title+body (current) or title-only for Governors Island.
 
 ## How to verify
 

@@ -58,6 +58,7 @@ from typing import Any
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
+from ._filters import ADULT_BLOCKLIST, MEMBERS_ONLY, contains_any
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -99,16 +100,9 @@ _EXCLUDE_CATEGORIES: frozenset[str] = frozenset(
     }
 )
 
-# Defensive net: drop unconditionally if the title contains any of these,
-# even when an included category matches. No live events currently trigger
-# this — same guard as prospect_park.
-_HARD_EXCLUDE_TITLE: tuple[str, ...] = (
-    "21+",
-    "adults only",
-    "adults-only",
-    "members only",
-    "members-only",
-)
+# Defensive net: drop unconditionally if the title hits the shared adult
+# blocklist or the members-only signal, even when an included category matches.
+# No live events currently trigger this — same guard as prospect_park.
 
 # ---------------------------------------------------------------------------
 # Venue / borough mapping
@@ -202,9 +196,8 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
     Exclusion categories and title hard-excludes win over the allowlist.
     """
     title = _strip_html(row.get("title")).lower()
-    for kw in _HARD_EXCLUDE_TITLE:
-        if kw in title:
-            return False
+    if contains_any(title, ADULT_BLOCKLIST) or contains_any(title, MEMBERS_ONLY):
+        return False
     categories = _category_names(row)
     if _EXCLUDE_CATEGORIES & categories:
         return False

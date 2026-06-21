@@ -62,6 +62,7 @@ from zoneinfo import ZoneInfo
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
+from ._filters import ADULT_BLOCKLIST, MEMBERS_ONLY, contains_any
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -84,33 +85,19 @@ USER_AGENT = (
 # ("Slide Hill", "Hammock Grove Play Area") carry no kid keyword at all.
 # ---------------------------------------------------------------------------
 
-# Adult-only / strong adult signals — checked against title + body.
-_HARD_EXCLUDE: tuple[str, ...] = (
-    "21+",
-    "18+",
-    "adults only",
-    "adults-only",
-    "adult-only",
-    "no children",
-    "burlesque",
-)
-
-# Adult-skewing or non-event terms — checked against the TITLE only, to avoid
-# dropping a family festival whose body merely mentions a "wine garden" etc.
-# Covers fundraiser galas, beach clubs, after-parties, open-bar events, and
-# non-event amenities (bike rentals, the spa "QC NY", the digital guide).
-# Alcohol-tasting terms (cocktail / wine or beer tasting / happy hour) were
-# intentionally removed — alcohol alone isn't an adult-only signal here.
+# Strong adult signals (`ADULT_BLOCKLIST`) are checked against title + body.
+# Venue-specific adult-skewing / non-event terms are checked against the TITLE
+# only, to avoid dropping a family festival whose body merely mentions a "wine
+# garden" etc. Covers fundraiser galas, beach clubs, after-parties, open-bar
+# events, and non-event amenities (bike rentals, the spa "QC NY", the digital
+# guide). Alcohol-tasting terms (cocktail / wine or beer tasting / happy hour)
+# were intentionally removed — alcohol alone isn't an adult-only signal here.
+# Hyphen/space variants ("after-party") are handled by the shared normalizer.
 _TITLE_EXCLUDE: tuple[str, ...] = (
     "gala",
     "beach club",
     "after party",
-    "after-party",
-    "drag show",
-    "drag brunch",
     "open bar",
-    "members only",
-    "members-only",
     "bike rental",
     "citi bike",
     "digital guide",
@@ -128,9 +115,9 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
     body = _strip_html(row.get("body")).lower()
     haystack = f"{title} {body}"
 
-    if any(kw in haystack for kw in _HARD_EXCLUDE):
+    if contains_any(haystack, ADULT_BLOCKLIST):
         return False
-    if any(kw in title for kw in _TITLE_EXCLUDE):
+    if contains_any(title, _TITLE_EXCLUDE) or contains_any(title, MEMBERS_ONLY):
         return False
     if _RACE_RX.search(title):
         return False

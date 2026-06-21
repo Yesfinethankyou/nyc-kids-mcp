@@ -62,6 +62,7 @@ from zoneinfo import ZoneInfo
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
+from ._filters import ADULT_BLOCKLIST, contains_any
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -90,31 +91,19 @@ USER_AGENT = (
 # Kid-relevance filter (inclusive + blocklist)
 #
 # Domino Park's calendar is a curated family-park program (tags are dominated
-# by "Family & Education"), so we INCLUDE by default and drop only a light
-# blocklist of clearly-adult signals — a safety net, consistent with the
-# Governors Island source. Bare "drag" is deliberately NOT blocklisted (would
-# catch family throwback/skate nights); only "drag show"/"drag brunch".
+# by "Family & Education"), so we INCLUDE by default and drop only the shared
+# adult blocklist (a safety net, consistent with the Governors Island source) —
+# checked against title + description. Bare "drag" is deliberately NOT
+# blocklisted (would catch family throwback/skate nights); only the shared
+# "drag show"/"drag brunch". Alcohol-tasting terms are intentionally absent —
+# alcohol alone isn't an adult-only signal at a family park.
 # ---------------------------------------------------------------------------
-
-_HARD_EXCLUDE: tuple[str, ...] = (
-    "21+",
-    "18+",
-    "adults only",
-    "adults-only",
-    "adult-only",
-    "no children",
-    "burlesque",
-    "drag show",
-    "drag brunch",
-    # Alcohol-tasting terms (wine/beer tasting, happy hour) were intentionally
-    # removed — alcohol alone isn't an adult-only signal at a family park.
-)
 
 
 def _is_kid_relevant(doc: dict[str, Any]) -> bool:
     """Return True unless the doc hits the adult blocklist."""
-    haystack = f"{doc.get('title') or ''} {doc.get('description') or ''}".lower()
-    return not any(kw in haystack for kw in _HARD_EXCLUDE)
+    haystack = f"{doc.get('title') or ''} {doc.get('description') or ''}"
+    return not contains_any(haystack, ADULT_BLOCKLIST)
 
 
 # ---------------------------------------------------------------------------
