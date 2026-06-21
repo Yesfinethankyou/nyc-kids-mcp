@@ -32,6 +32,12 @@ kid-relevance filters had drifted between six hand-maintained copies.
 - [x] **Docs reconciled:** `FILTER-REVIEW.md` (all obs. marked resolved +
       per-source detail), `CLAUDE.md` (layout + hygiene section), and
       `SOURCES-BACKLOG.md` (tech-debt marked done).
+- [x] **PR-workflow hook:** new PreToolUse hook
+      `.claude/hooks/require-handoff-update.sh` (matcher
+      `mcp__github__create_pull_request`) blocks PR creation unless
+      `session-handoff.md` was updated for the branch (dirty / changed vs
+      `origin/main` / in the latest commit). Fail-open on git errors. Documented
+      in CLAUDE.md's new "PR workflow" section.
 
 ### Session: Issues #4 / #5 / #6 (merged in PR #19)
 
@@ -69,6 +75,8 @@ industry 21, domino 104, prospect 303, nytm 12; 2026-06-21).
   title or body.
 - **Green-Wood soft blocklist was dead code** — removed, adult terms promoted
   to the hard-exclude.
+- **Handoff-before-PR is enforced by a hook**, not just convention — PR creation
+  is blocked until `session-handoff.md` is updated for the branch.
 
 ## Blockers / risks
 
