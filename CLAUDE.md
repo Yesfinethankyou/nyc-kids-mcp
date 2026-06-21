@@ -34,6 +34,11 @@ If a change breaks tests, fix the change — don't loosen the tests.
 - `src/nyc_events/oauth.py` — auth-code issue/consume + PKCE verification
 - `src/nyc_events/ingest.py` — CLI loop over `ENABLED_SOURCES`
 - `src/nyc_events/sources/base.py` — `Source` ABC; each source is one file in the same dir
+- `src/nyc_events/sources/_filters.py` — shared kid-relevance helpers:
+  `normalize()` (collapse hyphens/whitespace), `contains_any()`, and the
+  canonical adult sets: `ADULT_BLOCKLIST` (match title or body),
+  `ADULT_TITLE_BLOCKLIST` (drag show/brunch — title only), `MEMBERS_ONLY`.
+  Per-source extras + the inclusion *strategy* stay in each source.
 - `src/nyc_events/sources/__init__.py` — `ENABLED_SOURCES` registry
 - `tests/fixtures/` — captured real upstream responses used in parser tests
 
@@ -166,12 +171,16 @@ cleaned input. Strict-raw semantics would require restructuring (`raw_payload
 **Each editorial source carries its own kid-relevance filter** — strategies
 vary by venue (allowlist-required, inclusive+blocklist, category-allowlist,
 age-band). `FILTER-REVIEW.md` is the cross-source inventory: every inclusion
-gate, the actual keyword/category lists, and known inconsistencies (blocklist
-drift, dead Green-Wood blocklist, bare-substring tag false positives). A
-filter-consolidation pass is pending maintainer review (see `SOURCES-BACKLOG.md`
-→ Tech debt). When adding a source, pick the matching strategy — don't add a
-filter to a curated kids feed (`mommy_poppins`, `bk_childrens_museum` have none
-by design).
+gate, the actual keyword/category lists, and the resolved inconsistencies. The
+filter-consolidation pass is **done** (maintainer review, 2026-06): alcohol-
+tasting terms dropped everywhere; the shared adult signals hoisted into
+`sources/_filters.py` (`ADULT_BLOCKLIST` / `MEMBERS_ONLY` + a `normalize()` that
+collapses hyphen/space variants); Green-Wood's dead soft-blocklist removed (its
+adult terms promoted to the hard-exclude); and tag inference word-boundary-
+matched so short keywords (`art`/`tree`/`hill`) stop hitting mid-word. When
+adding a source, import the shared adult set from `_filters.py`, pick the
+matching strategy, and keep venue-specific extras local — don't add a filter to
+a curated kids feed (`mommy_poppins`, `bk_childrens_museum` have none by design).
 
 ## Tool output shape
 
@@ -284,11 +293,14 @@ Known accepted residuals (see `git log` for the security-audit commit):
     (`wp-json/tribe/events/v1/events`, `curl_cffi` impersonate=chrome). The
     earlier "custom headless CMS, no wp-json" verdict was a probe artifact.
     Categories aren't kid-curated, so filtering is title/description
-    keyword-driven with `Nightlife` as a hard-exclude category and an
-    adult/alcohol blocklist (21+, burlesque, drag, sake/whiskey/cocktail
-    tastings, "no children"). As built (2026-06-20): a live 60-day fetch
-    returned 29 rows → 16 dropped, 13 kept (workshops, Puppetworks, Zine Club,
-    outdoor World Cup watch parties). `cost`/`venue` always empty upstream →
+    keyword-driven with `Nightlife` as a hard-exclude category and an adult
+    blocklist (21+, burlesque, drag, late-night, "no children"). As built
+    (2026-06-20): a live 60-day fetch returned 29 rows → 16 dropped, 13 kept
+    (workshops, Puppetworks, Zine Club, outdoor World Cup watch parties).
+    (Alcohol-tasting terms — cocktail/whiskey/sake/brewery/distillery/wine-or-
+    beer tasting/happy hour — were later removed from the blocklist per the
+    filter review, so gourmet-tour and sake-class rows are now kept too.)
+    `cost`/`venue` always empty upstream →
     price UNKNOWN, venue/borough hardcoded Industry City / Brooklyn, no
     lat/lng/age. See SOURCES-BACKLOG.md as-built block.
   - **BUILT (live):** Governors Island — the prior "custom CMS, no API

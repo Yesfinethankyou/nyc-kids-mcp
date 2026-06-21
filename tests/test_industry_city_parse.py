@@ -97,17 +97,30 @@ def test_21_plus_blocklist_overrides_allowlist():
     assert _parse_row(row) is None
 
 
-def test_alcohol_tour_blocklist_overrides_tour_allowlist():
-    # The "gourmet food and drinks tour" matches no allowlist kw on its own,
-    # but an alcohol term must drop it even if "tour"/"workshop" appears.
+def test_adult_blocklist_overrides_allowlist():
+    # A hard-exclude term (burlesque/21+) must drop an event even when an
+    # allowlist keyword like "workshop" also appears.
     row = _row(
-        title="Father's Day Intro to Sake Class and Brewery Tour",
-        description="<p>A guided sake tasting and brewery tour workshop.</p>",
+        title="Burlesque 101 Workshop (21+)",
+        description="<p>An adults-only burlesque workshop.</p>",
         excerpt="",
         categories=[{"name": "Workshops"}],
     )
     assert _is_kid_relevant(row) is False
     assert _parse_row(row) is None
+
+
+def test_alcohol_term_alone_no_longer_blocks():
+    # Alcohol-tasting terms were removed from the blocklist — alcohol alone is
+    # not an adult-only signal, so a family workshop that mentions a tasting is
+    # kept (the "workshop" allowlist hit stands).
+    row = _row(
+        title="Family Sake & Brewery Tour Workshop",
+        description="<p>A guided sake tasting and brewery tour workshop.</p>",
+        excerpt="",
+        categories=[{"name": "Workshops"}],
+    )
+    assert _is_kid_relevant(row) is True
 
 
 # ---------------------------------------------------------------------------
@@ -169,8 +182,8 @@ def test_missing_optional_excerpt_falls_back_to_description():
 
 def test_recurring_tour_occurrences_get_distinct_ids():
     # The gourmet tour appears twice with distinct ids + dated URL slugs,
-    # confirming external_id = str(id) is per-occurrence. (Both are dropped by
-    # the alcohol filter, but the id distinctness is the point being asserted.)
+    # confirming external_id = str(id) is per-occurrence. (Both are now kept
+    # since the alcohol terms were removed; the id distinctness is the point.)
     ids = {e["id"] for e in _load_events() if e["slug"].startswith(
         "industry-city-gourmet-food-and-drinks-tour")}
     assert ids == {10051523, 10051524}
@@ -184,14 +197,19 @@ def test_recurring_tour_occurrences_get_distinct_ids():
 def test_fixture_kept_count():
     # Of the 15-row slice: yarn workshop, mending circle, Puppetworks KIDS, the
     # Puppetworks community reception, and the outdoor World Cup watch parties
-    # are kid-relevant; the 21+ band and alcohol tours/classes are dropped.
-    # (Watch parties match the "children" allowlist keyword and are no longer
-    # excluded on their "NO STROLLERS / children under the age of 3" copy.)
+    # are kid-relevant; the 21+ band is dropped. (Watch parties match the
+    # "children" allowlist keyword and are no longer excluded on their "NO
+    # STROLLERS / children under the age of 3" copy.) The sake class and the two
+    # gourmet food-and-drinks tours are now KEPT — the alcohol-tasting terms
+    # were removed from the blocklist, so alcohol alone no longer drops them.
     kept = [_parse_row(e) for e in _load_events()]
     kept = [ev for ev in kept if ev is not None]
     titles = sorted(ev.title for ev in kept)
     assert titles == [
         "Brooklyn Creative Reuse Mending Circle",
+        "Father's Day Intro to Sake Class and Brewery Tour",
+        "Industry City Gourmet Food and Drinks Tour",
+        "Industry City Gourmet Food and Drinks Tour",
         "Mexico v Czechia Outdoor World Cup Watch Party",
         "Outdoor World Cup Watch Party at Industry City 6/20",
         "Outdoor World Cup Watch Party at Industry City 6/21",

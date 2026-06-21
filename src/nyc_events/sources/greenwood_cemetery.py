@@ -39,6 +39,12 @@ from typing import Any
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
+from ._filters import (
+    ADULT_BLOCKLIST,
+    ADULT_TITLE_BLOCKLIST,
+    MEMBERS_ONLY,
+    contains_any,
+)
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -80,24 +86,21 @@ _ALLOWLIST_KEYWORDS: tuple[str, ...] = (
     "winter festival", "spring festival",
 )
 
-# An event is dropped if its title matches any blocklist keyword AND none of
-# the allowlist keywords matched.
-_BLOCKLIST_KEYWORDS: tuple[str, ...] = (
-    "gala",
-    "cocktail",
-    "donor",
-    "for adults only",
-    "adults only",
-)
-
-# An event is dropped unconditionally if its title contains any of these,
-# even when an allowlist keyword also matches. Members-only events are not
-# bookable by the public, so a "birding" or "tour" allowlist hit must not
-# pull them back in.
-_HARD_EXCLUDE_TITLE: tuple[str, ...] = (
-    "members only",
-    "members-only",
-)
+# An event is dropped unconditionally if its title hits the shared adult
+# blocklist or the members-only signal, even when an allowlist keyword also
+# matches. Members-only events aren't bookable by the public, so a "birding" or
+# "tour" allowlist hit must not pull them back in; "adults only" is a genuine
+# adult-only signal that must override the allowlist too ("adults only" also
+# covers "for adults only" via substring).
+#
+# A former soft `_BLOCKLIST_KEYWORDS` list (gala/donor/cocktail/adults only) was
+# removed: it was dead code. The allowlist is checked first and short-circuits
+# on a hit, and the function's default is a conservative drop, so a soft
+# blocklist term was only ever reached on a row that had no allowlist hit —
+# already dropped by the default. "gala"/"donor" therefore drop via the default
+# (a "Family Gala" with an allowlist hit was kept before and still is), and the
+# real adult-only signals moved to the shared `ADULT_BLOCKLIST` so they take
+# effect.
 
 # ---------------------------------------------------------------------------
 # Tag inference
@@ -170,21 +173,19 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
     haystack = f"{title} {excerpt} {description} {cats}"
 
     # Hard exclusions on title win over the allowlist.
-    for kw in _HARD_EXCLUDE_TITLE:
-        if kw in title:
-            return False
+    if (
+        contains_any(title, ADULT_BLOCKLIST)
+        or contains_any(title, ADULT_TITLE_BLOCKLIST)
+        or contains_any(title, MEMBERS_ONLY)
+    ):
+        return False
 
     # Check allowlist first.
     for kw in _ALLOWLIST_KEYWORDS:
         if kw in haystack:
             return True
 
-    # Check blocklist on title (title is noisier signal than haystack).
-    for kw in _BLOCKLIST_KEYWORDS:
-        if kw in title:
-            return False
-
-    # No allowlist match and no blocklist match — conservative default: drop.
+    # No allowlist match — conservative default: drop.
     return False
 
 
@@ -193,7 +194,11 @@ def _infer_tags(title: str, description: str | None) -> list[str]:
     haystack = title.lower() + " " + (description or "").lower()
     tags: list[str] = ["family"]
     for tag, keywords in _TAG_RULES:
-        if tag not in tags and any(kw in haystack for kw in keywords):
+        # Leading word boundary: "tree" matches "trees" but not "street";
+        # prefixes still match.
+        if tag not in tags and any(
+            re.search(rf"\b{re.escape(kw)}", haystack) for kw in keywords
+        ):
             tags.append(tag)
     return tags
 

@@ -28,17 +28,22 @@ on your laptop/NAS if a specific domain is actually blocked.
 
 ## Tech debt / TODO
 
-**Review filter lists for all sources.** Each source has grown its own
-kid-relevance filter (allowlist / blocklist / hard-exclude keywords, category
-filters, race/alcohol regexes) independently, and they've drifted apart. The
-full inventory — every source's inclusion gate, lists, and a set of flagged
-inconsistencies (blocklist drift, hyphen/space variants, Green-Wood's likely
-dead blocklist, bare-substring tag false positives) — is compiled in
-**`FILTER-REVIEW.md`** for a human review pass. **Owner: the maintainer is
-reviewing the filters personally**; that doc is the starting point and includes
-a one-liner to re-introspect the live constants. Don't change filters
-pre-emptively — wait for the review's decisions, then apply as one focused pass
-with fresh live fetches per touched source.
+**Review filter lists for all sources — DONE (maintainer review, 2026-06).**
+The full inventory lives in **`FILTER-REVIEW.md`**; the review's decisions were
+applied as a focused pass with fresh live fetches per touched source:
+- Alcohol-tasting terms dropped from every blocklist (alcohol alone isn't an
+  adult-only signal).
+- Shared adult signals hoisted into `src/nyc_events/sources/_filters.py`
+  (`ADULT_BLOCKLIST` / `MEMBERS_ONLY` + a `normalize()` that collapses
+  hyphen/space variants), imported by the six editorial sources; per-source
+  extras stay local.
+- Green-Wood's dead soft-blocklist removed; its adult terms promoted to the
+  hard-exclude.
+- Tag inference word-boundary-matched across all keyword-tagging sources so
+  short keywords stop matching mid-word.
+- `drag show`/`drag brunch` moved to a title-only shared set
+  (`ADULT_TITLE_BLOCKLIST`) so a family event whose body merely mentions an
+  adjacent drag show isn't dropped; the core adult terms still match title+body.
 
 ## How to verify
 
@@ -218,9 +223,11 @@ Revisit in Phase 3+ if a simpler path turns up.
   - **Filter as built:** keyword allowlist on title+description+excerpt (kids,
     family, workshop, craft, puppet, market, etc.); `Nightlife` category is a
     hard-exclude; a hard-exclude blocklist (21+, 18+, burlesque, drag, late
-    night, cocktail/whiskey/sake/brewery/distillery tastings) wins over the
-    allowlist and drops the adult "gourmet food and drinks" tour and the sake
-    class. Only an explicit **"no children"** is treated as an adult-only
+    night) wins over the allowlist. (Alcohol-tasting terms —
+    cocktail/whiskey/sake/brewery/distillery/wine-or-beer tasting/happy hour —
+    were later removed per the filter review, so the "gourmet food and drinks"
+    tour and the sake class are now kept.) Only an explicit **"no children"** is
+    treated as an adult-only
     signal. The outdoor World Cup watch parties say "NO STROLLERS or children
     under the age of 3"; the bare word "children" matches the allowlist, so
     they are **kept** as kid-friendly outdoor events. (An earlier build also
@@ -271,8 +278,9 @@ Revisit in Phase 3+ if a simpler path turns up.
     (Williamsburg waterfront); per-event `location` kept in `raw_payload`.
   - Inclusive + light blocklist (curated family-park feed; tags dominated by
     "Family & Education"). Only strong adult signals dropped (21+, burlesque,
-    "drag show"/"drag brunch", alcohol tastings); bare "drag" is NOT blocked
-    (catches family throwback/skate nights).
+    "drag show"/"drag brunch"); bare "drag" is NOT blocked (catches family
+    throwback/skate nights). (Alcohol-tasting terms — wine/beer tasting, happy
+    hour — were later removed per the filter review.)
   - Opted INTO missing-detection (`window_days=60`): the GROQ query returns the
     full event collection each run and occurrence ids are deterministic, so a
     fetch is a true full-window re-fetch.
@@ -309,8 +317,10 @@ Revisit in Phase 3+ if a simpler path turns up.
   - Filtering is **inclusive + blocklist**: GI skews family, so include by
     default and drop only a focused blocklist — adult-only signals (21+,
     burlesque), title-level adult/non-event terms (gala, beach club,
-    after-party, alcohol tastings, bike rentals, the QC NY spa, the digital
-    guide), and competitive road races (NYCRUNS 5K/10K/marathon). An allowlist
+    after-party, open bar, bike rentals, the QC NY spa, the digital guide), and
+    competitive road races (NYCRUNS 5K/10K/marathon). (Alcohol-tasting terms —
+    cocktail, wine/beer tasting, happy hour — were later removed per the filter
+    review; "open bar" stays.) An allowlist
     was rejected: it would drop keyword-less kid gold ("Slide Hill", "Hammock
     Grove Play Area").
   - `cost` absent upstream → price UNKNOWN. No lat/lng, no age range.
@@ -343,8 +353,9 @@ Source code is authoritative; these notes capture the surprises.
     cost→Price mapping is kept for when/if upstream populates it.
   - Use `utc_start_date` / `utc_end_date` directly — no local-tz conversion.
   - Kid-relevance: keyword allowlist (family, nature, music, storytelling,
-    holidays, film, tour, etc.) + soft blocklist (gala, cocktail, donor,
-    adults only). `members only` / `members-only` in the **title** is a
+    holidays, film, tour, etc.) + soft blocklist (gala, donor, adults only;
+    `cocktail` removed per the filter review). `members only` / `members-only`
+    in the **title** is a
     hard exclude that overrides any allowlist hit.
   - ~104 kid-relevant events in a 60-day window (verified live).
 
