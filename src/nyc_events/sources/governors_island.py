@@ -212,7 +212,12 @@ def _infer_tags(title: str, body: str | None) -> list[str]:
     haystack = title.lower() + " " + (body or "").lower()
     tags: list[str] = ["family"]
     for tag, keywords in _TAG_RULES:
-        if tag not in tags and any(kw in haystack for kw in keywords):
+        # Leading word boundary stops short keywords from matching mid-word:
+        # "tree"≠"street", "hill"≠"Churchill", "fort"≠"comfort", "walk"≠
+        # "boardwalk" — while still matching prefixes ("tree" → "trees").
+        if tag not in tags and any(
+            re.search(rf"\b{re.escape(kw)}", haystack) for kw in keywords
+        ):
             tags.append(tag)
     return tags
 

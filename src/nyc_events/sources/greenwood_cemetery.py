@@ -80,24 +80,24 @@ _ALLOWLIST_KEYWORDS: tuple[str, ...] = (
     "winter festival", "spring festival",
 )
 
-# An event is dropped if its title matches any blocklist keyword AND none of
-# the allowlist keywords matched.
-_BLOCKLIST_KEYWORDS: tuple[str, ...] = (
-    "gala",
-    # "cocktail" was intentionally removed — alcohol alone isn't an adult-only
-    # signal; explicit "adults only" still gates these out.
-    "donor",
-    "for adults only",
-    "adults only",
-)
-
 # An event is dropped unconditionally if its title contains any of these,
 # even when an allowlist keyword also matches. Members-only events are not
 # bookable by the public, so a "birding" or "tour" allowlist hit must not
-# pull them back in.
+# pull them back in. "adults only" is a genuine adult-only signal (matches the
+# other sources' hard-exclude lists) and must override the allowlist too.
+#
+# A former soft `_BLOCKLIST_KEYWORDS` list (gala/donor/cocktail/adults only) was
+# removed: it was dead code. The allowlist is checked first and short-circuits
+# on a hit, and the function's default is a conservative drop, so a soft
+# blocklist term was only ever reached on a row that had no allowlist hit —
+# already dropped by the default. "gala"/"donor" therefore drop via the default
+# (a "Family Gala" with an allowlist hit was kept before and still is), and the
+# two real adult-only signals were promoted here so they actually take effect.
 _HARD_EXCLUDE_TITLE: tuple[str, ...] = (
     "members only",
     "members-only",
+    "adults only",
+    "for adults only",
 )
 
 # ---------------------------------------------------------------------------
@@ -180,12 +180,7 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
         if kw in haystack:
             return True
 
-    # Check blocklist on title (title is noisier signal than haystack).
-    for kw in _BLOCKLIST_KEYWORDS:
-        if kw in title:
-            return False
-
-    # No allowlist match and no blocklist match — conservative default: drop.
+    # No allowlist match — conservative default: drop.
     return False
 
 
@@ -194,7 +189,11 @@ def _infer_tags(title: str, description: str | None) -> list[str]:
     haystack = title.lower() + " " + (description or "").lower()
     tags: list[str] = ["family"]
     for tag, keywords in _TAG_RULES:
-        if tag not in tags and any(kw in haystack for kw in keywords):
+        # Leading word boundary: "tree" matches "trees" but not "street";
+        # prefixes still match.
+        if tag not in tags and any(
+            re.search(rf"\b{re.escape(kw)}", haystack) for kw in keywords
+        ):
             tags.append(tag)
     return tags
 

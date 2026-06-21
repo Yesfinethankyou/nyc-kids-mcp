@@ -307,7 +307,9 @@ def _infer_tags(title: str, description: str | None) -> list[str]:
         haystack += " " + description.lower()
     tags: list[str] = []
     for tag, keywords in _KID_KEYWORDS:
-        if any(kw in haystack for kw in keywords):
+        # Leading word boundary: "art" matches "art"/"arts"/"artwork" but not
+        # "start"/"part"/"heart"; still matches prefixes ("sing" → "singing").
+        if any(re.search(rf"\b{re.escape(kw)}", haystack) for kw in keywords):
             tags.append(tag)
     return tags
 

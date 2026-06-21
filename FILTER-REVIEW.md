@@ -55,14 +55,17 @@ PY
 
 ### `mommy_poppins` — no inclusion filter
 Curated kids' editorial source, so every parsed row is kept. `_KID_KEYWORDS`
-is **tagging only**. Note bare `art` in the `arts & crafts` rule (matches
-`st-art`, `p-art`, `he-art`) and `show` in `theater` (matches `showcase`,
-`shower`).
+is **tagging only**, now matched with a leading word boundary (obs. 4): bare
+`art` matches `art`/`arts`/`artwork` but no longer `st-art`/`p-art`/`he-art`.
+Residual: `show` (theater) still matches `showcase`/`shower` because both
+*start* with `show` — a leading boundary can't separate them; negligible on a
+curated feed.
 
 ### `bk_childrens_museum` — no inclusion filter
 Everything at a children's museum is kid/family by default. Only gate:
 `_SKIP_TITLE_RX = \bclosed\b` (drops closed-day rows). `_KID_KEYWORDS` is
-tagging only; also has bare `art` and `make` / `draw`.
+tagging only, now leading-word-boundary matched (obs. 4): `art`/`make`/`draw`
+no longer hit `smart`/`filmmaker`/`withdraw`.
 
 ### `brooklyn_army_terminal` — blocklist only
 `_DROP_TITLE_PREFIX = "live music concert"` — drops the 21+ EDM nightclub
@@ -77,8 +80,9 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
   (alcohol-tasting terms `cocktail`/`wine tasting`/`beer tasting`/`happy hour`
   removed per maintainer review — alcohol alone isn't an adult-only signal)
 - `_RACE_RX`: `\bnycruns\b|\bhalf marathon\b|\bmarathon\b|\b\d+\s?k\b`
-- Tag rules `_TAG_RULES` (7). ⚠️ substring risks: `tree` ⊂ `street`,
-  `hill` ⊂ `Churchill`, `fort` ⊂ `comfort`/`effort`, `walk` ⊂ `boardwalk`.
+- Tag rules `_TAG_RULES` (7) — matched with a leading word boundary (obs. 4),
+  so `tree`/`hill`/`fort`/`walk` no longer hit `street`/`Churchill`/`comfort`/
+  `boardwalk`.
 
 ### `domino_park` — inclusive + blocklist
 - `_HARD_EXCLUDE` (title+desc, 9): `21+`, `18+`, `adults only`,
@@ -101,7 +105,8 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
   `Nature Programs`
 - `_HARD_EXCLUDE_TITLE` (5): `21+`, `adults only`, `adults-only`,
   `members only`, `members-only`
-- `_CATEGORY_TAGS` (15) + `_TITLE_TAG_RULES` (4)
+- `_CATEGORY_TAGS` (15) + `_TITLE_TAG_RULES` (4) — `_TITLE_TAG_RULES` now
+  leading-word-boundary matched (obs. 4): `sing` no longer hits `crossing`.
 
 ### `industry_city` — keyword allowlist (required)
 - `_EXCLUDE_CATEGORIES`: `Nightlife`
@@ -115,16 +120,16 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
 - `_TAG_RULES` (6)
 
 ### `greenwood_cemetery` — keyword allowlist (required)
-- `_HARD_EXCLUDE_TITLE` (2): `members only`, `members-only`
+- `_HARD_EXCLUDE_TITLE` (4): `members only`, `members-only`, `adults only`,
+  `for adults only` (last two **promoted** from the old soft blocklist per
+  obs. 3 so they actually override the allowlist).
 - `_ALLOWLIST_KEYWORDS` (53, must match one): broad — family, tour, nature,
   music, holiday/seasonal terms, Día de los Muertos, etc.
-- `_BLOCKLIST_KEYWORDS` (4): `gala`, `donor`, `for adults only`,
-  `adults only` (`cocktail` removed per maintainer review) — ⚠️ **likely dead
-  code**: the function returns `True` on any
-  allowlist hit and otherwise falls through to a conservative `return False`,
-  so a blocklist term is only reachable on a row that has **no** allowlist hit,
-  which is already dropped. Worth confirming/ removing or reordering.
-- `_TAG_RULES` (9). ⚠️ `sing` ⊂ `crossing`, `bird` is fine, `tree` clean here.
+- ~~`_BLOCKLIST_KEYWORDS`~~ **removed** (was dead code — see obs. 3). `gala`/
+  `donor` now drop via the conservative default; the two adult-only terms moved
+  to `_HARD_EXCLUDE_TITLE`.
+- `_TAG_RULES` (9) — now matched with a leading word boundary (obs. 4), so
+  `tree` no longer hits `s-tree-t`.
 
 ### `bpl` — age band + keyword fallback
 - `_ADULT_AGES` (exact match → drop): `adult`, `older adults`, `adults`
@@ -177,12 +182,23 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
    `late-night`. A shared normalizer (strip/lower/collapse hyphens before
    matching) would let each list hold one spelling.
 
-3. **`greenwood_cemetery` blocklist is probably dead code** (see above).
+3. **`greenwood_cemetery` blocklist was dead code — RESOLVED.** Confirmed dead
+   (allowlist short-circuits first, default drops), so `_BLOCKLIST_KEYWORDS` was
+   removed. `adults only`/`for adults only` were promoted to
+   `_HARD_EXCLUDE_TITLE` so they actually override the allowlist (consistent
+   with the other sources); `gala`/`donor` drop via the conservative default.
 
-4. **Bare-substring false positives in tag rules** (output quality, not
-   inclusion): `art` ⊂ start/part/heart (`mommy_poppins`, `bk_childrens`);
-   `tree`/`hill`/`fort`/`walk` (`governors_island`); `sing` ⊂ crossing
-   (`greenwood`). Consider word-boundary regexes for short keywords.
+4. **Bare-substring false positives in tag rules — RESOLVED.** Tag matching in
+   `mommy_poppins`, `bk_childrens`, `governors_island`, `greenwood_cemetery`,
+   and `prospect_park` now uses a **leading word boundary** (`re.search(r"\b"
+   + kw)`), so `art`/`tree`/`hill`/`fort`/`walk`/`sing` no longer match
+   `start`/`street`/`Churchill`/`comfort`/`boardwalk`/`crossing`, while prefix
+   matches (`tree`→`trees`, `puppet`→`puppets`) still work. Residual: `show`
+   (mommy_poppins) still matches `showcase`/`shower` — both *start* with
+   `show`, so a leading boundary can't separate them (negligible on a curated
+   feed). Not changed: `domino_park` (`moth`⊂mother, `dj`⊂adjust) and
+   `ny_transit` (`bus`⊂business, `story`⊂history) carry similar minor risks but
+   weren't in the original flag list — easy follow-ups with the same fix.
 
 5. **No-filter sources skew on trust.** `mommy_poppins` and `bk_childrens`
    keep everything by design. If either upstream ever broadens beyond kids,
@@ -199,9 +215,11 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
 
 - [x] Drop alcohol-tasting terms from every blocklist (obs. 1, done). Still
       open: hoist the shared adult blocklist into one constant vs. per-source.
-- [ ] Normalize hyphen/space variants (obs. 2).
-- [ ] Confirm + remove/repair Green-Wood's dead blocklist (obs. 3).
-- [ ] Word-boundary the short tag keywords (obs. 4).
+- [ ] Normalize hyphen/space variants (obs. 2) — pending a direction decision
+      (shared `_filters.py` normalizer vs. in-place per source).
+- [x] Confirm + remove/repair Green-Wood's dead blocklist (obs. 3, done).
+- [x] Word-boundary the short tag keywords (obs. 4, done for the 5 flagged
+      sources; `domino_park`/`ny_transit` are easy follow-ups).
 - [ ] Spot-check each allowlist source against a fresh live fetch for false
       negatives (legit kid events dropped).
 - [ ] After any change: `pytest tests/ -q` + `ruff check`, and a live dry-run

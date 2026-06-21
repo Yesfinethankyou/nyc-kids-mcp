@@ -151,7 +151,11 @@ def _infer_tags(title: str, description: str | None) -> list[str]:
     haystack = title.lower() + " " + (description or "").lower()
     tags: list[str] = ["family", "best for kids"]
     for tag, keywords in _KID_KEYWORDS:
-        if tag not in tags and any(kw in haystack for kw in keywords):
+        # Leading word boundary: "art"/"make"/"draw" match as words/prefixes
+        # ("artwork", "maker") but not mid-word ("smart", "filmmaker").
+        if tag not in tags and any(
+            re.search(rf"\b{re.escape(kw)}", haystack) for kw in keywords
+        ):
             tags.append(tag)
     return tags
 

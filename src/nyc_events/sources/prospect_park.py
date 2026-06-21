@@ -189,7 +189,11 @@ def _infer_tags(title: str, categories: set[str]) -> list[str]:
             tags.append(tag)
     title_lower = title.lower()
     for tag, keywords in _TITLE_TAG_RULES:
-        if tag not in tags and any(kw in title_lower for kw in keywords):
+        # Leading word boundary: "sing" matches "singing"/"sing-along" but not
+        # "crossing"/"housing"; prefixes still match.
+        if tag not in tags and any(
+            re.search(rf"\b{re.escape(kw)}", title_lower) for kw in keywords
+        ):
             tags.append(tag)
     return tags
 
