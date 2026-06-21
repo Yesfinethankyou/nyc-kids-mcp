@@ -62,7 +62,12 @@ from zoneinfo import ZoneInfo
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
-from ._filters import ADULT_BLOCKLIST, MEMBERS_ONLY, contains_any
+from ._filters import (
+    ADULT_BLOCKLIST,
+    ADULT_TITLE_BLOCKLIST,
+    MEMBERS_ONLY,
+    contains_any,
+)
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -117,7 +122,11 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
 
     if contains_any(haystack, ADULT_BLOCKLIST):
         return False
-    if contains_any(title, _TITLE_EXCLUDE) or contains_any(title, MEMBERS_ONLY):
+    if (
+        contains_any(title, ADULT_TITLE_BLOCKLIST)
+        or contains_any(title, _TITLE_EXCLUDE)
+        or contains_any(title, MEMBERS_ONLY)
+    ):
         return False
     if _RACE_RX.search(title):
         return False

@@ -47,6 +47,11 @@ def contains_any(text: str | None, keywords: Iterable[str]) -> bool:
 # in normalized form — always match via ``normalize``/``contains_any``.
 # Note: ``"adults only"`` is a substring of ``"for adults only"``, so the latter
 # needs no separate entry.
+#
+# ``ADULT_BLOCKLIST`` terms are strong enough to drop on a match anywhere (title
+# or body). ``ADULT_TITLE_BLOCKLIST`` terms are checked against the **title
+# only** — a family festival whose body merely mentions an adjacent "drag show"
+# shouldn't be dropped, so the title is the reliable signal for these.
 ADULT_BLOCKLIST: tuple[str, ...] = (
     "21+",
     "18+",
@@ -54,6 +59,10 @@ ADULT_BLOCKLIST: tuple[str, ...] = (
     "adult only",
     "no children",
     "burlesque",
+)
+
+# Adult signals checked against the title only (see note above).
+ADULT_TITLE_BLOCKLIST: tuple[str, ...] = (
     "drag show",
     "drag brunch",
 )

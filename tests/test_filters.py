@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from nyc_events.sources._filters import (
     ADULT_BLOCKLIST,
+    ADULT_TITLE_BLOCKLIST,
     MEMBERS_ONLY,
     contains_any,
     normalize,
@@ -37,8 +38,16 @@ def test_adults_only_substring_covers_for_adults_only():
 
 def test_adult_blocklist_flags_core_signals():
     for text in ["21+ show", "18+ night", "burlesque revue",
-                 "drag show", "drag brunch", "no children allowed"]:
+                 "no children allowed"]:
         assert contains_any(text, ADULT_BLOCKLIST), text
+
+
+def test_drag_is_title_only_not_in_core_blocklist():
+    # drag show/brunch live in the title-only set so a body mention of an
+    # adjacent drag show doesn't drop a family event.
+    assert contains_any("Drag Show Brunch", ADULT_TITLE_BLOCKLIST)
+    assert contains_any("Family Drag Brunch", ADULT_TITLE_BLOCKLIST)
+    assert not contains_any("drag show", ADULT_BLOCKLIST)
 
 
 def test_members_only_is_separate_from_adult_content():

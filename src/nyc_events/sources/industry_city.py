@@ -61,7 +61,7 @@ from typing import Any
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
-from ._filters import ADULT_BLOCKLIST, contains_any
+from ._filters import ADULT_BLOCKLIST, ADULT_TITLE_BLOCKLIST, contains_any
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -183,7 +183,11 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
 
     if _EXCLUDE_CATEGORIES & _category_names(row):
         return False
-    if contains_any(haystack, ADULT_BLOCKLIST) or contains_any(haystack, _LOCAL_EXCLUDE):
+    if (
+        contains_any(haystack, ADULT_BLOCKLIST)
+        or contains_any(title, ADULT_TITLE_BLOCKLIST)
+        or contains_any(haystack, _LOCAL_EXCLUDE)
+    ):
         return False
     return any(kw in haystack for kw in _ALLOWLIST_KEYWORDS)
 

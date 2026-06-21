@@ -72,9 +72,8 @@ no longer hit `smart`/`filmmaker`/`withdraw`.
 shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
 
 ### `governors_island` — inclusive + blocklist
-- Shared `ADULT_BLOCKLIST` (title+body) + `MEMBERS_ONLY` (title) from
-  `_filters.py`. `drag show`/`drag brunch` now live in the shared list (so they
-  match title+body, not title-only as before).
+- Shared `ADULT_BLOCKLIST` (title+body) + `ADULT_TITLE_BLOCKLIST` (title) +
+  `MEMBERS_ONLY` (title) from `_filters.py`.
 - `_TITLE_EXCLUDE` (title only, 8, local extras): `gala`, `beach club`,
   `after party`, `open bar`, `bike rental`, `citi bike`, `digital guide`,
   `qc ny`. (Hyphen variants like `after-party` now collapse via the normalizer;
@@ -85,17 +84,19 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
   `boardwalk`.
 
 ### `domino_park` — inclusive + blocklist
-- Shared `ADULT_BLOCKLIST` (title+desc) from `_filters.py`, no local extras
-  (alcohol-tasting terms were removed earlier per maintainer review).
-- `_CATEGORY_TAGS` (6) + `_KEYWORD_TAGS` (6) for tagging. (Bare `art` was
+- Shared `ADULT_BLOCKLIST` (title+desc) + `ADULT_TITLE_BLOCKLIST` (title) from
+  `_filters.py`, no local extras (alcohol-tasting terms were removed earlier).
+- `_CATEGORY_TAGS` (6) + `_KEYWORD_TAGS` (6), now leading-word-boundary matched
+  (obs. 4). (Bare `art` was
   already removed here; `field`/`lawn` in `outdoors` are clean.)
 
 ### `ny_transit_museum` — category allowlist
 - `_INCLUDE_CATEGORIES` (require one): `Family Programs`, `Nostalgia Rides`
 - `_EXCLUDE_CATEGORIES`: `Members-Only Programs`, `Virtual Programs`
-- Title defensive net: shared `ADULT_BLOCKLIST` + `MEMBERS_ONLY` (title only)
-  from `_filters.py` (was a local 5-item list; now the full shared set).
-- `_CATEGORY_TAGS` (4) + `_TITLE_TAG_RULES` (3)
+- Title defensive net: shared `ADULT_BLOCKLIST` + `ADULT_TITLE_BLOCKLIST` +
+  `MEMBERS_ONLY` (all title only) from `_filters.py` (was a local 5-item list).
+- `_CATEGORY_TAGS` (4) + `_TITLE_TAG_RULES` (3), now leading-word-boundary
+  matched (obs. 4): `bus`⊄`business`, `story`⊄`history`.
 
 ### `prospect_park` — category allowlist
 - `_INCLUDE_CATEGORIES` (8): `Audubon Center`, `Performing Arts`,
@@ -170,14 +171,16 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
    family sake/brewery tour). Explicit `21+` / `adults only` / `no children` /
    `burlesque` / `drag show` still gate genuinely adult content.
 
-   **Hoisting also done:** the shared adult set now lives in
-   `sources/_filters.py` as `ADULT_BLOCKLIST` (`21+`, `18+`, `adults only`,
-   `adult only`, `no children`, `burlesque`, `drag show`, `drag brunch`) plus
-   `MEMBERS_ONLY`, imported by Governors Island, Domino Park, Industry City, NY
-   Transit, Prospect Park, and Green-Wood. Per-source extras stay local (`gala`/
-   `qc ny`/etc. for Governors Island, the `Nightlife` category and `late night`
-   for Industry City). The *scope* each source matches in (title vs. title+body)
-   is intentionally still per-source.
+   **Hoisting also done:** the shared adult sets now live in
+   `sources/_filters.py`: `ADULT_BLOCKLIST` (`21+`, `18+`, `adults only`,
+   `adult only`, `no children`, `burlesque` — strong enough to drop on a match
+   in title *or* body), `ADULT_TITLE_BLOCKLIST` (`drag show`, `drag brunch` —
+   **title only**, so a family event whose body merely mentions an adjacent drag
+   show isn't dropped), and `MEMBERS_ONLY`. Imported by Governors Island, Domino
+   Park, Industry City, NY Transit, Prospect Park, and Green-Wood. Per-source
+   extras stay local (`gala`/`qc ny`/etc. for Governors Island, the `Nightlife`
+   category and `late night` for Industry City). The body-vs-title scope of the
+   shared sets is fixed; venue-specific extras keep their own scope.
 
 2. **Spelling/variant inconsistency — RESOLVED.** `_filters.normalize()`
    lowercases and collapses runs of hyphens/whitespace, and `contains_any()`
@@ -199,9 +202,9 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
    matches (`tree`→`trees`, `puppet`→`puppets`) still work. Residual: `show`
    (mommy_poppins) still matches `showcase`/`shower` — both *start* with
    `show`, so a leading boundary can't separate them (negligible on a curated
-   feed). Not changed: `domino_park` (`moth`⊂mother, `dj`⊂adjust) and
-   `ny_transit` (`bus`⊂business, `story`⊂history) carry similar minor risks but
-   weren't in the original flag list — easy follow-ups with the same fix.
+   feed). Also fixed in `domino_park` (`moth`⊄mother, `dj`⊄adjust) and
+   `ny_transit` (`bus`⊄business, `story`⊄history) with the same leading-boundary
+   match.
 
 5. **No-filter sources skew on trust.** `mommy_poppins` and `bk_childrens`
    keep everything by design. If either upstream ever broadens beyond kids,
@@ -222,8 +225,8 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
       `contains_any()`; the shared adult blocklist was also hoisted into
       `sources/_filters.py` (obs. 1 leftover).
 - [x] Confirm + remove/repair Green-Wood's dead blocklist (obs. 3, done).
-- [x] Word-boundary the short tag keywords (obs. 4, done for the 5 flagged
-      sources; `domino_park`/`ny_transit` are easy follow-ups).
+- [x] Word-boundary the short tag keywords (obs. 4, done for all flagged
+      sources plus `domino_park` and `ny_transit`).
 - [x] Live dry-run per touched source — kept counts unchanged after the
       `_filters.py` refactor (greenwood 87, governors 71, industry 21, domino
       105, prospect 303, nytm 12; verified 2026-06-21).

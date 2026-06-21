@@ -39,11 +39,11 @@ applied as a focused pass with fresh live fetches per touched source:
   extras stay local.
 - Green-Wood's dead soft-blocklist removed; its adult terms promoted to the
   hard-exclude.
-- Tag inference word-boundary-matched in the flagged sources so short keywords
-  stop matching mid-word.
-Remaining easy follow-ups (not blocking): apply the same tag word-boundary fix
-to `domino_park`/`ny_transit`, and decide whether `drag show`/`drag brunch`
-should stay title+body (current) or title-only for Governors Island.
+- Tag inference word-boundary-matched across all keyword-tagging sources so
+  short keywords stop matching mid-word.
+- `drag show`/`drag brunch` moved to a title-only shared set
+  (`ADULT_TITLE_BLOCKLIST`) so a family event whose body merely mentions an
+  adjacent drag show isn't dropped; the core adult terms still match title+body.
 
 ## How to verify
 

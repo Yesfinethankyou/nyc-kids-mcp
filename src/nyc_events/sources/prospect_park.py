@@ -42,7 +42,12 @@ from typing import Any
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
-from ._filters import ADULT_BLOCKLIST, MEMBERS_ONLY, contains_any
+from ._filters import (
+    ADULT_BLOCKLIST,
+    ADULT_TITLE_BLOCKLIST,
+    MEMBERS_ONLY,
+    contains_any,
+)
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -169,7 +174,11 @@ def _category_names(row: dict[str, Any]) -> set[str]:
 def _is_kid_relevant(row: dict[str, Any]) -> bool:
     """Return True if the event passes the category-based kid-relevance filter."""
     title = _strip_html(row.get("title")).lower()
-    if contains_any(title, ADULT_BLOCKLIST) or contains_any(title, MEMBERS_ONLY):
+    if (
+        contains_any(title, ADULT_BLOCKLIST)
+        or contains_any(title, ADULT_TITLE_BLOCKLIST)
+        or contains_any(title, MEMBERS_ONLY)
+    ):
         return False
     return bool(_INCLUDE_CATEGORIES & _category_names(row))
 

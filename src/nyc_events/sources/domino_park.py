@@ -62,7 +62,7 @@ from zoneinfo import ZoneInfo
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
-from ._filters import ADULT_BLOCKLIST, contains_any
+from ._filters import ADULT_BLOCKLIST, ADULT_TITLE_BLOCKLIST, contains_any
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -102,8 +102,12 @@ USER_AGENT = (
 
 def _is_kid_relevant(doc: dict[str, Any]) -> bool:
     """Return True unless the doc hits the adult blocklist."""
-    haystack = f"{doc.get('title') or ''} {doc.get('description') or ''}"
-    return not contains_any(haystack, ADULT_BLOCKLIST)
+    title = doc.get("title") or ""
+    haystack = f"{title} {doc.get('description') or ''}"
+    return not (
+        contains_any(haystack, ADULT_BLOCKLIST)
+        or contains_any(title, ADULT_TITLE_BLOCKLIST)
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -142,7 +146,12 @@ def _infer_tags(title: str, description: str | None, categories: list[str] | Non
             tags.append(tag)
     haystack = title.lower() + " " + (description or "").lower()
     for tag, keywords in _KEYWORD_TAGS:
-        if tag not in tags and any(kw in haystack for kw in keywords):
+        # Leading word boundary stops short keywords from matching mid-word:
+        # "moth" (storytelling) no longer hits "mother", "dj" no longer hits
+        # "adjust"; prefixes still match.
+        if tag not in tags and any(
+            re.search(rf"\b{re.escape(kw)}", haystack) for kw in keywords
+        ):
             tags.append(tag)
     return tags
 

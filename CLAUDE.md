@@ -36,8 +36,9 @@ If a change breaks tests, fix the change — don't loosen the tests.
 - `src/nyc_events/sources/base.py` — `Source` ABC; each source is one file in the same dir
 - `src/nyc_events/sources/_filters.py` — shared kid-relevance helpers:
   `normalize()` (collapse hyphens/whitespace), `contains_any()`, and the
-  canonical `ADULT_BLOCKLIST` / `MEMBERS_ONLY` sets the editorial sources
-  import. Per-source extras + the inclusion *strategy* stay in each source.
+  canonical adult sets: `ADULT_BLOCKLIST` (match title or body),
+  `ADULT_TITLE_BLOCKLIST` (drag show/brunch — title only), `MEMBERS_ONLY`.
+  Per-source extras + the inclusion *strategy* stay in each source.
 - `src/nyc_events/sources/__init__.py` — `ENABLED_SOURCES` registry
 - `tests/fixtures/` — captured real upstream responses used in parser tests
 

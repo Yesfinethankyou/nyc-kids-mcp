@@ -58,7 +58,12 @@ from typing import Any
 from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
-from ._filters import ADULT_BLOCKLIST, MEMBERS_ONLY, contains_any
+from ._filters import (
+    ADULT_BLOCKLIST,
+    ADULT_TITLE_BLOCKLIST,
+    MEMBERS_ONLY,
+    contains_any,
+)
 from .base import Source
 
 logger = logging.getLogger(__name__)
@@ -196,7 +201,11 @@ def _is_kid_relevant(row: dict[str, Any]) -> bool:
     Exclusion categories and title hard-excludes win over the allowlist.
     """
     title = _strip_html(row.get("title")).lower()
-    if contains_any(title, ADULT_BLOCKLIST) or contains_any(title, MEMBERS_ONLY):
+    if (
+        contains_any(title, ADULT_BLOCKLIST)
+        or contains_any(title, ADULT_TITLE_BLOCKLIST)
+        or contains_any(title, MEMBERS_ONLY)
+    ):
         return False
     categories = _category_names(row)
     if _EXCLUDE_CATEGORIES & categories:
@@ -234,7 +243,12 @@ def _infer_tags(title: str, categories: set[str]) -> list[str]:
             tags.append(tag)
     title_lower = title.lower()
     for tag, keywords in _TITLE_TAG_RULES:
-        if tag not in tags and any(kw in title_lower for kw in keywords):
+        # Leading word boundary stops short keywords from matching mid-word:
+        # "bus" no longer hits "business", "story" no longer hits "history";
+        # prefixes still match.
+        if tag not in tags and any(
+            re.search(rf"\b{re.escape(kw)}", title_lower) for kw in keywords
+        ):
             tags.append(tag)
     return tags
 
