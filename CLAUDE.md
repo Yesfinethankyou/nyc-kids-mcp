@@ -26,6 +26,15 @@ permit data only (one source); Phase 2 = editorial scrapers.
 
 If a change breaks tests, fix the change — don't loosen the tests.
 
+## PR workflow
+
+**Always update `session-handoff.md` to reflect the session's work and commit
+it BEFORE opening a PR.** This is enforced: a PreToolUse hook
+(`.claude/hooks/require-handoff-update.sh`, matcher
+`mcp__github__create_pull_request`) blocks PR creation unless the handoff has
+been touched for the current branch (dirty, changed vs `origin/main`, or in the
+latest commit). Update the handoff first and the PR proceeds.
+
 ## Layout
 
 - `src/nyc_events/models.py` — `Event` + `Borough` / `Price` enums + `compute_id()`
