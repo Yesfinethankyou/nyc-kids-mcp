@@ -84,7 +84,8 @@ _ALLOWLIST_KEYWORDS: tuple[str, ...] = (
 # the allowlist keywords matched.
 _BLOCKLIST_KEYWORDS: tuple[str, ...] = (
     "gala",
-    "cocktail",
+    # "cocktail" was intentionally removed — alcohol alone isn't an adult-only
+    # signal; explicit "adults only" still gates these out.
     "donor",
     "for adults only",
     "adults only",

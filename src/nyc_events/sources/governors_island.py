@@ -97,8 +97,10 @@ _HARD_EXCLUDE: tuple[str, ...] = (
 
 # Adult-skewing or non-event terms — checked against the TITLE only, to avoid
 # dropping a family festival whose body merely mentions a "wine garden" etc.
-# Covers fundraiser galas, beach clubs, after-parties, alcohol-centred events,
-# and non-event amenities (bike rentals, the spa "QC NY", the digital guide).
+# Covers fundraiser galas, beach clubs, after-parties, open-bar events, and
+# non-event amenities (bike rentals, the spa "QC NY", the digital guide).
+# Alcohol-tasting terms (cocktail / wine or beer tasting / happy hour) were
+# intentionally removed — alcohol alone isn't an adult-only signal here.
 _TITLE_EXCLUDE: tuple[str, ...] = (
     "gala",
     "beach club",
@@ -106,10 +108,6 @@ _TITLE_EXCLUDE: tuple[str, ...] = (
     "after-party",
     "drag show",
     "drag brunch",
-    "cocktail",
-    "wine tasting",
-    "beer tasting",
-    "happy hour",
     "open bar",
     "members only",
     "members-only",

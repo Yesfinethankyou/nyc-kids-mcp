@@ -108,8 +108,23 @@ def test_adult_gala_is_filtered_out():
     assert _parse_row(row) is None
 
 
-def test_cocktail_event_filtered_without_family_keyword():
-    row = {
+def test_cocktail_removed_from_blocklist():
+    # "cocktail" was removed from the blocklist — alcohol alone is not an
+    # adult-only signal. Green-Wood is allowlist-required, so a cocktail event
+    # with a family keyword is kept (allowlist wins), while one with no keyword
+    # is still dropped by the conservative default rather than the blocklist.
+    kept = {
+        "id": 99996,
+        "title": "Family Cocktail & Mocktail Garden Party",
+        "description": "",
+        "excerpt": "",
+        "categories": [],
+        "utc_start_date": "2026-07-01 18:00:00",
+        "utc_end_date": None,
+        "cost": "",
+        "url": "https://www.green-wood.com/event/family/",
+    }
+    dropped = {
         "id": 99998,
         "title": "VIP Cocktail Reception",
         "description": "",
@@ -120,7 +135,8 @@ def test_cocktail_event_filtered_without_family_keyword():
         "cost": "",
         "url": "https://www.green-wood.com/event/vip/",
     }
-    assert _is_kid_relevant(row) is False
+    assert _is_kid_relevant(kept) is True
+    assert _is_kid_relevant(dropped) is False
 
 
 def test_family_keyword_passes_filter():

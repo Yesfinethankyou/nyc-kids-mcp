@@ -71,18 +71,20 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
 ### `governors_island` — inclusive + blocklist
 - `_HARD_EXCLUDE` (title+body, 7): `21+`, `18+`, `adults only`, `adults-only`,
   `adult-only`, `no children`, `burlesque`
-- `_TITLE_EXCLUDE` (title only, 17): `gala`, `beach club`, `after party`,
-  `after-party`, `drag show`, `drag brunch`, `cocktail`, `wine tasting`,
-  `beer tasting`, `happy hour`, `open bar`, `members only`, `members-only`,
-  `bike rental`, `citi bike`, `digital guide`, `qc ny`
+- `_TITLE_EXCLUDE` (title only, 13): `gala`, `beach club`, `after party`,
+  `after-party`, `drag show`, `drag brunch`, `open bar`, `members only`,
+  `members-only`, `bike rental`, `citi bike`, `digital guide`, `qc ny`
+  (alcohol-tasting terms `cocktail`/`wine tasting`/`beer tasting`/`happy hour`
+  removed per maintainer review — alcohol alone isn't an adult-only signal)
 - `_RACE_RX`: `\bnycruns\b|\bhalf marathon\b|\bmarathon\b|\b\d+\s?k\b`
 - Tag rules `_TAG_RULES` (7). ⚠️ substring risks: `tree` ⊂ `street`,
   `hill` ⊂ `Churchill`, `fort` ⊂ `comfort`/`effort`, `walk` ⊂ `boardwalk`.
 
 ### `domino_park` — inclusive + blocklist
-- `_HARD_EXCLUDE` (title+desc, 12): `21+`, `18+`, `adults only`,
+- `_HARD_EXCLUDE` (title+desc, 9): `21+`, `18+`, `adults only`,
   `adults-only`, `adult-only`, `no children`, `burlesque`, `drag show`,
-  `drag brunch`, `wine tasting`, `beer tasting`, `happy hour`
+  `drag brunch` (alcohol-tasting terms `wine tasting`/`beer tasting`/
+  `happy hour` removed per maintainer review)
 - `_CATEGORY_TAGS` (6) + `_KEYWORD_TAGS` (6) for tagging. (Bare `art` was
   already removed here; `field`/`lawn` in `outdoors` are clean.)
 
@@ -103,10 +105,11 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
 
 ### `industry_city` — keyword allowlist (required)
 - `_EXCLUDE_CATEGORIES`: `Nightlife`
-- `_HARD_EXCLUDE` (19): `21+`, `adults only`, `adults-only`, `18+`,
+- `_HARD_EXCLUDE` (10): `21+`, `adults only`, `adults-only`, `18+`,
   `burlesque`, `drag show`, `drag brunch`, `late night`, `late-night`,
-  `cocktail`, `whiskey`, `whisky`, `sake`, `brewery`, `distillery`,
-  `wine tasting`, `beer tasting`, `happy hour`, `no children`
+  `no children` (alcohol-tasting terms `cocktail`/`whiskey`/`whisky`/`sake`/
+  `brewery`/`distillery`/`wine tasting`/`beer tasting`/`happy hour` removed per
+  maintainer review — now keeps the gourmet-tour + sake-class rows)
 - `_ALLOWLIST_KEYWORDS` (28, must match one): family/kids/all ages/workshop/
   craft/puppet/storytime/market/garden/… (see code)
 - `_TAG_RULES` (6)
@@ -115,8 +118,9 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
 - `_HARD_EXCLUDE_TITLE` (2): `members only`, `members-only`
 - `_ALLOWLIST_KEYWORDS` (53, must match one): broad — family, tour, nature,
   music, holiday/seasonal terms, Día de los Muertos, etc.
-- `_BLOCKLIST_KEYWORDS` (5): `gala`, `cocktail`, `donor`, `for adults only`,
-  `adults only` — ⚠️ **likely dead code**: the function returns `True` on any
+- `_BLOCKLIST_KEYWORDS` (4): `gala`, `donor`, `for adults only`,
+  `adults only` (`cocktail` removed per maintainer review) — ⚠️ **likely dead
+  code**: the function returns `True` on any
   allowlist hit and otherwise falls through to a conservative `return False`,
   so a blocklist term is only reachable on a row that has **no** allowlist hit,
   which is already dropped. Worth confirming/ removing or reordering.
@@ -154,15 +158,19 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
    | `adults only` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
    | `burlesque` | ✅ | ✅ | ✅ | — | — | — |
    | `drag show`/`drag brunch` | ✅ | ✅ | ✅ | — | — | — |
-   | `cocktail` | ✅(title) | — | ✅ | ✅ | — | — |
-   | `wine/beer tasting` | ✅(title) | ✅ | ✅ | — | — | — |
    | `members only` | ✅(title) | — | — | ✅ | ✅ | ✅ |
 
-   Decide a **canonical adult/alcohol blocklist** and whether to hoist it into
-   a shared `sources/_filters.py` (or `base.py`) constant that each source
-   imports, instead of six hand-maintained copies. Per-source extras (e.g.
-   `whiskey`/`sake`/`brewery` for Industry City, `qc ny` for Governors Island)
-   stay local.
+   **RESOLVED (maintainer review):** the alcohol-tasting terms — `cocktail`,
+   `whiskey`/`whisky`, `sake`, `brewery`, `distillery`, `wine tasting`,
+   `beer tasting`, `happy hour` — were removed from every source's blocklist.
+   Rationale: alcohol at a venue is not by itself an adult-only signal, and
+   these terms dropped legitimate family events (food-and-drink markets, a
+   family sake/brewery tour). Explicit `21+` / `adults only` / `no children` /
+   `burlesque` / `drag show` still gate genuinely adult content. The remaining
+   open question is whether to hoist the **shared** adult blocklist (`21+`,
+   `adults only`, `burlesque`, `drag …`) into a `sources/_filters.py` constant
+   instead of per-source copies; per-source extras (e.g. `qc ny` for Governors
+   Island) stay local.
 
 2. **Spelling/variant inconsistency.** `adults only` vs `adults-only` vs
    `adult-only`; `members only` vs `members-only`; `late night` vs
@@ -189,7 +197,8 @@ shows; keeps everything else. Tag rules: `_TITLE_TAG_RULES` (6).
 
 ## Suggested review checklist
 
-- [ ] Pick the canonical adult/alcohol blocklist (obs. 1) and where it lives.
+- [x] Drop alcohol-tasting terms from every blocklist (obs. 1, done). Still
+      open: hoist the shared adult blocklist into one constant vs. per-source.
 - [ ] Normalize hyphen/space variants (obs. 2).
 - [ ] Confirm + remove/repair Green-Wood's dead blocklist (obs. 3).
 - [ ] Word-boundary the short tag keywords (obs. 4).

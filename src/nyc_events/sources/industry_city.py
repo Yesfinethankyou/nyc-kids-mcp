@@ -35,9 +35,10 @@ Quirks (verified live + against the captured fixture, 2026-06-20):
     `Workshops`, `Nightlife`, `Tours`, plus ~10% uncategorized — and the real
     kids' puppet show is uncategorized. A category allowlist alone would wrongly
     drop kid events, so kid-relevance is decided by title/description keywords.
-  - Adult programming (21+ band nights, burlesque/drag, alcohol-tasting tours
-    like the sake/whiskey "gourmet drinks tour") is dropped via the hard-exclude
-    blocklist, which wins over any allowlist hit. The outdoor "World Cup Watch
+  - Adult programming (21+ band nights, burlesque/drag, late-night shows) is
+    dropped via the hard-exclude blocklist, which wins over any allowlist hit.
+    Alcohol-tasting terms are NOT blocklisted — alcohol at a venue isn't by
+    itself an adult-only signal. The outdoor "World Cup Watch
     Party" rows say "NO STROLLERS or children under 3"; the word "children"
     matches the allowlist, so they are KEPT as family-friendly outdoor events.
     We deliberately do NOT blocklist "no strollers" / "children under the age"
@@ -99,9 +100,11 @@ _ALLOWLIST_KEYWORDS: tuple[str, ...] = (
 )
 
 # Hard exclusions — win over any allowlist hit. These flag adult-only content
-# (21+ shows, burlesque/drag) and alcohol-centred tastings/tours (the
-# "gourmet food and drinks" tour, sake class, brewery/distillery tours), which
-# would otherwise be pulled back in by "tour"/"class"/"workshop" matches.
+# (21+ shows, burlesque/drag, late-night programming) that would otherwise be
+# pulled back in by a "tour"/"class"/"workshop" match. Alcohol-tasting terms
+# (cocktail/whiskey/sake/brewery/distillery/wine-or-beer tasting/happy hour)
+# were intentionally removed: alcohol at a venue is not by itself an adult-only
+# signal, and they dropped legitimate family events (e.g. food-and-drink markets).
 _HARD_EXCLUDE: tuple[str, ...] = (
     "21+",
     "adults only",
@@ -112,15 +115,6 @@ _HARD_EXCLUDE: tuple[str, ...] = (
     "drag brunch",
     "late night",
     "late-night",
-    "cocktail",
-    "whiskey",
-    "whisky",
-    "sake",
-    "brewery",
-    "distillery",
-    "wine tasting",
-    "beer tasting",
-    "happy hour",
     # An explicit "no children" in the copy is an adult-only signal — keep it.
     # (The weaker "no strollers" / "children under the age" phrasings were
     # removed: they wrongly dropped legitimate kid events that merely ban

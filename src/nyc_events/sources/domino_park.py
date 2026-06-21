@@ -106,9 +106,8 @@ _HARD_EXCLUDE: tuple[str, ...] = (
     "burlesque",
     "drag show",
     "drag brunch",
-    "wine tasting",
-    "beer tasting",
-    "happy hour",
+    # Alcohol-tasting terms (wine/beer tasting, happy hour) were intentionally
+    # removed — alcohol alone isn't an adult-only signal at a family park.
 )
 
 

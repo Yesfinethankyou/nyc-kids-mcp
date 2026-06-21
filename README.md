@@ -318,8 +318,8 @@ Adapters with real descriptions, URLs, age ranges:
 - ✅ **Industry City** — *shipped.* Fourth Tribe Events REST API instance
   (`curl_cffi`); categories aren't kid-curated, so filtering is
   title/description keyword-driven with `Nightlife` hard-excluded and an
-  adult/alcohol blocklist (21+, burlesque, drag, sake/whiskey/cocktail
-  tastings). Keeps maker/craft workshops, Puppetworks, Zine Club; `cost` and
+  adult blocklist (21+, burlesque, drag, late-night). Keeps maker/craft
+  workshops, Puppetworks, Zine Club; `cost` and
   `venue` always empty upstream → price unknown, venue/borough hardcoded.
   ~8 events/60 days.
 - ✅ **Governors Island** — *shipped.* Custom Craft CMS / Solspace-Calendar

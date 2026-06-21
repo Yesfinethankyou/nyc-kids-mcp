@@ -284,11 +284,14 @@ Known accepted residuals (see `git log` for the security-audit commit):
     (`wp-json/tribe/events/v1/events`, `curl_cffi` impersonate=chrome). The
     earlier "custom headless CMS, no wp-json" verdict was a probe artifact.
     Categories aren't kid-curated, so filtering is title/description
-    keyword-driven with `Nightlife` as a hard-exclude category and an
-    adult/alcohol blocklist (21+, burlesque, drag, sake/whiskey/cocktail
-    tastings, "no children"). As built (2026-06-20): a live 60-day fetch
-    returned 29 rows → 16 dropped, 13 kept (workshops, Puppetworks, Zine Club,
-    outdoor World Cup watch parties). `cost`/`venue` always empty upstream →
+    keyword-driven with `Nightlife` as a hard-exclude category and an adult
+    blocklist (21+, burlesque, drag, late-night, "no children"). As built
+    (2026-06-20): a live 60-day fetch returned 29 rows → 16 dropped, 13 kept
+    (workshops, Puppetworks, Zine Club, outdoor World Cup watch parties).
+    (Alcohol-tasting terms — cocktail/whiskey/sake/brewery/distillery/wine-or-
+    beer tasting/happy hour — were later removed from the blocklist per the
+    filter review, so gourmet-tour and sake-class rows are now kept too.)
+    `cost`/`venue` always empty upstream →
     price UNKNOWN, venue/borough hardcoded Industry City / Brooklyn, no
     lat/lng/age. See SOURCES-BACKLOG.md as-built block.
   - **BUILT (live):** Governors Island — the prior "custom CMS, no API
