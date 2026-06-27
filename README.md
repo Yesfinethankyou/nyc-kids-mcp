@@ -117,7 +117,11 @@ separate one-shot. On Synology DSM, schedule it via Task Scheduler:
   ```
 
 The ingest writes to the mounted `./data` volume so the running server picks
-up the new rows immediately (SQLite + WAL).
+up the new rows immediately (SQLite + WAL). It also runs a second
+**enrichment** pass at the end that codes each event's neighborhood and
+backfills coordinates (US Census geocoder; results cached so it's fast after
+the first run). The container therefore needs outbound HTTPS at ingest time.
+Set `ENRICH=0` in the command's environment to skip the pass.
 
 Don't bake the cron into the container — Watchtower restarts the container
 on every image update, which would race with a long-running ingest.
@@ -236,7 +240,7 @@ testing — useful for diagnostics without going through OAuth.
 
 | Tool                  | Purpose                                                                                          |
 |-----------------------|--------------------------------------------------------------------------------------------------|
-| `search_events`       | Free-text + filters (borough/age/free/days_ahead). Returns the cheap summary projection.         |
+| `search_events`       | Free-text + filters (borough/neighborhood/age/free/days_ahead). Returns the cheap summary projection. |
 | `events_this_weekend` | Saturday 00:00 → Sunday 23:59 local of the current/upcoming weekend (starts now if mid-weekend). |
 | `events_on_date`      | Single YYYY-MM-DD in `America/New_York`. Cheap summary projection.                               |
 | `get_event_detail`    | Drill into one event by `event_id`. Untruncated description + all metadata (no raw payload).     |
@@ -274,7 +278,10 @@ Hard limits of this source:
   *something* clickable.
 - **No organizer, no cost, no audience, no age fields.** Per-event price is
   always `unknown`; age range is always null.
-- **No structured neighborhood, lat, lng.**
+- **No structured neighborhood, lat, lng** *in the feed* — but the nightly
+  enrichment pass codes a neighborhood for most permit rows by matching the
+  park name against an NYC open-data park→neighborhood table (~91% of rows),
+  and geocodes the rest.
 - **Heavy filtering required.** The parser applies an agency allowlist
   (`Parks Department` only), an `event_type` allowlist, a regex title
   blocklist (school identifiers like `PS \d+ / I.S. \d+`, religious phrases,

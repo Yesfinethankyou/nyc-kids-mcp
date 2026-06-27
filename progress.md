@@ -2,8 +2,8 @@
 
 ## Current State
 
-**Last Updated:** 2026-06-19
-**Active Feature:** none — Phase 1–2 shipped; Phase 3 (feat-006, feat-008–012) planned, not started
+**Last Updated:** 2026-06-27
+**Active Feature:** feat-009 neighborhood coding + geocoding — **shipped** (enrich pass); Phase 3 otherwise in progress
 
 > **Canonical phase status:** CLAUDE.md `## Phase roadmap` is the source of
 > truth. This log and `feature-list.json` are derived snapshots — when a phase
@@ -22,19 +22,25 @@
 
 ### What's In Progress
 
-- Nothing in flight. Phase 3 is planned but not started.
+- [x] feat-006 — enrichment pipeline scaffold + caching layer: shipped as
+  `enrich.py` (second nightly pass) + `geocode_cache` table. Foundational for
+  weather/indoor-outdoor next.
+- [x] feat-009 (neighborhood + geocoding half): `enrich.py` codes
+  `neighborhood` via a 5-tier ladder (fixed-venue constant → enumerable site →
+  open-data park table → reverse-geocode → forward-geocode) and backfills
+  `lat`/`lng`. Surfaced in the `search_events` summary + a `neighborhood`
+  filter. **Remaining:** the distance-from-home / `near_me` affordance.
 
 ### What's Next
 
-Phase 3, in the PHASE-3-PLAN.md sequencing order (now broken out as separate
-features in `feature-list.json`):
+Phase 3, in the PHASE-3-PLAN.md sequencing order (separate features in
+`feature-list.json`):
 
-1. feat-006 — enrichment pipeline scaffold + caching layer (foundational).
-2. feat-008 — tech-debt bundle #4/#5/#6 (server-touching; do alongside #1).
-3. feat-009 — geocoding + neighborhood + distance-from-home.
-4. feat-010 — indoor/outdoor heuristic flag.
-5. feat-011 — weather on outdoor events (needs feat-009 + feat-010).
-6. feat-012 — venue expansion (Workstream B; Playwright fallback only if a probe needs it).
+1. feat-009 remainder — distance-from-home / `near_me` (coords now exist).
+2. feat-008 — tech-debt bundle #4/#5/#6 (server-touching).
+3. feat-010 — indoor/outdoor heuristic flag.
+4. feat-011 — weather on outdoor events (needs feat-009 coords + feat-010).
+5. feat-012 — venue expansion (Workstream B; Playwright fallback only if a probe needs it).
 
 ## Blockers / Risks
 

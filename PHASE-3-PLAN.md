@@ -71,10 +71,22 @@ image (recommended) vs. baking Chromium into the single image.
 Dependency chain: **geocode → (neighborhood, weather)**, and
 **indoor/outdoor → weather relevance**. Build A1 first.
 
-### A1. Geocode + neighborhood
-- Backfill `lat`/`lng` for rows lacking coords (most permit rows; some
-  editorial rows). Many editorial sources already provide coords — only
-  geocode when null.
+### A1. Geocode + neighborhood — **DONE** (neighborhood + coords), `near_me` pending
+
+Shipped as the `enrich.py` second pass. See CLAUDE.md "Neighborhood coding" for
+the as-built detail. Resolved the open decisions below: **geocoder = US Census**
+(no key; tract GEOID → NTA via the committed `tract_to_nta.json` crosswalk —
+Nominatim wasn't needed); **cache = a `geocode_cache` table in `events.db`**
+(no TTL). Neighborhood now resolves through a 5-tier ladder (fixed-venue
+constant → enumerable site → open-data park table → reverse-geocode → forward-
+geocode), and `lat`/`lng` are backfilled as a side effect. Surfaced in the
+`search_events` summary + a `neighborhood` substring filter. **Still TODO:** the
+`near_me` / sort-by-distance affordance + a home-location config (the coords it
+depends on now exist).
+
+- ~~Backfill `lat`/`lng` for rows lacking coords~~ — done (forward-geocode tier
+  fills coords when it resolves a venue; existing source coords are never
+  clobbered).
 - Geocoder: **US Census geocoder** (free, no key, no rate pain, strong on NYC
   street addresses) as primary; Nominatim as fallback. Geocode by
   `venue_name + borough + "NY"` (same string we already build `venue_map_url`
@@ -174,6 +186,8 @@ already be in `server.py`, so fold these in then:
 
 - Headless image: separate ingest image (recommended) vs. single image.
 - Weather: nightly vs. read-time vs. cached-with-TTL (recommended).
-- Geocoder: Census primary + Nominatim fallback (recommended).
-- Cache storage: new tables in `events.db` (leaning) vs. a third SQLite file.
-- Home location: env var vs. a config row (for distance-from-home).
+- ~~Geocoder~~ **SETTLED: US Census only** (Census tract → NTA crosswalk; no
+  Nominatim fallback needed in practice).
+- ~~Cache storage~~ **SETTLED: a `geocode_cache` table in `events.db`** (no TTL).
+- Home location: env var vs. a config row (for distance-from-home). Still open —
+  needed for the remaining `near_me` piece of A1.

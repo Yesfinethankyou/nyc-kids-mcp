@@ -63,6 +63,19 @@ CREATE TRIGGER IF NOT EXISTS events_au AFTER UPDATE ON events BEGIN
     INSERT INTO events_fts(rowid, title, description, venue_name, neighborhood, tags)
     VALUES (new.rowid, new.title, new.description, new.venue_name, new.neighborhood, new.tags);
 END;
+
+-- Geocode cache for the enrichment pass (nyc_events.enrich). Keyed by an
+-- opaque lookup string (forward = "fwd:<normalized venue|borough>", reverse =
+-- "rev:<rounded lat,lng>"). No TTL: venue locations are stable, so a hit
+-- never re-queries the US Census geocoder. Lives here (not oauth.db) because
+-- it's event-derived data; namespaced by the lookup_key prefix.
+CREATE TABLE IF NOT EXISTS geocode_cache (
+    lookup_key TEXT PRIMARY KEY,
+    lat REAL,
+    lng REAL,
+    nta_name TEXT,
+    resolved_at TEXT NOT NULL
+);
 """
 
 # OAuth state lives in a separate SQLite file (data/oauth.db) so that wiping
@@ -323,6 +336,7 @@ def search(
     *,
     query: str | None = None,
     borough: str | None = None,
+    neighborhood: str | None = None,
     age: int | None = None,
     free_only: bool = False,
     start_after: datetime | None = None,
@@ -341,6 +355,13 @@ def search(
     if borough:
         where.append("e.borough = ?")
         params.append(borough)
+
+    if neighborhood:
+        # Case-insensitive substring so a colloquial label ("Crown Heights")
+        # matches the official NTA names it prefixes ("Crown Heights (North)").
+        where.append("e.neighborhood LIKE ? ESCAPE '\\'")
+        esc = neighborhood.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        params.append(f"%{esc}%")
 
     if age is not None:
         where.append("(e.age_min IS NULL OR e.age_min <= ?)")
@@ -366,6 +387,39 @@ def search(
 
     rows = conn.execute(sql, params).fetchall()
     return [_row_to_event(r) for r in rows]
+
+
+def get_geocode(
+    conn: sqlite3.Connection, lookup_key: str
+) -> tuple[float | None, float | None, str | None] | None:
+    """Return (lat, lng, nta_name) for a cached lookup, or None on a miss.
+    A cached row with all-NULL values is a remembered negative result (the
+    geocoder couldn't resolve it) — still a hit, so we don't re-query."""
+    row = conn.execute(
+        "SELECT lat, lng, nta_name FROM geocode_cache WHERE lookup_key = ?",
+        (lookup_key,),
+    ).fetchone()
+    if row is None:
+        return None
+    return row["lat"], row["lng"], row["nta_name"]
+
+
+def put_geocode(
+    conn: sqlite3.Connection,
+    lookup_key: str,
+    lat: float | None,
+    lng: float | None,
+    nta_name: str | None,
+) -> None:
+    conn.execute(
+        "INSERT INTO geocode_cache (lookup_key, lat, lng, nta_name, resolved_at) "
+        "VALUES (?, ?, ?, ?, ?) "
+        "ON CONFLICT(lookup_key) DO UPDATE SET "
+        "lat = excluded.lat, lng = excluded.lng, "
+        "nta_name = excluded.nta_name, resolved_at = excluded.resolved_at",
+        (lookup_key, lat, lng, nta_name, datetime.now(UTC).isoformat()),
+    )
+    conn.commit()
 
 
 def store_oauth_token(
