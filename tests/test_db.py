@@ -81,6 +81,26 @@ def test_search_filters_by_borough(conn):
     assert len(results) == 1 and results[0].borough == Borough.BROOKLYN
 
 
+def test_search_filters_by_neighborhood_substring(conn):
+    db.upsert_events(conn, [
+        _ev(external_id="n1", neighborhood="Crown Heights (North)", title="North CH"),
+        _ev(external_id="n2", neighborhood="Crown Heights (South)", title="South CH"),
+        _ev(external_id="n3", neighborhood="Williamsburg", title="Wburg"),
+    ])
+    # Colloquial prefix matches both official NTA variants, case-insensitively.
+    titles = {e.title for e in db.search(conn, neighborhood="crown heights")}
+    assert titles == {"North CH", "South CH"}
+    assert {e.title for e in db.search(conn, neighborhood="Williamsburg")} == {"Wburg"}
+
+
+def test_search_neighborhood_filter_escapes_wildcards(conn):
+    db.upsert_events(conn, [
+        _ev(external_id="r1", neighborhood="Crown Heights", title="Real"),
+    ])
+    # A literal '%' must not match everything.
+    assert db.search(conn, neighborhood="%") == []
+
+
 def test_search_age_window_includes_in_range(conn):
     db.upsert_events(conn, [
         _ev(external_id="r1", age_min=1, age_max=4, title="Toddler"),
@@ -216,6 +236,27 @@ def test_list_sources_reports_counts_and_freshness(conn):
     assert by_source["src_a"]["event_count"] == 2
     assert by_source["src_b"]["event_count"] == 1
     assert all(r["last_seen"] for r in rows)
+
+
+# --- geocode cache -------------------------------------------------------
+
+
+def test_geocode_cache_roundtrip(conn):
+    assert db.get_geocode(conn, "fwd:domino park|brooklyn") is None  # miss
+    db.put_geocode(conn, "fwd:domino park|brooklyn", 40.71, -73.96, "Williamsburg")
+    assert db.get_geocode(conn, "fwd:domino park|brooklyn") == (40.71, -73.96, "Williamsburg")
+
+
+def test_geocode_cache_remembers_negative_result(conn):
+    # A stored all-NULL row is a hit (a remembered miss), distinct from None.
+    db.put_geocode(conn, "fwd:nowhere|queens", None, None, None)
+    assert db.get_geocode(conn, "fwd:nowhere|queens") == (None, None, None)
+
+
+def test_geocode_cache_upserts_on_conflict(conn):
+    db.put_geocode(conn, "rev:1,2", 1.0, 2.0, "Old")
+    db.put_geocode(conn, "rev:1,2", 1.0, 2.0, "New")
+    assert db.get_geocode(conn, "rev:1,2") == (1.0, 2.0, "New")
 
 
 # --- compute_id semantics -----------------------------------------------

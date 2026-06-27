@@ -1,6 +1,59 @@
 # Session Handoff
 
-## What was done (last two sessions)
+## What was done (most recent first)
+
+### Session: Neighborhood coding + geocoding (branch `claude/neighborhood-event-coding-wkb2dh`)
+
+Implemented Phase 3 A1's neighborhood + geocoding half (feat-006 + feat-009
+partial). Neighborhoods are now populated by a **second nightly pass**, not by
+sources.
+
+- [x] **`enrich.py` second pass** — runs at the tail of `ingest.main` (guarded;
+      `ENRICH=0` skips). Resolution ladder, first hit wins, only for rows with
+      `neighborhood IS NULL`:
+      1. fixed-venue source constant (`SOURCE_NEIGHBORHOOD`)
+      2. enumerable multi-site (`VENUE_NEIGHBORHOOD`, NY Transit's 2 sites)
+      3. open-data park table (`park_neighborhoods.json`, ~91% of permit rows)
+      4. reverse-geocode existing lat/lng → NTA
+      5. forward-geocode `"venue, city, NY"` → lat/lng (backfilled) + NTA
+- [x] **`geocode.py`** — US Census geocoder client (forward + reverse, no key).
+      Tract GEOID → NTA via the committed `tract_to_nta.json` crosswalk.
+- [x] **`geocode_cache` table** in `events.db` (no TTL; negatives cached too) —
+      a venue is geocoded at most once ever, so the nightly re-run is cheap even
+      though the upsert nulls `neighborhood` each ingest.
+- [x] **`sources/_neighborhoods.py`** — the static tables + `static_neighborhood()`
+      + `nta_for_tract()`. Sibling to `_filters.py`.
+- [x] **Open-data tables + build scripts** — `build_tract_nta.py` (Socrata
+      `hm78-6dwm`, 2327 tracts), `build_park_neighborhoods.py` (Parks Properties
+      `enfh-gkve` + Census batch/centroid, 1909 park keys), and
+      `build_library_neighborhoods.py` (NYC FacDB `ji82-xba5` + Census, 221
+      keys). Shared Census primitives in `scripts/_census.py`. JSON committed
+      under `src/nyc_events/data/`.
+- [x] **Library table** — `library_neighborhoods.json`, keyed
+      `"<borough>|<library-core>"` (`library_core()` strips generic
+      library/branch tokens). Codes **all 15** BPL feed branches; gated on a
+      `library` token so a park can't borrow a library entry; borough-keyed to
+      future-proof QPL/NYPL. `static_neighborhood()` now takes `borough`.
+- [x] **Egress documented** — ingest already needs outbound HTTPS (all sources
+      fetch external hosts); enrich adds `geocoding.geo.census.gov`. No egress
+      allowlist in compose. Debt noted: if egress is ever hardened, add the host.
+- [x] **BAM** added to `SOURCES-BACKLOG.md` as a CANDIDATE to probe (BAMkids;
+      likely Tessitura — verify).
+- [x] **Library systems backlog** — added Queens Public Library, NYPL, Bronx,
+      and Staten Island as CANDIDATE items, with a system-map note: NYC has 3
+      systems (BPL built, QPL, NYPL=Manhattan+Bronx+SI), so Bronx/SI are NYPL
+      borough slices. Neighborhood coding already covers all of them (the
+      library table is NYC-wide + borough-keyed) — a future source just needs to
+      set each event's branch borough.
+- [x] **Server** — `neighborhood` added to `_event_summary`; `search_events`
+      gains a `neighborhood` filter (case-insensitive substring) wired through
+      `db.search`.
+- [x] **Tests** — `test_neighborhoods.py`, `test_enrich.py` (injected geocoders,
+      no network), `test_event_projection.py`, plus geocode-cache + neighborhood-
+      filter cases in `test_db.py`. **436 passed, ruff clean.**
+- [x] **Docs** — CLAUDE.md (new "Neighborhood coding" section + Commands/Layout/
+      Test/roadmap), PHASE-3-PLAN.md (A1 marked done, geocoder/cache decisions
+      settled), README (ingest cron + permit-limits + tools), progress.md.
 
 ### Session: Filter-review pass (PR #21, open)
 
@@ -59,10 +112,13 @@ kid-relevance filters had drifted between six hand-maintained copies.
 
 ## Current state
 
-Suite: **414 passed**, ruff: **clean**. All filter-review changes on
-`claude/laughing-planck-xaar2v`; **PR #21 open** against main. Behavior-
-preserving — live kept counts unchanged (greenwood 87, governors 71,
-industry 21, domino 104, prospect 303, nytm 12; 2026-06-21).
+Suite: **439 passed**, ruff: **clean**. Neighborhood-coding work on
+`claude/neighborhood-event-coding-wkb2dh`. Live smoke test of the real Census
+path verified: Prospect Park→"Prospect Park" (park table), Domino→"Williamsburg"
+(constant), NY Transit Museum→"Brooklyn Heights" (tier 2), Sunset Park
+Library→"Sunset Park (West)" (library table), a Manhattan street
+address→"Midtown-Times Square" with lat/lng backfilled (forward geocode).
+Earlier filter-review pass is **PR #21** on `claude/laughing-planck-xaar2v`.
 
 ## Decisions made
 
@@ -86,19 +142,29 @@ industry 21, domino 104, prospect 303, nytm 12; 2026-06-21).
   hook trips on the literal `.venv` in the command string.
 - **OAuth token cache** means a revoked token (row deleted from `oauth.db`)
   stays valid for up to 5 min in a running server.
+- **Ingest egress (debt).** The enrich pass needs `geocoding.geo.census.gov`
+  reachable at ingest time (ingest already needs outbound HTTPS for all
+  sources). The repo has no egress allowlist; if the deployment ever adds one,
+  add that host or neighborhood coding silently stops (guarded — no crash).
 
 ## Next session startup
 
-1. Read `CLAUDE.md` (project guide — hard-won quirks, security baseline).
+1. Read `CLAUDE.md` (project guide — hard-won quirks, security baseline; the
+   new "Neighborhood coding" section).
 2. Read `progress.md` for current feature state.
-3. Run `pytest tests/ -q` + `ruff check` — suite should be green (414).
+3. Run `pytest tests/ -q` + `ruff check` — suite should be green (439).
 
 ## Recommended next steps
 
-- Merge **PR #21** (filter-review pass).
-- Filter consolidation is now **done** — `FILTER-REVIEW.md` checklist fully
-  closed. No filter work outstanding.
-- Phase 3 remains queued (`PHASE-3-PLAN.md`): geocoding / distance is the
-  high-value first step.
-- If `MCP_CONSENT_PASSWORD` is desirable on the NAS, generate a second token
-  and add it to `.env` before the next connector approval.
+- **Distance-from-home / `near_me`** finishes Phase 3 A1 — the coords the
+  enrich pass backfills now exist. Needs a home-location config (env vs row —
+  still open in PHASE-3-PLAN.md).
+- On first production ingest after deploy, the enrich pass will geocode all
+  unmapped/freeform venues once (then cache). Spot-check `list_sources` /
+  a few `get_event_detail` calls to confirm neighborhoods look sane.
+- Optional follow-up for fuller coverage: the ~9% of permit parks whose names
+  don't match the open-data table (BPL branches are now covered by the library
+  table).
+- **BAM** is queued in `SOURCES-BACKLOG.md` (CANDIDATE) — probe with
+  `source-verifier` (likely Tessitura) before building.
+- Merge **PR #21** (filter-review pass) — separate branch.

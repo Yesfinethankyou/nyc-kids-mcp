@@ -17,8 +17,12 @@ permit data only (one source); Phase 2 = editorial scrapers.
 
 ```bash
 .venv/bin/python -m nyc_events.server           # run HTTP server (needs MCP_AUTH_TOKEN)
-.venv/bin/python -m nyc_events.ingest           # one-shot ingest from enabled sources
+.venv/bin/python -m nyc_events.ingest           # one-shot ingest (runs the enrich pass at the end)
+.venv/bin/python -m nyc_events.enrich           # second pass alone: code neighborhoods + backfill lat/lng (network)
 .venv/bin/python -m nyc_events.seed_fake        # populate fake events for connector smoke-testing
+.venv/bin/python scripts/build_tract_nta.py     # rebuild data/tract_to_nta.json (one-shot, from NYC open data)
+.venv/bin/python scripts/build_park_neighborhoods.py     # rebuild data/park_neighborhoods.json (one-shot)
+.venv/bin/python scripts/build_library_neighborhoods.py  # rebuild data/library_neighborhoods.json (one-shot)
 .venv/bin/python -m pytest tests/ -q            # full test suite (should always be green)
 .venv/bin/python -m pytest tests/test_security_fixes.py::test_rate_limiter_is_per_ip -q  # single test
 .venv/bin/ruff check                            # lint
@@ -41,14 +45,27 @@ latest commit). Update the handoff first and the PR proceeds.
 - `src/nyc_events/db.py` — split SQLite stores (events + oauth) with idempotent migrations
 - `src/nyc_events/server.py` — FastMCP + OAuth shim + bearer middleware + MCP tools
 - `src/nyc_events/oauth.py` — auth-code issue/consume + PKCE verification
-- `src/nyc_events/ingest.py` — CLI loop over `ENABLED_SOURCES`
+- `src/nyc_events/ingest.py` — CLI loop over `ENABLED_SOURCES`; runs `enrich` at the end
+- `src/nyc_events/enrich.py` — second-pass location enrichment (neighborhood coding + lat/lng backfill)
+- `src/nyc_events/geocode.py` — US Census geocoder client (forward + reverse; no API key)
+- `src/nyc_events/data/` — committed open-data tables: `tract_to_nta.json`
+  (census tract → NTA neighborhood), `park_neighborhoods.json` (park name → NTA),
+  `library_neighborhoods.json` (borough+library-core → NTA). Built by
+  `scripts/build_*.py`; loaded as package data.
 - `src/nyc_events/sources/base.py` — `Source` ABC; each source is one file in the same dir
 - `src/nyc_events/sources/_filters.py` — shared kid-relevance helpers:
   `normalize()` (collapse hyphens/whitespace), `contains_any()`, and the
   canonical adult sets: `ADULT_BLOCKLIST` (match title or body),
   `ADULT_TITLE_BLOCKLIST` (drag show/brunch — title only), `MEMBERS_ONLY`.
   Per-source extras + the inclusion *strategy* stay in each source.
+- `src/nyc_events/sources/_neighborhoods.py` — neighborhood coding tables:
+  `SOURCE_NEIGHBORHOOD` (fixed-venue sources), `VENUE_NEIGHBORHOOD` (enumerable
+  multi-site), the park-table + tract-crosswalk loaders, and `static_neighborhood()`.
 - `src/nyc_events/sources/__init__.py` — `ENABLED_SOURCES` registry
+- `scripts/build_tract_nta.py` / `build_park_neighborhoods.py` /
+  `build_library_neighborhoods.py` — one-shot data-prep that regenerates the
+  `data/*.json` tables from NYC open data + Census (`scripts/_census.py` holds
+  the shared batch/reverse geocoder primitives).
 - `tests/fixtures/` — captured real upstream responses used in parser tests
 
 `server.py` is a single big module. If it grows past ~600 lines, split the
@@ -65,6 +82,14 @@ own file before touching anything else.
   real captured rows in `tests/fixtures/`.
 - `tests/test_missing_detection.py` — possible-cancellation flagging
   (mark/clear semantics, circuit breaker, grace period, source opt-in).
+- `tests/test_neighborhoods.py` — static neighborhood lookups (the three
+  no-network tiers + the tract crosswalk against the shipped data tables).
+- `tests/test_enrich.py` — enrichment resolution ladder with **injected**
+  geocoders (the suite never hits the network): static tiers don't call out,
+  network tiers call once then serve from `geocode_cache`, forward geocoding
+  backfills lat/lng.
+- `tests/test_event_projection.py` — `_event_summary`/`_event_detail` shape
+  (neighborhood is now surfaced in list summaries, not just detail).
 - New sources: add a fixture under `tests/fixtures/` from a real upstream
   response, then a `test_<source>_parse.py` that exercises the parser
   directly. Don't mock httpx — the parser takes a dict, not a response.
@@ -154,6 +179,9 @@ isn't per-occurrence.
 - Two SQLite files: `data/events.db` (data) and `data/oauth.db` (tokens).
   They have separate schemas. Do not cross-reference.
 - Precedents: `events.raw_payload TEXT`, `oauth_tokens.expires_at TEXT`.
+- The `geocode_cache` table lives in `events.db` (it's event-derived). It's a
+  plain `CREATE TABLE IF NOT EXISTS` in `EVENTS_SCHEMA`, not a `_migrate_*`
+  column-add — a whole new table is idempotent on its own.
 - **Never run `VACUUM` on `data/events.db` without immediately rebuilding the
   FTS index.** `events` has a TEXT primary key (no `INTEGER PRIMARY KEY` alias),
   so SQLite may renumber its implicit rowids on VACUUM. `events_fts` is an
@@ -196,7 +224,8 @@ a curated kids feed (`mommy_poppins`, `bk_childrens_museum` have none by design)
 Listing tools (`search_events`, `events_this_weekend`, `events_on_date`)
 return the **summary** dict via `_event_summary(ev)`:
 - Token-efficient — drops `external_id`, `end_local`, `lat`, `lng`,
-  `neighborhood`, `age_min`, `age_max`, `source`.
+  `age_min`, `age_max`, `source`. (`neighborhood` IS included — it's cheap and
+  high-signal for "what's near X" questions; `search_events` also filters on it.)
 - Truncates `description` to 200 chars.
 - Default `limit=10`.
 
@@ -213,6 +242,81 @@ All event dicts include:
   Claude should caveat these to the user)
 - `possibly_cancelled: bool` (true when the event has been missing from its
   source's ingest for > 30h — see "Missing-event detection" below)
+
+## Neighborhood coding (location enrichment)
+
+Neighborhoods are populated by a **second pass** (`enrich.py`) that runs after
+ingest, NOT by sources. Sources still yield `neighborhood=None`; keeping
+`fetch()` dumb is deliberate (same split as missing-detection). `ingest.main`
+calls `enrich.run` at the end, guarded so a geocoder hiccup can't fail the
+ingest; `ENRICH=0` skips it for offline dev.
+
+**Resolution ladder** (`enrich.resolve`, first hit wins, only for rows where
+`neighborhood IS NULL`):
+1. **Fixed-venue source** → `SOURCE_NEIGHBORHOOD` constant (Domino→Williamsburg,
+   Industry City/BAT→Sunset Park, BCM→Crown Heights, Prospect Park, etc.).
+2. **Enumerable multi-site** → `VENUE_NEIGHBORHOOD` (NY Transit Museum's two sites).
+3. **Library branch** → `library_neighborhoods.json` (keyed by borough +
+   library-core; codes all of BPL's branches).
+4. **Park name** → `park_neighborhoods.json` (covers ~91% of permit rows).
+5. **Row already has lat/lng** → reverse-geocode → NTA.
+6. **Forward-geocode** `"venue, city, NY"` → lat/lng (backfilled) + NTA.
+7. else `None` (the status quo — graceful).
+
+Tiers 1–4 are pure/offline; tiers 5–6 hit the **US Census geocoder**
+(`geocode.py`, no key) → 2020 census tract GEOID → NTA name via
+`tract_to_nta.json`. Every network result, **including negatives**, is cached
+in `geocode_cache` (no TTL; keyed `fwd:<venue|borough>` / `rev:<rounded
+lat,lng>`), so a venue is geocoded at most once ever.
+
+**Why re-running nightly is cheap:** the upsert nulls `neighborhood` every
+ingest (it's `excluded.neighborhood`), so enrich reprocesses the whole table
+each run — but tiers 1–3 are dict lookups and tiers 4–5 are `geocode_cache`
+hits, so steady-state network calls ≈ only brand-new venues. The `UPDATE` fills
+`lat`/`lng` via `COALESCE` (never clobbers a source-provided coord) and fires
+the FTS `events_au` trigger, so neighborhood is searchable immediately.
+
+**Gotchas that already cost time:**
+- **Census uses USPS city, not borough.** Manhattan's city is `New York`, not
+  `Manhattan` (`enrich._BOROUGH_CITY`). The park builder hit the same wall.
+- **Multi-ZIP fields.** Parks Properties lists several ZIPs (`"11364, 11423"`);
+  the batch CSV needs one — `build_park_neighborhoods.py` takes the first.
+- **Big parks have no street number.** Cunningham/Prospect/Bronx Park geocode by
+  multipolygon centroid (reverse), not address — the address pass alone left
+  the highest-traffic permit parks `None`.
+- **Label styles differ on purpose.** Tier-1/2 labels are colloquial
+  (`Sunset Park`); tier 3–5 are official NTA names (`Crown Heights (North)`).
+  The `search_events` neighborhood filter is a **case-insensitive substring**,
+  and the curated labels are chosen to be substrings of the NTA names, so
+  `neighborhood="Crown Heights"` unifies both.
+- **Known `None` residue (acceptable):** ~9% of permit parks (name mismatches
+  like `Randall's Island Park`) and freeform venues Census can't resolve.
+  `None` is the status quo, so this only ever adds coverage. (BPL branches are
+  now covered by the library table — they used to be the big gap.)
+
+**Data tables** are built once, offline, and committed (not fetched at ingest):
+`build_tract_nta.py` (Socrata `hm78-6dwm`), `build_park_neighborhoods.py`
+(Parks Properties `enfh-gkve` + Census), and `build_library_neighborhoods.py`
+(NYC FacDB `ji82-xba5` + Census). Re-run them to refresh; provenance is in each
+script's docstring. The shared Census batch/reverse primitives live in
+`scripts/_census.py`.
+
+**Library branches** get their own table (`library_neighborhoods.json`), keyed
+`"<borough>|<library-core>"` where `library_core()` strips the generic
+`library`/`branch`/`info commons` tokens so the BPL feed's `Arlington Library`
+keys the same as FacDB's `ARLINGTON LIBRARY`. Borough-keyed so a `Central
+Library` in Brooklyn vs. Queens can't collide (future-proofs QPL/NYPL sources).
+The lookup is gated on the venue containing a `library` token so a park like
+`Sunset Park` can't borrow `Sunset Park Library`'s entry.
+
+**Egress / outbound HTTPS:** the nightly ingest already needs outbound HTTPS —
+all ~11 sources fetch external hosts — so the enrich pass adds no *new*
+requirement, just new hosts: `geocoding.geo.census.gov` (runtime, tiers 4–5)
+and, for the offline `build_*.py` scripts only, `data.cityofnewyork.us`. The
+repo imposes no egress allowlist (`docker-compose.yml` has no network policy).
+**Debt:** if the deployment is ever hardened to an egress allowlist, those hosts
+must be added or the pass silently codes nothing (it's guarded, so ingest still
+succeeds — you'd see `neighborhood` stop populating, not a crash).
 
 ## Missing-event detection (possible cancellations)
 
@@ -342,11 +446,16 @@ Known accepted residuals (see `git log` for the security-audit commit):
     missing-detection (`window_days=60`, full GROQ re-fetch, deterministic
     occurrence ids). As built (2026-06-20): 125 docs → 104 events over a 60-day
     window. See SOURCES-BACKLOG.md as-built block.
-- **Phase 3 (planned — see `PHASE-3-PLAN.md`):** location-awareness
-  (geocoding + neighborhood + distance-from-home filter), weather on outdoor
-  events, an indoor/outdoor heuristic flag, more venue sources, and deferred
-  tech debt (issues #4/#5/#6). Designed but not yet implemented — AI/LLM
-  enrichment is explicitly out of scope for this phase. **Brooklyn Cyclones**
+- **Phase 3 (in progress — see `PHASE-3-PLAN.md`):** location-awareness,
+  weather on outdoor events, an indoor/outdoor heuristic flag, more venue
+  sources, and deferred tech debt. AI/LLM enrichment is explicitly out of scope.
+  - **DONE — A1 neighborhood coding + geocoding** (this pass): the `enrich.py`
+    second pass codes `neighborhood` for every locatable row and backfills
+    `lat`/`lng` as a side effect (see "Neighborhood coding" above). `near_me` /
+    distance-from-home is the remaining A1 piece (the coords it needs now exist).
+  - **TODO:** weather (A3, depends on coords + indoor/outdoor), indoor/outdoor
+    flag (A2), tech-debt #4/#5 are closed; more venue sources (Workstream B).
+  **Brooklyn Cyclones**
   is parked here too: the MLB Stats API (`teamId=453`, public JSON, no auth)
   gives the game schedule cheaply, but the themed nights (Star Wars Night
   etc.) that make it worth shipping live in Contentful CMS, JS-rendered only —

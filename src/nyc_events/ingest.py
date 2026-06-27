@@ -10,7 +10,7 @@ import os
 import sys
 from datetime import UTC, datetime, timedelta
 
-from . import db
+from . import db, enrich
 from .sources import ENABLED_SOURCES
 
 # Circuit breaker for missing-event marking: if a "successful" fetch returned
@@ -81,6 +81,17 @@ def main() -> int:
         pruned = db.prune_stale(conn, datetime.now(UTC) - timedelta(days=1))
 
     print(f"TOTAL: {total_in} inserted, {total_up} updated, {pruned} pruned")
+
+    # Second pass: code neighborhoods (and backfill lat/lng). Guarded so a
+    # geocoder hiccup can't fail the ingest — sources are already committed.
+    # Set ENRICH=0 to skip (dev iteration without network).
+    if os.environ.get("ENRICH", "1") != "0":
+        try:
+            considered, coded = enrich.run(db_path)
+            print(f"ENRICH: {coded}/{considered} rows coded with a neighborhood")
+        except Exception as exc:  # noqa: BLE001 — enrichment is best-effort
+            print(f"ENRICH: failed: {exc!r}", file=sys.stderr)
+
     if failures:
         print("FAILED SOURCES:", file=sys.stderr)
         for f in failures:

@@ -225,6 +225,7 @@ def _event_summary(ev: Event) -> dict[str, Any]:
         "title": ev.title,
         "when_local": ev.start_dt.astimezone(NYC_TZ).isoformat(),
         "borough": ev.borough.value if ev.borough else None,
+        "neighborhood": ev.neighborhood,
         "venue": ev.venue_name,
         "price": ev.price.value,
         "tags": ev.tags,
@@ -291,6 +292,7 @@ def _normalize_borough(b: str | None) -> str | None:
 def search_events(
     query: str | None = None,
     borough: str | None = None,
+    neighborhood: str | None = None,
     age: int | None = None,
     free_only: bool = False,
     days_ahead: int = 14,
@@ -320,6 +322,9 @@ def search_events(
         query: optional free-text search over title, description, venue,
             neighborhood, and tags. Prefix-matched, so "muse" matches "museum".
         borough: Manhattan, Brooklyn, Queens, Bronx, or Staten Island.
+        neighborhood: filter to a neighborhood (e.g. "Williamsburg",
+            "Crown Heights"). Case-insensitive substring, so a short name
+            matches the fuller official neighborhood labels it appears in.
         age: kid's age in years. Returns events whose [age_min, age_max]
             window includes this age, plus events without a declared range.
         free_only: if True, only events explicitly flagged free.
@@ -337,6 +342,7 @@ def search_events(
             conn,
             query=query,
             borough=_normalize_borough(borough),
+            neighborhood=neighborhood,
             age=age,
             free_only=free_only,
             start_after=now.astimezone(UTC),
