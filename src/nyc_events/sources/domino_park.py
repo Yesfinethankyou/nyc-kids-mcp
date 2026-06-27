@@ -52,6 +52,7 @@ from __future__ import annotations
 import calendar
 import json
 import logging
+import os
 import re
 from collections.abc import Iterable
 from datetime import date, datetime, timedelta
@@ -427,8 +428,10 @@ class DominoParkSource(Source):
             resp = cffi_requests.get(
                 url,
                 headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
-                impersonate="chrome",
+                impersonate="safari",
                 timeout=self._timeout,
+                proxy=os.environ.get("HTTPS_PROXY"),
+                verify=os.environ.get("SSL_CERT_FILE") or True,
             )
             resp.raise_for_status()
             data = resp.json()

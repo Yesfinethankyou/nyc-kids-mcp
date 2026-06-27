@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import time
 import xml.etree.ElementTree as ET
@@ -576,8 +577,10 @@ class MommyPoppinsSource(Source):
         resp = cffi_requests.get(
             url,
             timeout=self._timeout,
-            impersonate="chrome",
+            impersonate="safari",
             allow_redirects=True,
+            proxy=os.environ.get("HTTPS_PROXY"),
+            verify=os.environ.get("SSL_CERT_FILE") or True,
         )
         resp.raise_for_status()
         return resp.text

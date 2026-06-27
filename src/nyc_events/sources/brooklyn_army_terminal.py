@@ -46,6 +46,7 @@ Quirks (verified live, 2026-06-15):
 from __future__ import annotations
 
 import logging
+import os
 import re
 from collections.abc import Iterable
 from datetime import datetime
@@ -286,8 +287,10 @@ class BrooklynArmyTerminalSource(Source):
             resp = cffi_requests.get(
                 self._events_url,
                 headers={"User-Agent": USER_AGENT},
-                impersonate="chrome",
+                impersonate="safari",
                 timeout=self._timeout,
+                proxy=os.environ.get("HTTPS_PROXY"),
+                verify=os.environ.get("SSL_CERT_FILE") or True,
             )
             resp.raise_for_status()
         except Exception:  # noqa: BLE001

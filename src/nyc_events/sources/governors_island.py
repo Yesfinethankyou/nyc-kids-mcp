@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 from collections.abc import Iterable
 from datetime import datetime
@@ -315,8 +316,10 @@ class GovernorsIslandSource(Source):
             resp = cffi_requests.get(
                 self._events_url,
                 headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
-                impersonate="chrome",
+                impersonate="safari",
                 timeout=self._timeout,
+                proxy=os.environ.get("HTTPS_PROXY"),
+                verify=os.environ.get("SSL_CERT_FILE") or True,
             )
             resp.raise_for_status()
             data = resp.json()

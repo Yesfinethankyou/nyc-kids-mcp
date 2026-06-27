@@ -52,6 +52,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import time
 from collections.abc import Iterable
@@ -337,8 +338,10 @@ class IndustryCitySource(Source):
                 self._events_url,
                 params=params,
                 headers={"User-Agent": USER_AGENT},
-                impersonate="chrome",
+                impersonate="safari",
                 timeout=self._timeout,
+                proxy=os.environ.get("HTTPS_PROXY"),
+                verify=os.environ.get("SSL_CERT_FILE") or True,
             )
             resp.raise_for_status()
             data = resp.json()
