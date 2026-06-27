@@ -41,6 +41,27 @@ def test_tier3_park_table_resolves_permit_parks():
     assert nb.static_neighborhood("nyc_permitted_events", "cunningham   park") == "Cunningham Park"
 
 
+def test_library_core_strips_generic_tokens():
+    assert nb.library_core("Arlington Library") == "arlington"
+    assert nb.library_core("Central Library, Info Commons") == "central"
+    assert nb.library_core("Library for Arts & Culture") == "for arts culture"
+
+
+def test_library_tier_codes_bpl_branches_by_borough():
+    # Built from FacDB; gated on the venue actually being a library.
+    assert nb.static_neighborhood("bpl", "Sunset Park Library", "Brooklyn") == "Sunset Park (West)"
+    assert nb.static_neighborhood("bpl", "Greenpoint Library", "Brooklyn") == "Greenpoint"
+    # Wrong borough doesn't match (borough-keyed, collision-safe).
+    assert nb.static_neighborhood("bpl", "Sunset Park Library", "Queens") is None
+
+
+def test_library_gate_excludes_non_library_venues():
+    # A park named "Sunset Park" must not borrow the library entry — it has no
+    # "library" token, so it routes to the park table instead.
+    park = nb.static_neighborhood("nyc_permitted_events", "Sunset Park", "Brooklyn")
+    assert park == "Sunset Park (West)"
+
+
 def test_unmatched_returns_none():
     assert nb.static_neighborhood("nyc_permitted_events", "Not A Real Park 9000") is None
     assert nb.static_neighborhood("mommy_poppins", None) is None
@@ -56,4 +77,5 @@ def test_nta_for_tract_crosswalk():
 def test_data_tables_are_populated():
     # Guard against shipping empty tables (a broken data-prep run).
     assert len(nb._park_table()) > 1000
+    assert len(nb._library_table()) > 100
     assert len(nb._tract_table()) > 2000

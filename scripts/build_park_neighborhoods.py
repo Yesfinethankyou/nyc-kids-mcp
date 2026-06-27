@@ -21,8 +21,6 @@ Provenance: https://data.cityofnewyork.us/d/enfh-gkve
 
 from __future__ import annotations
 
-import csv
-import io
 import json
 import sys
 from pathlib import Path
@@ -31,10 +29,11 @@ import httpx
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from _census import batch_geographies, first_zip, reverse_tract  # noqa: E402
 
 PARKS_URL = "https://data.cityofnewyork.us/resource/enfh-gkve.json"
-BATCH_URL = "https://geocoding.geo.census.gov/geocoder/geographies/addressbatch"
-COORD_URL = "https://geocoding.geo.census.gov/geocoder/geographies/coordinates"
 OUT = ROOT / "src" / "nyc_events" / "data" / "park_neighborhoods.json"
 
 # Parks Properties borough code -> Census "city" component. NYC street matches
@@ -56,16 +55,10 @@ def fetch_parks() -> list[dict]:
         return resp.json()
 
 
-def first_zip(p: dict) -> str:
-    # Big parks list several ZIPs ("11364, 11423, 11427"); the batch CSV needs
-    # one. The Census matcher leans on the street range, so the first is fine.
-    return (p.get("zipcode") or "").split(",")[0].strip()
-
-
 def has_street_address(p: dict) -> bool:
     # A numbered street address geocodes via the batch endpoint. Cross-street
     # descriptions ("Eastern Pkwy. bet. ...") do not — those fall to centroid.
-    return bool(first_zip(p)) and (p.get("address") or "").strip()[:1].isdigit()
+    return bool(first_zip(p.get("zipcode"))) and (p.get("address") or "").strip()[:1].isdigit()
 
 
 def centroid(geom: dict | None) -> tuple[float, float] | None:
@@ -98,43 +91,11 @@ def centroid(geom: dict | None) -> tuple[float, float] | None:
 
 def geocode_batch(rows: list[tuple[str, dict]]) -> dict[str, str]:
     """rows = [(uid, parkdict), ...] -> {uid: tract_geoid}."""
-    buf = io.StringIO()
-    w = csv.writer(buf)
-    for uid, p in rows:
-        w.writerow([uid, p["address"], BORO_CITY[p["borough"]], "NY", first_zip(p)])
-    with httpx.Client(timeout=600.0) as client:
-        resp = client.post(
-            BATCH_URL,
-            files={"addressFile": ("parks.csv", buf.getvalue(), "text/csv")},
-            data={"benchmark": "Public_AR_Current", "vintage": "Census2020_Current"},
-        )
-        resp.raise_for_status()
-    out: dict[str, str] = {}
-    for rec in csv.reader(io.StringIO(resp.text)):
-        # uid,input,match,matchtype,matchedaddr,lon|lat,tigerid,side,state,county,tract,block
-        if len(rec) < 11 or rec[2] != "Match":
-            continue
-        state, county, tract = rec[8], rec[9], rec[10]
-        if state and county and tract:
-            out[rec[0]] = f"{state}{county}{tract}"
-    return out
-
-
-def reverse_tract(client: httpx.Client, lng: float, lat: float) -> str | None:
-    resp = client.get(
-        COORD_URL,
-        params={
-            "x": lng,
-            "y": lat,
-            "benchmark": "Public_AR_Current",
-            "vintage": "Census2020_Current",
-            "format": "json",
-            "layers": "Census Tracts",
-        },
-    )
-    resp.raise_for_status()
-    cts = resp.json().get("result", {}).get("geographies", {}).get("Census Tracts") or []
-    return cts[0]["GEOID"] if cts else None
+    csv_rows = [
+        (uid, p["address"], BORO_CITY[p["borough"]], "NY", first_zip(p.get("zipcode")))
+        for uid, p in rows
+    ]
+    return batch_geographies(csv_rows)
 
 
 def main() -> int:

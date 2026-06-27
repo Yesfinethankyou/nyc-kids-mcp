@@ -23,10 +23,22 @@ sources.
       though the upsert nulls `neighborhood` each ingest.
 - [x] **`sources/_neighborhoods.py`** — the static tables + `static_neighborhood()`
       + `nta_for_tract()`. Sibling to `_filters.py`.
-- [x] **Open-data tables + build scripts** — `scripts/build_tract_nta.py`
-      (Socrata `hm78-6dwm`, 2327 tracts) and `scripts/build_park_neighborhoods.py`
-      (Parks Properties `enfh-gkve` + Census batch/centroid, 1909 park keys).
-      Output JSON committed under `src/nyc_events/data/`.
+- [x] **Open-data tables + build scripts** — `build_tract_nta.py` (Socrata
+      `hm78-6dwm`, 2327 tracts), `build_park_neighborhoods.py` (Parks Properties
+      `enfh-gkve` + Census batch/centroid, 1909 park keys), and
+      `build_library_neighborhoods.py` (NYC FacDB `ji82-xba5` + Census, 221
+      keys). Shared Census primitives in `scripts/_census.py`. JSON committed
+      under `src/nyc_events/data/`.
+- [x] **Library table** — `library_neighborhoods.json`, keyed
+      `"<borough>|<library-core>"` (`library_core()` strips generic
+      library/branch tokens). Codes **all 15** BPL feed branches; gated on a
+      `library` token so a park can't borrow a library entry; borough-keyed to
+      future-proof QPL/NYPL. `static_neighborhood()` now takes `borough`.
+- [x] **Egress documented** — ingest already needs outbound HTTPS (all sources
+      fetch external hosts); enrich adds `geocoding.geo.census.gov`. No egress
+      allowlist in compose. Debt noted: if egress is ever hardened, add the host.
+- [x] **BAM** added to `SOURCES-BACKLOG.md` as a CANDIDATE to probe (BAMkids;
+      likely Tessitura — verify).
 - [x] **Server** — `neighborhood` added to `_event_summary`; `search_events`
       gains a `neighborhood` filter (case-insensitive substring) wired through
       `db.search`.
@@ -94,10 +106,11 @@ kid-relevance filters had drifted between six hand-maintained copies.
 
 ## Current state
 
-Suite: **436 passed**, ruff: **clean**. Neighborhood-coding work on
+Suite: **439 passed**, ruff: **clean**. Neighborhood-coding work on
 `claude/neighborhood-event-coding-wkb2dh`. Live smoke test of the real Census
 path verified: Prospect Park→"Prospect Park" (park table), Domino→"Williamsburg"
-(constant), NY Transit Museum→"Brooklyn Heights" (tier 2), a Manhattan street
+(constant), NY Transit Museum→"Brooklyn Heights" (tier 2), Sunset Park
+Library→"Sunset Park (West)" (library table), a Manhattan street
 address→"Midtown-Times Square" with lat/lng backfilled (forward geocode).
 Earlier filter-review pass is **PR #21** on `claude/laughing-planck-xaar2v`.
 
@@ -123,13 +136,17 @@ Earlier filter-review pass is **PR #21** on `claude/laughing-planck-xaar2v`.
   hook trips on the literal `.venv` in the command string.
 - **OAuth token cache** means a revoked token (row deleted from `oauth.db`)
   stays valid for up to 5 min in a running server.
+- **Ingest egress (debt).** The enrich pass needs `geocoding.geo.census.gov`
+  reachable at ingest time (ingest already needs outbound HTTPS for all
+  sources). The repo has no egress allowlist; if the deployment ever adds one,
+  add that host or neighborhood coding silently stops (guarded — no crash).
 
 ## Next session startup
 
 1. Read `CLAUDE.md` (project guide — hard-won quirks, security baseline; the
    new "Neighborhood coding" section).
 2. Read `progress.md` for current feature state.
-3. Run `pytest tests/ -q` + `ruff check` — suite should be green (436).
+3. Run `pytest tests/ -q` + `ruff check` — suite should be green (439).
 
 ## Recommended next steps
 
@@ -139,7 +156,9 @@ Earlier filter-review pass is **PR #21** on `claude/laughing-planck-xaar2v`.
 - On first production ingest after deploy, the enrich pass will geocode all
   unmapped/freeform venues once (then cache). Spot-check `list_sources` /
   a few `get_event_detail` calls to confirm neighborhoods look sane.
-- Optional follow-ups for fuller coverage: a BPL branch→neighborhood table
-  (the feed has no address, so branches mostly stay `None`), and the ~9% of
-  permit parks whose names don't match the open-data table.
+- Optional follow-up for fuller coverage: the ~9% of permit parks whose names
+  don't match the open-data table (BPL branches are now covered by the library
+  table).
+- **BAM** is queued in `SOURCES-BACKLOG.md` (CANDIDATE) — probe with
+  `source-verifier` (likely Tessitura) before building.
 - Merge **PR #21** (filter-review pass) — separate branch.

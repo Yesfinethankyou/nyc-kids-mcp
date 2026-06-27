@@ -21,7 +21,8 @@ permit data only (one source); Phase 2 = editorial scrapers.
 .venv/bin/python -m nyc_events.enrich           # second pass alone: code neighborhoods + backfill lat/lng (network)
 .venv/bin/python -m nyc_events.seed_fake        # populate fake events for connector smoke-testing
 .venv/bin/python scripts/build_tract_nta.py     # rebuild data/tract_to_nta.json (one-shot, from NYC open data)
-.venv/bin/python scripts/build_park_neighborhoods.py  # rebuild data/park_neighborhoods.json (one-shot)
+.venv/bin/python scripts/build_park_neighborhoods.py     # rebuild data/park_neighborhoods.json (one-shot)
+.venv/bin/python scripts/build_library_neighborhoods.py  # rebuild data/library_neighborhoods.json (one-shot)
 .venv/bin/python -m pytest tests/ -q            # full test suite (should always be green)
 .venv/bin/python -m pytest tests/test_security_fixes.py::test_rate_limiter_is_per_ip -q  # single test
 .venv/bin/ruff check                            # lint
@@ -48,8 +49,9 @@ latest commit). Update the handoff first and the PR proceeds.
 - `src/nyc_events/enrich.py` — second-pass location enrichment (neighborhood coding + lat/lng backfill)
 - `src/nyc_events/geocode.py` — US Census geocoder client (forward + reverse; no API key)
 - `src/nyc_events/data/` — committed open-data tables: `tract_to_nta.json`
-  (census tract → NTA neighborhood) + `park_neighborhoods.json` (park name → NTA).
-  Built by `scripts/build_*.py`; loaded as package data.
+  (census tract → NTA neighborhood), `park_neighborhoods.json` (park name → NTA),
+  `library_neighborhoods.json` (borough+library-core → NTA). Built by
+  `scripts/build_*.py`; loaded as package data.
 - `src/nyc_events/sources/base.py` — `Source` ABC; each source is one file in the same dir
 - `src/nyc_events/sources/_filters.py` — shared kid-relevance helpers:
   `normalize()` (collapse hyphens/whitespace), `contains_any()`, and the
@@ -60,8 +62,10 @@ latest commit). Update the handoff first and the PR proceeds.
   `SOURCE_NEIGHBORHOOD` (fixed-venue sources), `VENUE_NEIGHBORHOOD` (enumerable
   multi-site), the park-table + tract-crosswalk loaders, and `static_neighborhood()`.
 - `src/nyc_events/sources/__init__.py` — `ENABLED_SOURCES` registry
-- `scripts/build_tract_nta.py` / `scripts/build_park_neighborhoods.py` — one-shot
-  data-prep that regenerates the `data/*.json` tables from NYC open data + Census.
+- `scripts/build_tract_nta.py` / `build_park_neighborhoods.py` /
+  `build_library_neighborhoods.py` — one-shot data-prep that regenerates the
+  `data/*.json` tables from NYC open data + Census (`scripts/_census.py` holds
+  the shared batch/reverse geocoder primitives).
 - `tests/fixtures/` — captured real upstream responses used in parser tests
 
 `server.py` is a single big module. If it grows past ~600 lines, split the
@@ -252,12 +256,14 @@ ingest; `ENRICH=0` skips it for offline dev.
 1. **Fixed-venue source** → `SOURCE_NEIGHBORHOOD` constant (Domino→Williamsburg,
    Industry City/BAT→Sunset Park, BCM→Crown Heights, Prospect Park, etc.).
 2. **Enumerable multi-site** → `VENUE_NEIGHBORHOOD` (NY Transit Museum's two sites).
-3. **Park name** → `park_neighborhoods.json` (covers ~91% of permit rows).
-4. **Row already has lat/lng** → reverse-geocode → NTA.
-5. **Forward-geocode** `"venue, city, NY"` → lat/lng (backfilled) + NTA.
-6. else `None` (the status quo — graceful).
+3. **Library branch** → `library_neighborhoods.json` (keyed by borough +
+   library-core; codes all of BPL's branches).
+4. **Park name** → `park_neighborhoods.json` (covers ~91% of permit rows).
+5. **Row already has lat/lng** → reverse-geocode → NTA.
+6. **Forward-geocode** `"venue, city, NY"` → lat/lng (backfilled) + NTA.
+7. else `None` (the status quo — graceful).
 
-Tiers 1–3 are pure/offline; tiers 4–5 hit the **US Census geocoder**
+Tiers 1–4 are pure/offline; tiers 5–6 hit the **US Census geocoder**
 (`geocode.py`, no key) → 2020 census tract GEOID → NTA name via
 `tract_to_nta.json`. Every network result, **including negatives**, is cached
 in `geocode_cache` (no TTL; keyed `fwd:<venue|borough>` / `rev:<rounded
@@ -284,14 +290,33 @@ the FTS `events_au` trigger, so neighborhood is searchable immediately.
   and the curated labels are chosen to be substrings of the NTA names, so
   `neighborhood="Crown Heights"` unifies both.
 - **Known `None` residue (acceptable):** ~9% of permit parks (name mismatches
-  like `Randall's Island Park`), most BPL branches (the feed has no address to
-  geocode), and freeform venues Census can't resolve. `None` is the status quo,
-  so this only ever adds coverage.
+  like `Randall's Island Park`) and freeform venues Census can't resolve.
+  `None` is the status quo, so this only ever adds coverage. (BPL branches are
+  now covered by the library table — they used to be the big gap.)
 
 **Data tables** are built once, offline, and committed (not fetched at ingest):
-`build_tract_nta.py` (Socrata `hm78-6dwm`) and `build_park_neighborhoods.py`
-(Parks Properties `enfh-gkve` + Census). Re-run them to refresh; provenance is
-in each script's docstring.
+`build_tract_nta.py` (Socrata `hm78-6dwm`), `build_park_neighborhoods.py`
+(Parks Properties `enfh-gkve` + Census), and `build_library_neighborhoods.py`
+(NYC FacDB `ji82-xba5` + Census). Re-run them to refresh; provenance is in each
+script's docstring. The shared Census batch/reverse primitives live in
+`scripts/_census.py`.
+
+**Library branches** get their own table (`library_neighborhoods.json`), keyed
+`"<borough>|<library-core>"` where `library_core()` strips the generic
+`library`/`branch`/`info commons` tokens so the BPL feed's `Arlington Library`
+keys the same as FacDB's `ARLINGTON LIBRARY`. Borough-keyed so a `Central
+Library` in Brooklyn vs. Queens can't collide (future-proofs QPL/NYPL sources).
+The lookup is gated on the venue containing a `library` token so a park like
+`Sunset Park` can't borrow `Sunset Park Library`'s entry.
+
+**Egress / outbound HTTPS:** the nightly ingest already needs outbound HTTPS —
+all ~11 sources fetch external hosts — so the enrich pass adds no *new*
+requirement, just new hosts: `geocoding.geo.census.gov` (runtime, tiers 4–5)
+and, for the offline `build_*.py` scripts only, `data.cityofnewyork.us`. The
+repo imposes no egress allowlist (`docker-compose.yml` has no network policy).
+**Debt:** if the deployment is ever hardened to an egress allowlist, those hosts
+must be added or the pass silently codes nothing (it's guarded, so ingest still
+succeeds — you'd see `neighborhood` stop populating, not a crash).
 
 ## Missing-event detection (possible cancellations)
 

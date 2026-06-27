@@ -50,6 +50,11 @@ VENUE_NEIGHBORHOOD: dict[tuple[str, str], str] = {
 
 _NONWORD = re.compile(r"[^a-z0-9]+")
 
+# Generic library-name tokens stripped to a "core" so the BPL feed's
+# "Arlington Library" / "Central Library, Info Commons" key the same as FacDB's
+# "ARLINGTON LIBRARY" / "CENTRAL LIBRARY". See build_library_neighborhoods.py.
+_LIBRARY_TOKENS = re.compile(r"\b(library|branch|info commons|learning center)\b")
+
 
 def normalize_name(s: str | None) -> str:
     """Lowercase, strip punctuation to spaces, collapse whitespace. Used to
@@ -58,6 +63,11 @@ def normalize_name(s: str | None) -> str:
     if not s:
         return ""
     return _NONWORD.sub(" ", s.lower()).strip()
+
+
+def library_core(s: str | None) -> str:
+    """normalize_name minus the generic library tokens, re-collapsed."""
+    return _NONWORD.sub(" ", _LIBRARY_TOKENS.sub(" ", normalize_name(s))).strip()
 
 
 def _load_json(name: str) -> dict[str, str]:
@@ -77,18 +87,30 @@ def _park_table() -> dict[str, str]:
 
 
 @lru_cache(maxsize=1)
+def _library_table() -> dict[str, str]:
+    return _load_json("library_neighborhoods.json")
+
+
+@lru_cache(maxsize=1)
 def _tract_table() -> dict[str, str]:
     return _load_json("tract_to_nta.json")
 
 
-def static_neighborhood(source: str, venue: str | None) -> str | None:
+def static_neighborhood(source: str, venue: str | None, borough: str | None = None) -> str | None:
     """Tiers 1-3: deterministic, no network. Returns a neighborhood or None."""
     if source in SOURCE_NEIGHBORHOOD:
         return SOURCE_NEIGHBORHOOD[source]
-    key = (source, normalize_name(venue))
-    if key in VENUE_NEIGHBORHOOD:
-        return VENUE_NEIGHBORHOOD[key]
-    return _park_table().get(normalize_name(venue)) or None
+    nv = normalize_name(venue)
+    if (source, nv) in VENUE_NEIGHBORHOOD:
+        return VENUE_NEIGHBORHOOD[(source, nv)]
+    # Library branches: keyed by (borough, library-core). Gated on the venue
+    # actually being a library so a park like "Sunset Park" can't collide with
+    # the "Sunset Park Library" entry.
+    if "library" in nv.split():
+        lib = _library_table().get(f"{normalize_name(borough)}|{library_core(venue)}")
+        if lib:
+            return lib
+    return _park_table().get(nv) or None
 
 
 def nta_for_tract(geoid: str | None) -> str | None:

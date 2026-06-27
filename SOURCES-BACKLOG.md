@@ -74,6 +74,40 @@ for u in [
 
 ---
 
+## Candidates — to probe (Phase 3 venue expansion)
+
+Fresh leads, not yet probed. Run `source-verifier` (or the probe snippet above)
+to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
+
+### Brooklyn Academy of Music (BAM)
+
+- **Status:** CANDIDATE — proposed 2026-06-27, unprobed.
+- **Why:** BAM runs a dedicated family strand — **BAMkids** (BAMkids Film
+  Festival, family matinees, workshops) — so there's a real kid-relevant
+  subset, unlike an all-adult performing-arts calendar.
+- **URLs to probe:** `https://www.bam.org/programs/bamkids` and the main
+  calendar `https://www.bam.org/programs` / `https://www.bam.org/calendar`.
+- **Platform guess (verify, don't trust):** BAM ticketing has historically run
+  on **Tessitura** (and the probe snippet already greps for `tessitura`); the
+  marketing site may be a separate CMS. Tessitura usually exposes a JSON
+  "TNEW"/EPS API but often behind auth — check for a public `/api` or embedded
+  JSON-LD `Event` blocks on the listing pages first. Expect anti-bot 403s →
+  `curl_cffi impersonate="chrome"`.
+- **Filtering plan if built:** this is a curated *venue*, not a kids feed, so it
+  needs a kid-relevance gate — restrict to the BAMkids category if the feed
+  exposes categories, else title/description keyword inclusion (the
+  Industry-City strategy). Hard-exclude the adult mainstage (opera, late-night,
+  21+). Single venue → `SOURCE_NEIGHBORHOOD["bam"] = "Fort Greene"` for the
+  neighborhood pass (BAM is in Fort Greene / the BAM Cultural District).
+- **Borough/venue:** Brooklyn; venue "Brooklyn Academy of Music" (multiple
+  buildings — Howard Gilman Opera House, Harvey Theater, BAM Rose Cinemas — all
+  Fort Greene, so one neighborhood label is fine).
+- **Open question:** does BAMkids carry enough *dated, non-film* events to be
+  worth a source, or is it mostly the annual film festival? Gauge yield during
+  the probe before committing to `source-adder`.
+
+---
+
 ## Deferred to Phase 3+ (headless browser required)
 
 The Phase 2 editorial-source backlog is otherwise built or rejected. Brooklyn

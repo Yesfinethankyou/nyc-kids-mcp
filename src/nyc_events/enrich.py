@@ -62,7 +62,7 @@ def resolve(
     invoke the geocoders; lat/lng are returned so a forward-geocoded row can
     backfill its coordinates."""
     # Tiers 1-3: deterministic, no network.
-    nb = static_neighborhood(source, venue)
+    nb = static_neighborhood(source, venue, borough)
     if nb:
         return nb, lat, lng
 
