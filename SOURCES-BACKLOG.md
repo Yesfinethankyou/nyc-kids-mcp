@@ -106,6 +106,83 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
   worth a source, or is it mostly the annual film festival? Gauge yield during
   the probe before committing to `source-adder`.
 
+### NYC public libraries — system map (read before building any of the four below)
+
+NYC has **three** public-library systems, not five:
+
+- **Brooklyn Public Library (BPL)** — Brooklyn. **BUILT** (source `bpl`).
+- **Queens Public Library (QPL)** — Queens.
+- **New York Public Library (NYPL)** — **Manhattan, the Bronx, AND Staten
+  Island.** There is no separate "Bronx Public Library" or "Staten Island
+  Public Library"; those branches are NYPL.
+
+So the "Bronx Library" and "Staten Island Library" items below are **borough
+slices of NYPL**, tracked separately at the maintainer's request — building the
+single NYPL source satisfies all three (filter by branch borough if per-borough
+tracking is wanted).
+
+**Neighborhood coding is already done for all of these.** `library_neighborhoods.json`
+was built NYC-wide from FacDB and is borough-keyed: it already holds Queens (67),
+Manhattan (42), Bronx (35), and Staten Island (14) branch keys. So the enrich
+pass codes a QPL/NYPL branch the moment a source yields it — **no new data-prep**.
+The one requirement: the source must set each event's **correct branch borough**
+(NYPL spans three, so it can't hardcode one), since the library lookup is
+keyed `"<borough>|<library-core>"`.
+
+### Queens Public Library (QPL)
+
+- **Status:** CANDIDATE — proposed 2026-06-27, unprobed.
+- **System:** Queens only (~65 branches). Canonical domain **queenslibrary.org**
+  (NOT `queenspubliclibrary.org` — that domain currently redirects to a junk
+  site; don't probe it).
+- **URLs to probe:** `https://www.queenslibrary.org/calendar` and the
+  kids/family filter if the calendar exposes one.
+- **Platform guess (verify):** library event calendars commonly run on
+  **LibCal/Springshare**, **Communico**, or **BiblioCommons** — all of which
+  usually expose a JSON or iCal feed. Grep the page for `libcal`, `communico`,
+  `bibliocommons`, `assets.libcal`, JSON-LD `Event`. Expect anti-bot → use
+  `curl_cffi impersonate="chrome"`.
+- **Filtering plan if built:** curated venue, so gate to youth/family programs
+  (storytime, kids workshops) by category if available, else keyword inclusion.
+- **Borough/venue:** Queens; venue = branch name (so neighborhood coding via the
+  library table works); borough always Queens.
+
+### New York Public Library (NYPL)
+
+- **Status:** CANDIDATE — proposed 2026-06-27, unprobed.
+- **System:** **Manhattan + Bronx + Staten Island** (~90 branch libraries plus
+  the research libraries). Building this one source is what actually unlocks the
+  Bronx and Staten Island items below.
+- **URLs to probe:** `https://www.nypl.org/events/calendar` (JS-rendered shell
+  on a plain fetch — needs a real probe). Check for an events JSON endpoint
+  under `nypl.org` / `*.nypl.org`, JSON-LD on event detail pages, or a
+  LibCal/Communico backend.
+- **Platform guess (verify):** NYPL's main site is a custom React/Drupal stack;
+  the events system may be separate. If the listing is JS-only with no JSON
+  feed, this is a **headless-browser** candidate (Phase-3 Playwright fallback) —
+  decide during the probe.
+- **Filtering plan if built:** gate to kids/family programs; exclude the
+  adult/research-library lectures.
+- **Borough/venue — IMPORTANT:** NYPL spans three boroughs, so the source MUST
+  set each event's borough from its branch (not a hardcoded constant), or the
+  borough-keyed library neighborhood lookup will miss. venue = branch name.
+
+### Bronx Library (NYPL — Bronx branches)
+
+- **Status:** CANDIDATE — proposed 2026-06-27. **Not a separate system** — these
+  are NYPL's Bronx branches (~35 in FacDB). Tracked separately per request.
+- **Build path:** covered by the NYPL source above; no distinct endpoint. If
+  per-borough delivery is wanted, filter the NYPL feed to `borough == Bronx`.
+- **Neighborhood coding:** already covered (35 Bronx library keys in the table).
+
+### Staten Island Library (NYPL — Staten Island branches)
+
+- **Status:** CANDIDATE — proposed 2026-06-27. **Not a separate system** — these
+  are NYPL's Staten Island branches (~13 in FacDB). Tracked separately per request.
+- **Build path:** covered by the NYPL source above; no distinct endpoint. If
+  per-borough delivery is wanted, filter the NYPL feed to `borough == Staten Island`.
+- **Neighborhood coding:** already covered (14 Staten Island library keys in the table).
+
 ---
 
 ## Deferred to Phase 3+ (headless browser required)

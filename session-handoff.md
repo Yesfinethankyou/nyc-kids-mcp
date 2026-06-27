@@ -39,6 +39,12 @@ sources.
       allowlist in compose. Debt noted: if egress is ever hardened, add the host.
 - [x] **BAM** added to `SOURCES-BACKLOG.md` as a CANDIDATE to probe (BAMkids;
       likely Tessitura — verify).
+- [x] **Library systems backlog** — added Queens Public Library, NYPL, Bronx,
+      and Staten Island as CANDIDATE items, with a system-map note: NYC has 3
+      systems (BPL built, QPL, NYPL=Manhattan+Bronx+SI), so Bronx/SI are NYPL
+      borough slices. Neighborhood coding already covers all of them (the
+      library table is NYC-wide + borough-keyed) — a future source just needs to
+      set each event's branch borough.
 - [x] **Server** — `neighborhood` added to `_event_summary`; `search_events`
       gains a `neighborhood` filter (case-insensitive substring) wired through
       `db.search`.
