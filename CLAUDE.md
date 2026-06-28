@@ -227,7 +227,21 @@ return the **summary** dict via `_event_summary(ev)`:
   `age_min`, `age_max`, `source`. (`neighborhood` IS included — it's cheap and
   high-signal for "what's near X" questions; `search_events` also filters on it.)
 - Truncates `description` to 200 chars.
-- Default `limit=10`.
+- Default `limit=10` (`search_events` defaults to `limit=15`; all cap at 50).
+
+Shared listing filters (threaded into `db.search`):
+- `exclude_low_confidence` (all three listing tools) drops permit-style rows
+  where `description IS NULL AND url IS NULL` — the "only curated, attendable
+  events" path. Mirrors the `low_confidence` output flag.
+- `source` + arbitrary date window (`start_date`/`end_date`, falling back to
+  `days_ahead` width) are `search_events`-only. `start_date` defaults the window
+  start to that local date instead of now; `end_date` omitted → `start +
+  days_ahead`. End-before-start raises `ValueError`.
+
+`list_facets()` returns the distinct in-catalog values for the search facets
+(`boroughs`, `neighborhoods`, `tags`, `sources`) so a caller can discover valid
+filter values instead of guessing. Reflects only currently-ingested rows; tags
+are unpacked from the per-row JSON array in Python (no json1 dependency).
 
 Drilling tools return the full record:
 - `get_event_detail(event_id)` → `_event_detail(ev)` (all normalized fields,

@@ -123,6 +123,27 @@ def test_search_free_only(conn):
     assert titles == {"Free event"}
 
 
+def test_search_filters_by_source(conn):
+    db.upsert_events(conn, [
+        _ev(external_id="a", source="src_a", title="From A"),
+        _ev(external_id="b", source="src_b", title="From B"),
+    ])
+    assert {e.title for e in db.search(conn, source="src_a")} == {"From A"}
+
+
+def test_search_exclude_low_confidence(conn):
+    # low_confidence == description IS NULL AND url IS NULL (permit-style rows).
+    db.upsert_events(conn, [
+        _ev(external_id="perm", description=None, url=None, title="Permit row"),
+        _ev(external_id="desc", description="has detail", url=None, title="Has desc"),
+        _ev(external_id="link", description=None, url="https://x/y", title="Has url"),
+        _ev(external_id="full", description="d", url="https://x/z", title="Has both"),
+    ])
+    titles = {e.title for e in db.search(conn, exclude_low_confidence=True)}
+    assert "Permit row" not in titles
+    assert titles == {"Has desc", "Has url", "Has both"}
+
+
 def test_search_date_range(conn):
     db.upsert_events(conn, [
         _ev(external_id="past", start_dt=datetime(2025, 1, 1, tzinfo=UTC), title="Past"),
@@ -236,6 +257,36 @@ def test_list_sources_reports_counts_and_freshness(conn):
     assert by_source["src_a"]["event_count"] == 2
     assert by_source["src_b"]["event_count"] == 1
     assert all(r["last_seen"] for r in rows)
+
+
+# --- list_facets ---------------------------------------------------------
+
+
+def test_list_facets_returns_distinct_sorted_values(conn):
+    db.upsert_events(conn, [
+        _ev(external_id="a", source="src_a", borough=Borough.BROOKLYN,
+            neighborhood="Williamsburg", tags=["music", "family"]),
+        _ev(external_id="b", source="src_b", borough=Borough.QUEENS,
+            neighborhood="Astoria", tags=["family", "art"]),
+        # Duplicate borough/neighborhood/tags must collapse to one entry each.
+        _ev(external_id="c", source="src_a", borough=Borough.BROOKLYN,
+            neighborhood="Williamsburg", tags=["music"]),
+    ])
+    facets = db.list_facets(conn)
+    assert facets["boroughs"] == ["Brooklyn", "Queens"]
+    assert facets["neighborhoods"] == ["Astoria", "Williamsburg"]
+    assert facets["tags"] == ["art", "family", "music"]
+    assert facets["sources"] == ["src_a", "src_b"]
+
+
+def test_list_facets_skips_null_borough_and_neighborhood(conn):
+    db.upsert_events(conn, [
+        _ev(external_id="n", borough=None, neighborhood=None, tags=[]),
+    ])
+    facets = db.list_facets(conn)
+    assert facets["boroughs"] == []
+    assert facets["neighborhoods"] == []
+    assert facets["tags"] == []
 
 
 # --- geocode cache -------------------------------------------------------

@@ -183,6 +183,124 @@ keyed `"<borough>|<library-core>"`.
   per-borough delivery is wanted, filter the NYPL feed to `borough == Staten Island`.
 - **Neighborhood coding:** already covered (14 Staten Island library keys in the table).
 
+### NYC art museums — Manhattan (read before building any of the three below)
+
+Three flagship Manhattan art museums proposed 2026-06-28. All are **curated,
+adult-skewing venues**, not kids feeds, so each needs a kid-relevance gate to its
+family/kids strand (the BAM strategy: category filter if the calendar exposes
+one, else title/description keyword inclusion). All are single fixed venues → a
+`SOURCE_NEIGHBORHOOD` constant each, **except the Met** (two buildings in
+different neighborhoods → handle like NY Transit's two sites via
+`VENUE_NEIGHBORHOOD`). Expect anti-bot 403s on these consumer sites → probe with
+`curl_cffi impersonate="chrome"`. None is confirmed to have a structured feed;
+if a probe finds the calendar is JS-only with no JSON-LD / embedded JSON / JSON
+endpoint, it's a **headless-browser candidate** (Phase-3 Playwright fallback).
+Probe one first to learn the platform shape; copy-adapt if the others match.
+
+### The Metropolitan Museum of Art (The Met)
+
+- **Status:** CANDIDATE — proposed 2026-06-28, unprobed.
+- **Why:** the Met runs a substantial family strand — **#MetKids**, family
+  programs, drop-in drawing, story time, workshops — a real kid-relevant subset
+  under an otherwise adult calendar.
+- **URLs to probe:** `https://www.metmuseum.org/events` (filterable by audience —
+  look for a "Families"/"Kids and Families" filter and whether it maps to a query
+  param) and the MetKids landing page.
+- **Platform guess (verify, don't trust):** large custom CMS (not WordPress/
+  Tribe). Check listing/detail pages for JSON-LD `Event` blocks, a
+  `__NEXT_DATA__`/embedded-JSON blob, or an events JSON endpoint under
+  `metmuseum.org`. **Note:** the well-known Met "Open Access" API
+  (`collectionapi.metmuseum.org`) is the *art collection*, NOT events — don't
+  confuse them.
+- **Filtering plan if built:** gate to the family/kids audience by filter/category
+  if exposed, else keyword inclusion (story time, family, kids, workshop,
+  drop-in). Hard-exclude adult programming (members' openings, lectures, galas,
+  21+ evening events).
+- **Borough/venue — TWO sites:** Manhattan. Main building = Fifth Ave at 82nd
+  (Upper East Side / Museum Mile); **The Met Cloisters** = Fort Tryon Park,
+  Washington Heights. If both carry events, set venue per-event and code
+  neighborhood via `VENUE_NEIGHBORHOOD` (Met Fifth Ave → Upper East Side; Met
+  Cloisters → Washington Heights) — the NY-Transit two-site pattern, not a single
+  `SOURCE_NEIGHBORHOOD` constant.
+- **Open question:** does the family strand carry enough *dated* events (vs.
+  always-on gallery activities) to be worth a source? Gauge yield in the probe.
+
+### Museum of Modern Art (MoMA)
+
+- **Status:** CANDIDATE — proposed 2026-06-28, unprobed.
+- **Why:** MoMA's family programs (Art Lab, family gallery sessions, "Tours for
+  Fours", workshops) are a defined kid-relevant subset.
+- **URLs to probe:** `https://www.moma.org/calendar/` (and the family/kids filter
+  if one exists). Check **MoMA PS1** (`https://www.momaps1.org/`) separately — a
+  distinct Queens venue with its own calendar — only if PS1 runs family events.
+- **Platform guess (verify):** custom CMS/React. Grep for JSON-LD `Event`,
+  embedded JSON (`__NEXT_DATA__`/Apollo state), or a calendar JSON endpoint.
+  Headless fallback if JS-only.
+- **Filtering plan if built:** gate to family/kids programs; hard-exclude members'
+  previews, adult film series, evening adult events.
+- **Borough/venue:** Manhattan; venue "Museum of Modern Art", 11 W 53rd St →
+  `SOURCE_NEIGHBORHOOD["moma"]` = Midtown. **MoMA PS1, if included, is Long Island
+  City, QUEENS** — different borough + neighborhood, so treat PS1 as a separate
+  venue/source rather than hardcoding one borough.
+
+### Whitney Museum of American Art (The Whitney)
+
+- **Status:** CANDIDATE — proposed 2026-06-28, unprobed.
+- **Why:** the Whitney runs family days, kids/teen workshops, and "Open Studio"
+  drop-ins — a kid-relevant strand under an adult contemporary-art calendar.
+- **URLs to probe:** `https://whitney.org/events` (look for an audience/family
+  filter and its query param).
+- **Platform guess (verify):** custom CMS. Check for JSON-LD `Event`, embedded
+  JSON, or an events JSON endpoint; headless fallback if JS-only. Expect a
+  possible anti-bot 403 → `curl_cffi`.
+- **Filtering plan if built:** gate to family/kids/teen programs by category if
+  exposed, else keyword inclusion; hard-exclude members' events, adult talks, 21+
+  evenings.
+- **Borough/venue:** Manhattan; venue "Whitney Museum of American Art", 99
+  Gansevoort St (Meatpacking District) → `SOURCE_NEIGHBORHOOD["whitney"]` = West
+  Village (the NTA "West Village" covers the Meatpacking blocks — verify the
+  reverse-geocode lands there during the enrich pass).
+
+### The Skint (theskint.com) — citywide editorial RSS
+
+- **Status:** CANDIDATE — proposed 2026-06-28. RSS confirmed to exist by the
+  proposer; item granularity + kid-yield NOT yet verified.
+- **What it is:** a long-running NYC "free & cheap things to do" editorial blog
+  (WordPress). Citywide aggregator — **not** a venue and **not** a kids feed.
+- **URLs to probe:** `https://theskint.com/feed/` (WordPress default RSS; also
+  try `/feed/atom/`, the WP REST API `https://theskint.com/wp-json/wp/v2/posts`,
+  and a kids/family category feed if one exists,
+  `https://theskint.com/category/<tag>/feed/`).
+- **Two things the probe MUST settle (they decide whether it's buildable at all):**
+  1. **One item per event, or one digest post per day?** The Skint's signature
+     format is a single daily roundup post listing many events in the body. If
+     RSS items are daily digests, there is no per-event `start_dt`/`venue`/`url`
+     to map onto our `Event` rows without parsing free-text prose — and
+     free-text event extraction is **AI/NLP, explicitly out of scope**
+     (PHASE-3-PLAN.md). Only worth building if items (or a feed/REST variant)
+     are per-event with structured dates.
+  2. **Kid yield.** The Skint skews adult — free booze, bar nights, music, art
+     openings. Like Coney Island USA, the feed can "work" technically while being
+     almost entirely non-kid-relevant. Sample 30–50 items and estimate the
+     kid-relevant fraction before committing.
+- **Platform guess (verify):** WordPress → RSS/Atom is reliable; the WP REST API
+  (`/wp-json/wp/v2/posts`) or JSON-LD may give cleaner structured fields than
+  RSS. Anti-bot is unlikely on a feed, but fall back to `curl_cffi` if a plain
+  fetch 403s.
+- **Filtering plan if built:** mandatory kid-relevance **allowlist** on
+  title/body (family, kids, all-ages, storytime, puppet, workshop) plus the
+  shared `ADULT_BLOCKLIST` / `ADULT_TITLE_BLOCKLIST` from `_filters.py`.
+  Default-exclude — this is an adult-leaning general feed, the opposite of the
+  curated-kids feeds (`mommy_poppins`, `bk_childrens_museum`) that carry no
+  filter by design.
+- **Borough/venue/neighborhood:** all per-event and **only in free text** — a
+  blog RSS item has no structured venue field. Borough/neighborhood would come
+  from the enrich pass *iff* a parseable venue string can be extracted; expect
+  many rows to resolve to `None`. Another reason to confirm item granularity first.
+- **Missing-detection:** opt **out** (`window_days=None`, like `mommy_poppins`) —
+  an editorial feed rotates posts incrementally, so an unmodified item leaving a
+  recent window isn't a cancellation.
+
 ---
 
 ## Deferred to Phase 3+ (headless browser required)
