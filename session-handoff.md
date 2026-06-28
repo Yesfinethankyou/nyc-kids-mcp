@@ -32,6 +32,12 @@ schema/migration changes — all additive filtering over the existing `db.search
       ruff clean.**
 - [x] **Docs** — CLAUDE.md "Tool output shape" (filters + list_facets + new
       default limit), README tool table (7 tools now).
+- [x] **Backlog additions** (`SOURCES-BACKLOG.md`, unprobed CANDIDATEs) — three
+      Manhattan art museums (The Met, MoMA, The Whitney) under a shared "NYC art
+      museums" note (curated adult-skewing → family-strand gate; the Met is a
+      two-site `VENUE_NEIGHBORHOOD` case), and **The Skint** (theskint.com) — a
+      citywide WordPress RSS blog flagged with the two probe blockers that decide
+      buildability: digest-vs-per-event item granularity and low kid-yield.
 
 ### Session: Neighborhood coding + geocoding (branch `claude/neighborhood-event-coding-wkb2dh`)
 
