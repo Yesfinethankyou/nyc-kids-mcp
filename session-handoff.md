@@ -2,6 +2,37 @@
 
 ## What was done (most recent first)
 
+### Session: MCP tool filters + facet discovery (branch `claude/mcp-tools-review-6unjn8`)
+
+Reviewed the MCP tool surface and implemented three of the suggested gaps. No
+schema/migration changes — all additive filtering over the existing `db.search`.
+
+- [x] **`exclude_low_confidence` filter** — new bool on `db.search` (`description
+      IS NOT NULL OR url IS NOT NULL`) and exposed on all three listing tools
+      (`search_events`, `events_this_weekend`, `events_on_date`). Drops permit-
+      style rows for the "only curated, attendable events" path; mirrors the
+      existing `low_confidence` output flag. Fixes browse tools being flooded by
+      the ~700-row permit source.
+- [x] **Arbitrary date window on `search_events`** — `start_date`/`end_date`
+      (YYYY-MM-DD, NYC local). `start_date` defaults the window start to that
+      date instead of now; `end_date` omitted → `start + days_ahead` (same
+      precise-instant semantics as the existing now-window). End-before-start
+      and bad formats raise `ValueError`. Shared `_local_date()` helper (also
+      now used by `events_on_date`).
+- [x] **`source` filter on `search_events`** — restrict to one source id.
+- [x] **`list_facets()` new tool** — distinct in-catalog `boroughs`,
+      `neighborhoods`, `tags`, `sources` so a caller can discover valid filter
+      values. `db.list_facets()`; tags unpacked from per-row JSON in Python (no
+      json1 dependency).
+- [x] **`search_events` default `limit` 10 → 15** (others stay 10; all cap 50).
+- [x] **Tests** — `test_db.py` (source filter, exclude_low_confidence, two
+      `list_facets` cases); new `test_search_tools.py` (date-range window math,
+      end-before-start guard, bad-format guard, exclude_low_confidence + facets
+      through the tool layer, via monkeypatched `server.DB_PATH`). **449 passed,
+      ruff clean.**
+- [x] **Docs** — CLAUDE.md "Tool output shape" (filters + list_facets + new
+      default limit), README tool table (7 tools now).
+
 ### Session: Neighborhood coding + geocoding (branch `claude/neighborhood-event-coding-wkb2dh`)
 
 Implemented Phase 3 A1's neighborhood + geocoding half (feat-006 + feat-009

@@ -198,8 +198,8 @@ curl -X POST http://127.0.0.1:8765/ \
   -H "Accept: application/json, text/event-stream" \
   -H "Mcp-Session-Id: $SID" \
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
-# → should show 6 tools: search_events, events_this_weekend, events_on_date,
-#   get_event_detail, get_event_raw, list_sources
+# → should show 7 tools: search_events, events_this_weekend, events_on_date,
+#   get_event_detail, get_event_raw, list_sources, list_facets
 ```
 
 ### Adding as a custom connector in claude.ai web
@@ -240,17 +240,21 @@ testing — useful for diagnostics without going through OAuth.
 
 | Tool                  | Purpose                                                                                          |
 |-----------------------|--------------------------------------------------------------------------------------------------|
-| `search_events`       | Free-text + filters (borough/neighborhood/age/free/days_ahead). Returns the cheap summary projection. |
+| `search_events`       | Free-text + filters (borough/neighborhood/age/free/source/exclude_low_confidence) over an arbitrary date range (start_date/end_date or days_ahead). Returns the cheap summary projection. |
 | `events_this_weekend` | Saturday 00:00 → Sunday 23:59 local of the current/upcoming weekend (starts now if mid-weekend). |
 | `events_on_date`      | Single YYYY-MM-DD in `America/New_York`. Cheap summary projection.                               |
 | `get_event_detail`    | Drill into one event by `event_id`. Untruncated description + all metadata (no raw payload).     |
 | `get_event_raw`       | Original upstream JSON for one event by `event_id`. For debugging or recovering aged-out detail. |
 | `list_sources`        | Per-source counts + freshness, for diagnosing stale ingest.                                      |
+| `list_facets`         | Distinct filter values in the live catalog (boroughs, neighborhoods, tags, sources) for forming valid `search_events` filters. |
 
-The three listing tools share borough/age/free_only/limit filters and return a
-small per-event "summary" dict (default `limit=10`, description truncated to
-200 chars, plus `event_id` for follow-up calls). Drill into a result with
-`get_event_detail(event_id)` or `get_event_raw(event_id)`.
+The three listing tools share borough/age/free_only/`exclude_low_confidence`/limit
+filters and return a small per-event "summary" dict (`search_events` defaults to
+`limit=15`, the others to `limit=10`; description truncated to 200 chars, plus
+`event_id` for follow-up calls). `exclude_low_confidence=true` drops permit-style
+rows that have no description and no URL — use it for "only curated, attendable
+events." Drill into a result with `get_event_detail(event_id)` or
+`get_event_raw(event_id)`.
 
 ## Data sources and their limits
 

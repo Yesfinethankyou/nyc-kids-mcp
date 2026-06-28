@@ -14,7 +14,7 @@ import os
 import secrets
 import time as _time
 from collections import deque
-from datetime import UTC, datetime, time, timedelta
+from datetime import UTC, date, datetime, time, timedelta
 from typing import Any
 from urllib.parse import quote_plus, urlparse
 from zoneinfo import ZoneInfo
@@ -288,6 +288,14 @@ def _normalize_borough(b: str | None) -> str | None:
     return table.get(b.strip().lower(), b.strip().title())
 
 
+def _local_date(value: str) -> date:
+    """Parse a YYYY-MM-DD string as a calendar date, with a clear error."""
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").date()
+    except ValueError as exc:
+        raise ValueError(f"date must be YYYY-MM-DD, got {value!r}") from exc
+
+
 @mcp.tool()
 def search_events(
     query: str | None = None,
@@ -295,8 +303,12 @@ def search_events(
     neighborhood: str | None = None,
     age: int | None = None,
     free_only: bool = False,
+    exclude_low_confidence: bool = False,
+    source: str | None = None,
+    start_date: str | None = None,
+    end_date: str | None = None,
     days_ahead: int = 14,
-    limit: int = 10,
+    limit: int = 15,
 ) -> list[dict[str, Any]]:
     """Search NYC family-friendly events with optional filters.
 
@@ -307,7 +319,9 @@ def search_events(
     Each result has a `low_confidence: bool` flag — true means the row came
     from a permit-style source (no description, no URL) and may not be a
     public-facing event. Surface that uncertainty to the user instead of
-    assuming the event is attendable.
+    assuming the event is attendable. Pass `exclude_low_confidence=True` to
+    drop those rows entirely when the user wants only curated, attendable
+    events.
 
     Each result also has a `venue_map_url` field with a Google Maps link
     for the venue. If `url` is null (most permit-source rows are),
@@ -328,15 +342,40 @@ def search_events(
         age: kid's age in years. Returns events whose [age_min, age_max]
             window includes this age, plus events without a declared range.
         free_only: if True, only events explicitly flagged free.
-        days_ahead: window starts now and ends N days from today (default 14,
-            max 365).
-        limit: max events to return (default 10, max 50). Use
+        exclude_low_confidence: if True, drop permit-style rows that have no
+            description and no URL (the `low_confidence` rows). Use this when
+            the user only wants curated, clearly attendable events.
+        source: restrict to a single source id (see list_sources / list_facets
+            for the available ids, e.g. "domino_park").
+        start_date: YYYY-MM-DD (America/New_York). Window starts at 00:00 on
+            this date instead of now — use it to look at a specific future
+            date range. Defaults to now.
+        end_date: YYYY-MM-DD (America/New_York). Window ends at 23:59:59 on
+            this date. When omitted, the window ends `days_ahead` days after
+            the start. Provide both start_date and end_date for an explicit
+            range like a planned visit ("Aug 12–15").
+        days_ahead: width of the window when end_date is omitted; counted from
+            the start (default 14, max 365).
+        limit: max events to return (default 15, max 50). Use
             get_event_detail(event_id) to drill into a specific result.
     """
     days_ahead = min(days_ahead, 365)
     limit = min(limit, 50)
     now = datetime.now(NYC_TZ)
-    until = now + timedelta(days=days_ahead)
+    start = (
+        datetime.combine(_local_date(start_date), time(0, 0), NYC_TZ)
+        if start_date
+        else now
+    )
+    if end_date:
+        end = datetime.combine(_local_date(end_date), time(23, 59, 59), NYC_TZ)
+    else:
+        end = start + timedelta(days=days_ahead)
+    if end < start:
+        raise ValueError(
+            f"end_date {end_date!r} is before the window start "
+            f"({start_date!r} or now)"
+        )
     with db.connect_events(DB_PATH) as conn:
         events = db.search(
             conn,
@@ -345,8 +384,10 @@ def search_events(
             neighborhood=neighborhood,
             age=age,
             free_only=free_only,
-            start_after=now.astimezone(UTC),
-            start_before=until.astimezone(UTC),
+            source=source,
+            exclude_low_confidence=exclude_low_confidence,
+            start_after=start.astimezone(UTC),
+            start_before=end.astimezone(UTC),
             limit=limit,
         )
     return [_event_summary(e) for e in events]
@@ -370,6 +411,7 @@ def events_this_weekend(
     borough: str | None = None,
     age: int | None = None,
     free_only: bool = False,
+    exclude_low_confidence: bool = False,
     limit: int = 10,
 ) -> list[dict[str, Any]]:
     """Events happening THIS weekend in NYC.
@@ -382,6 +424,9 @@ def events_this_weekend(
         borough: Manhattan, Brooklyn, Queens, Bronx, or Staten Island.
         age: kid's age in years (see search_events for matching semantics).
         free_only: if True, only events explicitly flagged free.
+        exclude_low_confidence: if True, drop permit-style rows with no
+            description and no URL (the `low_confidence` rows), leaving only
+            curated, clearly attendable events.
         limit: max events to return (default 10, max 50). Use
             get_event_detail(event_id) to drill into a specific result.
     """
@@ -393,6 +438,7 @@ def events_this_weekend(
             borough=_normalize_borough(borough),
             age=age,
             free_only=free_only,
+            exclude_low_confidence=exclude_low_confidence,
             start_after=window_start.astimezone(UTC),
             start_before=sunday_end.astimezone(UTC),
             limit=limit,
@@ -406,6 +452,7 @@ def events_on_date(
     borough: str | None = None,
     age: int | None = None,
     free_only: bool = False,
+    exclude_low_confidence: bool = False,
     limit: int = 10,
 ) -> list[dict[str, Any]]:
     """Events on a specific local NYC date.
@@ -415,14 +462,14 @@ def events_on_date(
         borough: Manhattan, Brooklyn, Queens, Bronx, or Staten Island.
         age: kid's age in years.
         free_only: if True, only events explicitly flagged free.
+        exclude_low_confidence: if True, drop permit-style rows with no
+            description and no URL (the `low_confidence` rows), leaving only
+            curated, clearly attendable events.
         limit: max events to return (default 10, max 50). Use
             get_event_detail(event_id) to drill into a specific result.
     """
     limit = min(limit, 50)
-    try:
-        d = datetime.strptime(date, "%Y-%m-%d").date()
-    except ValueError as exc:
-        raise ValueError(f"date must be YYYY-MM-DD, got {date!r}") from exc
+    d = _local_date(date)
     day_start = datetime.combine(d, time(0, 0), NYC_TZ)
     day_end = datetime.combine(d, time(23, 59, 59), NYC_TZ)
     with db.connect_events(DB_PATH) as conn:
@@ -431,6 +478,7 @@ def events_on_date(
             borough=_normalize_borough(borough),
             age=age,
             free_only=free_only,
+            exclude_low_confidence=exclude_low_confidence,
             start_after=day_start.astimezone(UTC),
             start_before=day_end.astimezone(UTC),
             limit=limit,
@@ -491,6 +539,25 @@ def list_sources() -> list[dict[str, Any]]:
     """
     with db.connect_events(DB_PATH) as conn:
         return db.list_sources(conn)
+
+
+@mcp.tool()
+def list_facets() -> dict[str, list[str]]:
+    """List the distinct filter values currently present in the catalog.
+
+    Returns the valid values for the main search_events filters, drawn from
+    the events actually ingested right now:
+      - boroughs:      borough names in use
+      - neighborhoods: neighborhood labels in use (search_events filters these
+                       as a case-insensitive substring, so a partial label works)
+      - tags:          all tags applied across events
+      - sources:       source ids (pass one back as search_events `source`)
+
+    Call this first when you need to translate a vague user phrase into a valid
+    filter value (e.g. which neighborhoods or tags exist) instead of guessing.
+    """
+    with db.connect_events(DB_PATH) as conn:
+        return db.list_facets(conn)
 
 
 # Paths the bearer middleware lets through unauthenticated.

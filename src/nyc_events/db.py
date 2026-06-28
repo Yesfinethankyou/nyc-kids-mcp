@@ -339,6 +339,8 @@ def search(
     neighborhood: str | None = None,
     age: int | None = None,
     free_only: bool = False,
+    source: str | None = None,
+    exclude_low_confidence: bool = False,
     start_after: datetime | None = None,
     start_before: datetime | None = None,
     limit: int = 25,
@@ -355,6 +357,16 @@ def search(
     if borough:
         where.append("e.borough = ?")
         params.append(borough)
+
+    if source:
+        where.append("e.source = ?")
+        params.append(source)
+
+    if exclude_low_confidence:
+        # low_confidence (in the tool projection) is description IS NULL AND
+        # url IS NULL — i.e. permit-style rows with no public-facing detail.
+        # Excluding it keeps either field present.
+        where.append("(e.description IS NOT NULL OR e.url IS NOT NULL)")
 
     if neighborhood:
         # Case-insensitive substring so a colloquial label ("Crown Heights")
@@ -473,3 +485,44 @@ def list_sources(conn: sqlite3.Connection) -> list[dict]:
         """
     ).fetchall()
     return [dict(r) for r in rows]
+
+
+def list_facets(conn: sqlite3.Connection) -> dict[str, list[str]]:
+    """Distinct values currently present in the DB for the search facets a
+    caller would filter on: boroughs, neighborhoods, tags, and sources.
+
+    Lets a client discover valid filter values instead of guessing. Reflects
+    only what's actually ingested right now, so it tracks the live data (e.g.
+    a neighborhood with zero current events won't appear). Tags are stored as
+    a JSON array per row, so they're unpacked and de-duplicated in Python
+    rather than via a json1 query, keeping the dependency surface unchanged.
+    """
+    boroughs = [
+        r["borough"] for r in conn.execute(
+            "SELECT DISTINCT borough FROM events "
+            "WHERE borough IS NOT NULL ORDER BY borough"
+        )
+    ]
+    neighborhoods = [
+        r["neighborhood"] for r in conn.execute(
+            "SELECT DISTINCT neighborhood FROM events "
+            "WHERE neighborhood IS NOT NULL ORDER BY neighborhood"
+        )
+    ]
+    sources = [
+        r["source"] for r in conn.execute(
+            "SELECT DISTINCT source FROM events ORDER BY source"
+        )
+    ]
+    tagset: set[str] = set()
+    for r in conn.execute("SELECT tags FROM events WHERE tags IS NOT NULL"):
+        try:
+            tagset.update(json.loads(r["tags"]))
+        except (json.JSONDecodeError, TypeError):
+            continue
+    return {
+        "boroughs": boroughs,
+        "neighborhoods": neighborhoods,
+        "tags": sorted(tagset),
+        "sources": sources,
+    }
