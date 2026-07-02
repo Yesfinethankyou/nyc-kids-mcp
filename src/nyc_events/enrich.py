@@ -9,21 +9,28 @@ deterministic-first, network-last:
     5    forward-geocode "venue, borough, NY" -> lat/lng (backfilled) + NTA
 
 Every network result (including negatives) is cached in geocode_cache, so a
-given venue is geocoded at most once, ever. Only rows with neighborhood IS NULL
-are processed; the upsert nulls neighborhood each ingest, so the pass refreshes
-the whole table nightly but hits the network only for venues it has never seen.
+given venue is geocoded at most once, ever.
+
+The nightly pass processes only rows with neighborhood IS NULL: brand-new
+rows, plus rows whose venue/borough changed this ingest (the upsert resets
+their coding — see db.upsert_events). Already-coded rows keep their label
+across ingests, so a failed pass only delays coverage for new rows; it never
+blanks the catalog. The flip side: corrections to the static tables
+(_neighborhoods.py constants, the data/*.json rebuilds) don't reach
+already-coded rows on their own — run `python -m nyc_events.enrich
+--recode-all` after changing them to re-resolve every row.
 """
 
 from __future__ import annotations
 
+import argparse
 import logging
-import os
 import sqlite3
 from collections.abc import Callable
 
 import httpx
 
-from . import db, geocode
+from . import config, db, geocode
 from .sources._neighborhoods import normalize_name, nta_for_tract, static_neighborhood
 
 logger = logging.getLogger(__name__)
@@ -102,16 +109,24 @@ def run(
     *,
     forward: ForwardFn | None = None,
     reverse: ReverseFn | None = None,
+    recode_all: bool = False,
 ) -> tuple[int, int]:
-    """Enrich all rows with a null neighborhood. Returns (considered, coded).
-    The geocoders default to the live Census client; tests inject fakes."""
+    """Enrich rows with a null neighborhood. Returns (considered, coded).
+    The geocoders default to the live Census client; tests inject fakes.
+
+    recode_all=True re-resolves every row instead (run it after changing the
+    static tables so corrections propagate to already-coded rows). A row
+    whose resolution now fails keeps its existing label — the pass only ever
+    adds or updates coverage, never removes it.
+    """
     with httpx.Client(timeout=30.0) as client:
         fwd = forward or (lambda q: geocode.forward(q, client=client))
         rev = reverse or (lambda y, x: geocode.reverse(y, x, client=client))
         with db.connect_events(db_path) as conn:
+            where = "" if recode_all else " WHERE neighborhood IS NULL"
             rows = conn.execute(
                 "SELECT id, source, venue_name, borough, lat, lng "
-                "FROM events WHERE neighborhood IS NULL"
+                f"FROM events{where}"
             ).fetchall()
             coded = 0
             for r in rows:
@@ -135,9 +150,20 @@ def run(
 
 
 def main() -> int:
+    # allow_abbrev=False: don't let argparse accept prefixes like --recode —
+    # cron lines should name the flag exactly or fail loudly.
+    parser = argparse.ArgumentParser(
+        description="Location-enrichment pass.", allow_abbrev=False
+    )
+    parser.add_argument(
+        "--recode-all",
+        action="store_true",
+        help="re-resolve every row, not just uncoded ones (run after "
+        "changing the static neighborhood tables)",
+    )
+    args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
-    db_path = os.environ.get("DB_PATH", "data/events.db")
-    considered, coded = run(db_path)
+    considered, coded = run(config.DB_PATH, recode_all=args.recode_all)
     print(f"enrich: {coded}/{considered} rows coded with a neighborhood")
     return 0
 

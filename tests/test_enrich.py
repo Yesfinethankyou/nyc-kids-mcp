@@ -154,3 +154,41 @@ def test_run_skips_already_coded_rows(conn, tmp_path):
         db.upsert_events(c, [_ev(external_id="a", neighborhood="Preset")])
     considered, coded = enrich.run(path, forward=_Spy(None), reverse=_Spy(None))
     assert considered == 0 and coded == 0  # neighborhood already set, not reconsidered
+
+
+# --- recode_all: propagate static-table corrections ----------------------
+
+
+def test_recode_all_reprocesses_coded_rows(conn, tmp_path):
+    # A row coded before a static-table correction keeps its stale label on
+    # normal runs; --recode-all re-resolves it (here via the tier-1 constant).
+    path = str(tmp_path / "test.db")
+    with db.connect_events(path) as c:
+        db.upsert_events(c, [_ev(external_id="a", neighborhood="Stale Label")])
+    considered, coded = enrich.run(path, forward=_Spy(None), reverse=_Spy(None))
+    assert (considered, coded) == (0, 0)  # normal run leaves it alone
+    considered, coded = enrich.run(
+        path, forward=_Spy(None), reverse=_Spy(None), recode_all=True
+    )
+    assert (considered, coded) == (1, 1)
+    with db.connect_events(path) as c:
+        ev = db.search(c, start_after=datetime(2026, 1, 1, tzinfo=UTC))[0]
+    assert ev.neighborhood == "Williamsburg"  # domino_park tier-1 constant
+
+
+def test_recode_all_keeps_label_when_resolution_fails(conn, tmp_path):
+    # Recode only ever adds/updates coverage: a row whose resolution now
+    # fails (no static hit, geocoder miss) keeps its existing label.
+    path = str(tmp_path / "test.db")
+    with db.connect_events(path) as c:
+        db.upsert_events(c, [_ev(
+            external_id="a", source="mommy_poppins", venue_name="Nowhere Real",
+            neighborhood="Hand Coded",
+        )])
+    considered, coded = enrich.run(
+        path, forward=_Spy(None), reverse=_Spy(None), recode_all=True
+    )
+    assert (considered, coded) == (1, 0)
+    with db.connect_events(path) as c:
+        ev = db.search(c, start_after=datetime(2026, 1, 1, tzinfo=UTC))[0]
+    assert ev.neighborhood == "Hand Coded"

@@ -18,7 +18,8 @@ permit data only (one source); Phase 2 = editorial scrapers.
 ```bash
 .venv/bin/python -m nyc_events.server           # run HTTP server (needs MCP_AUTH_TOKEN)
 .venv/bin/python -m nyc_events.ingest           # one-shot ingest (runs the enrich pass at the end)
-.venv/bin/python -m nyc_events.enrich           # second pass alone: code neighborhoods + backfill lat/lng (network)
+.venv/bin/python -m nyc_events.enrich           # second pass alone: code new/uncoded rows (network)
+.venv/bin/python -m nyc_events.enrich --recode-all  # re-resolve EVERY row (after static-table changes)
 .venv/bin/python -m nyc_events.seed_fake        # populate fake events for connector smoke-testing
 .venv/bin/python scripts/build_tract_nta.py     # rebuild data/tract_to_nta.json (one-shot, from NYC open data)
 .venv/bin/python scripts/build_park_neighborhoods.py     # rebuild data/park_neighborhoods.json (one-shot)
@@ -43,7 +44,20 @@ latest commit). Update the handoff first and the PR proceeds.
 
 - `src/nyc_events/models.py` — `Event` + `Borough` / `Price` enums + `compute_id()`
 - `src/nyc_events/db.py` — split SQLite stores (events + oauth) with idempotent migrations
-- `src/nyc_events/server.py` — FastMCP + OAuth shim + bearer middleware + MCP tools
+- `src/nyc_events/server.py` — composition root only: `build_app()` (routes +
+  middleware wiring) + `main()` (uvicorn). A diff here is always a wiring change.
+- `src/nyc_events/tools.py` — the MCP surface: `FastMCP` instance, the seven
+  tools, and the `_event_summary`/`_event_detail` projections. The high-churn
+  side — new tools go here and must not touch `auth.py`.
+- `src/nyc_events/auth.py` — the "do not regress" security surface: bearer
+  middleware (+ OAuth token cache), rate limiter, redirect-URI allowlist,
+  OAuth discovery/`/register`/`/authorize`/`/token` handlers, consent page.
+- `src/nyc_events/config.py` — env-derived settings (`DB_PATH`,
+  `OAUTH_DB_PATH`, `PORT`, `FORWARDED_ALLOW_IPS`, `OAUTH_TOKEN_TTL_DAYS`,
+  redirect allowlist), read once at import. Consumers do attribute access
+  (`config.DB_PATH`) so tests monkeypatch attributes here. Credentials
+  (`MCP_AUTH_TOKEN`/`MCP_CONSENT_PASSWORD`) deliberately stay call-time
+  env reads in auth.py/server.py.
 - `src/nyc_events/oauth.py` — auth-code issue/consume + PKCE verification
 - `src/nyc_events/ingest.py` — CLI loop over `ENABLED_SOURCES`; runs `enrich` at the end
 - `src/nyc_events/enrich.py` — second-pass location enrichment (neighborhood coding + lat/lng backfill)
@@ -53,6 +67,16 @@ latest commit). Update the handoff first and the PR proceeds.
   `library_neighborhoods.json` (borough+library-core → NTA). Built by
   `scripts/build_*.py`; loaded as package data.
 - `src/nyc_events/sources/base.py` — `Source` ABC; each source is one file in the same dir
+- `src/nyc_events/sources/_tribe.py` — shared machinery for the four
+  WordPress / The Events Calendar sources (Green-Wood, Prospect Park,
+  NY Transit Museum, Industry City): `TribeEventsSource` (fetch/pagination
+  loop + curl_cffi page fetch), `parse_row`/`RowParts` (the common row
+  skeleton), and the canonical `strip_html`/`parse_utc_dt`/`parse_cost`.
+  A new Tribe venue subclasses this — never copy-adapt an existing Tribe
+  source. Kid-relevance strategy, tag rules, and venue/borough/price
+  mapping stay per-source; each module keeps a module-level `_parse_row`
+  (assigned into the class via `staticmethod`) so parser tests exercise
+  it directly with fixture dicts.
 - `src/nyc_events/sources/_filters.py` — shared kid-relevance helpers:
   `normalize()` (collapse hyphens/whitespace), `contains_any()`, and the
   canonical adult sets: `ADULT_BLOCKLIST` (match title or body),
@@ -68,9 +92,10 @@ latest commit). Update the handoff first and the PR proceeds.
   the shared batch/reverse geocoder primitives).
 - `tests/fixtures/` — captured real upstream responses used in parser tests
 
-`server.py` is a single big module. If it grows past ~600 lines, split the
-OAuth handlers (`/authorize`, `/token`, `/register`, discovery) into their
-own file before touching anything else.
+The server is split on churn vs consequence: `tools.py` changes often
+(Phase 3 keeps adding tools), `auth.py` holds the security baseline and
+should barely ever change. Never blend them back — a tool PR whose diff
+touches `auth.py` is a red flag.
 
 ## Test architecture
 
@@ -263,7 +288,9 @@ Neighborhoods are populated by a **second pass** (`enrich.py`) that runs after
 ingest, NOT by sources. Sources still yield `neighborhood=None`; keeping
 `fetch()` dumb is deliberate (same split as missing-detection). `ingest.main`
 calls `enrich.run` at the end, guarded so a geocoder hiccup can't fail the
-ingest; `ENRICH=0` skips it for offline dev.
+sources — but a failed pass exits the ingest with code **3** (0 = clean,
+2 = source failure(s), which takes precedence) so the nightly cron alerts.
+`ENRICH=0` skips it for offline dev.
 
 **Resolution ladder** (`enrich.resolve`, first hit wins, only for rows where
 `neighborhood IS NULL`):
@@ -283,12 +310,20 @@ Tiers 1–4 are pure/offline; tiers 5–6 hit the **US Census geocoder**
 in `geocode_cache` (no TTL; keyed `fwd:<venue|borough>` / `rev:<rounded
 lat,lng>`), so a venue is geocoded at most once ever.
 
-**Why re-running nightly is cheap:** the upsert nulls `neighborhood` every
-ingest (it's `excluded.neighborhood`), so enrich reprocesses the whole table
-each run — but tiers 1–3 are dict lookups and tiers 4–5 are `geocode_cache`
-hits, so steady-state network calls ≈ only brand-new venues. The `UPDATE` fills
-`lat`/`lng` via `COALESCE` (never clobbers a source-provided coord) and fires
-the FTS `events_au` trigger, so neighborhood is searchable immediately.
+**Persistence (issue #27):** the upsert **preserves** enriched
+`neighborhood`/`lat`/`lng` across nightly re-ingests — a source-provided value
+still wins, and the coding resets to NULL only when the row's venue or borough
+changed this ingest, so stale coding re-resolves the same night (see the CASE
+expressions in `db.upsert_events`). Nightly enrich therefore touches only
+new/changed rows, and a wholesale enrich failure delays coverage for those
+rows but can no longer blank the whole catalog's neighborhoods. The flip side:
+corrections to the static tables don't reach already-coded rows on their own —
+run `python -m nyc_events.enrich --recode-all` after editing
+`_neighborhoods.py` or rebuilding the `data/*.json` tables. Recode only ever
+adds/updates coverage: a row whose re-resolution fails keeps its old label.
+The enrich `UPDATE` fills `lat`/`lng` via `COALESCE` (never clobbers a
+source-provided coord) and fires the FTS `events_au` trigger, so neighborhood
+is searchable immediately.
 
 **Gotchas that already cost time:**
 - **Census uses USPS city, not borough.** Manhattan's city is `New York`, not
@@ -329,8 +364,10 @@ requirement, just new hosts: `geocoding.geo.census.gov` (runtime, tiers 4–5)
 and, for the offline `build_*.py` scripts only, `data.cityofnewyork.us`. The
 repo imposes no egress allowlist (`docker-compose.yml` has no network policy).
 **Debt:** if the deployment is ever hardened to an egress allowlist, those hosts
-must be added or the pass silently codes nothing (it's guarded, so ingest still
-succeeds — you'd see `neighborhood` stop populating, not a crash).
+must be added or the pass codes nothing for new freeform venues (sources still
+commit; existing rows keep their labels; the ingest exits 3 only if the pass
+*raises* — a reachable-but-blocked geocoder may just return misses, which are
+cached as negatives, so also check `geocode_cache` when debugging).
 
 ## Missing-event detection (possible cancellations)
 
@@ -367,6 +404,11 @@ during one), so a dead ingest cron flags nothing.
 
 If you touch the server, do not regress these:
 
+- **Single-worker only.** The rate limiter, OAuth token cache (`auth.py`),
+  and pending auth codes (`oauth.py`) are in-process dicts. Running uvicorn
+  with `workers > 1` breaks the OAuth flow non-deterministically (code
+  issued on one worker, consumed on another) and the failure mimics a
+  broken claude.ai client. `main()` runs single-process; keep it that way.
 - All bearer comparisons via `secrets.compare_digest`. Never `==`.
 - Redirect URI allowlist on `/authorize` GET and POST (defense in depth).
 - Consent page sends `X-Frame-Options: DENY`, `X-Content-Type-Options:

@@ -2,6 +2,127 @@
 
 ## What was done (most recent first)
 
+### Session: neighborhood persistence, issue #27 (branch `claude/architecture-design-review-8r5735`, same session as #26/#25 below)
+
+Fixed the wipe-and-restore fragility: the nightly upsert used to null every
+row's `neighborhood` and rely on a best-effort enrich pass to restore it, so
+one failed pass left the whole catalog without neighborhoods (and
+`search_events(neighborhood=...)` returning nothing) for 24h, silently.
+Implemented issue #27's option 1 + the option-2 exit code.
+
+- [x] **Upsert preserves enrichment** (`db.upsert_events`): `neighborhood`/
+      `lat`/`lng` now use CASE expressions — a source-provided value wins;
+      otherwise the enriched value is kept; and the coding resets to NULL
+      exactly when the row's **venue or borough changed** this ingest
+      (null-safe `IS NOT`), so stale coding re-resolves the same night.
+      That last clause handles the staleness objection to plain COALESCE
+      (an event moved to a new venue no longer keeps the old venue's label).
+- [x] **`enrich --recode-all`** — new CLI flag / `run(recode_all=True)`:
+      re-resolves every row (not just `neighborhood IS NULL`); needed now
+      that static-table corrections no longer propagate via the nightly
+      wipe. Conservative: a row whose re-resolution fails keeps its old
+      label (recode only adds/updates, never removes). `allow_abbrev=False`
+      so `--recode` fails loudly instead of silently matching (caught live
+      during verification).
+- [x] **Ingest exit code 3** when the enrich pass raises (sources still
+      commit first; source failures keep exit 2, which takes precedence) —
+      the DSM cron can now alert instead of the failure landing in stderr
+      of a 0-exit run.
+- [x] **Tests** — 4 new upsert-persistence cases in `test_db.py` (preserve
+      on re-ingest / source wins / venue change resets / borough change
+      resets), 2 new recode cases in `test_enrich.py` (reprocesses coded
+      rows; keeps label on failed resolution). **455 passed, ruff clean.**
+- [x] **Runtime-verified via the real CLIs** on a seeded temp DB: nightly
+      enrich coded only the NULL row (offline park tier), second run 0/0,
+      `--recode-all` re-resolved all 6 rows through the live Census
+      geocoder (5 misses kept their labels, 1 stale label recoded), second
+      recode served entirely from the negative cache (0 HTTP requests),
+      re-seed (UPDATE path) blanked nothing.
+- [x] **Docs** — CLAUDE.md: Commands (+`--recode-all`), the "Persistence"
+      paragraph replaces "Why re-running nightly is cheap", ingest exit
+      codes (0/2/3), egress-debt note updated (existing rows keep labels;
+      blocked-geocoder misses are cached as negatives — check
+      `geocode_cache` when debugging).
+
+### Session: server.py split, issue #26 (branch `claude/architecture-design-review-8r5735`, same session as #25 below)
+
+Split the 926-line `server.py` on churn vs consequence, per issue #26. Pure
+move — no handler/middleware logic changed (one attempted "improvement" to
+the middleware style was caught and reverted mid-session; the security
+surface ships byte-equivalent logic).
+
+- [x] **`auth.py`** (new) — the "do not regress" surface: rate limiter +
+      buckets, OAuth token cache, `BearerAuthMiddleware`, redirect-URI
+      allowlist, discovery endpoints, `/register`, `/authorize` GET/POST,
+      `/token`, consent HTML + security headers. Module docstring carries the
+      single-process warning (issue #30 item 1); CLAUDE.md security baseline
+      gained a matching **single-worker only** bullet.
+- [x] **`tools.py`** (new) — the MCP surface: `FastMCP` instance, all seven
+      tools, `_event_summary`/`_event_detail`, `_weekend_window`,
+      `_normalize_borough`, `_local_date`, `_venue_map_url`,
+      `_possibly_cancelled`.
+- [x] **`config.py`** (new, issue #30 item 2) — env-derived settings read
+      once: `DB_PATH` (was read in **four** places: server/ingest/enrich/
+      seed_fake — all now `config.DB_PATH`), `OAUTH_DB_PATH`, `PORT`,
+      `FORWARDED_ALLOW_IPS`, `OAUTH_TOKEN_TTL_DAYS`, redirect allowlist.
+      Consumers use attribute access so tests monkeypatch `config.X`.
+      Credentials deliberately stay call-time env reads (master token never
+      sits in an importable module attribute).
+- [x] **`server.py`** now 97 lines: `build_app()` + `main()` only.
+- [x] **Tests repointed** (import/monkeypatch targets only, no assertion
+      changes): `test_security_fixes` → `auth`, `test_search_tools` →
+      `tools` + `config.DB_PATH`, `test_event_projection` /
+      `test_weekend_window` / `test_missing_detection` → `tools`.
+- [x] **Runtime-verified end-to-end** (booted the real server on a temp DB):
+      browser probe 200 / POST 401, discovery JSON, consent page + all
+      security headers, evil-redirect 400, full OAuth flow (register →
+      consent with separate consent-pw AND master fallback → PKCE exchange →
+      issued bearer accepted), auth-code single-use, MCP protocol round trip
+      (initialize → tools/list shows all 7 → tools/call returns seeded rows),
+      rate limiter 429s at request 6 with Retry-After, GET /token downgrade
+      guard 400s. **449 passed, ruff clean.**
+- [x] **Docs** — CLAUDE.md Layout (four module entries replace the server.py
+      line; the ">600 lines → split" paragraph replaced by "never blend them
+      back"); security baseline gained the single-worker bullet.
+
+### Session: Tribe source consolidation, issue #25 (branch `claude/architecture-design-review-8r5735`)
+
+Architecture-review session: filed issues #25–#30 from a full design review,
+then implemented **#25** — the four WordPress / The Events Calendar (Tribe)
+sources were ~150-line copies of each other and had already drifted.
+
+- [x] **New `src/nyc_events/sources/_tribe.py`** — everything that is a
+      property of the *plugin*, not the venue: `TribeEventsSource` (the
+      fetch/pagination loop + curl_cffi Chrome-impersonation page fetch),
+      `parse_row`/`RowParts` (the common row skeleton: kid-relevance gate,
+      title, UTC dates, per-occurrence external_id, excerpt-preferred
+      description + 2000-char trim, raw_payload), and the canonical
+      `strip_html` / `parse_utc_dt` / `parse_cost` / `category_names`.
+- [x] **Four sources rewritten as subclasses** — `greenwood_cemetery`,
+      `prospect_park`, `industry_city`, `ny_transit_museum` now keep only
+      venue-specific logic: filter strategy, tag rules, venue/borough/price
+      mapping (incl. NY Transit's venue-object mapping + "Included with
+      Museum admission"→PAID override, Industry City's always-UNKNOWN price).
+      Each keeps a module-level `_parse_row` (assigned into the class via
+      `staticmethod`) plus `_strip_html`/`_parse_utc_dt`/`_parse_cost` aliases
+      so the parser tests exercise them unchanged. **Net −634 lines.**
+- [x] **Drift fixed: entity decoding unified on `html.unescape`.**
+      Prospect Park / Industry City / NY Transit hand-replaced a fixed handful
+      of entities (Green-Wood already used unescape). Behavior change:
+      `&#8217;` now decodes to the real `’` (U+2019), not a normalized ASCII
+      `'` — three test assertions updated to the faithful decode. Event ids
+      are unaffected (all four sources have per-occurrence external_ids).
+- [x] **`window_days` double-duty collapsed** (issue #30 item 3, Tribe
+      sources only): one attribute, set once in the base `__init__`; the
+      `self._window_days`/`self.window_days` duplication is gone. Base opts
+      into missing-detection by default (all Tribe sources are full-window).
+- [x] **Smoke-tested beyond the suite:** all four classes instantiate via the
+      `ENABLED_SOURCES` no-arg path, and the shared `fetch()` loop yields
+      correct events end-to-end against stubbed pages from the fixtures.
+- [x] **Docs** — CLAUDE.md Layout (new `_tribe.py` entry: subclass, never
+      copy-adapt), `.claude/agents/source-adder.md` Tribe fast-path now
+      points at `TribeEventsSource`. **449 passed, ruff clean.**
+
 ### Session: MCP tool filters + facet discovery (branch `claude/mcp-tools-review-6unjn8`)
 
 Reviewed the MCP tool surface and implemented three of the suggested gaps. No
@@ -149,13 +270,16 @@ kid-relevance filters had drifted between six hand-maintained copies.
 
 ## Current state
 
-Suite: **439 passed**, ruff: **clean**. Neighborhood-coding work on
-`claude/neighborhood-event-coding-wkb2dh`. Live smoke test of the real Census
-path verified: Prospect Park→"Prospect Park" (park table), Domino→"Williamsburg"
-(constant), NY Transit Museum→"Brooklyn Heights" (tier 2), Sunset Park
-Library→"Sunset Park (West)" (library table), a Manhattan street
-address→"Midtown-Times Square" with lat/lng backfilled (forward geocode).
-Earlier filter-review pass is **PR #21** on `claude/laughing-planck-xaar2v`.
+Suite: **455 passed**, ruff: **clean**. Issues #25 (Tribe consolidation),
+#26 (server split), and #27 (neighborhood persistence) implemented on
+`claude/architecture-design-review-8r5735`. Architecture-review issues
+**#28–#29** remain open (db.init/connect split, unused deps); **#30** is
+fully absorbed (items 1+2 with #26, item 3 with #25).
+
+**Deploy note for #27:** after this lands, corrections to the static
+neighborhood tables need a one-off `docker exec … python -m nyc_events.enrich
+--recode-all` to reach already-coded rows — the nightly wipe that used to
+propagate them implicitly is gone (that wipe was the bug).
 
 ## Decisions made
 

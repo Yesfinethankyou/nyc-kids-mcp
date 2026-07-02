@@ -129,7 +129,14 @@ Check for these before assuming you need to scrape HTML:
   `{base}/wp-json/tribe/events/v1/events?per_page=50&page=N`
   Returns fully structured JSON with `title`, `start_date`, `description`
   (HTML — strip tags), `url`, `venue`, `cost`. Paginate via the `next`
-  link in the response. Green-Wood Cemetery is the confirmed example.
+  link in the response. **Do NOT copy-adapt an existing Tribe source** —
+  subclass `sources/_tribe.py::TribeEventsSource` instead. It owns the
+  fetch/pagination loop, the curl_cffi page fetch, and the row skeleton
+  (`parse_row` + `RowParts`); your module supplies only the kid-relevance
+  filter, tag rules, venue/borough/price mapping, and a module-level
+  `_parse_row` assigned into the class via `staticmethod`. Green-Wood
+  Cemetery / Prospect Park / NY Transit Museum / Industry City are the
+  four live examples.
 
 - **MLB Stats API** — public JSON, no key. Schedule endpoint:
   `https://statsapi.mlb.com/api/v1/schedule?sportId=13&teamId={id}&startDate=...&endDate=...&gameType=R`

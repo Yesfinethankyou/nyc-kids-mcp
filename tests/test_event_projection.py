@@ -1,4 +1,4 @@
-"""Tool output projections (server._event_summary / _event_detail).
+"""Tool output projections (tools._event_summary / _event_detail).
 
 Guards the token-efficient summary shape, specifically that neighborhood is
 now surfaced in list results (it was previously detail-only).
@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 from nyc_events.models import Borough, Event, Price
-from nyc_events.server import _event_detail, _event_summary
+from nyc_events.tools import _event_detail, _event_summary
 
 
 def _ev(**kw):

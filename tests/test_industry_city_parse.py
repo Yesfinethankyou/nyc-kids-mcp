@@ -207,7 +207,7 @@ def test_fixture_kept_count():
     titles = sorted(ev.title for ev in kept)
     assert titles == [
         "Brooklyn Creative Reuse Mending Circle",
-        "Father's Day Intro to Sake Class and Brewery Tour",
+        "Father’s Day Intro to Sake Class and Brewery Tour",
         "Industry City Gourmet Food and Drinks Tour",
         "Industry City Gourmet Food and Drinks Tour",
         "Mexico v Czechia Outdoor World Cup Watch Party",

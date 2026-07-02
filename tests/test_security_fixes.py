@@ -11,7 +11,7 @@ from datetime import UTC, datetime, timedelta
 import pytest
 
 from nyc_events import db
-from nyc_events.server import (
+from nyc_events.auth import (
     _CONSENT_HEADERS,
     _RATE_LIMITS,
     _rate_limit,

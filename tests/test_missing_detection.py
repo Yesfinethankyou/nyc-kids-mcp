@@ -5,7 +5,7 @@ Covers the layered design:
   and never re-stamps (grace is measured from the FIRST miss).
 - upsert_events clears the stamp the moment an event is seen again (self-heal).
 - ingest._fetch_looks_complete circuit breaker rejects empty/short fetches.
-- server._possibly_cancelled only surfaces after the grace period.
+- tools._possibly_cancelled only surfaces after the grace period.
 - Only full-window sources opt in (mommy_poppins must stay excluded).
 """
 
@@ -18,10 +18,10 @@ import pytest
 from nyc_events import db
 from nyc_events.ingest import _fetch_looks_complete
 from nyc_events.models import Borough, Event, Price, compute_id
-from nyc_events.server import _possibly_cancelled
 from nyc_events.sources import ENABLED_SOURCES
 from nyc_events.sources.governors_island import GovernorsIslandSource
 from nyc_events.sources.mommy_poppins import MommyPoppinsSource
+from nyc_events.tools import _possibly_cancelled
 
 # Sources that intentionally opt OUT of missing-detection (window_days is None)
 # because a fetch is not a guaranteed full re-fetch of the window:

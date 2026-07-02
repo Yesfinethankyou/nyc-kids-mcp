@@ -4,20 +4,17 @@ Industry City (a 35-acre former manufacturing complex on the Sunset Park,
 Brooklyn waterfront) hosts a busy public events calendar: maker/craft
 workshops, family programming (e.g. the Puppetworks marionette theatre),
 food-hall pop-ups, ticketed culinary tours, outdoor watch parties, plus a
-fair amount of adult nightlife (21+ shows, drink tastings). Events come from a
-WordPress / The Events Calendar (Tribe) REST API — the fourth Tribe instance
-in this project (after Green-Wood Cemetery, Prospect Park, and NY Transit
-Museum); this module is a copy-adapt of those.
+fair amount of adult nightlife (21+ shows, drink tastings). Events come from
+a WordPress / The Events Calendar (Tribe) REST API; the fetch/pagination/
+parsing machinery is shared with the other Tribe sources via
+`_tribe.TribeEventsSource`.
 
-Data flow:
-  1. GET /wp-json/tribe/events/v1/events?per_page=50&page=N (curl_cffi with
-     Chrome impersonation — the Streetsense theme bot-blocks plain fetchers).
-  2. Paginate via `next_rest_url` in each response until absent (~195 events
-     / 60 days → ~4 pages at per_page=50).
-  3. Filter for kid-relevance on title/description KEYWORDS (categories here
-     are NOT kid-curated — see below), with `Nightlife` as a hard-exclude
-     category and an adult-content title/description blocklist.
-  4. Strip HTML, hardcode venue / borough, yield Events.
+This module keeps only what is venue-specific:
+  - Kid-relevance strategy: title/description KEYWORDS (categories here are
+    NOT kid-curated — see below), with `Nightlife` as a hard-exclude category
+    and an adult-content blocklist that wins over any allowlist hit.
+  - Tag rules.
+  - Venue/borough hardcoded; price always UNKNOWN (see quirks).
 
 Quirks (verified live + against the captured fixture, 2026-06-20):
   - The Tribe `id` IS per-occurrence: the same precedent as Prospect Park and
@@ -50,33 +47,28 @@ Quirks (verified live + against the captured fixture, 2026-06-20):
 
 from __future__ import annotations
 
-import json
-import logging
-import re
-import time
-from collections.abc import Iterable
-from datetime import UTC, datetime, timedelta
 from typing import Any
-
-from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
 from ._filters import ADULT_BLOCKLIST, ADULT_TITLE_BLOCKLIST, contains_any
-from .base import Source
-
-logger = logging.getLogger(__name__)
+from ._tribe import (
+    RowParts,
+    TribeEventsSource,
+    category_names,
+    parse_row,
+    parse_utc_dt,
+    strip_html,
+)
 
 BASE_URL = "https://industrycity.com"
 EVENTS_URL = f"{BASE_URL}/wp-json/tribe/events/v1/events"
 VENUE_NAME = "Industry City"
-DEFAULT_WINDOW_DAYS = 60
-PAGE_DELAY_SECONDS = 1.0
-DEFAULT_PER_PAGE = 50
-MAX_PAGES = 30  # safety cap; ~195 events / 50 per page = 4 pages in practice
-USER_AGENT = (
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/124.0 Safari/537.36 nyc-kids-mcp/1.0"
-)
+
+# Shared Tribe helpers under this module's historical names — the parser tests
+# exercise them from here.
+_strip_html = strip_html
+_parse_utc_dt = parse_utc_dt
+_category_names = category_names
 
 # ---------------------------------------------------------------------------
 # Keyword filters
@@ -130,46 +122,6 @@ _TAG_RULES: list[tuple[str, tuple[str, ...]]] = [
     ("outdoors", ("garden", "outdoor", "courtyard")),
 ]
 
-# ---------------------------------------------------------------------------
-# Pure helpers
-# ---------------------------------------------------------------------------
-
-_HTML_TAG_RX = re.compile(r"<[^>]+>")
-_WS_RX = re.compile(r"\s+")
-
-
-def _strip_html(raw: str | None) -> str:
-    """Strip HTML tags, decode common entities, collapse whitespace."""
-    if not raw:
-        return ""
-    text = _HTML_TAG_RX.sub(" ", raw)
-    text = (
-        text.replace("&nbsp;", " ")
-        .replace("&amp;", "&")
-        .replace("&#8217;", "'")
-        .replace("&#8211;", "–")
-        .replace("&#038;", "&")
-        .replace("&#8220;", '"')
-        .replace("&#8221;", '"')
-    )
-    return _WS_RX.sub(" ", text).strip()
-
-
-def _parse_utc_dt(raw: str | None) -> datetime | None:
-    """Parse a UTC naive datetime string like '2026-06-20 18:00:00' into UTC-aware."""
-    if not raw:
-        return None
-    try:
-        dt = datetime.strptime(raw, "%Y-%m-%d %H:%M:%S")
-        return dt.replace(tzinfo=UTC)
-    except (ValueError, TypeError):
-        return None
-
-
-def _category_names(row: dict[str, Any]) -> set[str]:
-    """Extract upstream category names from a Tribe row."""
-    return {c.get("name", "") for c in (row.get("categories") or [])}
-
 
 def _is_kid_relevant(row: dict[str, Any]) -> bool:
     """Return True if the event passes the keyword-based kid-relevance filter.
@@ -202,46 +154,16 @@ def _infer_tags(title: str, description: str | None) -> list[str]:
     return tags
 
 
-def _parse_row(row: dict[str, Any]) -> Event | None:
-    """Parse one Tribe event record into an Event, or None if filtered out."""
-    if not _is_kid_relevant(row):
-        return None
-
-    title = _strip_html(row.get("title"))
-    if not title:
-        logger.debug("industry_city: skipping row with no title: id=%r", row.get("id"))
-        return None
-
-    start_dt = _parse_utc_dt(row.get("utc_start_date"))
-    if start_dt is None:
-        logger.debug("industry_city: skipping %r — no parseable start date", title)
-        return None
-
-    end_dt = _parse_utc_dt(row.get("utc_end_date"))
-
-    # The Tribe id is per-occurrence on this site (recurring events get a
-    # distinct id + dated URL slug per occurrence) — verified against the
-    # fixture, see module docstring. No date suffix needed.
-    external_id = str(row["id"]) if row.get("id") else None
-    url = row.get("url") or None
-
-    excerpt_text = _strip_html(row.get("excerpt"))
-    description_text = _strip_html(row.get("description"))
-    description = excerpt_text or description_text or None
-    if description and len(description) > 2000:
-        description = description[:2000].rsplit(" ", 1)[0] + "…"
-
-    tags = _infer_tags(title, description_text)
-
+def _build_event(row: dict[str, Any], p: RowParts) -> Event:
     return Event(
-        id=compute_id("industry_city", external_id=external_id, url=url, title=title),
+        id=compute_id("industry_city", external_id=p.external_id, url=p.url, title=p.title),
         source="industry_city",
-        external_id=external_id,
-        title=title,
-        description=description,
-        url=url,
-        start_dt=start_dt,
-        end_dt=end_dt,
+        external_id=p.external_id,
+        title=p.title,
+        description=p.description,
+        url=p.url,
+        start_dt=p.start_dt,
+        end_dt=p.end_dt,
         venue_name=VENUE_NAME,
         borough=Borough.BROOKLYN,
         lat=None,
@@ -249,102 +171,25 @@ def _parse_row(row: dict[str, Any]) -> Event | None:
         age_min=None,
         age_max=None,
         price=Price.UNKNOWN,  # cost is always empty upstream
-        tags=tags,
-        raw_payload=json.dumps(row, sort_keys=True, default=str),
+        tags=_infer_tags(p.title, p.description_text),
+        raw_payload=p.raw_payload,
     )
 
 
-class IndustryCitySource(Source):
+def _parse_row(row: dict[str, Any]) -> Event | None:
+    """Parse one Tribe event record into an Event, or None if filtered out."""
+    return parse_row(
+        row,
+        source="industry_city",
+        is_kid_relevant=_is_kid_relevant,
+        build_event=_build_event,
+    )
+
+
+class IndustryCitySource(TribeEventsSource):
     """Industry City events via the Tribe Events Calendar REST API."""
 
     name = "industry_city"
-
-    def __init__(
-        self,
-        *,
-        events_url: str = EVENTS_URL,
-        window_days: int = DEFAULT_WINDOW_DAYS,
-        per_page: int = DEFAULT_PER_PAGE,
-        page_delay: float = PAGE_DELAY_SECONDS,
-        http_timeout: float = 30.0,
-        max_pages: int = MAX_PAGES,
-    ):
-        self._events_url = events_url
-        self._window_days = window_days
-        self.window_days = window_days  # full-window re-fetch: missing-detection eligible
-        self._per_page = per_page
-        self._delay = page_delay
-        self._timeout = http_timeout
-        self._max_pages = max_pages
-
-    def fetch(self) -> Iterable[Event]:
-        """Paginate the Tribe REST API, yielding kid-relevant Events."""
-        now = datetime.now(UTC)
-        start_date = now.strftime("%Y-%m-%d %H:%M:%S")
-        end_date = (now + timedelta(days=self._window_days)).strftime("%Y-%m-%d %H:%M:%S")
-
-        total = 0
-        page = 1
-        while page <= self._max_pages:
-            rows, next_url = self._get_page(page, start_date, end_date)
-            if rows is None:
-                # Hard error on this page — log already emitted in _get_page.
-                break
-            if not rows:
-                break
-
-            for row in rows:
-                try:
-                    ev = _parse_row(row)
-                except Exception:  # noqa: BLE001
-                    logger.warning(
-                        "industry_city: failed to parse event id=%r",
-                        row.get("id"),
-                        exc_info=True,
-                    )
-                    continue
-                if ev is not None:
-                    total += 1
-                    yield ev
-
-            if not next_url:
-                break
-
-            page += 1
-            time.sleep(self._delay)
-
-        logger.info("industry_city: yielded %d events", total)
-
-    def _get_page(
-        self,
-        page: int,
-        start_date: str,
-        end_date: str,
-    ) -> tuple[list[dict[str, Any]] | None, str | None]:
-        """Fetch one page of events.
-
-        Returns (rows, next_rest_url) on success, or (None, None) on HTTP error.
-        """
-        params = {
-            "per_page": self._per_page,
-            "page": page,
-            "start_date": start_date,
-            "end_date": end_date,
-            "status": "publish",
-        }
-        try:
-            resp = cffi_requests.get(
-                self._events_url,
-                params=params,
-                headers={"User-Agent": USER_AGENT},
-                impersonate="chrome",
-                timeout=self._timeout,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            rows = list(data.get("events") or [])
-            next_url = data.get("next_rest_url") or None
-            return rows, next_url
-        except Exception:  # noqa: BLE001
-            logger.warning("industry_city: failed to fetch page %d", page, exc_info=True)
-            return None, None
+    events_url = EVENTS_URL
+    max_pages = 30  # safety cap; ~195 events / 50 per page = 4 pages in practice
+    _parse_row = staticmethod(_parse_row)

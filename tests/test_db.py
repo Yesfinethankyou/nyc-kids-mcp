@@ -69,6 +69,75 @@ def test_upsert_updates_changed_fields(conn):
     assert title == "New Title"
 
 
+# --- upsert vs enrichment (neighborhood / lat / lng persistence) ----------
+#
+# Sources yield neighborhood=None (and usually lat/lng=None); enrich.py fills
+# them in a second pass. The upsert must not blank those enriched values on
+# the nightly re-ingest — otherwise one failed enrich pass leaves the whole
+# catalog without neighborhoods for a day.
+
+
+def _enrich_row(conn, event_id, *, neighborhood="Williamsburg", lat=40.71, lng=-73.96):
+    """Simulate what enrich.run writes for a coded row."""
+    conn.execute(
+        "UPDATE events SET neighborhood = ?, lat = COALESCE(lat, ?), "
+        "lng = COALESCE(lng, ?) WHERE id = ?",
+        (neighborhood, lat, lng, event_id),
+    )
+    conn.commit()
+
+
+def test_upsert_preserves_enriched_fields_on_reingest(conn):
+    e = _ev(external_id="e1", neighborhood=None, lat=None, lng=None)
+    db.upsert_events(conn, [e])
+    _enrich_row(conn, e.id)
+    db.upsert_events(conn, [e])  # nightly re-ingest, source fields unchanged
+    row = db.get_event_by_id(conn, e.id)
+    assert row.neighborhood == "Williamsburg"
+    assert (row.lat, row.lng) == (40.71, -73.96)
+
+
+def test_upsert_source_provided_location_wins_over_enrichment(conn):
+    e = _ev(external_id="e1", neighborhood=None, lat=None, lng=None)
+    db.upsert_events(conn, [e])
+    _enrich_row(conn, e.id)
+    # Source starts providing its own neighborhood + coords: they win.
+    db.upsert_events(conn, [_ev(
+        external_id="e1", neighborhood="DUMBO", lat=40.70, lng=-73.99,
+    )])
+    row = db.get_event_by_id(conn, e.id)
+    assert row.neighborhood == "DUMBO"
+    assert (row.lat, row.lng) == (40.70, -73.99)
+
+
+def test_upsert_venue_change_resets_enrichment(conn):
+    e = _ev(external_id="e1", neighborhood=None, lat=None, lng=None)
+    db.upsert_events(conn, [e])
+    _enrich_row(conn, e.id)
+    # Upstream moves the event to a different venue (same external_id, so the
+    # same row): the stale coding must reset so enrich re-resolves it tonight.
+    db.upsert_events(conn, [_ev(
+        external_id="e1", venue_name="McCarren Park",
+        neighborhood=None, lat=None, lng=None,
+    )])
+    row = db.get_event_by_id(conn, e.id)
+    assert row.neighborhood is None
+    assert (row.lat, row.lng) == (None, None)
+
+
+def test_upsert_borough_change_resets_enrichment(conn):
+    e = _ev(external_id="e1", neighborhood=None, lat=None, lng=None)
+    db.upsert_events(conn, [e])
+    _enrich_row(conn, e.id)
+    db.upsert_events(conn, [_ev(
+        external_id="e1", borough=Borough.QUEENS,
+        neighborhood=None, lat=None, lng=None,
+    )])
+    row = db.get_event_by_id(conn, e.id)
+    assert row.neighborhood is None
+    assert (row.lat, row.lng) == (None, None)
+
+
 # --- search filters ------------------------------------------------------
 
 
