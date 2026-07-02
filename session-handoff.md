@@ -2,6 +2,48 @@
 
 ## What was done (most recent first)
 
+### Session: neighborhood persistence, issue #27 (branch `claude/architecture-design-review-8r5735`, same session as #26/#25 below)
+
+Fixed the wipe-and-restore fragility: the nightly upsert used to null every
+row's `neighborhood` and rely on a best-effort enrich pass to restore it, so
+one failed pass left the whole catalog without neighborhoods (and
+`search_events(neighborhood=...)` returning nothing) for 24h, silently.
+Implemented issue #27's option 1 + the option-2 exit code.
+
+- [x] **Upsert preserves enrichment** (`db.upsert_events`): `neighborhood`/
+      `lat`/`lng` now use CASE expressions — a source-provided value wins;
+      otherwise the enriched value is kept; and the coding resets to NULL
+      exactly when the row's **venue or borough changed** this ingest
+      (null-safe `IS NOT`), so stale coding re-resolves the same night.
+      That last clause handles the staleness objection to plain COALESCE
+      (an event moved to a new venue no longer keeps the old venue's label).
+- [x] **`enrich --recode-all`** — new CLI flag / `run(recode_all=True)`:
+      re-resolves every row (not just `neighborhood IS NULL`); needed now
+      that static-table corrections no longer propagate via the nightly
+      wipe. Conservative: a row whose re-resolution fails keeps its old
+      label (recode only adds/updates, never removes). `allow_abbrev=False`
+      so `--recode` fails loudly instead of silently matching (caught live
+      during verification).
+- [x] **Ingest exit code 3** when the enrich pass raises (sources still
+      commit first; source failures keep exit 2, which takes precedence) —
+      the DSM cron can now alert instead of the failure landing in stderr
+      of a 0-exit run.
+- [x] **Tests** — 4 new upsert-persistence cases in `test_db.py` (preserve
+      on re-ingest / source wins / venue change resets / borough change
+      resets), 2 new recode cases in `test_enrich.py` (reprocesses coded
+      rows; keeps label on failed resolution). **455 passed, ruff clean.**
+- [x] **Runtime-verified via the real CLIs** on a seeded temp DB: nightly
+      enrich coded only the NULL row (offline park tier), second run 0/0,
+      `--recode-all` re-resolved all 6 rows through the live Census
+      geocoder (5 misses kept their labels, 1 stale label recoded), second
+      recode served entirely from the negative cache (0 HTTP requests),
+      re-seed (UPDATE path) blanked nothing.
+- [x] **Docs** — CLAUDE.md: Commands (+`--recode-all`), the "Persistence"
+      paragraph replaces "Why re-running nightly is cheap", ingest exit
+      codes (0/2/3), egress-debt note updated (existing rows keep labels;
+      blocked-geocoder misses are cached as negatives — check
+      `geocode_cache` when debugging).
+
 ### Session: server.py split, issue #26 (branch `claude/architecture-design-review-8r5735`, same session as #25 below)
 
 Split the 926-line `server.py` on churn vs consequence, per issue #26. Pure
@@ -228,12 +270,16 @@ kid-relevance filters had drifted between six hand-maintained copies.
 
 ## Current state
 
-Suite: **449 passed**, ruff: **clean**. Issues #25 (Tribe consolidation) and
-#26 (server split) implemented on `claude/architecture-design-review-8r5735`.
-Architecture-review issues **#27–#29** remain open (neighborhood
-wipe-and-restore, db.init/connect split, unused deps); **#30** is fully
-absorbed: item 1 (single-worker guard) and item 2 (config.py) landed with
-#26, item 3 (window_days) landed with #25.
+Suite: **455 passed**, ruff: **clean**. Issues #25 (Tribe consolidation),
+#26 (server split), and #27 (neighborhood persistence) implemented on
+`claude/architecture-design-review-8r5735`. Architecture-review issues
+**#28–#29** remain open (db.init/connect split, unused deps); **#30** is
+fully absorbed (items 1+2 with #26, item 3 with #25).
+
+**Deploy note for #27:** after this lands, corrections to the static
+neighborhood tables need a one-off `docker exec … python -m nyc_events.enrich
+--recode-all` to reach already-coded rows — the nightly wipe that used to
+propagate them implicitly is gone (that wipe was the bug).
 
 ## Decisions made
 

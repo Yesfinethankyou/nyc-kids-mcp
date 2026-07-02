@@ -83,20 +83,30 @@ def main() -> int:
     print(f"TOTAL: {total_in} inserted, {total_up} updated, {pruned} pruned")
 
     # Second pass: code neighborhoods (and backfill lat/lng). Guarded so a
-    # geocoder hiccup can't fail the ingest — sources are already committed.
-    # Set ENRICH=0 to skip (dev iteration without network).
+    # geocoder hiccup can't fail the sources (already committed above) — but
+    # the failure is surfaced via a distinct exit code (3) so the nightly
+    # cron alerts instead of exiting 0. Already-coded rows keep their labels
+    # across ingests (see db.upsert_events), so a failed pass only delays
+    # coverage for new rows. Set ENRICH=0 to skip (dev iteration without
+    # network).
+    enrich_failed = False
     if os.environ.get("ENRICH", "1") != "0":
         try:
             considered, coded = enrich.run(db_path)
             print(f"ENRICH: {coded}/{considered} rows coded with a neighborhood")
-        except Exception as exc:  # noqa: BLE001 — enrichment is best-effort
+        except Exception as exc:  # noqa: BLE001 — must not mask source results
+            enrich_failed = True
             print(f"ENRICH: failed: {exc!r}", file=sys.stderr)
 
+    # Exit codes: 0 = clean, 2 = one or more sources failed (takes
+    # precedence), 3 = sources fine but the enrich pass failed.
     if failures:
         print("FAILED SOURCES:", file=sys.stderr)
         for f in failures:
             print(f"  {f}", file=sys.stderr)
         return 2
+    if enrich_failed:
+        return 3
     return 0
 
 

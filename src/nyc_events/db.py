@@ -185,9 +185,33 @@ def upsert_events(conn: sqlite3.Connection, events: Iterable[Event]) -> tuple[in
                 end_dt       = excluded.end_dt,
                 venue_name   = excluded.venue_name,
                 borough      = excluded.borough,
-                neighborhood = excluded.neighborhood,
-                lat          = excluded.lat,
-                lng          = excluded.lng,
+                -- neighborhood / lat / lng are enrichment-managed (sources
+                -- almost always yield NULL; enrich.py fills them in a second
+                -- pass). A source-provided value always wins; otherwise keep
+                -- the enriched value so one failed enrich pass can't blank
+                -- the whole catalog's neighborhoods for a day — UNLESS the
+                -- row's location identity (venue or borough) changed this
+                -- ingest, in which case the stale coding is reset to NULL so
+                -- tonight's enrich re-resolves it. (IS NOT = null-safe
+                -- "is distinct from"; bare column names = the existing row.)
+                neighborhood = CASE
+                    WHEN excluded.neighborhood IS NOT NULL THEN excluded.neighborhood
+                    WHEN excluded.venue_name IS NOT venue_name
+                      OR excluded.borough IS NOT borough THEN NULL
+                    ELSE neighborhood
+                END,
+                lat = CASE
+                    WHEN excluded.lat IS NOT NULL THEN excluded.lat
+                    WHEN excluded.venue_name IS NOT venue_name
+                      OR excluded.borough IS NOT borough THEN NULL
+                    ELSE lat
+                END,
+                lng = CASE
+                    WHEN excluded.lng IS NOT NULL THEN excluded.lng
+                    WHEN excluded.venue_name IS NOT venue_name
+                      OR excluded.borough IS NOT borough THEN NULL
+                    ELSE lng
+                END,
                 age_min      = excluded.age_min,
                 age_max      = excluded.age_max,
                 price        = excluded.price,

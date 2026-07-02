@@ -18,7 +18,8 @@ permit data only (one source); Phase 2 = editorial scrapers.
 ```bash
 .venv/bin/python -m nyc_events.server           # run HTTP server (needs MCP_AUTH_TOKEN)
 .venv/bin/python -m nyc_events.ingest           # one-shot ingest (runs the enrich pass at the end)
-.venv/bin/python -m nyc_events.enrich           # second pass alone: code neighborhoods + backfill lat/lng (network)
+.venv/bin/python -m nyc_events.enrich           # second pass alone: code new/uncoded rows (network)
+.venv/bin/python -m nyc_events.enrich --recode-all  # re-resolve EVERY row (after static-table changes)
 .venv/bin/python -m nyc_events.seed_fake        # populate fake events for connector smoke-testing
 .venv/bin/python scripts/build_tract_nta.py     # rebuild data/tract_to_nta.json (one-shot, from NYC open data)
 .venv/bin/python scripts/build_park_neighborhoods.py     # rebuild data/park_neighborhoods.json (one-shot)
@@ -287,7 +288,9 @@ Neighborhoods are populated by a **second pass** (`enrich.py`) that runs after
 ingest, NOT by sources. Sources still yield `neighborhood=None`; keeping
 `fetch()` dumb is deliberate (same split as missing-detection). `ingest.main`
 calls `enrich.run` at the end, guarded so a geocoder hiccup can't fail the
-ingest; `ENRICH=0` skips it for offline dev.
+sources — but a failed pass exits the ingest with code **3** (0 = clean,
+2 = source failure(s), which takes precedence) so the nightly cron alerts.
+`ENRICH=0` skips it for offline dev.
 
 **Resolution ladder** (`enrich.resolve`, first hit wins, only for rows where
 `neighborhood IS NULL`):
@@ -307,12 +310,20 @@ Tiers 1–4 are pure/offline; tiers 5–6 hit the **US Census geocoder**
 in `geocode_cache` (no TTL; keyed `fwd:<venue|borough>` / `rev:<rounded
 lat,lng>`), so a venue is geocoded at most once ever.
 
-**Why re-running nightly is cheap:** the upsert nulls `neighborhood` every
-ingest (it's `excluded.neighborhood`), so enrich reprocesses the whole table
-each run — but tiers 1–3 are dict lookups and tiers 4–5 are `geocode_cache`
-hits, so steady-state network calls ≈ only brand-new venues. The `UPDATE` fills
-`lat`/`lng` via `COALESCE` (never clobbers a source-provided coord) and fires
-the FTS `events_au` trigger, so neighborhood is searchable immediately.
+**Persistence (issue #27):** the upsert **preserves** enriched
+`neighborhood`/`lat`/`lng` across nightly re-ingests — a source-provided value
+still wins, and the coding resets to NULL only when the row's venue or borough
+changed this ingest, so stale coding re-resolves the same night (see the CASE
+expressions in `db.upsert_events`). Nightly enrich therefore touches only
+new/changed rows, and a wholesale enrich failure delays coverage for those
+rows but can no longer blank the whole catalog's neighborhoods. The flip side:
+corrections to the static tables don't reach already-coded rows on their own —
+run `python -m nyc_events.enrich --recode-all` after editing
+`_neighborhoods.py` or rebuilding the `data/*.json` tables. Recode only ever
+adds/updates coverage: a row whose re-resolution fails keeps its old label.
+The enrich `UPDATE` fills `lat`/`lng` via `COALESCE` (never clobbers a
+source-provided coord) and fires the FTS `events_au` trigger, so neighborhood
+is searchable immediately.
 
 **Gotchas that already cost time:**
 - **Census uses USPS city, not borough.** Manhattan's city is `New York`, not
@@ -353,8 +364,10 @@ requirement, just new hosts: `geocoding.geo.census.gov` (runtime, tiers 4–5)
 and, for the offline `build_*.py` scripts only, `data.cityofnewyork.us`. The
 repo imposes no egress allowlist (`docker-compose.yml` has no network policy).
 **Debt:** if the deployment is ever hardened to an egress allowlist, those hosts
-must be added or the pass silently codes nothing (it's guarded, so ingest still
-succeeds — you'd see `neighborhood` stop populating, not a crash).
+must be added or the pass codes nothing for new freeform venues (sources still
+commit; existing rows keep their labels; the ingest exits 3 only if the pass
+*raises* — a reachable-but-blocked geocoder may just return misses, which are
+cached as negatives, so also check `geocode_cache` when debugging).
 
 ## Missing-event detection (possible cancellations)
 
