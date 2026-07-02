@@ -4,20 +4,17 @@ The Transit Museum (Downtown Brooklyn, in a decommissioned 1936 subway
 station) runs toddler programs (Transit Tots), family workshops (Movers and
 Makers), vintage-train Nostalgia Rides, plus adult walking tours, lectures
 and virtual talks. Events come from a WordPress / Tribe Events Calendar REST
-API — the third Tribe instance in this project (after Green-Wood Cemetery
-and Prospect Park); this module is a copy-adapt of `prospect_park.py`.
+API; the fetch/pagination/parsing machinery is shared with the other Tribe
+sources via `_tribe.TribeEventsSource`.
 
-Data flow:
-  1. GET /wp-json/tribe/events/v1/events?per_page=50&page=N (curl_cffi with
-     Chrome impersonation — plain default-UA fetchers get 403).
-  2. Paginate via `next_rest_url` in each response until absent. Small
-     calendar (~26 events / 60 days) — single page in practice, but the
-     loop is kept.
-  3. Filter by upstream `categories`: allowlist {Family Programs,
-     Nostalgia Rides}; hard-exclude {Members-Only Programs, Virtual
-     Programs} (exclusion wins over any allowlist overlap).
-  4. Map the per-event `venue` object to venue_name / borough / lat / lng.
-  5. Strip HTML, map the cost string to a Price enum, yield Events.
+This module keeps only what is venue-specific:
+  - Kid-relevance strategy: upstream `categories` — allowlist {Family
+    Programs, Nostalgia Rides}; hard-exclude {Members-Only Programs, Virtual
+    Programs} (exclusion wins over any allowlist overlap).
+  - The per-event `venue` object → venue_name / borough / lat / lng mapping
+    (unlike the other Tribe sources, venue is a real object here).
+  - A cost quirk: "Included with Museum admission" maps to PAID.
+  - Tag rules.
 
 Quirks (verified live, 2026-06-10):
   - The Tribe `id` IS per-occurrence: 26 events in a 60-day window → 26
@@ -25,8 +22,7 @@ Quirks (verified live, 2026-06-10):
     tour ×3, shuttle rides ×2) each getting a distinct id and dated URL
     slug per occurrence. `external_id = str(id)` — no `:start.isoformat()`
     suffix needed.
-  - Unlike Prospect Park, `venue` is a real per-event object, not an empty
-    list. Values seen live: "New York Transit Museum, Brooklyn" (city=
+  - Venue values seen live: "New York Transit Museum, Brooklyn" (city=
     "Brooklyn", geo_lat/geo_lng populated), "Off-Site" (subway/station
     tours meeting elsewhere — no city, no geo), "Virtual" (no city/geo).
     Borough comes from the venue `city` field when recognized; otherwise
@@ -47,15 +43,8 @@ Quirks (verified live, 2026-06-10):
 
 from __future__ import annotations
 
-import json
-import logging
 import re
-import time
-from collections.abc import Iterable
-from datetime import UTC, datetime, timedelta
 from typing import Any
-
-from curl_cffi import requests as cffi_requests
 
 from ..models import Borough, Event, Price, compute_id
 from ._filters import (
@@ -64,20 +53,24 @@ from ._filters import (
     MEMBERS_ONLY,
     contains_any,
 )
-from .base import Source
-
-logger = logging.getLogger(__name__)
+from ._tribe import (
+    RowParts,
+    TribeEventsSource,
+    category_names,
+    parse_cost,
+    parse_row,
+    parse_utc_dt,
+    strip_html,
+)
 
 BASE_URL = "https://www.nytransitmuseum.org"
 EVENTS_URL = f"{BASE_URL}/wp-json/tribe/events/v1/events"
-DEFAULT_WINDOW_DAYS = 60
-PAGE_DELAY_SECONDS = 1.0
-DEFAULT_PER_PAGE = 50
-MAX_PAGES = 10  # safety cap; ~26 events / 60 days = 1 page in practice
-USER_AGENT = (
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/124.0 Safari/537.36 nyc-kids-mcp/1.0"
-)
+
+# Shared Tribe helpers under this module's historical names — the parser tests
+# exercise them from here.
+_strip_html = strip_html
+_parse_utc_dt = parse_utc_dt
+_category_names = category_names
 
 # ---------------------------------------------------------------------------
 # Category filter
@@ -140,59 +133,14 @@ _TITLE_TAG_RULES: list[tuple[str, tuple[str, ...]]] = [
     ("best for kids", ("tots", "kids", "children", "family")),
 ]
 
-# ---------------------------------------------------------------------------
-# Pure helpers
-# ---------------------------------------------------------------------------
-
-_HTML_TAG_RX = re.compile(r"<[^>]+>")
-_WS_RX = re.compile(r"\s+")
-
-
-def _strip_html(raw: str | None) -> str:
-    """Strip HTML tags, decode common entities, collapse whitespace."""
-    if not raw:
-        return ""
-    text = _HTML_TAG_RX.sub(" ", raw)
-    text = (
-        text.replace("&nbsp;", " ")
-        .replace("&amp;", "&")
-        .replace("&#8217;", "'")
-        .replace("&#8211;", "–")
-        .replace("&#8220;", '"')
-        .replace("&#8221;", '"')
-    )
-    return _WS_RX.sub(" ", text).strip()
-
-
-def _parse_utc_dt(raw: str | None) -> datetime | None:
-    """Parse a UTC naive datetime string like '2026-06-14 13:30:00' into UTC-aware."""
-    if not raw:
-        return None
-    try:
-        dt = datetime.strptime(raw, "%Y-%m-%d %H:%M:%S")
-        return dt.replace(tzinfo=UTC)
-    except (ValueError, TypeError):
-        return None
-
 
 def _parse_cost(cost: str | None) -> Price:
-    """Map a Tribe cost string to a Price enum value."""
-    if not cost:
-        return Price.UNKNOWN
-    cost_lower = cost.strip().lower()
-    if "free" in cost_lower:
-        return Price.FREE
-    if "$" in cost:
+    """Shared Tribe cost mapping plus this venue's "Included with Museum
+    admission" phrasing — admission itself is paid."""
+    price = parse_cost(cost)
+    if price is Price.UNKNOWN and cost and "admission" in cost.lower():
         return Price.PAID
-    # "Included with Museum admission" — admission itself is paid.
-    if "admission" in cost_lower:
-        return Price.PAID
-    return Price.UNKNOWN
-
-
-def _category_names(row: dict[str, Any]) -> set[str]:
-    """Extract upstream category names from a Tribe row."""
-    return {c.get("name", "") for c in (row.get("categories") or [])}
+    return price
 
 
 def _is_kid_relevant(row: dict[str, Any]) -> bool:
@@ -253,151 +201,43 @@ def _infer_tags(title: str, categories: set[str]) -> list[str]:
     return tags
 
 
-def _parse_row(row: dict[str, Any]) -> Event | None:
-    """Parse one Tribe event record into an Event, or None if filtered out."""
-    if not _is_kid_relevant(row):
-        return None
-
-    title = _strip_html(row.get("title"))
-    if not title:
-        logger.debug("ny_transit_museum: skipping row with no title: id=%r", row.get("id"))
-        return None
-
-    start_dt = _parse_utc_dt(row.get("utc_start_date"))
-    if start_dt is None:
-        logger.debug("ny_transit_museum: skipping %r — no parseable start date", title)
-        return None
-
-    end_dt = _parse_utc_dt(row.get("utc_end_date"))
-
-    # The Tribe id is per-occurrence on this site (recurring programs get a
-    # distinct id + dated URL slug per occurrence) — verified live, see
-    # module docstring. No date suffix needed.
-    external_id = str(row["id"]) if row.get("id") else None
-    url = row.get("url") or None
-
-    excerpt_text = _strip_html(row.get("excerpt"))
-    description_text = _strip_html(row.get("description"))
-    description = excerpt_text or description_text or None
-    if description and len(description) > 2000:
-        description = description[:2000].rsplit(" ", 1)[0] + "…"
-
-    price = _parse_cost(row.get("cost"))
-    tags = _infer_tags(title, _category_names(row))
+def _build_event(row: dict[str, Any], p: RowParts) -> Event:
     venue_name, borough, lat, lng = _venue_fields(row)
-
     return Event(
-        id=compute_id("ny_transit_museum", external_id=external_id, url=url, title=title),
+        id=compute_id("ny_transit_museum", external_id=p.external_id, url=p.url, title=p.title),
         source="ny_transit_museum",
-        external_id=external_id,
-        title=title,
-        description=description,
-        url=url,
-        start_dt=start_dt,
-        end_dt=end_dt,
+        external_id=p.external_id,
+        title=p.title,
+        description=p.description,
+        url=p.url,
+        start_dt=p.start_dt,
+        end_dt=p.end_dt,
         venue_name=venue_name,
         borough=borough,
         lat=lat,
         lng=lng,
         age_min=None,
         age_max=None,
-        price=price,
-        tags=tags,
-        raw_payload=json.dumps(row, sort_keys=True, default=str),
+        price=_parse_cost(row.get("cost")),
+        tags=_infer_tags(p.title, _category_names(row)),
+        raw_payload=p.raw_payload,
     )
 
 
-class NYTransitMuseumSource(Source):
+def _parse_row(row: dict[str, Any]) -> Event | None:
+    """Parse one Tribe event record into an Event, or None if filtered out."""
+    return parse_row(
+        row,
+        source="ny_transit_museum",
+        is_kid_relevant=_is_kid_relevant,
+        build_event=_build_event,
+    )
+
+
+class NYTransitMuseumSource(TribeEventsSource):
     """New York Transit Museum events via the Tribe Events Calendar REST API."""
 
     name = "ny_transit_museum"
-
-    def __init__(
-        self,
-        *,
-        events_url: str = EVENTS_URL,
-        window_days: int = DEFAULT_WINDOW_DAYS,
-        per_page: int = DEFAULT_PER_PAGE,
-        page_delay: float = PAGE_DELAY_SECONDS,
-        http_timeout: float = 30.0,
-        max_pages: int = MAX_PAGES,
-    ):
-        self._events_url = events_url
-        self._window_days = window_days
-        self.window_days = window_days  # full-window re-fetch: missing-detection eligible
-        self._per_page = per_page
-        self._delay = page_delay
-        self._timeout = http_timeout
-        self._max_pages = max_pages
-
-    def fetch(self) -> Iterable[Event]:
-        """Paginate the Tribe REST API, yielding kid-relevant Events."""
-        now = datetime.now(UTC)
-        start_date = now.strftime("%Y-%m-%d %H:%M:%S")
-        end_date = (now + timedelta(days=self._window_days)).strftime("%Y-%m-%d %H:%M:%S")
-
-        total = 0
-        page = 1
-        while page <= self._max_pages:
-            rows, next_url = self._get_page(page, start_date, end_date)
-            if rows is None:
-                # Hard error on this page — log already emitted in _get_page.
-                break
-            if not rows:
-                break
-
-            for row in rows:
-                try:
-                    ev = _parse_row(row)
-                except Exception:  # noqa: BLE001
-                    logger.warning(
-                        "ny_transit_museum: failed to parse event id=%r",
-                        row.get("id"),
-                        exc_info=True,
-                    )
-                    continue
-                if ev is not None:
-                    total += 1
-                    yield ev
-
-            if not next_url:
-                break
-
-            page += 1
-            time.sleep(self._delay)
-
-        logger.info("ny_transit_museum: yielded %d events", total)
-
-    def _get_page(
-        self,
-        page: int,
-        start_date: str,
-        end_date: str,
-    ) -> tuple[list[dict[str, Any]] | None, str | None]:
-        """Fetch one page of events.
-
-        Returns (rows, next_rest_url) on success, or (None, None) on HTTP error.
-        """
-        params = {
-            "per_page": self._per_page,
-            "page": page,
-            "start_date": start_date,
-            "end_date": end_date,
-            "status": "publish",
-        }
-        try:
-            resp = cffi_requests.get(
-                self._events_url,
-                params=params,
-                headers={"User-Agent": USER_AGENT},
-                impersonate="chrome",
-                timeout=self._timeout,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            rows = list(data.get("events") or [])
-            next_url = data.get("next_rest_url") or None
-            return rows, next_url
-        except Exception:  # noqa: BLE001
-            logger.warning("ny_transit_museum: failed to fetch page %d", page, exc_info=True)
-            return None, None
+    events_url = EVENTS_URL
+    max_pages = 10  # safety cap; ~26 events / 60 days = 1 page in practice
+    _parse_row = staticmethod(_parse_row)

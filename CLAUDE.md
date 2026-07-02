@@ -53,6 +53,16 @@ latest commit). Update the handoff first and the PR proceeds.
   `library_neighborhoods.json` (borough+library-core → NTA). Built by
   `scripts/build_*.py`; loaded as package data.
 - `src/nyc_events/sources/base.py` — `Source` ABC; each source is one file in the same dir
+- `src/nyc_events/sources/_tribe.py` — shared machinery for the four
+  WordPress / The Events Calendar sources (Green-Wood, Prospect Park,
+  NY Transit Museum, Industry City): `TribeEventsSource` (fetch/pagination
+  loop + curl_cffi page fetch), `parse_row`/`RowParts` (the common row
+  skeleton), and the canonical `strip_html`/`parse_utc_dt`/`parse_cost`.
+  A new Tribe venue subclasses this — never copy-adapt an existing Tribe
+  source. Kid-relevance strategy, tag rules, and venue/borough/price
+  mapping stay per-source; each module keeps a module-level `_parse_row`
+  (assigned into the class via `staticmethod`) so parser tests exercise
+  it directly with fixture dicts.
 - `src/nyc_events/sources/_filters.py` — shared kid-relevance helpers:
   `normalize()` (collapse hyphens/whitespace), `contains_any()`, and the
   canonical adult sets: `ADULT_BLOCKLIST` (match title or body),

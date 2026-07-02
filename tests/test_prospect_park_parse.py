@@ -54,7 +54,9 @@ def test_strip_html_removes_tags():
 
 
 def test_strip_html_decodes_apostrophe_entity():
-    assert _strip_html("Alfreda&#8217;s Cinema") == "Alfreda's Cinema"
+    # html.unescape decodes &#8217; to the real right single quote (U+2019),
+    # not a normalized ASCII apostrophe.
+    assert _strip_html("Alfreda&#8217;s Cinema") == "Alfreda’s Cinema"
 
 
 def test_strip_html_none_returns_empty():
@@ -177,7 +179,7 @@ def test_film_event_gets_movie_tag_and_decoded_title():
     row = next(e for e in _load_events() if e["id"] == 36922)
     ev = _parse_row(row)
     assert ev is not None
-    assert ev.title == "Alfreda's Cinema, Brooklyn Boheme (2011)"
+    assert ev.title == "Alfreda’s Cinema, Brooklyn Boheme (2011)"
     assert ev.price == Price.FREE
     assert "movie" in ev.tags
 

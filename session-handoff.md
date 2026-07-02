@@ -2,6 +2,44 @@
 
 ## What was done (most recent first)
 
+### Session: Tribe source consolidation, issue #25 (branch `claude/architecture-design-review-8r5735`)
+
+Architecture-review session: filed issues #25–#30 from a full design review,
+then implemented **#25** — the four WordPress / The Events Calendar (Tribe)
+sources were ~150-line copies of each other and had already drifted.
+
+- [x] **New `src/nyc_events/sources/_tribe.py`** — everything that is a
+      property of the *plugin*, not the venue: `TribeEventsSource` (the
+      fetch/pagination loop + curl_cffi Chrome-impersonation page fetch),
+      `parse_row`/`RowParts` (the common row skeleton: kid-relevance gate,
+      title, UTC dates, per-occurrence external_id, excerpt-preferred
+      description + 2000-char trim, raw_payload), and the canonical
+      `strip_html` / `parse_utc_dt` / `parse_cost` / `category_names`.
+- [x] **Four sources rewritten as subclasses** — `greenwood_cemetery`,
+      `prospect_park`, `industry_city`, `ny_transit_museum` now keep only
+      venue-specific logic: filter strategy, tag rules, venue/borough/price
+      mapping (incl. NY Transit's venue-object mapping + "Included with
+      Museum admission"→PAID override, Industry City's always-UNKNOWN price).
+      Each keeps a module-level `_parse_row` (assigned into the class via
+      `staticmethod`) plus `_strip_html`/`_parse_utc_dt`/`_parse_cost` aliases
+      so the parser tests exercise them unchanged. **Net −634 lines.**
+- [x] **Drift fixed: entity decoding unified on `html.unescape`.**
+      Prospect Park / Industry City / NY Transit hand-replaced a fixed handful
+      of entities (Green-Wood already used unescape). Behavior change:
+      `&#8217;` now decodes to the real `’` (U+2019), not a normalized ASCII
+      `'` — three test assertions updated to the faithful decode. Event ids
+      are unaffected (all four sources have per-occurrence external_ids).
+- [x] **`window_days` double-duty collapsed** (issue #30 item 3, Tribe
+      sources only): one attribute, set once in the base `__init__`; the
+      `self._window_days`/`self.window_days` duplication is gone. Base opts
+      into missing-detection by default (all Tribe sources are full-window).
+- [x] **Smoke-tested beyond the suite:** all four classes instantiate via the
+      `ENABLED_SOURCES` no-arg path, and the shared `fetch()` loop yields
+      correct events end-to-end against stubbed pages from the fixtures.
+- [x] **Docs** — CLAUDE.md Layout (new `_tribe.py` entry: subclass, never
+      copy-adapt), `.claude/agents/source-adder.md` Tribe fast-path now
+      points at `TribeEventsSource`. **449 passed, ruff clean.**
+
 ### Session: MCP tool filters + facet discovery (branch `claude/mcp-tools-review-6unjn8`)
 
 Reviewed the MCP tool surface and implemented three of the suggested gaps. No
@@ -149,13 +187,11 @@ kid-relevance filters had drifted between six hand-maintained copies.
 
 ## Current state
 
-Suite: **439 passed**, ruff: **clean**. Neighborhood-coding work on
-`claude/neighborhood-event-coding-wkb2dh`. Live smoke test of the real Census
-path verified: Prospect Park→"Prospect Park" (park table), Domino→"Williamsburg"
-(constant), NY Transit Museum→"Brooklyn Heights" (tier 2), Sunset Park
-Library→"Sunset Park (West)" (library table), a Manhattan street
-address→"Midtown-Times Square" with lat/lng backfilled (forward geocode).
-Earlier filter-review pass is **PR #21** on `claude/laughing-planck-xaar2v`.
+Suite: **449 passed**, ruff: **clean**. Tribe consolidation (issue #25) on
+`claude/architecture-design-review-8r5735`. Architecture-review issues
+**#26–#30** remain open (server.py split, neighborhood wipe-and-restore,
+db.init/connect split, unused deps, housekeeping batch — #30 item 3 is
+already done for the Tribe sources as part of #25).
 
 ## Decisions made
 
