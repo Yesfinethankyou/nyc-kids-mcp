@@ -10,7 +10,7 @@ import os
 import sys
 from datetime import UTC, datetime, timedelta
 
-from . import db, enrich
+from . import config, db, enrich
 from .sources import ENABLED_SOURCES
 
 # Circuit breaker for missing-event marking: if a "successful" fetch returned
@@ -33,7 +33,7 @@ def main() -> int:
         print("No sources enabled. (Checkpoint B wires up NYCParksSource.)", file=sys.stderr)
         return 1
 
-    db_path = os.environ.get("DB_PATH", "data/events.db")
+    db_path = config.DB_PATH
     total_in = 0
     total_up = 0
     failures: list[str] = []

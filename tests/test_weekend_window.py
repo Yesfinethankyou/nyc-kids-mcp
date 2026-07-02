@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from nyc_events.server import NYC_TZ, _weekend_window
+from nyc_events.tools import NYC_TZ, _weekend_window
 
 
 def _local(y, m, d, hh=0, mm=0):

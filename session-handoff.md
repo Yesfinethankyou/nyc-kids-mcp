@@ -2,6 +2,47 @@
 
 ## What was done (most recent first)
 
+### Session: server.py split, issue #26 (branch `claude/architecture-design-review-8r5735`, same session as #25 below)
+
+Split the 926-line `server.py` on churn vs consequence, per issue #26. Pure
+move — no handler/middleware logic changed (one attempted "improvement" to
+the middleware style was caught and reverted mid-session; the security
+surface ships byte-equivalent logic).
+
+- [x] **`auth.py`** (new) — the "do not regress" surface: rate limiter +
+      buckets, OAuth token cache, `BearerAuthMiddleware`, redirect-URI
+      allowlist, discovery endpoints, `/register`, `/authorize` GET/POST,
+      `/token`, consent HTML + security headers. Module docstring carries the
+      single-process warning (issue #30 item 1); CLAUDE.md security baseline
+      gained a matching **single-worker only** bullet.
+- [x] **`tools.py`** (new) — the MCP surface: `FastMCP` instance, all seven
+      tools, `_event_summary`/`_event_detail`, `_weekend_window`,
+      `_normalize_borough`, `_local_date`, `_venue_map_url`,
+      `_possibly_cancelled`.
+- [x] **`config.py`** (new, issue #30 item 2) — env-derived settings read
+      once: `DB_PATH` (was read in **four** places: server/ingest/enrich/
+      seed_fake — all now `config.DB_PATH`), `OAUTH_DB_PATH`, `PORT`,
+      `FORWARDED_ALLOW_IPS`, `OAUTH_TOKEN_TTL_DAYS`, redirect allowlist.
+      Consumers use attribute access so tests monkeypatch `config.X`.
+      Credentials deliberately stay call-time env reads (master token never
+      sits in an importable module attribute).
+- [x] **`server.py`** now 97 lines: `build_app()` + `main()` only.
+- [x] **Tests repointed** (import/monkeypatch targets only, no assertion
+      changes): `test_security_fixes` → `auth`, `test_search_tools` →
+      `tools` + `config.DB_PATH`, `test_event_projection` /
+      `test_weekend_window` / `test_missing_detection` → `tools`.
+- [x] **Runtime-verified end-to-end** (booted the real server on a temp DB):
+      browser probe 200 / POST 401, discovery JSON, consent page + all
+      security headers, evil-redirect 400, full OAuth flow (register →
+      consent with separate consent-pw AND master fallback → PKCE exchange →
+      issued bearer accepted), auth-code single-use, MCP protocol round trip
+      (initialize → tools/list shows all 7 → tools/call returns seeded rows),
+      rate limiter 429s at request 6 with Retry-After, GET /token downgrade
+      guard 400s. **449 passed, ruff clean.**
+- [x] **Docs** — CLAUDE.md Layout (four module entries replace the server.py
+      line; the ">600 lines → split" paragraph replaced by "never blend them
+      back"); security baseline gained the single-worker bullet.
+
 ### Session: Tribe source consolidation, issue #25 (branch `claude/architecture-design-review-8r5735`)
 
 Architecture-review session: filed issues #25–#30 from a full design review,
@@ -187,11 +228,12 @@ kid-relevance filters had drifted between six hand-maintained copies.
 
 ## Current state
 
-Suite: **449 passed**, ruff: **clean**. Tribe consolidation (issue #25) on
-`claude/architecture-design-review-8r5735`. Architecture-review issues
-**#26–#30** remain open (server.py split, neighborhood wipe-and-restore,
-db.init/connect split, unused deps, housekeeping batch — #30 item 3 is
-already done for the Tribe sources as part of #25).
+Suite: **449 passed**, ruff: **clean**. Issues #25 (Tribe consolidation) and
+#26 (server split) implemented on `claude/architecture-design-review-8r5735`.
+Architecture-review issues **#27–#29** remain open (neighborhood
+wipe-and-restore, db.init/connect split, unused deps); **#30** is fully
+absorbed: item 1 (single-worker guard) and item 2 (config.py) landed with
+#26, item 3 (window_days) landed with #25.
 
 ## Decisions made
 

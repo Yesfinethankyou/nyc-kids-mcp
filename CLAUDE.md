@@ -43,7 +43,20 @@ latest commit). Update the handoff first and the PR proceeds.
 
 - `src/nyc_events/models.py` — `Event` + `Borough` / `Price` enums + `compute_id()`
 - `src/nyc_events/db.py` — split SQLite stores (events + oauth) with idempotent migrations
-- `src/nyc_events/server.py` — FastMCP + OAuth shim + bearer middleware + MCP tools
+- `src/nyc_events/server.py` — composition root only: `build_app()` (routes +
+  middleware wiring) + `main()` (uvicorn). A diff here is always a wiring change.
+- `src/nyc_events/tools.py` — the MCP surface: `FastMCP` instance, the seven
+  tools, and the `_event_summary`/`_event_detail` projections. The high-churn
+  side — new tools go here and must not touch `auth.py`.
+- `src/nyc_events/auth.py` — the "do not regress" security surface: bearer
+  middleware (+ OAuth token cache), rate limiter, redirect-URI allowlist,
+  OAuth discovery/`/register`/`/authorize`/`/token` handlers, consent page.
+- `src/nyc_events/config.py` — env-derived settings (`DB_PATH`,
+  `OAUTH_DB_PATH`, `PORT`, `FORWARDED_ALLOW_IPS`, `OAUTH_TOKEN_TTL_DAYS`,
+  redirect allowlist), read once at import. Consumers do attribute access
+  (`config.DB_PATH`) so tests monkeypatch attributes here. Credentials
+  (`MCP_AUTH_TOKEN`/`MCP_CONSENT_PASSWORD`) deliberately stay call-time
+  env reads in auth.py/server.py.
 - `src/nyc_events/oauth.py` — auth-code issue/consume + PKCE verification
 - `src/nyc_events/ingest.py` — CLI loop over `ENABLED_SOURCES`; runs `enrich` at the end
 - `src/nyc_events/enrich.py` — second-pass location enrichment (neighborhood coding + lat/lng backfill)
@@ -78,9 +91,10 @@ latest commit). Update the handoff first and the PR proceeds.
   the shared batch/reverse geocoder primitives).
 - `tests/fixtures/` — captured real upstream responses used in parser tests
 
-`server.py` is a single big module. If it grows past ~600 lines, split the
-OAuth handlers (`/authorize`, `/token`, `/register`, discovery) into their
-own file before touching anything else.
+The server is split on churn vs consequence: `tools.py` changes often
+(Phase 3 keeps adding tools), `auth.py` holds the security baseline and
+should barely ever change. Never blend them back — a tool PR whose diff
+touches `auth.py` is a red flag.
 
 ## Test architecture
 
@@ -377,6 +391,11 @@ during one), so a dead ingest cron flags nothing.
 
 If you touch the server, do not regress these:
 
+- **Single-worker only.** The rate limiter, OAuth token cache (`auth.py`),
+  and pending auth codes (`oauth.py`) are in-process dicts. Running uvicorn
+  with `workers > 1` breaks the OAuth flow non-deterministically (code
+  issued on one worker, consumed on another) and the failure mimics a
+  broken claude.ai client. `main()` runs single-process; keep it that way.
 - All bearer comparisons via `secrets.compare_digest`. Never `==`.
 - Redirect URI allowlist on `/authorize` GET and POST (defense in depth).
 - Consent page sends `X-Frame-Options: DENY`, `X-Content-Type-Options:

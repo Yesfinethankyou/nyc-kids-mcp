@@ -17,13 +17,12 @@ the whole table nightly but hits the network only for venues it has never seen.
 from __future__ import annotations
 
 import logging
-import os
 import sqlite3
 from collections.abc import Callable
 
 import httpx
 
-from . import db, geocode
+from . import config, db, geocode
 from .sources._neighborhoods import normalize_name, nta_for_tract, static_neighborhood
 
 logger = logging.getLogger(__name__)
@@ -136,7 +135,7 @@ def run(
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
-    db_path = os.environ.get("DB_PATH", "data/events.db")
+    db_path = config.DB_PATH
     considered, coded = run(db_path)
     print(f"enrich: {coded}/{considered} rows coded with a neighborhood")
     return 0

@@ -6,11 +6,10 @@ exists. Run with: `python -m nyc_events.seed_fake`. Delete after Checkpoint B.
 
 from __future__ import annotations
 
-import os
 from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from . import db
+from . import config, db
 from .models import Borough, Event, Price, compute_id
 
 NYC_TZ = ZoneInfo("America/New_York")
@@ -111,7 +110,7 @@ def fake_events(now: datetime | None = None) -> list[Event]:
 
 
 def main() -> None:
-    path = os.environ.get("DB_PATH", "data/events.db")
+    path = config.DB_PATH
     events = fake_events()
     with db.connect_events(path) as conn:
         ins, upd = db.upsert_events(conn, events)
