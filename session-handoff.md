@@ -2,6 +2,31 @@
 
 ## What was done (most recent first)
 
+### Session: DB init/connect split + dead-dep cull, issues #28 & #29 (branch `claude/github-issues-28-29-7ks73y`)
+
+Two architecture-review findings from 2026-07-02.
+
+- [x] **#28 — schema DDL off the read path.** Split `db._open()` into
+      `db._connect()` (plain: WAL + `row_factory` + FK pragma, **no DDL**) and
+      `db.init_events()` / `db.init_oauth()` (schema `executescript` +
+      `_migrate_*`). `connect_events` / `connect_oauth` are now plain opens, so
+      a per-request `search_events` connection no longer re-runs `CREATE TABLE`/
+      `ALTER` and takes a write lock contending with the nightly ingest. `init_*`
+      is called once at each entry point: `server.build_app()`, `ingest.main`,
+      `enrich.main`, `seed_fake.main`. Test fixtures that create a fresh DB now
+      call `init_*` first; the two migration tests (`test_migration_adds_
+      missing_since_column`, `test_oauth_migration_adds_expires_at_column`) call
+      `init_*` explicitly since that's where migrations now live.
+- [x] **#29 — removed unused deps** `feedparser`, `icalendar`,
+      `python-dateutil` from `pyproject.toml` (imported nowhere in
+      `src`/`tests`/`scripts`; Phase-1 RSS/iCal anticipation that never
+      materialized). Re-add `icalendar` if an iCal source shows up in Phase 3.
+- [x] **Docs** — CLAUDE.md "DB migrations" section rewritten to describe the
+      init/connect split.
+- [x] **Verified** — full suite **455 passed, ruff clean**; runtime smoke test
+      confirms `build_app()` creates + migrates both DBs and `connect_*` opens
+      them plainly.
+
 ### Session: neighborhood persistence, issue #27 (branch `claude/architecture-design-review-8r5735`, same session as #26/#25 below)
 
 Fixed the wipe-and-restore fragility: the nightly upsert used to null every
@@ -273,8 +298,9 @@ kid-relevance filters had drifted between six hand-maintained copies.
 Suite: **455 passed**, ruff: **clean**. Issues #25 (Tribe consolidation),
 #26 (server split), and #27 (neighborhood persistence) implemented on
 `claude/architecture-design-review-8r5735`. Architecture-review issues
-**#28–#29** remain open (db.init/connect split, unused deps); **#30** is
-fully absorbed (items 1+2 with #26, item 3 with #25).
+**#28** (db.init/connect split) and **#29** (unused deps) now implemented on
+`claude/github-issues-28-29-7ks73y`; **#30** is fully absorbed (items 1+2 with
+#26, item 3 with #25).
 
 **Deploy note for #27:** after this lands, corrections to the static
 neighborhood tables need a one-off `docker exec … python -m nyc_events.enrich

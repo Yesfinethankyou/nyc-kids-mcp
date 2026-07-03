@@ -45,7 +45,9 @@ def _ev(**overrides):
 
 @pytest.fixture
 def conn(tmp_path):
-    with db.connect_events(str(tmp_path / "test.db")) as c:
+    path = str(tmp_path / "test.db")
+    db.init_events(path)
+    with db.connect_events(path) as c:
         yield c
 
 
