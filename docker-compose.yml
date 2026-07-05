@@ -23,10 +23,17 @@ services:
       # the loopback-only default would make uvicorn ignore X-Forwarded-Proto
       # and advertise http://… in OAuth metadata. claude.ai then POSTs http,
       # Funnel 302s to https, httpx follows and downgrades POST→GET, losing
-      # the body — and the /token exchange dies silently. Trusting all
-      # forwarded headers is safe here because the host port is bound to
-      # 127.0.0.1, so only local processes (Funnel, curl) can reach this.
-      FORWARDED_ALLOW_IPS: "*"
+      # the body — and the /token exchange dies silently.
+      #
+      # Do NOT set this to "*" (issue #33): Funnel forwards the client's own
+      # X-Forwarded-For through, and with every source trusted uvicorn takes
+      # the LEFTMOST XFF entry as the client IP — so an attacker mints a
+      # fresh rate-limiter bucket per request and the /authorize//token//
+      # register limits stop bounding online guessing. Trust exactly the
+      # bridge gateway (pinned below): uvicorn then walks XFF right-to-left
+      # past the trusted hop and lands on the Funnel-appended real client
+      # address, which the attacker can't forge.
+      FORWARDED_ALLOW_IPS: "172.28.0.1"
     volumes:
       - ./data:/data
     ports:
@@ -44,7 +51,10 @@ services:
       start_period: 10s
 
   watchtower:
-    image: containrrr/watchtower:latest
+    # Version-pinned (issue #36): Watchtower holds the Docker socket
+    # (root-equivalent on the host), so it must not itself float on :latest.
+    # Bump deliberately after reading its release notes.
+    image: containrrr/watchtower:1.7.1
     container_name: nyc-events-watchtower
     restart: unless-stopped
     volumes:
@@ -61,3 +71,14 @@ services:
       # Public image, no registry auth needed. If we ever flip the GHCR
       # package to private, mount a docker config with a PAT.
       WATCHTOWER_INCLUDE_RESTARTING: "true"
+
+# Pin the bridge subnet so the gateway IP is deterministic and
+# FORWARDED_ALLOW_IPS above can name it exactly instead of wildcarding.
+# If 172.28.0.0/24 collides with an existing network on your host, change
+# both the subnet here and the FORWARDED_ALLOW_IPS value together.
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+          gateway: 172.28.0.1
