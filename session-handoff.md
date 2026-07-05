@@ -2,6 +2,19 @@
 
 ## What was done (most recent first)
 
+### Session: multi-user plan doc (branch `claude/add-puppetworks-source-wup5yq`)
+
+Wrote `MULTI-USER-PLAN.md` — the roadmap for opening the server to a small
+friends-and-family circle. Key framing: the data is shared/read-only, so no
+tenancy work; all changes are auth-layer. Phase A (per-person invite codes in
+a `users` table, `user_id` attribution on `oauth_tokens`, a `users` admin
+CLI) must ship before inviting anyone; Phase B is hardening (tokens hashed at
+rest, per-token rate limit on POST /, log residual re-check); Phase C is
+availability guardrails (oauth.db backup, /healthz uptime monitor, keep
+single-worker). Maintainer explicitly dropped the shorter-TTL item
+(lost-device window not a concern). Plan doc only — no code changes yet;
+CLAUDE.md's "out-of-scope: multi-user" line gets updated when Phase A ships.
+
 ### Session: Puppetworks + Brooklyn Bridge Park backlog entries (branch `claude/add-puppetworks-source-wup5yq`)
 
 Added Puppetworks (marionette theater) and Brooklyn Bridge Park to
