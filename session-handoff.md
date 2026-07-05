@@ -2,6 +2,19 @@
 
 ## What was done (most recent first)
 
+### Session: Puppetworks backlog entry (branch `claude/add-puppetworks-source-wup5yq`)
+
+Added Puppetworks (marionette theater) to `SOURCES-BACKLOG.md` as a CANDIDATE
+under "Candidates — to probe". Live probing was attempted from this session
+(`curl_cffi impersonate="chrome"` against `puppetworks.org`) but every request
+got `Recv failure: Connection reset by peer` — sandbox egress to this host is
+currently blocked, so the entry is unprobed. Flagged the user-supplied
+location ("Brooklyn Bridge Park") as needing verification during the probe —
+Puppetworks has historically been sited in Park Slope, not Brooklyn Bridge
+Park. No code changes; next step is `source-verifier` once the host is
+reachable (retry from a different network per the "sandbox egress varies"
+note).
+
 ### Session: security fixes #33/#34/#36 (branch `claude/security-issues-review-q0w33m`)
 
 Handled the High + Medium findings from the 2026-07-05 security review
