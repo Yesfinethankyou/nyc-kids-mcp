@@ -2,6 +2,38 @@
 
 ## What was done (most recent first)
 
+### Session: multi-user Phase A implemented (branch `claude/add-puppetworks-source-wup5yq`)
+
+Implemented Phase A of `MULTI-USER-PLAN.md` (per-person credentials):
+
+- `db.py`: new `users` table in `OAUTH_SCHEMA` (`user_id`, unique `name`,
+  `passcode_hash`, `created_at`, `revoked_at` tombstone); `_migrate_oauth`
+  adds `oauth_tokens.user_id` (idempotent column-add, `expires_at` pattern);
+  `store_oauth_token` takes `user_id`; new `create_user` /
+  `get_user_by_name` / `active_user_passcodes` / `revoke_user` (tombstone +
+  delete their tokens, returns count) / `list_users` (with token counts).
+- New `users.py`: PBKDF2-SHA256 salted passcode hashing (codes are generated
+  `token_urlsafe(24)`, hash-only at rest), `match_user()` (checks every
+  active hash, no early exit), and the `add`/`revoke`/`list` CLI
+  (`python -m nyc_events.users`; `add` prints the code exactly once).
+- `oauth.py`: `AuthCode` gains `user_id`; `issue_auth_code` threads it.
+- `auth.py`: `authorize_post` accepts the operator consent password OR a
+  user invite code (DB lookup only on password miss); matched `user_id`
+  rides the auth code and is stamped onto the token at `/token`. Consent
+  label "Master token" → "Access code". No other auth surface touched.
+- Tests: new Phase A section in `test_security_fixes.py` (17 tests —
+  migration, hashing, matching, revocation semantics, full
+  authorize→token attribution flow via real Starlette requests, CLI).
+  Full suite 474 passed, ruff clean.
+- Docs: CLAUDE.md (commands, layout, OAuth model, out-of-scope reworded to
+  multi-*tenancy*), README (invite flow + rotation model), plan checkboxes
+  ticked with SHIPPED marker.
+
+NOT done (deliberate): Phase B (hash tokens at rest, per-token rate limit,
+log residual) and Phase C — still open in `MULTI-USER-PLAN.md`. Deploy note:
+run the CLI inside the container (`docker exec ... python -m
+nyc_events.users add <name>`) so it hits `/data/oauth.db`.
+
 ### Session: multi-user plan doc (branch `claude/add-puppetworks-source-wup5yq`)
 
 Wrote `MULTI-USER-PLAN.md` — the roadmap for opening the server to a small

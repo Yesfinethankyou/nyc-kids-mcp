@@ -222,13 +222,32 @@ covered below. Quick recipe:
 3. Paste the bare Funnel URL with NO path suffix: `https://nas.example.ts.net`
    (claude.ai treats the URL as the MCP endpoint itself — don't append `/mcp`)
 4. claude.ai redirects you to a one-field consent page on your server
-5. **Paste your `MCP_AUTH_TOKEN`** on the consent page and click Approve
+5. **Paste your access code** on the consent page and click Approve — as the
+   operator that's `MCP_AUTH_TOKEN` (or `MCP_CONSENT_PASSWORD` if set); an
+   invited user pastes their personal invite code (see below)
 6. claude.ai stores an issued access token; you should now see the 7 tools
 
-That's it — there's no "API key" field anywhere. The master token's role is
-just the password on that one consent page. After approval, claude.ai sends
+That's it — there's no "API key" field anywhere. The credential's only role is
+the password on that one consent page. After approval, claude.ai sends
 a different opaque token (stored in your `oauth_tokens` SQLite table) on
-every request. Revoking access = `DELETE FROM oauth_tokens` for that row.
+every request.
+
+#### Inviting friends & family
+
+Each trusted user gets their own generated invite code instead of the shared
+password, so one person can be revoked without rotating anything for everyone
+else (see `MULTI-USER-PLAN.md`):
+
+```bash
+python -m nyc_events.users add "Aunt Kim"     # prints her invite code ONCE
+python -m nyc_events.users list               # users + token counts
+python -m nyc_events.users revoke "Aunt Kim"  # disables the code + deletes her tokens
+```
+
+Send the code over a reasonable channel; they paste it on the consent page in
+step 5. Codes are stored as salted hashes only. Access tokens issued via an
+invite code carry that `user_id`, so revocation is per-person; revoked
+sessions stop working within ~5 minutes (server-side token cache).
 
 #### OAuth flow under the hood
 
@@ -238,8 +257,8 @@ every request. Revoking access = `DELETE FROM oauth_tokens` for that row.
 | `/.well-known/oauth-protected-resource`       | RFC 9728 — points at us as the authorization server            |
 | `/.well-known/oauth-authorization-server`     | RFC 8414 — lists `/authorize`, `/token`, `/register`           |
 | `POST /register`                              | RFC 7591 DCR — accepts anything, returns a generated client_id |
-| `GET  /authorize`                             | Consent page (HTML form: paste master token)                   |
-| `POST /authorize`                             | Validates token, issues auth code, 302 to `redirect_uri`       |
+| `GET  /authorize`                             | Consent page (HTML form: paste access code)                    |
+| `POST /authorize`                             | Validates operator password or invite code, issues auth code, 302 to `redirect_uri` |
 | `POST /token`                                 | Code + PKCE verifier → opaque access token (stored in SQLite)  |
 
 The master `MCP_AUTH_TOKEN` is still accepted directly as a bearer for curl
@@ -386,6 +405,7 @@ nyc-kids-mcp/
 │   ├── tools.py          # FastMCP instance + the 7 MCP tools + projections
 │   ├── auth.py           # bearer middleware, OAuth 2.1 shim, rate limiter
 │   ├── oauth.py          # auth-code issue/consume + PKCE verification
+│   ├── users.py          # per-person invite codes + add/revoke/list admin CLI
 │   ├── config.py         # env-derived settings (DB paths, port, allowlists)
 │   ├── ingest.py         # CLI: loops ENABLED_SOURCES -> upsert -> prune -> enrich
 │   ├── enrich.py         # second-pass neighborhood coding + lat/lng backfill
@@ -423,10 +443,12 @@ The master `MCP_AUTH_TOKEN` and OAuth-issued access tokens are independent:
   once per connector pairing) and the direct bearer for curl testing. It does
   **NOT** invalidate access tokens that claude.ai already holds — those keep
   working until they hit `OAUTH_TOKEN_TTL_DAYS` or you explicitly delete them.
-- **Revoking a single connector**: `DELETE FROM oauth_tokens WHERE client_id = ?`
-  on `data/oauth.db`.
+- **Revoking one invited user**: `python -m nyc_events.users revoke <name>` —
+  disables their invite code and deletes their attributed tokens.
+- **Revoking a single connector** (e.g. one of your own sessions):
+  `DELETE FROM oauth_tokens WHERE client_id = ?` on `data/oauth.db`.
 - **Revoking everything**: `DELETE FROM oauth_tokens`. claude.ai will re-prompt
-  for the master token on the next request.
+  for an access code on the next request.
 
 This asymmetry is intentional: rotating the master token is cheap and shouldn't
 disconnect an already-paired client; revoking a connector is a deliberate act.

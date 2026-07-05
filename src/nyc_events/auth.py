@@ -37,7 +37,7 @@ from starlette.responses import (
     Response,
 )
 
-from . import config, db, oauth
+from . import config, db, oauth, users
 
 # --- minimal in-process per-IP rate limiter ----------------------------------
 # Bounds online guessing on /authorize POST (master-token), /token (code), and
@@ -338,7 +338,7 @@ Redirect after approval: <code>{redirect_uri}</code></p>
   <input type="hidden" name="code_challenge_method" value="{code_challenge_method}">
   <input type="hidden" name="state" value="{state}">
   <input type="hidden" name="scope" value="{scope}">
-  <label for="token">Master token</label>
+  <label for="token">Access code</label>
   <input id="token" type="password" name="token" required autofocus>
   <button type="submit">Approve</button>
 </form>
@@ -413,8 +413,17 @@ async def authorize_post(request: Request) -> Response:
         return PlainTextResponse(
             "redirect_uri not in allowlist", status_code=400
         )
-    if not (consent_pw and secrets.compare_digest(presented, consent_pw)):
-        return _render_consent(params, error="Invalid token.")
+    # Two ways in: the operator's consent password (user_id stays None), or a
+    # per-person invite code from the users table (user_id stamped through the
+    # auth code onto the access token — see users.py / MULTI-USER-PLAN.md).
+    user_id: str | None = None
+    authorized = bool(consent_pw and secrets.compare_digest(presented, consent_pw))
+    if not authorized:
+        with db.connect_oauth(config.OAUTH_DB_PATH) as conn:
+            user_id = users.match_user(conn, presented)
+        authorized = user_id is not None
+    if not authorized:
+        return _render_consent(params, error="Invalid access code.")
 
     code = oauth.issue_auth_code(
         client_id=params["client_id"],
@@ -422,6 +431,7 @@ async def authorize_post(request: Request) -> Response:
         code_challenge=params["code_challenge"],
         code_challenge_method=params["code_challenge_method"] or "plain",
         scope=params["scope"] or None,
+        user_id=user_id,
     )
     sep = "&" if "?" in params["redirect_uri"] else "?"
     location = f'{params["redirect_uri"]}{sep}code={code}'
@@ -460,7 +470,7 @@ async def token_endpoint(request: Request) -> Response:
     with db.connect_oauth(config.OAUTH_DB_PATH) as conn:
         db.store_oauth_token(
             conn, access_token, ac.client_id,
-            scope=ac.scope, expires_at=expires_at,
+            scope=ac.scope, expires_at=expires_at, user_id=ac.user_id,
         )
     return JSONResponse(
         {

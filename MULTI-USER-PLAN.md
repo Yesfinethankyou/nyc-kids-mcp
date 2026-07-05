@@ -28,7 +28,11 @@ ingest's writes don't block reads.
 
 ## Phase A — per-person credentials (must ship before inviting anyone)
 
-- [ ] **Per-person invite codes replacing the shared consent password.**
+**Status: SHIPPED 2026-07-05** (users table + migration, consent-flow change,
+`nyc_events.users` CLI, tests in `test_security_fixes.py`, CLAUDE.md/README
+updates). Implementation notes live in CLAUDE.md § "OAuth model".
+
+- [x] **Per-person invite codes replacing the shared consent password.**
       New `users` table in `oauth.db` (`user_id`, `name`, `passcode_hash` —
       salted hash, `created_at`, `revoked_at`). The consent form in `auth.py`
       stays one field; `authorize_post` looks up which non-revoked user's
@@ -37,12 +41,12 @@ ingest's writes don't block reads.
       or longer), never human-chosen — the consent page is the
       online-guessing surface, and the per-IP limiter (5 req/10s on
       `authorize_post`) bounds attempts but shouldn't be the only defense.
-- [ ] **Token attribution.** Add `user_id` to `oauth_tokens` via an
+- [x] **Token attribution.** Add `user_id` to `oauth_tokens` via an
       idempotent `_migrate_oauth` column-add (same pattern as `expires_at`).
       Stamped at `/token` time by threading the user through the auth code —
       the `AuthCode` dataclass in `oauth.py` gains a `user_id` field set by
       `authorize_post`.
-- [ ] **Admin CLI** — `python -m nyc_events.users`:
+- [x] **Admin CLI** — `python -m nyc_events.users`:
       - `add <name>` → creates the user, prints the invite code **once**
         (only the hash is stored);
       - `revoke <name>` → sets `revoked_at` AND deletes the user's
@@ -52,11 +56,11 @@ ingest's writes don't block reads.
       Note the 300-second in-process token cache in `auth.py` means a
       revocation takes effect within ~5 minutes — acceptable at this scale;
       don't add cache invalidation plumbing for it.
-- [ ] **`MCP_AUTH_TOKEN` stays operator-only.** It remains the direct-curl
+- [x] **`MCP_AUTH_TOKEN` stays operator-only.** It remains the direct-curl
       bearer and is never handed out. `MCP_CONSENT_PASSWORD` can be retired
       once the users table exists (or kept as the operator's own consent
       login during migration).
-- [ ] **Tests + docs.** New auth paths get tests in
+- [x] **Tests + docs.** New auth paths get tests in
       `test_security_fixes.py` — this is `auth.py`, the do-not-regress
       surface, so tests are not optional. Update CLAUDE.md (out-of-scope
       list, OAuth-model section, security baseline) and the README.

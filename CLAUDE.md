@@ -21,6 +21,7 @@ permit data only (one source); Phase 2 = editorial scrapers.
 .venv/bin/python -m nyc_events.enrich           # second pass alone: code new/uncoded rows (network)
 .venv/bin/python -m nyc_events.enrich --recode-all  # re-resolve EVERY row (after static-table changes)
 .venv/bin/python -m nyc_events.seed_fake        # populate fake events for connector smoke-testing
+.venv/bin/python -m nyc_events.users add <name> # invite-code admin (add | revoke | list)
 .venv/bin/python scripts/build_tract_nta.py     # rebuild data/tract_to_nta.json (one-shot, from NYC open data)
 .venv/bin/python scripts/build_park_neighborhoods.py     # rebuild data/park_neighborhoods.json (one-shot)
 .venv/bin/python scripts/build_library_neighborhoods.py  # rebuild data/library_neighborhoods.json (one-shot)
@@ -59,6 +60,10 @@ latest commit). Update the handoff first and the PR proceeds.
   (`MCP_AUTH_TOKEN`/`MCP_CONSENT_PASSWORD`) deliberately stay call-time
   env reads in auth.py/server.py.
 - `src/nyc_events/oauth.py` — auth-code issue/consume + PKCE verification
+- `src/nyc_events/users.py` — per-person invite codes (MULTI-USER-PLAN.md
+  Phase A): PBKDF2 passcode hashing, `match_user()` for the consent flow,
+  and the `add`/`revoke`/`list` admin CLI. Only hashes are stored; the
+  plaintext code is printed once by `add`.
 - `src/nyc_events/ingest.py` — CLI loop over `ENABLED_SOURCES`; runs `enrich` at the end
 - `src/nyc_events/enrich.py` — second-pass location enrichment (neighborhood coding + lat/lng backfill)
 - `src/nyc_events/geocode.py` — US Census geocoder client (forward + reverse; no API key)
@@ -167,17 +172,30 @@ These have all cost us real time. Don't relearn:
 
 ## OAuth model
 
-- `MCP_AUTH_TOKEN` = master bearer AND fallback consent-page password.
+- `MCP_AUTH_TOKEN` = master bearer AND fallback consent-page password. Stays
+  operator-only — never hand it to an invited user.
 - `MCP_CONSENT_PASSWORD` = optional separate consent-page password for `/authorize` POST.
   When set, the browser form accepts this instead of `MCP_AUTH_TOKEN`, so the master
   bearer is never typed into a browser. Falls back to `MCP_AUTH_TOKEN` when unset
   (original single-var behaviour). The two credentials can be rotated independently.
+- **Per-person invite codes (multi-user, Phase A of MULTI-USER-PLAN.md):**
+  the `users` table in `oauth.db` holds trusted friends/family. The consent
+  page accepts EITHER the operator password OR a non-revoked user's invite
+  code (`users.match_user`); the matched `user_id` rides the auth code and is
+  stamped onto the issued token (`oauth_tokens.user_id`; NULL = operator).
+  Codes are generated (`secrets.token_urlsafe(24)`), stored as salted PBKDF2
+  hashes only, and managed via `python -m nyc_events.users add|revoke|list`.
+  `revoke` tombstones the user AND deletes their tokens (live sessions die
+  within the ~5-min token cache TTL — no cache-invalidation plumbing, by
+  design).
 - `oauth_tokens` table = OAuth-issued access tokens. Lives in `data/oauth.db`,
   intentionally separate from `data/events.db` so wiping events during dev
   does not log claude.ai out.
 - **Rotating `MCP_AUTH_TOKEN` does NOT revoke already-issued access tokens.**
-  This asymmetry is intentional. To revoke a connector:
-  `DELETE FROM oauth_tokens WHERE client_id = ?` on `data/oauth.db`.
+  This asymmetry is intentional. To revoke an invited user:
+  `python -m nyc_events.users revoke <name>`. To revoke one of the operator's
+  own connectors: `DELETE FROM oauth_tokens WHERE client_id = ?` on
+  `data/oauth.db`.
 - Issued tokens default to **90-day TTL** (`OAUTH_TOKEN_TTL_DAYS`). Legacy
   rows with NULL `expires_at` are grandfathered (still valid until manual delete).
 - Redirect-URI allowlist gates `/authorize` GET and POST. Default:
@@ -512,7 +530,10 @@ Known accepted residuals (see `git log` for the security-audit commit):
 
 ## Out-of-scope (deliberate)
 
-- Multi-user. Single-user personal server; the OAuth shim trusts any client_id.
+- Multi-*tenancy*. Friends-and-family multi-user is supported at the auth
+  layer (per-person invite codes — see "OAuth model" and MULTI-USER-PLAN.md),
+  but everyone sees the same shared catalog: no per-user data, preferences,
+  or isolation. The OAuth shim still trusts any client_id.
 - Federated identity / SSO.
 - Admin UI / browser config. The Claude client IS the UI.
 - HTTP retries / queue workers. SQLite + sync httpx is fine at this scale.
