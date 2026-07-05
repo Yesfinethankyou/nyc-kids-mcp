@@ -17,7 +17,7 @@ from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 from starlette.routing import Mount, Route
 
-from . import auth, config
+from . import auth, config, db
 from .tools import mcp
 
 
@@ -37,6 +37,12 @@ def build_app() -> Starlette:
     token = os.environ.get("MCP_AUTH_TOKEN")
     if not token:
         raise RuntimeError("MCP_AUTH_TOKEN env var is required")
+    # Schema + migrations run once here, at startup — NOT on the per-request
+    # read path (tools.py / bearer validation open plain connections). This
+    # keeps DDL write locks off search_events and out of the nightly ingest's
+    # way (issue #28).
+    db.init_events(config.DB_PATH)
+    db.init_oauth(config.OAUTH_DB_PATH)
     # streamable_http_app() lazily materializes mcp.session_manager. The inner
     # app's lifespan is what starts the session manager's task group; we have
     # to forward it through our outer Starlette or every request 500s with

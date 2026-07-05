@@ -312,8 +312,9 @@ kid-relevance filters had drifted between six hand-maintained copies.
 Suite: **455 passed**, ruff: **clean**. Issues #25 (Tribe consolidation),
 #26 (server split), and #27 (neighborhood persistence) implemented on
 `claude/architecture-design-review-8r5735`. Architecture-review issues
-**#28–#29** remain open (db.init/connect split, unused deps); **#30** is
-fully absorbed (items 1+2 with #26, item 3 with #25).
+**#28** (db.init/connect split) and **#29** (unused deps) now implemented on
+`claude/github-issues-28-29-7ks73y`; **#30** is fully absorbed (items 1+2 with
+#26, item 3 with #25).
 
 **Deploy note for #27:** after this lands, corrections to the static
 neighborhood tables need a one-off `docker exec … python -m nyc_events.enrich

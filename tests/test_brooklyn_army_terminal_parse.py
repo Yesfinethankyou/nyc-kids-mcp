@@ -126,6 +126,7 @@ def test_events_survive_db_upsert(events, tmp_path):
     from nyc_events import db
 
     db_path = str(tmp_path / "events.db")
+    db.init_events(db_path)
     with db.connect_events(db_path) as conn:
         ins, _ = db.upsert_events(conn, events)
         assert ins == len(events)

@@ -54,7 +54,9 @@ def _ev(external_id: str, *, days_ahead: float = 7, source: str = "testsrc") -> 
 
 @pytest.fixture
 def conn(tmp_path):
-    with db.connect_events(str(tmp_path / "test.db")) as c:
+    path = str(tmp_path / "test.db")
+    db.init_events(path)
+    with db.connect_events(path) as c:
         yield c
 
 
@@ -171,6 +173,7 @@ def test_migration_adds_missing_since_column(tmp_path):
     )
     legacy.commit()
     legacy.close()
+    db.init_events(p)  # schema DDL + migrations now live in init, not connect
     with db.connect_events(p) as conn:
         cols = {r["name"] for r in conn.execute("PRAGMA table_info(events)")}
     assert "missing_since" in cols

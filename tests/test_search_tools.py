@@ -43,6 +43,7 @@ def _ev(**overrides):
 def seeded_db(tmp_path, monkeypatch):
     path = str(tmp_path / "events.db")
     monkeypatch.setattr(config, "DB_PATH", path)
+    db.init_events(path)
     with db.connect_events(path) as conn:
         db.upsert_events(conn, [
             _ev(external_id="before", title="Before",
@@ -88,6 +89,7 @@ def test_bad_date_format_raises(seeded_db):
 def test_exclude_low_confidence_threads_through(tmp_path, monkeypatch):
     path = str(tmp_path / "events.db")
     monkeypatch.setattr(config, "DB_PATH", path)
+    db.init_events(path)
     with db.connect_events(path) as conn:
         db.upsert_events(conn, [
             _ev(external_id="perm", title="Permit", description=None, url=None),
@@ -103,6 +105,7 @@ def test_exclude_low_confidence_threads_through(tmp_path, monkeypatch):
 def test_list_facets_tool(tmp_path, monkeypatch):
     path = str(tmp_path / "events.db")
     monkeypatch.setattr(config, "DB_PATH", path)
+    db.init_events(path)
     with db.connect_events(path) as conn:
         db.upsert_events(conn, [
             _ev(external_id="a", source="src_a", neighborhood="Astoria",
