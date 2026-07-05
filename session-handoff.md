@@ -2,16 +2,17 @@
 
 ## What was done (most recent first)
 
-### Session: Puppetworks backlog entry (branch `claude/add-puppetworks-source-wup5yq`)
+### Session: Puppetworks + Brooklyn Bridge Park backlog entries (branch `claude/add-puppetworks-source-wup5yq`)
 
-Added Puppetworks (marionette theater) to `SOURCES-BACKLOG.md` as a CANDIDATE
-under "Candidates — to probe". Live probing was attempted from this session
-(`curl_cffi impersonate="chrome"` against `puppetworks.org`) but every request
-got `Recv failure: Connection reset by peer` — sandbox egress to this host is
-currently blocked, so the entry is unprobed. Flagged the user-supplied
-location ("Brooklyn Bridge Park") as needing verification during the probe —
-Puppetworks has historically been sited in Park Slope, not Brooklyn Bridge
-Park. No code changes; next step is `source-verifier` once the host is
+Added Puppetworks (marionette theater) and Brooklyn Bridge Park to
+`SOURCES-BACKLOG.md` as CANDIDATEs under "Candidates — to probe". Live
+probing was attempted from this session (`curl_cffi impersonate="chrome"`)
+for both `puppetworks.org` and `brooklynbridgepark.org`, but every request
+got `Recv failure: Connection reset by peer` — sandbox egress to both hosts
+is currently blocked, so both entries are unprobed. Flagged that Puppetworks
+is a distinct venue from Brooklyn Bridge Park itself (historically Park
+Slope, not part of the park) so the two shouldn't be conflated when built.
+No code changes; next step for both is `source-verifier` once the hosts are
 reachable (retry from a different network per the "sandbox egress varies"
 note).
 
