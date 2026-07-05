@@ -63,6 +63,40 @@ def _client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
+# Cap on request bodies for the unauthenticated OAuth endpoints (issue #34).
+# Their legitimate payloads are tiny (a DCR JSON stub, a consent form, a token
+# exchange form); Starlette/uvicorn impose no default body limit, so without
+# this a multi-hundred-MB POST to /register is buffered wholesale into memory.
+_MAX_BODY_BYTES = 8192
+
+
+async def _body_too_large(request: Request) -> bool:
+    """True if the request body exceeds _MAX_BODY_BYTES.
+
+    Content-Length is checked first as a cheap reject, but the real limit is
+    enforced while draining the stream, so a chunked request that omits
+    Content-Length can't bypass it. On success the body is cached on the
+    request, and Starlette's .json()/.form() re-serve the cached bytes.
+    """
+    try:
+        declared = int(request.headers.get("content-length") or 0)
+    except ValueError:
+        return True
+    if declared > _MAX_BODY_BYTES:
+        return True
+    body = bytearray()
+    async for chunk in request.stream():
+        body.extend(chunk)
+        if len(body) > _MAX_BODY_BYTES:
+            return True
+    request._body = bytes(body)
+    return False
+
+
+def _payload_too_large() -> PlainTextResponse:
+    return PlainTextResponse("payload too large", status_code=413)
+
+
 def _rate_limit(request: Request, endpoint: str) -> Response | None:
     """Return a 429 response if the (IP, endpoint) bucket is exhausted, else
     record this hit and return None. Cheap; called at the top of each
@@ -249,6 +283,8 @@ async def register(request: Request) -> Response:
     limited = _rate_limit(request, "register")
     if limited is not None:
         return limited
+    if await _body_too_large(request):
+        return _payload_too_large()
     # RFC 7591 says POST-only. We accept GET too as a soft guard against the
     # same http→https-redirect-downgrade pitfall described on /token: if the
     # advertised registration_endpoint is http://… and Funnel 302s to https,
@@ -358,6 +394,8 @@ async def authorize_post(request: Request) -> Response:
     limited = _rate_limit(request, "authorize_post")
     if limited is not None:
         return limited
+    if await _body_too_large(request):
+        return _payload_too_large()
     form = await request.form()
     presented = form.get("token", "") or ""
     # Read at request time, not import time — the master token must never sit
@@ -396,6 +434,8 @@ async def token_endpoint(request: Request) -> Response:
     limited = _rate_limit(request, "token")
     if limited is not None:
         return limited
+    if await _body_too_large(request):
+        return _payload_too_large()
     # Accept GET in addition to POST: when the OAuth metadata accidentally
     # advertises an http:// token endpoint (e.g. FORWARDED_ALLOW_IPS not set
     # for a Docker bridge), Tailscale Funnel 302s the POST to https, and

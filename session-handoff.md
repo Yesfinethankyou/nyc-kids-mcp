@@ -2,6 +2,48 @@
 
 ## What was done (most recent first)
 
+### Session: security fixes #33/#34/#36 (branch `claude/security-issues-review-q0w33m`)
+
+Handled the High + Medium findings from the 2026-07-05 security review
+(issues #33, #34, #36). Lows #35/#37 deliberately left open.
+
+- [x] **#33 (High) — rate-limiter bypass via spoofed `X-Forwarded-For`:**
+      `docker-compose.yml` no longer sets `FORWARDED_ALLOW_IPS: "*"`. The
+      compose file now pins the bridge network (`172.28.0.0/24`, gateway
+      `172.28.0.1`) and trusts exactly the gateway, so uvicorn walks XFF
+      right-to-left past the trusted hop to the Funnel-appended real client
+      IP instead of taking an attacker-supplied leftmost entry. CLAUDE.md
+      quirk #5 rewritten (it used to claim the wildcard was safe — that
+      reasoning only covered hostname forgery, not rate-limit keying);
+      security-baseline bullet + README env table updated.
+      **Deploy note:** `docker compose up` will recreate the network; verify
+      after deploy that OAuth discovery still advertises `https://…` (the
+      original reason `*` was chosen) — if the NAS assigns a different
+      gateway, adjust subnet + `FORWARDED_ALLOW_IPS` together.
+- [x] **#34 (Medium) — no body cap on unauthenticated OAuth endpoints:**
+      `auth._body_too_large()` enforces an 8 KB cap (`_MAX_BODY_BYTES`) on
+      `/register`, `/authorize` POST, `/token`, after the rate-limit check
+      and before any parse. Content-Length is a cheap first reject, but the
+      cap binds while draining the stream, so chunked bodies without
+      Content-Length can't bypass it; the drained body is cached on the
+      request so Starlette's `.json()`/`.form()` still work. 6 new tests in
+      `test_security_fixes.py` (oversized declared / oversized streamed /
+      within-limit-still-parses for register; oversized for authorize+token;
+      undersized token still reaches grant validation).
+- [x] **#36 (Medium) — supply chain:** Watchtower pinned
+      `containrrr/watchtower:latest` → `:1.7.1` (it holds the Docker
+      socket; it must not float). New `requirements.lock` (fresh-venv
+      resolve of the runtime deps, no hashes — multi-arch builds would need
+      per-platform wheel digests); Dockerfile installs the lock first, then
+      the project `--no-deps`, so image builds stop floating on
+      newest-PyPI. Full suite verified green against the pinned set in a
+      clean venv (455/455 pre-change, 461/461 after). pyproject keeps loose
+      floors for dev. **Residual (deliberate, maintainer's call):** the app
+      image itself stays on `:latest` + Watchtower auto-deploy — that's the
+      designed update path; pinning it would break auto-updates. README
+      documents the trade and the manual-pull alternative.
+- [x] Suite **461 passed** (455 + 6 new), ruff clean.
+
 ### Session: scaffolding & docs drift review (branch `claude/scaffold-docs-review-3jtjpi`)
 
 Reviewed the repo's AI scaffolding (`.claude/` agents/skills/hooks, CLAUDE.md,
@@ -309,11 +351,12 @@ kid-relevance filters had drifted between six hand-maintained copies.
 
 ## Current state
 
-Suite: **455 passed**, ruff: **clean**. Issues #25 (Tribe consolidation),
-#26 (server split), and #27 (neighborhood persistence) implemented on
-`claude/architecture-design-review-8r5735`. Architecture-review issues
-**#28–#29** remain open (db.init/connect split, unused deps); **#30** is
-fully absorbed (items 1+2 with #26, item 3 with #25).
+Suite: **461 passed**, ruff: **clean**. Security issues **#33/#34/#36**
+(High + both Mediums from the 2026-07-05 review) implemented on
+`claude/security-issues-review-q0w33m`; security Lows **#35** (negative
+`limit` clamp) and **#37** (container hardening opts) remain open, as do
+architecture-review issues **#28–#29** (db.init/connect split, unused deps —
+note #29's dep removals would also shrink the new `requirements.lock`).
 
 **Deploy note for #27:** after this lands, corrections to the static
 neighborhood tables need a one-off `docker exec … python -m nyc_events.enrich

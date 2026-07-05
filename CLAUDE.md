@@ -153,9 +153,17 @@ These have all cost us real time. Don't relearn:
    no params), can't exchange the code, the bearer is never issued, and
    every subsequent `POST /` arrives with no Authorization header. The
    symptom looks like a broken claude.ai client; the root cause is our
-   config. `docker-compose.yml` sets `FORWARDED_ALLOW_IPS=*` because the
-   host port is bound to `127.0.0.1`, so only Funnel/localhost can reach
-   the container — wildcarding is safe under that bind constraint.
+   config. **Do NOT fix this with `FORWARDED_ALLOW_IPS=*`** (we used to;
+   issue #33): Funnel forwards the client's own `X-Forwarded-For` header,
+   and under a wildcard uvicorn takes the *leftmost* XFF entry as the
+   client IP — an attacker mints a fresh per-IP rate-limit bucket on every
+   request and the `/authorize`/`/token`/`/register` limits stop bounding
+   online guessing. `docker-compose.yml` instead pins the bridge subnet
+   (`172.28.0.0/24`) and trusts exactly the gateway
+   (`FORWARDED_ALLOW_IPS=172.28.0.1`); uvicorn walks XFF right-to-left
+   past that trusted hop to the Funnel-appended real client address, which
+   can't be forged. If you change the subnet, change `FORWARDED_ALLOW_IPS`
+   with it — and re-verify the discovery JSON still advertises `https://…`.
 
 ## OAuth model
 
@@ -417,8 +425,14 @@ If you touch the server, do not regress these:
   `default-src 'none'` + `form-action 'self'` + `frame-ancestors 'none'`.
 - Rate limiter on `/authorize` POST, `/token`, `/register`. Sliding-window
   per (client_ip, endpoint) buckets.
+- Request-body cap (`_MAX_BODY_BYTES`, 8 KB) on `/authorize` POST, `/token`,
+  `/register` — the unauthenticated endpoints that parse bodies. Enforced on
+  the stream, not just Content-Length, so chunked bodies can't bypass it
+  (issue #34).
 - `forwarded_allow_ips` defaults to `127.0.0.1`. Override only for Docker
-  bridge networks via `FORWARDED_ALLOW_IPS` env.
+  bridge networks via `FORWARDED_ALLOW_IPS` env — name the bridge gateway
+  exactly, never `"*"` (a wildcard lets spoofed `X-Forwarded-For` defeat the
+  per-IP rate limiter; issue #33).
 - Browser-probe response is the minimum payload (`authorization_required`
   + `resource_metadata` only). Don't add identifying fields back.
 - Master token never logged. No auth tokens in query strings.

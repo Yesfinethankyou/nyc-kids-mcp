@@ -14,11 +14,15 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml ./
+COPY pyproject.toml requirements.lock ./
 COPY src ./src
 
 # Install into a relocatable prefix so the runtime stage can copy it directly.
-RUN pip install --prefix=/install .
+# Pinned deps first (issue #36 — builds must not float on newest-PyPI), then
+# the project itself with --no-deps so pyproject's loose floors can't widen
+# the resolution.
+RUN pip install --prefix=/install -r requirements.lock \
+    && pip install --prefix=/install --no-deps .
 
 # ---- runtime ----------------------------------------------------------------
 FROM python:3.11-slim-bookworm AS runtime

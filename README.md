@@ -134,6 +134,14 @@ The compose file's Watchtower service polls every 5 minutes for new
 containers carrying the `com.centurylinklabs.watchtower.enable=true` label,
 so other containers on your NAS are untouched.
 
+Watchtower itself is version-pinned in the compose file (it mounts the
+Docker socket, which is root-equivalent on the host — it must not float on
+`:latest`). Bump its tag deliberately. The app image's Python dependencies
+are pinned via `requirements.lock` at build time, so a rebuild of the same
+git commit produces the same dependency set; the residual trust is the
+`:latest` app tag itself, which Watchtower auto-deploys by design — pin the
+app image and drop Watchtower if you want a human in that loop (see below).
+
 When a new tag is pushed to GitHub (`v0.2.0`, etc.), the GH Actions workflow
 builds + pushes amd64 and arm64 images. The NAS picks up the update on the
 next poll.
@@ -403,7 +411,7 @@ See `CLAUDE.md` `## Layout` for the authoritative per-module map.
 | `PORT`                         | `8765`                                                                                 | Internal HTTP port (Funnel maps 443 → this)                                                      |
 | `DB_PATH`                      | `data/events.db`                                                                       | SQLite file for events (safe to wipe during ingest iteration)                                    |
 | `OAUTH_DB_PATH`                | `data/oauth.db`                                                                        | Separate SQLite file for OAuth access tokens, so wiping events DB keeps connectors authenticated |
-| `FORWARDED_ALLOW_IPS`          | `127.0.0.1`                                                                            | Source IPs whose `X-Forwarded-*` headers uvicorn trusts. On Synology Docker include the bridge.  |
+| `FORWARDED_ALLOW_IPS`          | `127.0.0.1`                                                                            | Source IPs whose `X-Forwarded-*` headers uvicorn trusts. In Docker, name the bridge gateway exactly (compose pins it to `172.28.0.1`). Never `"*"` — that lets a client spoof `X-Forwarded-For` and mint fresh per-IP rate-limit buckets on the OAuth endpoints. |
 | `OAUTH_REDIRECT_URI_ALLOWLIST` | `https://claude.ai/api/mcp/auth_callback,http://localhost,http://127.0.0.1`            | Comma-separated allowlist for OAuth `redirect_uri`, matched by URL components (exact scheme+host, port if pinned, path prefix). Blocks open-redirect / phishing. |
 | `OAUTH_TOKEN_TTL_DAYS`         | `90`                                                                                   | Default lifetime of an OAuth-issued access token. Bounds an undetected leak.                     |
 
