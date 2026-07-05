@@ -70,19 +70,25 @@ migration, consent-flow change, CLI, tests, docs).
 
 ## Phase B — hardening worth doing alongside
 
-- [ ] **Hash access tokens at rest.** `oauth_tokens.access_token` is
+**Status: SHIPPED 2026-07-05** (same session as Phase A). Tokens are stored
+as `sha256:<hex>` with a one-time in-place migration of legacy plaintext
+rows; the MCP path has a 60 req/min per-token limit (master bearer
+included); `auth.RedactAuthorizeQueryFilter` scrubs `/authorize` query
+strings from uvicorn access logs.
+
+- [x] **Hash access tokens at rest.** `oauth_tokens.access_token` is
       currently the plaintext token. Store `sha256(token)` instead and hash
       the presented bearer before lookup (`db.store_oauth_token` /
       `is_valid_oauth_token`). Cheap, and it means a leaked `oauth.db`
       backup doesn't leak live sessions — more relevant now that the DB
       holds other people's sessions. (The in-memory token cache can keep
       keying on the presented token; only the at-rest form changes.)
-- [ ] **Light per-token rate limit on the authenticated `POST /` path.**
+- [x] **Light per-token rate limit on the authenticated `POST /` path.**
       Today only the unauthenticated OAuth endpoints are limited; one
       person's runaway client shouldn't be able to starve the NAS. Generous
       (e.g. 60 req/min per token) — availability protection, not abuse
       defense.
-- [ ] **Revisit the auth-code-in-access-logs residual.** The code in
+- [x] **Revisit the auth-code-in-access-logs residual.** The code in
       `/authorize?...` query strings landing in uvicorn logs was an accepted
       residual single-user; with multiple users' codes flowing through,
       either drop query strings from access logs or re-confirm logs never

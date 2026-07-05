@@ -19,7 +19,9 @@ another).
 
 from __future__ import annotations
 
+import hashlib
 import html
+import logging
 import os
 import secrets
 import time as _time
@@ -57,6 +59,11 @@ _RATE_LIMITS: dict[str, tuple[int, int]] = {
     "token":          (5, 10),
     "register":       (20, 3600),
 }
+# Per-token limit on the authenticated MCP path (MULTI-USER-PLAN.md Phase B).
+# Availability protection, not abuse defense: one person's runaway client
+# must not starve the NAS for everyone else. Generous — a human-driven
+# Claude conversation makes a handful of tool calls per minute.
+_MCP_TOKEN_LIMIT: tuple[int, int] = (60, 60)  # (max_requests, window_seconds)
 
 
 def _client_ip(request: Request) -> str:
@@ -97,14 +104,10 @@ def _payload_too_large() -> PlainTextResponse:
     return PlainTextResponse("payload too large", status_code=413)
 
 
-def _rate_limit(request: Request, endpoint: str) -> Response | None:
-    """Return a 429 response if the (IP, endpoint) bucket is exhausted, else
-    record this hit and return None. Cheap; called at the top of each
-    protected handler. Auth-success path is never throttled — only the
-    failure-prone surface where guessing happens."""
-    limit, window = _RATE_LIMITS[endpoint]
-    ip = _client_ip(request)
-    key = (ip, endpoint)
+def _bucket_limited(key: tuple[str, str], limit: int, window: int) -> Response | None:
+    """Sliding-window check on one bucket: 429 if exhausted, else record the
+    hit and return None. Shared by the per-IP limiter on the OAuth endpoints
+    and the per-token limiter on the MCP path."""
     now = _time.time()
     bucket = _rate_state.get(key)
     if bucket is not None:
@@ -125,6 +128,43 @@ def _rate_limit(request: Request, endpoint: str) -> Response | None:
         _rate_state[key] = bucket
     bucket.append(now)
     return None
+
+
+def _rate_limit(request: Request, endpoint: str) -> Response | None:
+    """Per-(client IP, endpoint) limit on the unauthenticated OAuth endpoints
+    — bounds online guessing. Cheap; called at the top of each protected
+    handler."""
+    limit, window = _RATE_LIMITS[endpoint]
+    return _bucket_limited((_client_ip(request), endpoint), limit, window)
+
+
+def _token_rate_limit(presented: str) -> Response | None:
+    """Per-token limit on authenticated MCP requests. Keyed by the token's
+    hash so raw bearer material doesn't sit in another in-process structure
+    longer than it must."""
+    limit, window = _MCP_TOKEN_LIMIT
+    key = ("tok:" + hashlib.sha256(presented.encode()).hexdigest(), "mcp")
+    return _bucket_limited(key, limit, window)
+
+
+class RedactAuthorizeQueryFilter(logging.Filter):
+    """Scrub the /authorize query string from uvicorn access-log lines
+    (MULTI-USER-PLAN.md Phase B). Single-user this was an accepted residual;
+    with multiple users' consent redirects flowing through, the PKCE
+    challenge / state / redirect params stay out of anything that might one
+    day ship off-host. Wired onto the "uvicorn.access" logger in server.main.
+
+    uvicorn's access records carry (client_addr, method, full_path,
+    http_version, status_code) in record.args; only full_path is rewritten.
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        args = record.args
+        if isinstance(args, tuple) and len(args) == 5:
+            path = args[2]
+            if isinstance(path, str) and path.startswith("/authorize?"):
+                record.args = (*args[:2], "/authorize?[redacted]", *args[3:])
+        return True
 
 
 def _redirect_uri_allowed(uri: str) -> bool:
@@ -192,19 +232,33 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
         auth = request.headers.get("authorization", "")
         scheme, _, presented = auth.partition(" ")
         if scheme.lower() == "bearer" and presented:
+            authorized = False
             if secrets.compare_digest(presented, self._master):
+                authorized = True
+            else:
+                mono = _time.monotonic()
+                if _oauth_token_cache.get(presented, 0.0) > mono:
+                    authorized = True
+                else:
+                    with db.connect_oauth(self._oauth_db_path) as conn:
+                        if db.is_valid_oauth_token(conn, presented):
+                            _oauth_token_cache[presented] = mono + _OAUTH_CACHE_TTL
+                            if len(_oauth_token_cache) > 200:
+                                stale = [
+                                    k for k, v in _oauth_token_cache.items()
+                                    if v <= mono
+                                ]
+                                for k in stale:
+                                    del _oauth_token_cache[k]
+                            authorized = True
+            if authorized:
+                # Per-token availability limit (applies to the master bearer
+                # too — a runaway curl loop is as capable of starving the NAS
+                # as a runaway connector).
+                limited = _token_rate_limit(presented)
+                if limited is not None:
+                    return limited
                 return await call_next(request)
-            mono = _time.monotonic()
-            if _oauth_token_cache.get(presented, 0.0) > mono:
-                return await call_next(request)
-            with db.connect_oauth(self._oauth_db_path) as conn:
-                if db.is_valid_oauth_token(conn, presented):
-                    _oauth_token_cache[presented] = mono + _OAUTH_CACHE_TTL
-                    if len(_oauth_token_cache) > 200:
-                        stale = [k for k, v in _oauth_token_cache.items() if v <= mono]
-                        for k in stale:
-                            del _oauth_token_cache[k]
-                    return await call_next(request)
 
         meta = f"{_base_url(request)}/.well-known/oauth-protected-resource"
 

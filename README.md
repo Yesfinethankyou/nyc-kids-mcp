@@ -229,8 +229,9 @@ covered below. Quick recipe:
 
 That's it — there's no "API key" field anywhere. The credential's only role is
 the password on that one consent page. After approval, claude.ai sends
-a different opaque token (stored in your `oauth_tokens` SQLite table) on
-every request.
+a different opaque token on every request (stored hashed in your
+`oauth_tokens` SQLite table, so a leaked DB backup doesn't leak live
+sessions).
 
 #### Inviting friends & family
 

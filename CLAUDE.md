@@ -188,9 +188,10 @@ These have all cost us real time. Don't relearn:
   `revoke` tombstones the user AND deletes their tokens (live sessions die
   within the ~5-min token cache TTL — no cache-invalidation plumbing, by
   design).
-- `oauth_tokens` table = OAuth-issued access tokens. Lives in `data/oauth.db`,
-  intentionally separate from `data/events.db` so wiping events during dev
-  does not log claude.ai out.
+- `oauth_tokens` table = OAuth-issued access tokens, stored **hashed at rest**
+  (Phase B — a leaked oauth.db backup doesn't leak live sessions). Lives in
+  `data/oauth.db`, intentionally separate from `data/events.db` so wiping
+  events during dev does not log claude.ai out.
 - **Rotating `MCP_AUTH_TOKEN` does NOT revoke already-issued access tokens.**
   This asymmetry is intentional. To revoke an invited user:
   `python -m nyc_events.users revoke <name>`. To revoke one of the operator's
@@ -451,6 +452,15 @@ If you touch the server, do not regress these:
   `default-src 'none'` + `form-action 'self'` + `frame-ancestors 'none'`.
 - Rate limiter on `/authorize` POST, `/token`, `/register`. Sliding-window
   per (client_ip, endpoint) buckets.
+- Per-token rate limit on the authenticated MCP path (60 req/min,
+  `_MCP_TOKEN_LIMIT`) — availability protection so one runaway client
+  (including the master bearer) can't starve the NAS. Buckets are keyed by
+  the token's sha256, never the raw bearer.
+- OAuth access tokens are stored **hashed** (`db.hash_access_token`,
+  `sha256:<hex>`); the wire still carries the plaintext bearer, and
+  `_migrate_oauth` hashed legacy plaintext rows in place once. Plain SHA-256
+  is deliberate — tokens are 384-bit random, not passwords; don't "upgrade"
+  it to PBKDF2 (that's for the human-carried invite codes in users.py).
 - Request-body cap (`_MAX_BODY_BYTES`, 8 KB) on `/authorize` POST, `/token`,
   `/register` — the unauthenticated endpoints that parse bodies. Enforced on
   the stream, not just Content-Length, so chunked bodies can't bypass it
@@ -466,9 +476,10 @@ If you touch the server, do not regress these:
 Known accepted residuals (see `git log` for the security-audit commit):
 - Auth code in URL on redirect — mitigated by single-use + 5-min TTL +
   `Referrer-Policy: no-referrer`.
-- No persistent log scrubbing — `/authorize?...` query string lands in
-  uvicorn access logs. Acceptable for personal scale; revisit if logs
-  ship off-host.
+- ~~No persistent log scrubbing~~ — closed in multi-user Phase B:
+  `auth.RedactAuthorizeQueryFilter` (wired onto `uvicorn.access` in
+  `server.main`) rewrites `/authorize?...` to `/authorize?[redacted]` in
+  access-log lines.
 - DCR is a no-op (accepts any payload) — intentional per OAuth spec for
   public clients; gating is at consent.
 

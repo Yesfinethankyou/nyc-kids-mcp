@@ -2,6 +2,34 @@
 
 ## What was done (most recent first)
 
+### Session: multi-user Phase B implemented (branch `claude/add-puppetworks-source-wup5yq`)
+
+Implemented Phase B of `MULTI-USER-PLAN.md` (hardening), same session as
+Phase A:
+
+- **Tokens hashed at rest** — `db.hash_access_token()` (`sha256:<hex>`
+  prefix); `store_oauth_token` stores the hash, `is_valid_oauth_token`
+  hashes the presented bearer before lookup. `_migrate_oauth` rewrites any
+  legacy plaintext row in place once (prefix makes it idempotent; clients'
+  cached plaintext bearers keep working). Plain SHA-256 on purpose — tokens
+  are 384-bit random, PBKDF2 stays reserved for human-carried invite codes.
+- **Per-token rate limit on the MCP path** — `_MCP_TOKEN_LIMIT = (60, 60)`
+  applied in `BearerAuthMiddleware` after successful auth (master bearer
+  included). Rate-limiter core refactored into `_bucket_limited()` shared
+  with the per-IP OAuth-endpoint limiter; buckets keyed by token sha256,
+  never the raw bearer.
+- **Access-log redaction** — `auth.RedactAuthorizeQueryFilter` rewrites
+  `/authorize?...` → `/authorize?[redacted]` in `uvicorn.access` records;
+  wired in `server.main()`. Closes the "no persistent log scrubbing"
+  accepted residual in CLAUDE.md.
+- Tests: 7 new (hashing at rest, plaintext-migration idempotency, per-token
+  limit semantics, no-raw-token-in-bucket-keys, log-filter scrub/pass-through);
+  two Phase A tests updated to look rows up by hash. Suite 481 passed, ruff
+  clean. Docs: CLAUDE.md baseline + residuals, README, plan checkboxes.
+
+Phase C (oauth.db backup, uptime check) remains open — it's ops work on the
+NAS, not repo code, except the documented keep-single-worker stance.
+
 ### Session: multi-user Phase A implemented (branch `claude/add-puppetworks-source-wup5yq`)
 
 Implemented Phase A of `MULTI-USER-PLAN.md` (per-person credentials):

@@ -443,7 +443,8 @@ def test_auth_code_carries_user_id_through_consume():
 def test_store_oauth_token_persists_user_id(oauth_conn):
     db.store_oauth_token(oauth_conn, "tk-attr", "client-x", user_id="user-9")
     row = oauth_conn.execute(
-        "SELECT user_id FROM oauth_tokens WHERE access_token = 'tk-attr'"
+        "SELECT user_id FROM oauth_tokens WHERE access_token = ?",
+        (db.hash_access_token("tk-attr"),),
     ).fetchone()
     assert row["user_id"] == "user-9"
 
@@ -550,7 +551,7 @@ def test_user_token_flow_stamps_attribution(user_oauth_db):
     with db.connect_oauth(path) as conn:
         row = conn.execute(
             "SELECT user_id FROM oauth_tokens WHERE access_token = ?",
-            (access_token,),
+            (db.hash_access_token(access_token),),
         ).fetchone()
     assert row["user_id"] == "user-f"
 
@@ -573,3 +574,122 @@ def test_users_cli_add_list_revoke(tmp_path, monkeypatch, capsys):
     with db.connect_oauth(config.OAUTH_DB_PATH) as conn:
         assert users.match_user(conn, code) is None
     assert users.main(["revoke", "nobody"]) == 1
+
+
+# ---- Phase B multi-user hardening ---------------------------------------------
+# (MULTI-USER-PLAN.md — tokens hashed at rest, per-token MCP rate limit,
+#  /authorize query strings out of the access log.)
+
+import logging  # noqa: E402
+
+from nyc_events.auth import (  # noqa: E402
+    _MCP_TOKEN_LIMIT,
+    RedactAuthorizeQueryFilter,
+    _token_rate_limit,
+)
+
+
+def test_tokens_are_stored_hashed_at_rest(oauth_conn):
+    db.store_oauth_token(oauth_conn, "tk-plain-secret", "client-x", scope="mcp")
+    stored = [
+        r["access_token"]
+        for r in oauth_conn.execute("SELECT access_token FROM oauth_tokens")
+    ]
+    assert "tk-plain-secret" not in stored
+    assert db.hash_access_token("tk-plain-secret") in stored
+    assert all(t.startswith("sha256:") for t in stored)
+    # The plaintext as presented on the wire still validates.
+    assert db.is_valid_oauth_token(oauth_conn, "tk-plain-secret")
+    # Presenting the stored hash itself must NOT validate (it gets re-hashed).
+    assert not db.is_valid_oauth_token(
+        oauth_conn, db.hash_access_token("tk-plain-secret")
+    )
+
+
+def test_migration_hashes_legacy_plaintext_tokens(tmp_path):
+    import sqlite3
+    p = str(tmp_path / "plain.db")
+    legacy = sqlite3.connect(p)
+    legacy.executescript("""
+        CREATE TABLE oauth_tokens (
+            access_token TEXT PRIMARY KEY, client_id TEXT NOT NULL,
+            scope TEXT, issued_at TEXT NOT NULL, expires_at TEXT, user_id TEXT
+        );
+        INSERT INTO oauth_tokens VALUES
+            ('legacy-plaintext-token', 'client-old', 'mcp',
+             '2026-01-01T00:00:00+00:00', NULL, NULL);
+    """)
+    legacy.commit()
+    legacy.close()
+    db.init_oauth(p)
+    db.init_oauth(p)  # idempotent — second run must not double-hash
+    with db.connect_oauth(p) as conn:
+        stored = conn.execute(
+            "SELECT access_token FROM oauth_tokens"
+        ).fetchone()["access_token"]
+        assert stored == db.hash_access_token("legacy-plaintext-token")
+        # The client's cached plaintext bearer keeps working post-migration.
+        assert db.is_valid_oauth_token(conn, "legacy-plaintext-token")
+
+
+def test_token_rate_limit_blocks_over_limit():
+    _reset_rate_state()
+    limit, _ = _MCP_TOKEN_LIMIT
+    for _ in range(limit):
+        assert _token_rate_limit("bearer-abc") is None
+    blocked = _token_rate_limit("bearer-abc")
+    assert blocked is not None
+    assert blocked.status_code == 429
+    assert "Retry-After" in blocked.headers
+
+
+def test_token_rate_limit_is_per_token():
+    _reset_rate_state()
+    limit, _ = _MCP_TOKEN_LIMIT
+    for _ in range(limit):
+        _token_rate_limit("bearer-one")
+    assert _token_rate_limit("bearer-one") is not None
+    # A different bearer has its own bucket.
+    assert _token_rate_limit("bearer-two") is None
+
+
+def test_token_rate_limit_does_not_store_raw_token():
+    _reset_rate_state()
+    _token_rate_limit("super-secret-bearer")
+    for key, _endpoint in _rate_state:
+        assert "super-secret-bearer" not in key
+
+
+def _access_log_record(path: str) -> logging.LogRecord:
+    # Mirrors uvicorn's access-log record shape: %s args =
+    # (client_addr, method, full_path, http_version, status_code).
+    return logging.LogRecord(
+        name="uvicorn.access", level=logging.INFO, pathname="", lineno=0,
+        msg='%s - "%s %s HTTP/%s" %d',
+        args=("1.2.3.4:5", "GET", path, "1.1", 200),
+        exc_info=None,
+    )
+
+
+def test_redact_filter_scrubs_authorize_query_string():
+    rec = _access_log_record(
+        "/authorize?client_id=c&redirect_uri=https%3A%2F%2Fclaude.ai%2F"
+        "&code_challenge=SECRETCHAL&state=SECRETSTATE"
+    )
+    assert RedactAuthorizeQueryFilter().filter(rec) is True
+    rendered = rec.getMessage()
+    assert "SECRETCHAL" not in rendered
+    assert "SECRETSTATE" not in rendered
+    assert "/authorize?[redacted]" in rendered
+
+
+def test_redact_filter_leaves_other_paths_alone():
+    rec = _access_log_record("/token")
+    RedactAuthorizeQueryFilter().filter(rec)
+    assert rec.args[2] == "/token"
+    # Odd-shaped records (non-tuple args) pass through untouched.
+    odd = logging.LogRecord(
+        name="uvicorn.error", level=logging.INFO, pathname="", lineno=0,
+        msg="plain message", args=None, exc_info=None,
+    )
+    assert RedactAuthorizeQueryFilter().filter(odd) is True

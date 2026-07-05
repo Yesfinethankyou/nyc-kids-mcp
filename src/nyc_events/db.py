@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sqlite3
@@ -168,6 +169,21 @@ def _migrate_oauth(conn: sqlite3.Connection) -> None:
         # issued before the users table existed get NULL — they're the
         # operator's own claude.ai sessions and stay valid.
         conn.execute("ALTER TABLE oauth_tokens ADD COLUMN user_id TEXT")
+        conn.commit()
+    # Phase B: tokens are stored hashed at rest (see hash_access_token). Any
+    # legacy plaintext row is hashed in place, once — the "sha256:" prefix
+    # makes the rewrite idempotent, and the client keeps presenting the same
+    # plaintext bearer so nothing is logged out.
+    legacy = conn.execute(
+        "SELECT access_token FROM oauth_tokens "
+        "WHERE access_token NOT LIKE 'sha256:%'"
+    ).fetchall()
+    for row in legacy:
+        conn.execute(
+            "UPDATE oauth_tokens SET access_token = ? WHERE access_token = ?",
+            (hash_access_token(row["access_token"]), row["access_token"]),
+        )
+    if legacy:
         conn.commit()
 
 
@@ -503,6 +519,15 @@ def put_geocode(
     conn.commit()
 
 
+def hash_access_token(token: str) -> str:
+    """At-rest form of an access token (MULTI-USER-PLAN.md Phase B): a leaked
+    oauth.db backup must not leak live bearer credentials. Plain SHA-256 (no
+    salt/stretching) is right here — tokens are 384-bit random strings, not
+    passwords. The prefix marks a value as already hashed so the one-time
+    migration in _migrate_oauth is idempotent."""
+    return "sha256:" + hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
 def store_oauth_token(
     conn: sqlite3.Connection,
     access_token: str,
@@ -511,13 +536,15 @@ def store_oauth_token(
     expires_at: datetime | None = None,
     user_id: str | None = None,
 ) -> None:
+    """Persist a newly issued token. Only the hash is stored; the caller is
+    responsible for returning the plaintext to the client exactly once."""
     now = datetime.now(UTC)
     conn.execute(
         "INSERT INTO oauth_tokens "
         "(access_token, client_id, scope, issued_at, expires_at, user_id) "
         "VALUES (?, ?, ?, ?, ?, ?)",
         (
-            access_token,
+            hash_access_token(access_token),
             client_id,
             scope,
             now.isoformat(),
@@ -529,9 +556,11 @@ def store_oauth_token(
 
 
 def is_valid_oauth_token(conn: sqlite3.Connection, access_token: str) -> bool:
+    """Takes the plaintext bearer as presented on the wire; the lookup is by
+    its at-rest hash."""
     row = conn.execute(
         "SELECT expires_at FROM oauth_tokens WHERE access_token = ?",
-        (access_token,),
+        (hash_access_token(access_token),),
     ).fetchone()
     if row is None:
         return False
