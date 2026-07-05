@@ -156,6 +156,40 @@ The CI publishes the following on every `vX.Y.Z` tag push:
 For pinning in production, prefer `:vX.Y.Z` over `:latest` and disable
 Watchtower auto-update for that container by removing the enable label.
 
+### 5. Backups + uptime monitoring (multi-user Phase C)
+
+Once other people depend on the connector, two bits of NAS ops matter
+(see `MULTI-USER-PLAN.md` Phase C):
+
+**Back up `oauth.db` nightly.** Losing it logs every user out at once (they'd
+each need a fresh consent-page approval; invited users' codes still work, but
+it's a multi-person annoyance). `events.db` needs no backup — the nightly
+ingest rebuilds it. Don't just file-copy a live SQLite DB in WAL mode (torn
+copy risk); snapshot it through SQLite's online backup API via the
+container's Python. DSM Task Scheduler, daily (e.g. 04:30, after ingest),
+user `root`:
+
+```bash
+docker exec nyc-events python -c "import sqlite3; s = sqlite3.connect('/data/oauth.db'); d = sqlite3.connect('/data/oauth.db.bak'); s.backup(d); d.close(); s.close()"
+```
+
+The snapshot lands in the bind-mounted `./data` on the host, so whatever
+already backs up your NAS volumes (Hyper Backup etc.) carries it off-box —
+make sure that directory is in a backup task. Restore = stop the container,
+`cp data/oauth.db.bak data/oauth.db`, start it. The `.bak` contains hashed
+tokens and hashed invite codes only, but treat it as sensitive anyway.
+
+**External uptime check on `/healthz`.** Point any monitor at the **public
+Funnel URL** — `https://<your-host>.ts.net/healthz`, expect HTTP 200 body
+`ok` — so it exercises the whole path (Funnel + container), not just the
+LAN port. `/healthz` is unauthenticated by design; never put the master
+token in a monitor config. Self-hosted option on the same NAS
+([Uptime Kuma](https://github.com/louislam/uptime-kuma)) is fine for alerting
+on container death, but it shares the NAS as a failure domain — a free
+external pinger (e.g. UptimeRobot) is the more honest check. The NAS +
+Funnel remain a single point of failure by design; set that expectation
+with users instead of engineering around it.
+
 ## Checkpoint A — verify the HTTP + auth + tools path
 
 Seeds 6 hardcoded events across all 5 boroughs, starts the server, and proves

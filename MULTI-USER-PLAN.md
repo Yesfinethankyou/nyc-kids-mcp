@@ -100,14 +100,21 @@ window is not a concern for this user population).
 
 ## Phase C — availability guardrails (proportionate only)
 
-- [ ] **Keep single-worker.** The in-process rate limiter, token cache, and
+**Status: repo side DONE 2026-07-05.** The runbook lives in README § "Backups
++ uptime monitoring (multi-user Phase C)": nightly `oauth.db` snapshot via
+SQLite's online backup API (DSM Task Scheduler → `docker exec`), external
+monitor on the public Funnel `/healthz`. The two remaining actions are NAS
+ops, not code — create the DSM backup task and point a monitor at the URL.
+
+- [x] **Keep single-worker.** The in-process rate limiter, token cache, and
       pending auth codes force it (see CLAUDE.md security baseline), and
       uvicorn's async loop + millisecond SQLite reads handle this scale
       easily. Moving pending codes into `oauth.db` to unlock multi-worker is
       documented tech debt, not something to build now.
-- [ ] **Back up `oauth.db`** alongside the NAS backup routine — losing it
+- [x] **Back up `oauth.db`** alongside the NAS backup routine — losing it
       logs everyone out simultaneously, now a multi-person annoyance.
-- [ ] **External uptime check** against the unauthenticated `/healthz`
+      *(Documented; DSM task itself is a NAS action — see README.)*
+- [x] **External uptime check** against the unauthenticated `/healthz`
       (e.g. Uptime Kuma on the NAS), since other people will notice outages
       before the operator does.
 - The NAS + Tailscale Funnel remains the single point of failure. Accepted —

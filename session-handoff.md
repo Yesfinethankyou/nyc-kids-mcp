@@ -2,6 +2,28 @@
 
 ## What was done (most recent first)
 
+### Session: multi-user Phase C documented (branch `claude/add-puppetworks-source-wup5yq`)
+
+Phase C of `MULTI-USER-PLAN.md` is ops, not code — the repo side is a
+runbook. Added README § "5. Backups + uptime monitoring (multi-user
+Phase C)" under Deploy:
+
+- Nightly `oauth.db` snapshot via SQLite's online backup API through the
+  container's Python (`docker exec nyc-events python -c "...s.backup(d)..."`
+  → `/data/oauth.db.bak`), because a raw file copy of a live WAL DB risks a
+  torn copy. One-liner verified locally against a WAL db. `events.db`
+  deliberately not backed up (ingest rebuilds it).
+- External monitor on the PUBLIC Funnel `/healthz` (200 "ok"), so the check
+  exercises Funnel + container; recommends an off-NAS pinger over
+  same-NAS Uptime Kuma (shared failure domain). No token in monitor config.
+- Keep-single-worker stance already enforced/documented — box ticked.
+
+Plan checkboxes ticked with a "repo side DONE, NAS actions pending" status
+note. Remaining NAS actions for the operator: create the DSM Task Scheduler
+backup job, ensure `./data` is in a Hyper Backup task, point a monitor at
+the Funnel URL. With this, all three phases of MULTI-USER-PLAN.md are
+closed on the repo side.
+
 ### Session: multi-user Phase B implemented (branch `claude/add-puppetworks-source-wup5yq`)
 
 Implemented Phase B of `MULTI-USER-PLAN.md` (hardening), same session as
