@@ -240,9 +240,10 @@ cleaned input. Strict-raw semantics would require restructuring (`raw_payload
 
 **Each editorial source carries its own kid-relevance filter** — strategies
 vary by venue (allowlist-required, inclusive+blocklist, category-allowlist,
-age-band). `FILTER-REVIEW.md` is the cross-source inventory: every inclusion
-gate, the actual keyword/category lists, and the resolved inconsistencies. The
-filter-consolidation pass is **done** (maintainer review, 2026-06): alcohol-
+age-band). The cross-source filter-consolidation pass is **done** (maintainer
+review, 2026-06; the FILTER-REVIEW.md worksheet that drove it was deleted after
+the review — the durable outcome lives in `sources/_filters.py` and the
+per-source modules): alcohol-
 tasting terms dropped everywhere; the shared adult signals hoisted into
 `sources/_filters.py` (`ADULT_BLOCKLIST` / `MEMBERS_ONLY` + a `normalize()` that
 collapses hyphen/space variants); Green-Wood's dead soft-blocklist removed (its
@@ -459,57 +460,26 @@ Known accepted residuals (see `git log` for the security-audit commit):
     yield) and the Mermaid Parade is published outside the event feed.
     See the Coney Island USA entry in SOURCES-BACKLOG.md (Rejected section)
     for the evidence and revisit conditions.
-- **Phase 2 backlog — venue sources (see `SOURCES-BACKLOG.md` for full
-  probe instructions and data shapes):**
-  - **BUILT (live):** Brooklyn Army Terminal — single-page HTML scrape via
-    `curl_cffi`. Filters out "Live Music Concert" 21+ EDM shows. As built
-    (2026-06-15): 24 cards → 12 dropped, 12 kept kid-relevant community
-    events. See SOURCES-BACKLOG.md as-built block.
-  - **BUILT (live):** Industry City — WordPress + The Events Calendar (Tribe),
-    the same fast-path as Green-Wood / Prospect Park / NY Transit
-    (`wp-json/tribe/events/v1/events`, `curl_cffi` impersonate=chrome). The
-    earlier "custom headless CMS, no wp-json" verdict was a probe artifact.
-    Categories aren't kid-curated, so filtering is title/description
-    keyword-driven with `Nightlife` as a hard-exclude category and an adult
-    blocklist (21+, burlesque, drag, late-night, "no children"). As built
-    (2026-06-20): a live 60-day fetch returned 29 rows → 16 dropped, 13 kept
-    (workshops, Puppetworks, Zine Club, outdoor World Cup watch parties).
-    (Alcohol-tasting terms — cocktail/whiskey/sake/brewery/distillery/wine-or-
-    beer tasting/happy hour — were later removed from the blocklist per the
-    filter review, so gourmet-tour and sake-class rows are now kept too.)
-    `cost`/`venue` always empty upstream →
-    price UNKNOWN, venue/borough hardcoded Industry City / Brooklyn, no
-    lat/lng/age. See SOURCES-BACKLOG.md as-built block.
-  - **BUILT (live):** Governors Island — the prior "custom CMS, no API
-    surface" verdict was a non-impersonating-probe artifact (same failure mode
-    as Industry City). It has a clean custom Craft CMS / Solspace-Calendar JSON
-    feed at `/things-to-do.json` (NOT WordPress/Tribe). Inclusive + blocklist
-    filtering: GI skews family, so include by default and drop only clearly
-    adult content (galas, 7AM NYCRUNS road races) and non-event amenities (bike
-    rentals, the QC NY spa, the digital guide). As built (2026-06-20): a live
-    fetch returned 100 rows → 15 dropped, 85 kept. Dates are "floating" local
-    wall-time mislabeled `Z` (parsed as America/New_York). `cost` absent → price
-    UNKNOWN; venue/borough hardcoded Governors Island / Manhattan; no
-    lat/lng/age. **Opted OUT of missing-detection** (`window_days=None`): the
-    feed hard-caps at 100 rows ordered id-asc with no pagination, so newer
-    events can scroll past the cap rather than being cancelled. See
-    SOURCES-BACKLOG.md as-built block.
-  - **BUILT (live):** Domino Park — the "Sanity headless, no public feed"
-    verdict was a non-impersonating-probe artifact. The `production` dataset on
-    Sanity project `4shd8slw` allows anonymous reads, so we query the public
-    GROQ API directly (`*[_type=="event"]{...}`, `curl_cffi`) — no scraping, no
-    headless browser. Inclusive + light blocklist (it's a curated family-park
-    feed, tags dominated by "Family & Education"). **Recurrence is keyed off
-    the `variant` field, NOT `frequency`:** `reoccurring` docs are expanded via
-    frequency/interval into per-occurrence rows (`external_id=f"{_id}:{date}"`);
-    `single-day`/`multi-day` docs are one event each and their leftover
-    frequency/endDate is vestigial template data (must be ignored or rows
-    double-count). Free-text `startHour`/`endHour` parsed leniently; dates are
-    local wall-time → America/New_York. Has lat/lng + descriptions + tags; no
-    price → UNKNOWN; venue/borough hardcoded Domino Park / Brooklyn. Opted INTO
-    missing-detection (`window_days=60`, full GROQ re-fetch, deterministic
-    occurrence ids). As built (2026-06-20): 125 docs → 104 events over a 60-day
-    window. See SOURCES-BACKLOG.md as-built block.
+- **Phase 2 backlog — venue sources: all BUILT (live).** One line + the
+  load-bearing gotcha each; the full as-built notes (probe history, filter
+  decisions, row counts, upstream quirks) are in each source's
+  SOURCES-BACKLOG.md as-built block — read that before touching a source.
+  - Brooklyn Army Terminal — single-page HTML scrape (`curl_cffi`);
+    drops 21+ EDM "Live Music Concert" shows.
+  - Industry City — fourth Tribe/WordPress source; categories aren't
+    kid-curated so filtering is keyword-driven with `Nightlife` hard-excluded;
+    `cost`/`venue` always empty upstream (hardcoded Brooklyn, price UNKNOWN).
+  - Governors Island — custom Craft/Solspace JSON at `/things-to-do.json`
+    (NOT Tribe); dates are "floating" wall-time mislabeled `Z` (parse as
+    America/New_York); **opted OUT of missing-detection** — the feed
+    hard-caps at 100 rows id-asc, so events scroll past the cap.
+  - Domino Park — public Sanity GROQ API (project `4shd8slw`, anonymous
+    reads); **recurrence keys off `variant`, NOT `frequency`** —
+    `reoccurring` docs expand per-occurrence, single/multi-day docs' leftover
+    frequency is vestigial (ignore it or rows double-count).
+  - Industry City, Governors Island, and Domino Park were each first
+    "rejected" by a non-impersonating probe — always re-probe with
+    `curl_cffi` impersonate=chrome before believing "no feed".
 - **Phase 3 (in progress — see `PHASE-3-PLAN.md`):** location-awareness,
   weather on outdoor events, an indoor/outdoor heuristic flag, more venue
   sources, and deferred tech debt. AI/LLM enrichment is explicitly out of scope.
@@ -517,8 +487,8 @@ Known accepted residuals (see `git log` for the security-audit commit):
     second pass codes `neighborhood` for every locatable row and backfills
     `lat`/`lng` as a side effect (see "Neighborhood coding" above). `near_me` /
     distance-from-home is the remaining A1 piece (the coords it needs now exist).
-  - **TODO:** weather (A3, depends on coords + indoor/outdoor), indoor/outdoor
-    flag (A2), tech-debt #4/#5 are closed; more venue sources (Workstream B).
+  - **TODO:** indoor/outdoor flag (A2), weather (A3 — needs coords + A2),
+    `near_me`, more venue sources (Workstream B). Tech-debt #4/#5/#6 closed.
   **Brooklyn Cyclones**
   is parked here too: the MLB Stats API (`teamId=453`, public JSON, no auth)
   gives the game schedule cheaply, but the themed nights (Star Wars Night
@@ -570,9 +540,10 @@ The `docker-compose.dev.yml` override:
 - Watchtower is scoped via `com.centurylinklabs.watchtower.enable=true`
   label so it does not auto-update other containers on the NAS. If you
   add a sidecar that should NOT auto-update, just omit the label.
-- Healthcheck is a TCP-port probe (no curl in slim, no auth needed). If
-  you want a richer probe, add an unauthenticated `/healthz` endpoint
-  rather than baking the master token into the healthcheck.
+- Healthcheck is a TCP-port probe (no curl in slim, no auth needed). For
+  a richer probe, point it at the existing unauthenticated `/healthz`
+  route (`server.py`) rather than baking the master token into the
+  healthcheck.
 
 ## Files that must never be committed
 

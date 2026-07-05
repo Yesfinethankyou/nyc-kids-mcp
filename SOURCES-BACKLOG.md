@@ -29,7 +29,9 @@ on your laptop/NAS if a specific domain is actually blocked.
 ## Tech debt / TODO
 
 **Review filter lists for all sources — DONE (maintainer review, 2026-06).**
-The full inventory lives in **`FILTER-REVIEW.md`**; the review's decisions were
+The `FILTER-REVIEW.md` worksheet that inventoried every filter was deleted
+after the review (its outcome lives in `sources/_filters.py` and the source
+modules); the review's decisions were
 applied as a focused pass with fresh live fetches per touched source:
 - Alcohol-tasting terms dropped from every blocklist (alcohol alone isn't an
   adult-only signal).

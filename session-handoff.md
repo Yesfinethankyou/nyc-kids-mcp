@@ -2,30 +2,44 @@
 
 ## What was done (most recent first)
 
-### Session: DB init/connect split + dead-dep cull, issues #28 & #29 (branch `claude/github-issues-28-29-7ks73y`)
+### Session: scaffolding & docs drift review (branch `claude/scaffold-docs-review-3jtjpi`)
 
-Two architecture-review findings from 2026-07-02.
+Reviewed the repo's AI scaffolding (`.claude/` agents/skills/hooks, CLAUDE.md,
+MCP tool docstrings, docs) for staleness and gaps. Verdict: the scaffolding
+itself is in good shape (agents/skills/hooks verified against code and history;
+tool docstrings verified against `db.search` semantics — no changes needed
+there beyond one nit). The problem was **status drift across four surfaces**,
+all fixed this session:
 
-- [x] **#28 — schema DDL off the read path.** Split `db._open()` into
-      `db._connect()` (plain: WAL + `row_factory` + FK pragma, **no DDL**) and
-      `db.init_events()` / `db.init_oauth()` (schema `executescript` +
-      `_migrate_*`). `connect_events` / `connect_oauth` are now plain opens, so
-      a per-request `search_events` connection no longer re-runs `CREATE TABLE`/
-      `ALTER` and takes a write lock contending with the nightly ingest. `init_*`
-      is called once at each entry point: `server.build_app()`, `ingest.main`,
-      `enrich.main`, `seed_fake.main`. Test fixtures that create a fresh DB now
-      call `init_*` first; the two migration tests (`test_migration_adds_
-      missing_since_column`, `test_oauth_migration_adds_expires_at_column`) call
-      `init_*` explicitly since that's where migrations now live.
-- [x] **#29 — removed unused deps** `feedparser`, `icalendar`,
-      `python-dateutil` from `pyproject.toml` (imported nowhere in
-      `src`/`tests`/`scripts`; Phase-1 RSS/iCal anticipation that never
-      materialized). Re-add `icalendar` if an iCal source shows up in Phase 3.
-- [x] **Docs** — CLAUDE.md "DB migrations" section rewritten to describe the
-      init/connect split.
-- [x] **Verified** — full suite **455 passed, ruff clean**; runtime smoke test
-      confirms `build_app()` creates + migrates both DBs and `connect_*` opens
-      them plainly.
+- [x] **Deleted `progress.md` + `feature-list.json`** — the harness-template
+      trackers were stale and mutually contradictory (feature-list said
+      feat-006/008/009 "not-started"; progress.md said feat-006/009 shipped;
+      CLAUDE.md — the declared canonical source — says A1 done, tech debt
+      closed). CLAUDE.md `## Phase roadmap` + this handoff now carry those
+      roles alone. `init.sh` next-steps repointed accordingly.
+- [x] **CLAUDE.md de-staled:** removed the two references to the deleted
+      `FILTER-REVIEW.md` (here + SOURCES-BACKLOG.md); fixed the Docker
+      healthcheck bullet that implied `/healthz` doesn't exist (it does —
+      `server.py`); trimmed the four long Phase-2 as-built paragraphs
+      (BAT / Industry City / Governors Island / Domino Park) to one-liners
+      keeping only the load-bearing gotchas — the full notes stay in
+      SOURCES-BACKLOG.md as-built blocks; clarified the Phase-3 TODO line
+      (tech-debt #4/#5/#6 closed).
+- [x] **README de-staled:** Phase 3 status now says the enrichment pass
+      shipped (it said "planned (not yet implemented)" while the deploy
+      section described the pass running); project-layout tree updated for
+      the post-#26 server split (auth/tools/config/oauth/enrich/geocode
+      modules) and de-drifted (per-source file list replaced with a pointer
+      to CLAUDE.md `## Layout`); "6 tools" → 7; the "Why Permitted Events"
+      source enumeration (7 of 10 listed) replaced with a pointer to Status.
+- [x] **`list_sources` docstring** (tools.py) now steers consuming LLMs to
+      `list_facets` for filter values — it's a health tool, not a search tool.
+- [x] **ingest-health skill:** replaced hard `file.py:NN-NN` line references
+      (already rotted) with symbol references.
+- [x] Full suite green + ruff clean after the tools.py docstring change.
+
+Explicitly NOT done (reviewed and rejected as premature): new slash commands,
+new agents, ADR files, tool-description rewrites beyond the one nit above.
 
 ### Session: neighborhood persistence, issue #27 (branch `claude/architecture-design-review-8r5735`, same session as #26/#25 below)
 
@@ -336,10 +350,9 @@ propagate them implicitly is gone (that wipe was the bug).
 
 ## Next session startup
 
-1. Read `CLAUDE.md` (project guide — hard-won quirks, security baseline; the
-   new "Neighborhood coding" section).
-2. Read `progress.md` for current feature state.
-3. Run `pytest tests/ -q` + `ruff check` — suite should be green (439).
+1. Read `CLAUDE.md` (project guide — hard-won quirks, security baseline;
+   `## Phase roadmap` is the canonical feature state).
+2. Run `pytest tests/ -q` + `ruff check` — suite should be green.
 
 ## Recommended next steps
 

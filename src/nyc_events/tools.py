@@ -396,7 +396,10 @@ def list_sources() -> list[dict[str, Any]]:
     """List ingested event sources with counts and freshness.
 
     Returns one row per source with event_count, earliest_event, latest_event,
-    and last_seen. Useful for diagnosing stale or empty sources.
+    and last_seen. Use this for data-health questions ("is the catalog
+    current?", "which source is stale/empty?") — not for finding events. To
+    discover valid search_events filter values (including source ids), prefer
+    list_facets.
     """
     with db.connect_events(config.DB_PATH) as conn:
         return db.list_sources(conn)
