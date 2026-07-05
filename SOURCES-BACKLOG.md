@@ -108,6 +108,61 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
   worth a source, or is it mostly the annual film festival? Gauge yield during
   the probe before committing to `source-adder`.
 
+### Puppetworks
+
+- **Status:** CANDIDATE — proposed 2026-07-05, unprobed (sandbox egress to
+  `puppetworks.org` was reset/blocked this session — `curl_cffi
+  impersonate="chrome"` got `Recv failure: Connection reset by peer` on `/`,
+  `/calendar`, `/schedule`, `/tickets`, `/events`; retry from a different
+  network before concluding it's actually unreachable, per the "sandbox
+  egress varies" note above).
+- **Why:** dedicated marionette/puppet theater — all-ages by construction,
+  no kid-relevance filter likely needed (same "curated kids feed" bucket as
+  `mommy_poppins`/`bk_childrens_museum`).
+- **URLs to probe:** `https://puppetworks.org` plus a calendar/schedule/
+  tickets page (exact path unconfirmed — probe blocked before a page loaded).
+  Check for a ticketing-platform embed (many small theaters run Eventbrite,
+  Ticketleap, or a custom WordPress calendar) — grep for the usual tells
+  (`wp-json`, `tribe-events`, `eventbrite`, JSON-LD `Event`).
+- **Borough/venue:** proposed as Brooklyn Bridge Park — **verify during the
+  probe**, since Puppetworks has historically been sited in Park Slope
+  (338 6th Ave), not Brooklyn Bridge Park; confirm the current address before
+  hardcoding a `SOURCE_NEIGHBORHOOD` entry.
+- **Filtering plan if built:** likely no filter needed (single-purpose kids'
+  venue) — confirm the full program list is actually all-ages before skipping
+  a filter, same caution as the other curated feeds.
+
+### Brooklyn Bridge Park
+
+- **Status:** CANDIDATE — proposed 2026-07-05, unprobed (sandbox egress to
+  `brooklynbridgepark.org` was reset/blocked this session — same `Recv
+  failure: Connection reset by peer` on `/`, `/events`, `/calendar` as the
+  Puppetworks probe above; retry from a different network before concluding
+  it's actually unreachable, per the "sandbox egress varies" note above).
+- **Why:** a major waterfront park with a large recurring family-program
+  calendar (free movies, kayaking, playgrounds programming, seasonal
+  festivals) — a real Phase-2-shaped venue source, similar in spirit to
+  Prospect Park / Domino Park / Governors Island.
+- **URLs to probe:** `https://www.brooklynbridgepark.org/events` and
+  `/calendar` (exact path unconfirmed — probe blocked before a page loaded).
+  Grep for the usual platform tells (`wp-json`/`tribe-events`, Squarespace,
+  Sanity, JSON-LD `Event`, embedded JSON) once reachable; a nonprofit park
+  conservancy site is plausibly WordPress/Tribe (same stack as Green-Wood/
+  Prospect Park/NY Transit) or a custom CMS — don't assume, probe.
+- **Filtering plan if built:** curated park site, likely inclusive-with-
+  blocklist like Prospect Park/Domino/Governors Island (adult-only events are
+  the minority) — confirm strategy once the category/tag shape is known.
+- **Borough/venue:** Brooklyn; the park spans multiple piers/sections
+  (DUMBO through Cobble Hill) — check whether events carry a per-pier
+  location that would need `VENUE_NEIGHBORHOOD` (like NY Transit's two
+  sites / the Met's two buildings) rather than a single
+  `SOURCE_NEIGHBORHOOD` constant, since DUMBO and Cobble Hill are different
+  NTAs.
+- **Note:** Puppetworks (added above, same session) was proposed as sited
+  "in Brooklyn Bridge Park" — Puppetworks is actually a separate, historically
+  Park-Slope-based venue, not part of the park itself. Treat these as two
+  distinct candidates; don't conflate their venues/neighborhoods if both get built.
+
 ### NYC public libraries — system map (read before building any of the four below)
 
 NYC has **three** public-library systems, not five:
