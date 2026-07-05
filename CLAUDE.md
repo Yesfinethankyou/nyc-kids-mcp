@@ -205,7 +205,15 @@ isn't per-occurrence.
 
 ## DB migrations
 
-- Each `connect_*` runs an idempotent `_migrate_*` after schema creation.
+- **Schema DDL + migrations live in `init_events()` / `init_oauth()`, run once
+  at startup — NOT on the per-connection read path (issue #28).** `connect_events`
+  / `connect_oauth` are now plain opens (WAL + `row_factory` + FK pragma, no
+  DDL); they assume `init_*` already ran for that path. Call `init_*` at the top
+  of each entry point: `server.build_app()`, `ingest.main`, `enrich.main`,
+  `seed_fake.main` (and in tests that create a fresh DB — see the fixtures).
+  Keeping DDL off `connect` means a `search_events` call never takes a write
+  lock to re-run `CREATE TABLE`/`ALTER` and contend with the nightly ingest.
+- Each `init_*` runs an idempotent `_migrate_*` after schema creation.
 - Migrations are `PRAGMA table_info` to read existing columns + `ALTER TABLE
   ADD COLUMN` if missing. No timestamp-based migration framework — keep it
   this simple unless we genuinely outgrow it.

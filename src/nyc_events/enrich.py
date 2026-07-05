@@ -163,6 +163,7 @@ def main() -> int:
     )
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
+    db.init_events(config.DB_PATH)  # standalone run: ensure schema (issue #28)
     considered, coded = run(config.DB_PATH, recode_all=args.recode_all)
     print(f"enrich: {coded}/{considered} rows coded with a neighborhood")
     return 0

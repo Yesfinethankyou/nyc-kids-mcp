@@ -97,7 +97,9 @@ def test_consent_headers_constant_includes_csp_form_action():
 
 @pytest.fixture
 def oauth_conn(tmp_path):
-    with db.connect_oauth(str(tmp_path / "oauth.db")) as c:
+    path = str(tmp_path / "oauth.db")
+    db.init_oauth(path)
+    with db.connect_oauth(path) as c:
         yield c
 
 
@@ -113,6 +115,7 @@ def test_oauth_migration_adds_expires_at_column(tmp_path):
     """)
     legacy.commit()
     legacy.close()
+    db.init_oauth(p)  # schema DDL + migrations now live in init, not connect
     with db.connect_oauth(p) as conn:
         cols = {r["name"] for r in conn.execute("PRAGMA table_info(oauth_tokens)")}
     assert "expires_at" in cols

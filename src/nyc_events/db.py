@@ -93,7 +93,11 @@ CREATE TABLE IF NOT EXISTS oauth_tokens (
 """
 
 
-def _open(path: str, schema: str) -> sqlite3.Connection:
+def _connect(path: str) -> sqlite3.Connection:
+    """Plain open: WAL + row_factory + FK pragma, NO DDL. The schema must
+    already exist — call init_events()/init_oauth() once at process startup
+    (server build_app / each CLI entry point) so the per-request read path
+    never re-runs schema DDL and takes a write lock contending with ingest."""
     parent = os.path.dirname(path)
     if parent:
         os.makedirs(parent, exist_ok=True)
@@ -101,8 +105,29 @@ def _open(path: str, schema: str) -> sqlite3.Connection:
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
-    conn.executescript(schema)
     return conn
+
+
+def init_events(path: str) -> None:
+    """Create the events schema + run idempotent migrations. Call once at
+    startup, off the request path (see _connect). Safe to re-run."""
+    conn = _connect(path)
+    try:
+        conn.executescript(EVENTS_SCHEMA)
+        _migrate_events(conn)
+    finally:
+        conn.close()
+
+
+def init_oauth(path: str) -> None:
+    """Create the oauth schema + run idempotent migrations. Call once at
+    startup, off the request path. Safe to re-run."""
+    conn = _connect(path)
+    try:
+        conn.executescript(OAUTH_SCHEMA)
+        _migrate_oauth(conn)
+    finally:
+        conn.close()
 
 
 def _migrate_events(conn: sqlite3.Connection) -> None:
@@ -130,9 +155,10 @@ def _migrate_oauth(conn: sqlite3.Connection) -> None:
 
 @contextmanager
 def connect_events(path: str):
-    conn = _open(path, EVENTS_SCHEMA)
+    """Plain per-call connection to the events DB. Assumes init_events() has
+    already run for this path (server startup / CLI entry point)."""
+    conn = _connect(path)
     try:
-        _migrate_events(conn)
         yield conn
     finally:
         conn.close()
@@ -140,9 +166,10 @@ def connect_events(path: str):
 
 @contextmanager
 def connect_oauth(path: str):
-    conn = _open(path, OAUTH_SCHEMA)
+    """Plain per-call connection to the oauth DB. Assumes init_oauth() has
+    already run for this path (server startup)."""
+    conn = _connect(path)
     try:
-        _migrate_oauth(conn)
         yield conn
     finally:
         conn.close()

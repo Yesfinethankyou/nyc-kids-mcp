@@ -34,6 +34,7 @@ def main() -> int:
         return 1
 
     db_path = config.DB_PATH
+    db.init_events(db_path)  # schema + migrations, off the read path (issue #28)
     total_in = 0
     total_up = 0
     failures: list[str] = []

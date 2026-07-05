@@ -112,6 +112,7 @@ def fake_events(now: datetime | None = None) -> list[Event]:
 def main() -> None:
     path = config.DB_PATH
     events = fake_events()
+    db.init_events(path)  # schema + migrations, off the read path (issue #28)
     with db.connect_events(path) as conn:
         ins, upd = db.upsert_events(conn, events)
     print(f"Seeded {len(events)} fake events to {path}: {ins} inserted, {upd} updated")
