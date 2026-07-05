@@ -31,7 +31,8 @@ form only when you explicitly want to check prod.
 This already prints, per source, a line like
 `mommy_poppins: 12 inserted, 5 updated (233 fetched)`, then a `TOTAL:` line, and
 on failure a `FAILED SOURCES:` block (and exits non-zero). Lean on that output —
-do not reimplement the loop. (See `src/nyc_events/ingest.py:37-45`.)
+do not reimplement the loop. (See the per-source summary loop in
+`ingest.main`, `src/nyc_events/ingest.py`.)
 
 ### 2. Flag from the run output
 
@@ -47,8 +48,8 @@ do not reimplement the loop. (See `src/nyc_events/ingest.py:37-45`.)
 
 ### 3. Read freshness from the DB
 
-Use the project's own `db.list_sources` (same shape as
-`src/nyc_events/db.py:349-362`) rather than a raw SQL string:
+Use the project's own `db.list_sources` (in `src/nyc_events/db.py`) rather
+than a raw SQL string:
 
 ```bash
 .venv/bin/python -c "

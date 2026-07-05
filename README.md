@@ -20,9 +20,12 @@ tools — designed for use from the Claude mobile app while out with a kid.
   Out NY Kids (no event feed without a headless browser) and Coney Island
   USA (feed works, but the calendar is adult programming). More venues in
   `SOURCES-BACKLOG.md`.
-- Phase 3 📋 planned (not yet implemented) — location-awareness (geocoding +
-  distance-from-home), weather on outdoor events, an indoor/outdoor flag, and
-  more venue sources. Design in `PHASE-3-PLAN.md`.
+- Phase 3 🚧 in progress — **shipped:** neighborhood coding + lat/lng
+  geocoding as a nightly enrichment pass after ingest (US Census geocoder,
+  results cached; surfaced as a `neighborhood` field + `search_events`
+  filter). **Remaining:** distance-from-home (`near_me`), weather on outdoor
+  events, an indoor/outdoor flag, and more venue sources. Design in
+  `PHASE-3-PLAN.md`.
 
 **Why "Permitted Events" and not "Parks":** the spec originally named the
 NYC Parks Events Listing (`fudw-fgrp`) SODA dataset, but it's been frozen
@@ -30,11 +33,9 @@ since 2019-12. The live successor is `tvpp-9vvx` (NYC Permitted Event
 Information) — a citywide permitting catalog, broader and noisier. The
 ingest filters to `event_agency='Parks Department'`, a kid-friendly event
 type allowlist, a title blocklist (drops Eid/load-in/RC-plane noise), and
-finally a kid-keyword filter (must match at least one tag). Phase 2 editorial
-sources add higher-curated signal alongside this baseline — Mommy Poppins NYC,
-BPL, Brooklyn Children's Museum, Green-Wood Cemetery, Prospect Park
-Alliance, the New York Transit Museum, and the Brooklyn Army Terminal are
-live.
+finally a kid-keyword filter (must match at least one tag). The ten Phase 2
+editorial sources (see Status above) add higher-curated signal alongside this
+baseline.
 
 ## Architecture
 
@@ -214,7 +215,7 @@ covered below. Quick recipe:
    (claude.ai treats the URL as the MCP endpoint itself — don't append `/mcp`)
 4. claude.ai redirects you to a one-field consent page on your server
 5. **Paste your `MCP_AUTH_TOKEN`** on the consent page and click Approve
-6. claude.ai stores an issued access token; you should now see the 6 tools
+6. claude.ai stores an issued access token; you should now see the 7 tools
 
 That's it — there's no "API key" field anywhere. The master token's role is
 just the password on that one consent page. After approval, claude.ai sends
@@ -367,39 +368,32 @@ data is a useful denominator even with its thinness.
 ## Project layout
 
 ```
-nyc-events-mcp/
+nyc-kids-mcp/
 ├── pyproject.toml
 ├── .env.example
 ├── src/nyc_events/
 │   ├── models.py         # Event + Borough/Price enums + compute_id
 │   ├── db.py             # SQLite schema, FTS5, upsert, prune, search
-│   ├── server.py         # FastMCP app + bearer middleware + tools + /healthz
-│   ├── ingest.py         # CLI: loops ENABLED_SOURCES -> upsert -> prune
-│   ├── seed_fake.py      # Hardcoded events for connector smoke-testing
-│   └── sources/
-│       ├── base.py                   # Source ABC
-│       ├── __init__.py               # ENABLED_SOURCES registry
-│       ├── nyc_permitted_events.py   # NYC Open Data tvpp-9vvx  (Phase 1)
-│       ├── mommy_poppins.py          # editorial scraper        (Phase 2, shipped)
-│       ├── bpl.py                    # BPL calendar             (Phase 2, shipped)
-│       ├── bk_childrens_museum.py    # Brooklyn Children's Mus. (Phase 2, shipped)
-│       ├── greenwood_cemetery.py     # Tribe Events REST        (Phase 2, shipped)
-│       ├── prospect_park.py          # Tribe Events REST        (Phase 2, shipped)
-│       ├── ny_transit_museum.py      # Tribe Events REST        (Phase 2, shipped)
-│       ├── brooklyn_army_terminal.py # single-page HTML scrape  (Phase 2, shipped)
-│       ├── industry_city.py          # Tribe Events REST        (Phase 2, shipped)
-│       ├── governors_island.py       # Craft CMS JSON feed      (Phase 2, shipped)
-│       ├── domino_park.py            # Sanity GROQ API          (Phase 2, shipped)
-│       └── timeout_nykids.py         # stub                     (rejected — no feed)
+│   ├── server.py         # composition root: build_app() wiring + uvicorn main()
+│   ├── tools.py          # FastMCP instance + the 7 MCP tools + projections
+│   ├── auth.py           # bearer middleware, OAuth 2.1 shim, rate limiter
+│   ├── oauth.py          # auth-code issue/consume + PKCE verification
+│   ├── config.py         # env-derived settings (DB paths, port, allowlists)
+│   ├── ingest.py         # CLI: loops ENABLED_SOURCES -> upsert -> prune -> enrich
+│   ├── enrich.py         # second-pass neighborhood coding + lat/lng backfill
+│   ├── geocode.py        # US Census geocoder client (no API key)
+│   ├── seed_fake.py      # hardcoded events for connector smoke-testing
+│   ├── data/             # committed open-data lookup tables (tract/park/library → NTA)
+│   └── sources/          # one module per source (+ shared _tribe/_filters/
+│                         #   _neighborhoods helpers, ENABLED_SOURCES registry)
+├── scripts/              # one-shot builders for the src/nyc_events/data tables
 ├── data/                 # SQLite lives here; gitignored
-├── SOURCES-BACKLOG.md    # researched candidate sources
-└── tests/
-    ├── test_db.py                          # schema, migrations, search
-    ├── test_security_fixes.py              # Checkpoint C bundle
-    ├── test_weekend_window.py              # events_this_weekend window
-    ├── test_nyc_permitted_events_parse.py  # Phase 1 parser
-    └── test_<source>_parse.py              # one per Phase 2 source
+├── SOURCES-BACKLOG.md    # researched candidate sources + as-built notes
+└── tests/                # per-surface tests + one test_<source>_parse.py per
+                          #   source, against real captured fixtures/
 ```
+
+See `CLAUDE.md` `## Layout` for the authoritative per-module map.
 
 ## Env vars
 

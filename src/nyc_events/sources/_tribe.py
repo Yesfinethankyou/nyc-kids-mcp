@@ -17,7 +17,8 @@ owns everything that is a property of the *plugin*, not the venue:
   decoded only a fixed handful of entities).
 
 Each source keeps what is a property of the *venue*: its kid-relevance
-strategy (keyword allowlist vs category allowlist — see FILTER-REVIEW.md),
+strategy (keyword allowlist vs category allowlist — shared adult signals
+in ``_filters.py``, strategy documented per source module),
 tag rules, and venue/borough/price mapping. Sources define a module-level
 ``_parse_row(row)`` on top of ``parse_row`` and assign it into their class
 via ``staticmethod``, so parser tests keep calling it directly with fixture
