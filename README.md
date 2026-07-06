@@ -284,6 +284,46 @@ step 5. Codes are stored as salted hashes only. Access tokens issued via an
 invite code carry that `user_id`, so revocation is per-person; revoked
 sessions stop working within ~5 minutes (server-side token cache).
 
+#### Onboarding an invited user
+
+Hand the new user two things — the **connector URL** (your public Funnel
+hostname, e.g. `https://nas.example.ts.net`) and their **invite code** — then
+give them the steps below. Everything from "Send this to the person you're
+inviting" down is written to be copy-pasted to them verbatim; fill in the URL
+first.
+
+> **Setting up your NYC Kids events connector in Claude**
+>
+> You'll need: a Claude account (the [web app](https://claude.ai) or the
+> mobile app both work), the connector URL and the invite code I sent you.
+> This connects Claude to a shared calendar of NYC family-friendly events —
+> once it's set up you can just ask Claude things like *"what's happening for
+> kids in Brooklyn this weekend?"*
+>
+> 1. Open Claude and go to **Settings → Connectors** (on mobile: **Profile →
+>    Settings → Connectors**).
+> 2. Tap **Add custom connector**.
+> 3. For the URL, paste the connector URL exactly as I sent it — nothing
+>    added on the end. Give it any name you like (e.g. "NYC Kids Events").
+> 4. Claude sends you to a small approval page that asks for an **access
+>    code**. Paste the **invite code** I sent you and tap **Approve**.
+> 5. Done — Claude will show a set of event-search tools. Start a new chat and
+>    ask about kids' events in NYC to try it.
+>
+> A few notes:
+> - **Keep your invite code.** You'll need it again if you add Claude on
+>    another device, or if you're ever asked to reconnect. It's yours alone —
+>    please don't share it.
+> - If the approval page says the code is invalid, double-check you copied the
+>    whole thing (no stray spaces), and that you used the *invite code* rather
+>    than the URL. If it still fails, let me know — I can reissue it.
+> - If Claude says the URL looks wrong, make sure you pasted it with nothing
+>    appended after the hostname.
+
+If a user needs a fresh code (lost it, or you revoked and want to re-add
+them), `revoke` then `add` again — codes can't be recovered, only reissued,
+since only the hash is stored.
+
 #### OAuth flow under the hood
 
 | Endpoint                                       | Purpose                                                        |

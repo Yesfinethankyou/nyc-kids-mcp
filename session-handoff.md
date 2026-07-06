@@ -2,6 +2,17 @@
 
 ## What was done (most recent first)
 
+### Session: invited-user onboarding in README (branch `claude/add-puppetworks-source-wup5yq`)
+
+Added README § "Onboarding an invited user" under the connector docs. The
+existing "Inviting friends & family" section was operator-facing (the `users`
+CLI); this fills the gap with a copy-pasteable, jargon-free walkthrough the
+operator can forward to the invited person verbatim — Settings → Connectors →
+Add custom connector, paste URL, paste invite code on the approval page, done
+— plus keep-your-code / invalid-code / bad-URL troubleshooting and a note that
+codes are reissued (never recovered) via revoke+add. Docs only; no code, no
+test changes.
+
 ### Session: multi-user Phase C documented (branch `claude/add-puppetworks-source-wup5yq`)
 
 Phase C of `MULTI-USER-PLAN.md` is ops, not code — the repo side is a
