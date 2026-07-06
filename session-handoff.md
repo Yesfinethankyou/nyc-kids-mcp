@@ -35,6 +35,27 @@ The Whitney and The Skint were already in the backlog from a prior session —
 not duplicated. No code changes; docs only. Next step for any of these is
 `source-verifier`.
 
+### Session (same branch): Time Out re-probed — rejection stands, reason updated
+
+Re-assessed the Time Out NY Kids rejection at the user's request (the
+"non-impersonating probe" lesson made the old verdict suspect). Live re-probe
+2026-07-06, plain `httpx` (no anti-bot):
+
+- The old reason is **stale**: the site is server-rendered now, not
+  JS-rendered. No headless browser needed to read it.
+- But the rejection **stands** on new grounds: the kids vertical has zero
+  dated events (evergreen listicles only), and while the main NYC monthly
+  events calendar (~58 items/month, server-rendered, detail pages with
+  structured Address/Price/Opening-hours box and a `TheaterEvent`-typed
+  JSON-LD) is real, **no `startDate` exists anywhere** — event dates are
+  mid-sentence editorial prose, which is free-text NLP extraction, out of
+  scope per PHASE-3-PLAN.md. Kid yield of the general calendar was ~5% on a
+  quick `_filters.py` pass anyway.
+- Rewrote the SOURCES-BACKLOG.md Rejected entry with the re-probe findings
+  and a concrete revisit tell (watch for `startDate` appearing in the
+  JSON-LD — the CMS already types events, it's one field away). Stub
+  tombstone unchanged. Docs only, no code.
+
 ### Session (same branch): The Skint probed in depth — digest parser is buildable, yield is the open question
 
 Followed up on "is there a way to make The Skint work" by actually fetching

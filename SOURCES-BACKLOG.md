@@ -986,9 +986,41 @@ Source code is authoritative; these notes capture the surprises.
   into the event collection. A strict title/category allowlist version is
   ~20 minutes of work on top of the Squarespace fast-path if that happens.
 
-### Time Out NY Kids — ❌ REJECTED (no structured feed)
+### Time Out NY Kids — ❌ REJECTED (re-probed 2026-07-06; reason updated)
 
-- **Status:** REJECTED. JS-rendered editorial site: no JSON-LD, no API, no
-  sitemap with events. Would need a headless browser — out of scope for
-  Phase 2. Stub kept at `src/nyc_events/sources/timeout_nykids.py` as a
-  tombstone (raises `NotImplementedError`); don't implement or delete it.
+- **Status:** REJECTED — re-probed 2026-07-06 per the "non-impersonating
+  probe" lesson. The rejection **stands**, but the original reason is stale;
+  don't trust the old "needs a headless browser" framing.
+- **What changed since the original probe:** the site is **server-rendered
+  now** — plain `httpx` with a browser UA gets full content, no anti-bot, no
+  JS rendering needed. The original "JS-rendered, no structured data" verdict
+  no longer describes the site.
+- **What the re-probe found:**
+  - **The kids vertical (`/new-york-kids`) has no dated events at all.** Its
+    "things to do" hub is evergreen listicles only ("101 things to do with
+    kids", "25 best playgrounds") — nothing with a date to ingest. The old
+    kids events calendar URL 404s.
+  - **The main NYC monthly events calendar**
+    (`/newyork/events-calendar/<month>-events-calendar`) is real: ~58
+    numbered, server-rendered items/month, each tile linking to a detail
+    page. Detail pages carry a structured info box (Address / Price /
+    Opening hours / Event website) and a `Review` JSON-LD whose
+    `itemReviewed` is typed `TheaterEvent` **with an `offers.price` field
+    but NO `startDate`** — one schema field short of buildable.
+  - **Event dates exist only mid-sentence in editorial prose** ("On July 11,
+    New York City Lab School…", "Thursday nights throughout July and
+    August, plus a special family movie night in September"). Unlike The
+    Skint's deterministic `fri 7pm:` prefixes, there is no positional or
+    templated date token — extracting `start_dt` here is free-text NLP,
+    explicitly out of scope (PHASE-3-PLAN.md).
+  - **Kid yield of the general calendar is low anyway:** a quick pass of the
+    58 July items through `_filters.py` + a draft kid allowlist kept 3
+    (~5%) — and the calendar's kid-relevant series (Movies with a View, NYC
+    Math Festival) are venues/programs we can cover directly (Brooklyn
+    Bridge Park is already a CANDIDATE).
+- **Revisit if:** Time Out adds `startDate` to the JSON-LD (the
+  `TheaterEvent` typing suggests the CMS knows it's an event — they're one
+  field away), or a dated "When" row appears in the detail-page info box.
+  Check the JSON-LD first on any future probe; it's the cheapest tell.
+- Stub kept at `src/nyc_events/sources/timeout_nykids.py` as a tombstone
+  (raises `NotImplementedError`); don't implement or delete it.
