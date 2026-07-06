@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sqlite3
@@ -90,6 +91,18 @@ CREATE TABLE IF NOT EXISTS oauth_tokens (
     issued_at TEXT NOT NULL,
     expires_at TEXT
 );
+
+-- Per-person invite codes (MULTI-USER-PLAN.md Phase A). Only the salted hash
+-- of a user's passcode is stored; the plaintext code is printed exactly once
+-- by `python -m nyc_events.users add`. revoked_at is a tombstone, not a
+-- delete, so attribution on old tokens survives revocation.
+CREATE TABLE IF NOT EXISTS users (
+    user_id TEXT PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    passcode_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    revoked_at TEXT
+);
 """
 
 
@@ -150,6 +163,27 @@ def _migrate_oauth(conn: sqlite3.Connection) -> None:
         # treats as "no expiry recorded" — they keep working until manually
         # revoked. Newly issued tokens (post-fix) always get an expires_at.
         conn.execute("ALTER TABLE oauth_tokens ADD COLUMN expires_at TEXT")
+        conn.commit()
+    if "user_id" not in existing:
+        # Attribution for multi-user (MULTI-USER-PLAN.md Phase A). Tokens
+        # issued before the users table existed get NULL — they're the
+        # operator's own claude.ai sessions and stay valid.
+        conn.execute("ALTER TABLE oauth_tokens ADD COLUMN user_id TEXT")
+        conn.commit()
+    # Phase B: tokens are stored hashed at rest (see hash_access_token). Any
+    # legacy plaintext row is hashed in place, once — the "sha256:" prefix
+    # makes the rewrite idempotent, and the client keeps presenting the same
+    # plaintext bearer so nothing is logged out.
+    legacy = conn.execute(
+        "SELECT access_token FROM oauth_tokens "
+        "WHERE access_token NOT LIKE 'sha256:%'"
+    ).fetchall()
+    for row in legacy:
+        conn.execute(
+            "UPDATE oauth_tokens SET access_token = ? WHERE access_token = ?",
+            (hash_access_token(row["access_token"]), row["access_token"]),
+        )
+    if legacy:
         conn.commit()
 
 
@@ -485,32 +519,48 @@ def put_geocode(
     conn.commit()
 
 
+def hash_access_token(token: str) -> str:
+    """At-rest form of an access token (MULTI-USER-PLAN.md Phase B): a leaked
+    oauth.db backup must not leak live bearer credentials. Plain SHA-256 (no
+    salt/stretching) is right here — tokens are 384-bit random strings, not
+    passwords. The prefix marks a value as already hashed so the one-time
+    migration in _migrate_oauth is idempotent."""
+    return "sha256:" + hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
 def store_oauth_token(
     conn: sqlite3.Connection,
     access_token: str,
     client_id: str,
     scope: str | None = None,
     expires_at: datetime | None = None,
+    user_id: str | None = None,
 ) -> None:
+    """Persist a newly issued token. Only the hash is stored; the caller is
+    responsible for returning the plaintext to the client exactly once."""
     now = datetime.now(UTC)
     conn.execute(
-        "INSERT INTO oauth_tokens (access_token, client_id, scope, issued_at, expires_at) "
-        "VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO oauth_tokens "
+        "(access_token, client_id, scope, issued_at, expires_at, user_id) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
         (
-            access_token,
+            hash_access_token(access_token),
             client_id,
             scope,
             now.isoformat(),
             _iso(expires_at) if expires_at is not None else None,
+            user_id,
         ),
     )
     conn.commit()
 
 
 def is_valid_oauth_token(conn: sqlite3.Connection, access_token: str) -> bool:
+    """Takes the plaintext bearer as presented on the wire; the lookup is by
+    its at-rest hash."""
     row = conn.execute(
         "SELECT expires_at FROM oauth_tokens WHERE access_token = ?",
-        (access_token,),
+        (hash_access_token(access_token),),
     ).fetchone()
     if row is None:
         return False
@@ -520,6 +570,68 @@ def is_valid_oauth_token(conn: sqlite3.Connection, access_token: str) -> bool:
         # — manual `DELETE FROM oauth_tokens` is still how you revoke these.
         return True
     return datetime.fromisoformat(expires_at) > datetime.now(UTC)
+
+
+# ---- users (per-person invite codes; MULTI-USER-PLAN.md Phase A) ------------
+
+
+def create_user(
+    conn: sqlite3.Connection, *, user_id: str, name: str, passcode_hash: str
+) -> None:
+    """Insert a new user. Raises sqlite3.IntegrityError on a duplicate name —
+    the CLI surfaces that instead of silently replacing someone's code."""
+    conn.execute(
+        "INSERT INTO users (user_id, name, passcode_hash, created_at) "
+        "VALUES (?, ?, ?, ?)",
+        (user_id, name, passcode_hash, datetime.now(UTC).isoformat()),
+    )
+    conn.commit()
+
+
+def get_user_by_name(conn: sqlite3.Connection, name: str) -> sqlite3.Row | None:
+    return conn.execute(
+        "SELECT * FROM users WHERE name = ?", (name,)
+    ).fetchone()
+
+
+def active_user_passcodes(conn: sqlite3.Connection) -> list[tuple[str, str]]:
+    """(user_id, passcode_hash) for every non-revoked user. The consent flow
+    iterates these to find whose code was presented — fine at friends-and-
+    family scale; don't add an index-by-code scheme for it."""
+    return [
+        (r["user_id"], r["passcode_hash"])
+        for r in conn.execute(
+            "SELECT user_id, passcode_hash FROM users WHERE revoked_at IS NULL"
+        )
+    ]
+
+
+def revoke_user(conn: sqlite3.Connection, user_id: str) -> int:
+    """Tombstone the user AND delete their access tokens (both halves of
+    revocation — the code stops minting new tokens, and existing sessions
+    die within the auth.py token-cache TTL). Returns tokens deleted."""
+    conn.execute(
+        "UPDATE users SET revoked_at = ? WHERE user_id = ?",
+        (datetime.now(UTC).isoformat(), user_id),
+    )
+    cur = conn.execute("DELETE FROM oauth_tokens WHERE user_id = ?", (user_id,))
+    conn.commit()
+    return cur.rowcount
+
+
+def list_users(conn: sqlite3.Connection) -> list[dict]:
+    rows = conn.execute(
+        """
+        SELECT u.user_id, u.name, u.created_at, u.revoked_at,
+               COUNT(t.access_token) AS token_count,
+               MAX(t.issued_at) AS last_token_issued_at
+        FROM users u
+        LEFT JOIN oauth_tokens t ON t.user_id = u.user_id
+        GROUP BY u.user_id
+        ORDER BY u.created_at
+        """
+    ).fetchall()
+    return [dict(r) for r in rows]
 
 
 def list_sources(conn: sqlite3.Connection) -> list[dict]:

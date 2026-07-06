@@ -8,6 +8,7 @@ module to routing + startup so a diff here is always a wiring change.
 
 from __future__ import annotations
 
+import logging
 import os
 
 import uvicorn
@@ -82,6 +83,9 @@ def build_app() -> Starlette:
 
 def main() -> None:
     app = build_app()
+    # Keep /authorize query strings (PKCE challenge, state, redirect params)
+    # out of the access log — see auth.RedactAuthorizeQueryFilter.
+    logging.getLogger("uvicorn.access").addFilter(auth.RedactAuthorizeQueryFilter())
     # forwarded_allow_ips="*" lets request.base_url reflect the public
     # https://<host>/... that Tailscale Funnel forwards in X-Forwarded-* —
     # otherwise the OAuth discovery JSON would advertise http://0.0.0.0:8765/.

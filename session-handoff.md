@@ -2,6 +2,99 @@
 
 ## What was done (most recent first)
 
+### Session: invited-user onboarding in README (branch `claude/add-puppetworks-source-wup5yq`)
+
+Added README § "Onboarding an invited user" under the connector docs. The
+existing "Inviting friends & family" section was operator-facing (the `users`
+CLI); this fills the gap with a copy-pasteable, jargon-free walkthrough the
+operator can forward to the invited person verbatim — Settings → Connectors →
+Add custom connector, paste URL, paste invite code on the approval page, done
+— plus keep-your-code / invalid-code / bad-URL troubleshooting and a note that
+codes are reissued (never recovered) via revoke+add. Docs only; no code, no
+test changes.
+
+### Session: multi-user Phase C documented (branch `claude/add-puppetworks-source-wup5yq`)
+
+Phase C of `MULTI-USER-PLAN.md` is ops, not code — the repo side is a
+runbook. Added README § "5. Backups + uptime monitoring (multi-user
+Phase C)" under Deploy:
+
+- Nightly `oauth.db` snapshot via SQLite's online backup API through the
+  container's Python (`docker exec nyc-events python -c "...s.backup(d)..."`
+  → `/data/oauth.db.bak`), because a raw file copy of a live WAL DB risks a
+  torn copy. One-liner verified locally against a WAL db. `events.db`
+  deliberately not backed up (ingest rebuilds it).
+- External monitor on the PUBLIC Funnel `/healthz` (200 "ok"), so the check
+  exercises Funnel + container; recommends an off-NAS pinger over
+  same-NAS Uptime Kuma (shared failure domain). No token in monitor config.
+- Keep-single-worker stance already enforced/documented — box ticked.
+
+Plan checkboxes ticked with a "repo side DONE, NAS actions pending" status
+note. Remaining NAS actions for the operator: create the DSM Task Scheduler
+backup job, ensure `./data` is in a Hyper Backup task, point a monitor at
+the Funnel URL. With this, all three phases of MULTI-USER-PLAN.md are
+closed on the repo side.
+
+### Session: multi-user Phase B implemented (branch `claude/add-puppetworks-source-wup5yq`)
+
+Implemented Phase B of `MULTI-USER-PLAN.md` (hardening), same session as
+Phase A:
+
+- **Tokens hashed at rest** — `db.hash_access_token()` (`sha256:<hex>`
+  prefix); `store_oauth_token` stores the hash, `is_valid_oauth_token`
+  hashes the presented bearer before lookup. `_migrate_oauth` rewrites any
+  legacy plaintext row in place once (prefix makes it idempotent; clients'
+  cached plaintext bearers keep working). Plain SHA-256 on purpose — tokens
+  are 384-bit random, PBKDF2 stays reserved for human-carried invite codes.
+- **Per-token rate limit on the MCP path** — `_MCP_TOKEN_LIMIT = (60, 60)`
+  applied in `BearerAuthMiddleware` after successful auth (master bearer
+  included). Rate-limiter core refactored into `_bucket_limited()` shared
+  with the per-IP OAuth-endpoint limiter; buckets keyed by token sha256,
+  never the raw bearer.
+- **Access-log redaction** — `auth.RedactAuthorizeQueryFilter` rewrites
+  `/authorize?...` → `/authorize?[redacted]` in `uvicorn.access` records;
+  wired in `server.main()`. Closes the "no persistent log scrubbing"
+  accepted residual in CLAUDE.md.
+- Tests: 7 new (hashing at rest, plaintext-migration idempotency, per-token
+  limit semantics, no-raw-token-in-bucket-keys, log-filter scrub/pass-through);
+  two Phase A tests updated to look rows up by hash. Suite 481 passed, ruff
+  clean. Docs: CLAUDE.md baseline + residuals, README, plan checkboxes.
+
+Phase C (oauth.db backup, uptime check) remains open — it's ops work on the
+NAS, not repo code, except the documented keep-single-worker stance.
+
+### Session: multi-user Phase A implemented (branch `claude/add-puppetworks-source-wup5yq`)
+
+Implemented Phase A of `MULTI-USER-PLAN.md` (per-person credentials):
+
+- `db.py`: new `users` table in `OAUTH_SCHEMA` (`user_id`, unique `name`,
+  `passcode_hash`, `created_at`, `revoked_at` tombstone); `_migrate_oauth`
+  adds `oauth_tokens.user_id` (idempotent column-add, `expires_at` pattern);
+  `store_oauth_token` takes `user_id`; new `create_user` /
+  `get_user_by_name` / `active_user_passcodes` / `revoke_user` (tombstone +
+  delete their tokens, returns count) / `list_users` (with token counts).
+- New `users.py`: PBKDF2-SHA256 salted passcode hashing (codes are generated
+  `token_urlsafe(24)`, hash-only at rest), `match_user()` (checks every
+  active hash, no early exit), and the `add`/`revoke`/`list` CLI
+  (`python -m nyc_events.users`; `add` prints the code exactly once).
+- `oauth.py`: `AuthCode` gains `user_id`; `issue_auth_code` threads it.
+- `auth.py`: `authorize_post` accepts the operator consent password OR a
+  user invite code (DB lookup only on password miss); matched `user_id`
+  rides the auth code and is stamped onto the token at `/token`. Consent
+  label "Master token" → "Access code". No other auth surface touched.
+- Tests: new Phase A section in `test_security_fixes.py` (17 tests —
+  migration, hashing, matching, revocation semantics, full
+  authorize→token attribution flow via real Starlette requests, CLI).
+  Full suite 474 passed, ruff clean.
+- Docs: CLAUDE.md (commands, layout, OAuth model, out-of-scope reworded to
+  multi-*tenancy*), README (invite flow + rotation model), plan checkboxes
+  ticked with SHIPPED marker.
+
+NOT done (deliberate): Phase B (hash tokens at rest, per-token rate limit,
+log residual) and Phase C — still open in `MULTI-USER-PLAN.md`. Deploy note:
+run the CLI inside the container (`docker exec ... python -m
+nyc_events.users add <name>`) so it hits `/data/oauth.db`.
+
 ### Session: multi-user plan doc (branch `claude/add-puppetworks-source-wup5yq`)
 
 Wrote `MULTI-USER-PLAN.md` — the roadmap for opening the server to a small

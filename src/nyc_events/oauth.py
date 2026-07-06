@@ -32,6 +32,10 @@ class AuthCode:
     code_challenge_method: str
     expires_at: float
     scope: str | None = None
+    # Which invite-code user approved the consent page (None = the operator
+    # via MCP_CONSENT_PASSWORD/MCP_AUTH_TOKEN). Stamped onto the access token
+    # at /token so revocation and attribution work per person.
+    user_id: str | None = None
 
 
 _pending: dict[str, AuthCode] = {}
@@ -44,6 +48,7 @@ def issue_auth_code(
     code_challenge: str,
     code_challenge_method: str,
     scope: str | None = None,
+    user_id: str | None = None,
 ) -> str:
     code = secrets.token_urlsafe(32)
     _pending[code] = AuthCode(
@@ -53,6 +58,7 @@ def issue_auth_code(
         code_challenge_method=code_challenge_method or "plain",
         expires_at=time.time() + AUTH_CODE_TTL_SECONDS,
         scope=scope,
+        user_id=user_id,
     )
     _gc()
     return code

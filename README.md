@@ -156,6 +156,40 @@ The CI publishes the following on every `vX.Y.Z` tag push:
 For pinning in production, prefer `:vX.Y.Z` over `:latest` and disable
 Watchtower auto-update for that container by removing the enable label.
 
+### 5. Backups + uptime monitoring (multi-user Phase C)
+
+Once other people depend on the connector, two bits of NAS ops matter
+(see `MULTI-USER-PLAN.md` Phase C):
+
+**Back up `oauth.db` nightly.** Losing it logs every user out at once (they'd
+each need a fresh consent-page approval; invited users' codes still work, but
+it's a multi-person annoyance). `events.db` needs no backup — the nightly
+ingest rebuilds it. Don't just file-copy a live SQLite DB in WAL mode (torn
+copy risk); snapshot it through SQLite's online backup API via the
+container's Python. DSM Task Scheduler, daily (e.g. 04:30, after ingest),
+user `root`:
+
+```bash
+docker exec nyc-events python -c "import sqlite3; s = sqlite3.connect('/data/oauth.db'); d = sqlite3.connect('/data/oauth.db.bak'); s.backup(d); d.close(); s.close()"
+```
+
+The snapshot lands in the bind-mounted `./data` on the host, so whatever
+already backs up your NAS volumes (Hyper Backup etc.) carries it off-box —
+make sure that directory is in a backup task. Restore = stop the container,
+`cp data/oauth.db.bak data/oauth.db`, start it. The `.bak` contains hashed
+tokens and hashed invite codes only, but treat it as sensitive anyway.
+
+**External uptime check on `/healthz`.** Point any monitor at the **public
+Funnel URL** — `https://<your-host>.ts.net/healthz`, expect HTTP 200 body
+`ok` — so it exercises the whole path (Funnel + container), not just the
+LAN port. `/healthz` is unauthenticated by design; never put the master
+token in a monitor config. Self-hosted option on the same NAS
+([Uptime Kuma](https://github.com/louislam/uptime-kuma)) is fine for alerting
+on container death, but it shares the NAS as a failure domain — a free
+external pinger (e.g. UptimeRobot) is the more honest check. The NAS +
+Funnel remain a single point of failure by design; set that expectation
+with users instead of engineering around it.
+
 ## Checkpoint A — verify the HTTP + auth + tools path
 
 Seeds 6 hardcoded events across all 5 boroughs, starts the server, and proves
@@ -222,13 +256,73 @@ covered below. Quick recipe:
 3. Paste the bare Funnel URL with NO path suffix: `https://nas.example.ts.net`
    (claude.ai treats the URL as the MCP endpoint itself — don't append `/mcp`)
 4. claude.ai redirects you to a one-field consent page on your server
-5. **Paste your `MCP_AUTH_TOKEN`** on the consent page and click Approve
+5. **Paste your access code** on the consent page and click Approve — as the
+   operator that's `MCP_AUTH_TOKEN` (or `MCP_CONSENT_PASSWORD` if set); an
+   invited user pastes their personal invite code (see below)
 6. claude.ai stores an issued access token; you should now see the 7 tools
 
-That's it — there's no "API key" field anywhere. The master token's role is
-just the password on that one consent page. After approval, claude.ai sends
-a different opaque token (stored in your `oauth_tokens` SQLite table) on
-every request. Revoking access = `DELETE FROM oauth_tokens` for that row.
+That's it — there's no "API key" field anywhere. The credential's only role is
+the password on that one consent page. After approval, claude.ai sends
+a different opaque token on every request (stored hashed in your
+`oauth_tokens` SQLite table, so a leaked DB backup doesn't leak live
+sessions).
+
+#### Inviting friends & family
+
+Each trusted user gets their own generated invite code instead of the shared
+password, so one person can be revoked without rotating anything for everyone
+else (see `MULTI-USER-PLAN.md`):
+
+```bash
+python -m nyc_events.users add "Aunt Kim"     # prints her invite code ONCE
+python -m nyc_events.users list               # users + token counts
+python -m nyc_events.users revoke "Aunt Kim"  # disables the code + deletes her tokens
+```
+
+Send the code over a reasonable channel; they paste it on the consent page in
+step 5. Codes are stored as salted hashes only. Access tokens issued via an
+invite code carry that `user_id`, so revocation is per-person; revoked
+sessions stop working within ~5 minutes (server-side token cache).
+
+#### Onboarding an invited user
+
+Hand the new user two things — the **connector URL** (your public Funnel
+hostname, e.g. `https://nas.example.ts.net`) and their **invite code** — then
+give them the steps below. Everything from "Send this to the person you're
+inviting" down is written to be copy-pasted to them verbatim; fill in the URL
+first.
+
+> **Setting up your NYC Kids events connector in Claude**
+>
+> You'll need: a Claude account (the [web app](https://claude.ai) or the
+> mobile app both work), the connector URL and the invite code I sent you.
+> This connects Claude to a shared calendar of NYC family-friendly events —
+> once it's set up you can just ask Claude things like *"what's happening for
+> kids in Brooklyn this weekend?"*
+>
+> 1. Open Claude and go to **Settings → Connectors** (on mobile: **Profile →
+>    Settings → Connectors**).
+> 2. Tap **Add custom connector**.
+> 3. For the URL, paste the connector URL exactly as I sent it — nothing
+>    added on the end. Give it any name you like (e.g. "NYC Kids Events").
+> 4. Claude sends you to a small approval page that asks for an **access
+>    code**. Paste the **invite code** I sent you and tap **Approve**.
+> 5. Done — Claude will show a set of event-search tools. Start a new chat and
+>    ask about kids' events in NYC to try it.
+>
+> A few notes:
+> - **Keep your invite code.** You'll need it again if you add Claude on
+>    another device, or if you're ever asked to reconnect. It's yours alone —
+>    please don't share it.
+> - If the approval page says the code is invalid, double-check you copied the
+>    whole thing (no stray spaces), and that you used the *invite code* rather
+>    than the URL. If it still fails, let me know — I can reissue it.
+> - If Claude says the URL looks wrong, make sure you pasted it with nothing
+>    appended after the hostname.
+
+If a user needs a fresh code (lost it, or you revoked and want to re-add
+them), `revoke` then `add` again — codes can't be recovered, only reissued,
+since only the hash is stored.
 
 #### OAuth flow under the hood
 
@@ -238,8 +332,8 @@ every request. Revoking access = `DELETE FROM oauth_tokens` for that row.
 | `/.well-known/oauth-protected-resource`       | RFC 9728 — points at us as the authorization server            |
 | `/.well-known/oauth-authorization-server`     | RFC 8414 — lists `/authorize`, `/token`, `/register`           |
 | `POST /register`                              | RFC 7591 DCR — accepts anything, returns a generated client_id |
-| `GET  /authorize`                             | Consent page (HTML form: paste master token)                   |
-| `POST /authorize`                             | Validates token, issues auth code, 302 to `redirect_uri`       |
+| `GET  /authorize`                             | Consent page (HTML form: paste access code)                    |
+| `POST /authorize`                             | Validates operator password or invite code, issues auth code, 302 to `redirect_uri` |
 | `POST /token`                                 | Code + PKCE verifier → opaque access token (stored in SQLite)  |
 
 The master `MCP_AUTH_TOKEN` is still accepted directly as a bearer for curl
@@ -386,6 +480,7 @@ nyc-kids-mcp/
 │   ├── tools.py          # FastMCP instance + the 7 MCP tools + projections
 │   ├── auth.py           # bearer middleware, OAuth 2.1 shim, rate limiter
 │   ├── oauth.py          # auth-code issue/consume + PKCE verification
+│   ├── users.py          # per-person invite codes + add/revoke/list admin CLI
 │   ├── config.py         # env-derived settings (DB paths, port, allowlists)
 │   ├── ingest.py         # CLI: loops ENABLED_SOURCES -> upsert -> prune -> enrich
 │   ├── enrich.py         # second-pass neighborhood coding + lat/lng backfill
@@ -423,10 +518,12 @@ The master `MCP_AUTH_TOKEN` and OAuth-issued access tokens are independent:
   once per connector pairing) and the direct bearer for curl testing. It does
   **NOT** invalidate access tokens that claude.ai already holds — those keep
   working until they hit `OAUTH_TOKEN_TTL_DAYS` or you explicitly delete them.
-- **Revoking a single connector**: `DELETE FROM oauth_tokens WHERE client_id = ?`
-  on `data/oauth.db`.
+- **Revoking one invited user**: `python -m nyc_events.users revoke <name>` —
+  disables their invite code and deletes their attributed tokens.
+- **Revoking a single connector** (e.g. one of your own sessions):
+  `DELETE FROM oauth_tokens WHERE client_id = ?` on `data/oauth.db`.
 - **Revoking everything**: `DELETE FROM oauth_tokens`. claude.ai will re-prompt
-  for the master token on the next request.
+  for an access code on the next request.
 
 This asymmetry is intentional: rotating the master token is cheap and shouldn't
 disconnect an already-paired client; revoking a connector is a deliberate act.
