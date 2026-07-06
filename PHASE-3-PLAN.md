@@ -11,8 +11,7 @@ in a later phase. Indoor/outdoor here is heuristic, not model-derived (see A2).
 
 ## Definition of done
 
-- Geocoding + neighborhood backfilled for all rows that can be located;
-  distance-from-home available as a search filter.
+- Geocoding + neighborhood backfilled for all rows that can be located.
 - Weather attached to upcoming **outdoor** events inside the forecast window.
 - Indoor/outdoor flag on every event (heuristic + per-source default).
 - The Phase-3 venue list below is each BUILT or REJECTED (source-adder recipe).
@@ -71,7 +70,7 @@ image (recommended) vs. baking Chromium into the single image.
 Dependency chain: **geocode → (neighborhood, weather)**, and
 **indoor/outdoor → weather relevance**. Build A1 first.
 
-### A1. Geocode + neighborhood — **DONE** (neighborhood + coords), `near_me` pending
+### A1. Geocode + neighborhood — **DONE**
 
 Shipped as the `enrich.py` second pass. See CLAUDE.md "Neighborhood coding" for
 the as-built detail. Resolved the open decisions below: **geocoder = US Census**
@@ -80,9 +79,11 @@ Nominatim wasn't needed); **cache = a `geocode_cache` table in `events.db`**
 (no TTL). Neighborhood now resolves through a 5-tier ladder (fixed-venue
 constant → enumerable site → open-data park table → reverse-geocode → forward-
 geocode), and `lat`/`lng` are backfilled as a side effect. Surfaced in the
-`search_events` summary + a `neighborhood` substring filter. **Still TODO:** the
-`near_me` / sort-by-distance affordance + a home-location config (the coords it
-depends on now exist).
+`search_events` summary + a `neighborhood` substring filter.
+
+**`near_me` / sort-by-distance — declined, out of scope.** The coords A1
+produces would support it, but the feature itself isn't wanted. Not tracked
+as remaining A1 work; revisit only if requirements change.
 
 - ~~Backfill `lat`/`lng` for rows lacking coords~~ — done (forward-geocode tier
   fills coords when it resolves a venue; existing source coords are never
@@ -96,8 +97,6 @@ depends on now exist).
   or a borough+ZIP→neighborhood table.
 - **Cache** geocode results by the lookup string — venue locations are stable,
   never re-hit upstream for a venue we've seen (see caching layer below).
-- New search affordance: `near_me` / sort-by-distance once a home location is
-  configured (env or a tiny config row).
 
 ### A2. Indoor/outdoor flag (heuristic — NOT AI)
 - Per-source default: museums/libraries → indoor; zoos/gardens/parks →
@@ -160,24 +159,21 @@ shape (WCS, a museum, a library system, a parks org), then fan out.
 
 ---
 
-## Workstream C — Tech debt (server-touching; bundle together)
+## Workstream C — Tech debt — **DONE**
 
-Best done in one server-touching pass — the A3/`near_me` read-path work will
-already be in `server.py`, so fold these in then:
-- **#4 — FTS5 VACUUM footgun** (operational/doc).
-- **#5 — split consent password from the master bearer** (the one-env-var,
-  two-roles coupling in the OAuth model).
-- **#6 — efficiency / hygiene grab-bag.**
+- **#4 — FTS5 VACUUM footgun** — closed (documented in CLAUDE.md "DB
+  migrations"; guarded procedurally by the `db-maintenance` skill).
+- **#5 — split consent password from the master bearer** — closed
+  (`MCP_CONSENT_PASSWORD`, see CLAUDE.md "OAuth model").
+- **#6 — efficiency / hygiene grab-bag** — closed.
 
 ---
 
 ## Suggested sequencing
 
-1. **Tech debt #4–#6 + caching-layer scaffolding** — server-touching; do
-   together while we're in `server.py`/`db.py`.
-2. **A1 geocode + neighborhood** — prerequisite for weather; immediately
-   useful (distance/near-me) on the existing ~1,150 events.
-3. **A2 indoor/outdoor** — cheap; needed to scope weather.
+1. ~~Tech debt #4–#6 + caching-layer scaffolding~~ — done.
+2. ~~A1 geocode + neighborhood~~ — done.
+3. **A2 indoor/outdoor** — cheap; needed to scope weather. Next up.
 4. **A3 weather** — depends on A1 + A2.
 5. **New sources (Workstream B)** — cheap REST/JSON-LD first; adopt the
    headless ingest image only when a probed source actually needs it.
@@ -189,5 +185,3 @@ already be in `server.py`, so fold these in then:
 - ~~Geocoder~~ **SETTLED: US Census only** (Census tract → NTA crosswalk; no
   Nominatim fallback needed in practice).
 - ~~Cache storage~~ **SETTLED: a `geocode_cache` table in `events.db`** (no TTL).
-- Home location: env var vs. a config row (for distance-from-home). Still open —
-  needed for the remaining `near_me` piece of A1.
