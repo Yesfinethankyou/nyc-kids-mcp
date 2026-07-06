@@ -81,6 +81,9 @@ for u in [
 Fresh leads, not yet probed. Run `source-verifier` (or the probe snippet above)
 to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 
+**Note:** Brooklyn Children's Museum is already **BUILT** (source
+`bk_childrens_museum`, live in `ENABLED_SOURCES`) — not re-added here.
+
 ### Brooklyn Academy of Music (BAM)
 
 - **Status:** CANDIDATE — proposed 2026-06-27, unprobed.
@@ -317,6 +320,160 @@ Probe one first to learn the platform shape; copy-adapt if the others match.
   Gansevoort St (Meatpacking District) → `SOURCE_NEIGHBORHOOD["whitney"]` = West
   Village (the NTA "West Village" covers the Meatpacking blocks — verify the
   reverse-geocode lands there during the enrich pass).
+
+### Brooklyn Museum
+
+- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Why:** runs a dedicated family strand (First Saturdays free late-night —
+  partly adult but includes family/kids programming earlier in the evening,
+  Brooklyn Museum Kids, Great Hall drop-in workshops, Target First Saturdays
+  kids' activities) — a real kid-relevant subset under an adult-skewing
+  contemporary/fine-art calendar. Don't confuse with **Brooklyn Children's
+  Museum** (already BUILT, `bk_childrens_museum`) — this is the separate,
+  larger fine-arts museum on Eastern Parkway.
+- **URLs to probe:** `https://www.brooklynmuseum.org/calendar` (look for a
+  family/kids filter or category) and the First Saturdays landing page.
+- **Platform guess (verify, don't trust):** custom CMS. Check for JSON-LD
+  `Event` blocks, embedded JSON, or a calendar JSON endpoint on listing/detail
+  pages. Expect anti-bot 403 on the consumer site → `curl_cffi
+  impersonate="chrome"`. Headless-browser candidate if JS-only.
+- **Filtering plan if built:** gate to family/kids programs by category if
+  exposed, else keyword inclusion (family, kids, drop-in, Great Hall,
+  storytime); hard-exclude 21+ evening programming, members' previews, adult
+  talks/lectures. First Saturdays itself is a mixed adult/family event — if
+  included, don't drop it wholesale just because it also has an adult DJ set;
+  judge by whether the listing itself is family-labeled.
+- **Borough/venue:** Brooklyn; venue "Brooklyn Museum", 200 Eastern Parkway →
+  `SOURCE_NEIGHBORHOOD["brooklyn_museum"]` = Prospect Heights (verify the NTA
+  during the enrich pass — the address sits near the Crown Heights North /
+  Prospect Heights border).
+
+### New York Hall of Science (NYSCI)
+
+- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Why:** a hands-on science museum built for kids/families — likely closer
+  to the "curated kids feed" bucket (like `mommy_poppins`/`bk_childrens_museum`)
+  than a filtered adult calendar, since nearly everything NYSCI runs is
+  family-facing. Still worth confirming — camps/member-only sessions may need
+  excluding.
+- **URLs to probe:** `https://nysci.org/events/` or `/calendar` (exact path
+  unconfirmed).
+- **Platform guess (verify):** unknown CMS — grep for JSON-LD `Event`,
+  `wp-json`/Tribe, Eventbrite embed, or a calendar JSON endpoint. Expect
+  possible anti-bot → `curl_cffi impersonate="chrome"`.
+- **Filtering plan if built:** confirm whether a filter is even needed (all-ages
+  science center) before adding one; if members-only/private-rental events
+  appear in the same feed, exclude by category/keyword.
+- **Borough/venue:** Queens; venue "New York Hall of Science", Corona
+  (Flushing Meadows Corona Park) → likely a `SOURCE_NEIGHBORHOOD` constant
+  once the NTA is confirmed (Corona).
+
+### American Museum of Natural History (AMNH)
+
+- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Why:** major family destination — Discovery Room, family workshops,
+  Space Show family programming, overnight "Night at the Museum" sleepovers —
+  a well-defined kid-relevant strand under an otherwise mixed adult/family
+  calendar (member lectures, 21+ evening events like "One Step Beyond").
+- **URLs to probe:** `https://www.amnh.org/calendar` (look for a family/kids
+  audience filter and its query param).
+- **Platform guess (verify):** large custom CMS. Check for JSON-LD `Event`,
+  an embedded JSON blob (`__NEXT_DATA__` or similar), or an events JSON
+  endpoint under `amnh.org`. Expect anti-bot 403 → `curl_cffi
+  impersonate="chrome"`; headless fallback if JS-only.
+- **Filtering plan if built:** gate to family/kids programs by
+  category/audience filter if exposed, else keyword inclusion (family, kids,
+  Discovery Room, sleepover, workshop); hard-exclude adult member events,
+  21+ evening programs, fundraising galas.
+- **Borough/venue:** Manhattan; venue "American Museum of Natural History",
+  Central Park West at 79th St → `SOURCE_NEIGHBORHOOD["amnh"]` = Upper West
+  Side.
+
+### Intrepid Sea, Air & Space Museum (USS Intrepid)
+
+- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Why:** family-oriented museum (aircraft carrier, space shuttle pavilion)
+  with school-break camps, family days, and STEM workshops — real kid-relevant
+  programming distinct from its adult evening-rental/gala business.
+- **URLs to probe:** `https://intrepidmuseum.org/visit/calendar` or
+  `/events` (exact path unconfirmed).
+- **Platform guess (verify):** unknown CMS — grep for JSON-LD `Event`,
+  `wp-json`/Tribe, ticketing-platform embeds (Eventbrite/Tessitura), or a
+  calendar JSON endpoint. Expect anti-bot → `curl_cffi
+  impersonate="chrome"`.
+- **Filtering plan if built:** gate to family/kids/STEM programs if a
+  category exists, else keyword inclusion; hard-exclude private evening
+  rentals, galas, 21+ events.
+- **Borough/venue:** Manhattan; venue "Intrepid Museum", Pier 86 (W 46th St)
+  → `SOURCE_NEIGHBORHOOD["intrepid"]` = Hell's Kitchen / Clinton (verify NTA
+  name during enrich pass).
+
+### City Parks Foundation (cityparksfoundation.org)
+
+- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Why:** high potential yield — this is the nonprofit behind **SummerStage**
+  (free concerts across many NYC parks), the **Puppet Mobile** (free puppet
+  shows touring parks, explicitly kids' programming), and the **Charlie
+  Parker Jazz Festival**, plus other citywide free programs (sports, arts
+  education). Unlike a single venue, this is a citywide multi-park
+  aggregator — closer in shape to the permit source but editorially curated
+  (real descriptions/URLs, not permit noise).
+- **URLs to probe:** `https://cityparksfoundation.org/events/` or
+  `/calendar`, and specifically the Puppet Mobile schedule page (likely the
+  cleanest kid-relevant subset) and the SummerStage schedule
+  (`https://cityparksfoundation.org/summerstage/`).
+- **Platform guess (verify):** unknown CMS — grep for JSON-LD `Event`,
+  `wp-json`/Tribe, or a calendar JSON endpoint. Expect anti-bot → `curl_cffi
+  impersonate="chrome"`.
+- **Filtering plan if built:** this is a mixed calendar — SummerStage skews
+  adult (concerts, often with alcohol sales) while Puppet Mobile and other
+  arts-education programs are all-ages. Needs a real strategy decision during
+  the probe: category/series filter (Puppet Mobile allowlisted, SummerStage
+  excluded or kept only for clearly family-billed shows) rather than a blanket
+  include.
+- **Borough/venue — citywide, per-event:** each event happens at a different
+  park across multiple boroughs (SummerStage alone runs in Central Park,
+  Prospect Park, Coney Island, St. Mary's Park, etc.) — this needs a
+  **per-event venue/borough field from the source**, not a hardcoded
+  constant, similar to the NYPL borough requirement. If venue names match
+  existing parks, `park_neighborhoods.json` may already cover neighborhood
+  coding for many rows — worth checking coverage during the probe before
+  assuming gaps.
+- **Open question:** does the feed expose per-event structured data (dates,
+  park, program), or is it more editorial/prose like a season announcement?
+  Gauge during the probe — same caution as The Skint below.
+
+### Gothamist
+
+- **Status:** CANDIDATE — proposed 2026-07-06, unprobed. **Likely not a kids
+  event source** — flagged for evaluation, not assumed buildable.
+- **What it is:** NYC news/culture site (WNYC-owned). Not a dedicated events
+  calendar — occasional "things to do with kids this weekend" roundup posts,
+  similar in spirit to The Skint but even less event-structured (it's a news
+  site, not an events blog).
+- **URLs to probe:** `https://gothamist.com/feed` or `/arts-entertainment/feed`
+  (WordPress-style RSS, unconfirmed), and check for a dedicated kids/family
+  tag/category feed.
+- **Same two blocking questions as The Skint (settle first):**
+  1. **Per-event or digest/roundup articles?** Gothamist's kids content is
+     almost certainly roundup articles ("32 things to do with kids in NYC
+     this weekend") listing many events in prose, not one item per event.
+     Extracting structured events from that prose is free-text NLP —
+     **explicitly out of scope** (PHASE-3-PLAN.md). If every kids-relevant
+     post is this shape, this candidate is **not buildable** without an
+     out-of-scope NLP step and should be rejected outright.
+  2. **Kid yield.** Even if some items are per-event, Gothamist is a general
+     news site — expect most content to be unrelated to kids/family events
+     entirely (politics, food, transit). A strict allowlist would be
+     mandatory.
+  - **Recommendation:** probe briefly to confirm/reject the digest-format
+    problem before investing more time — this is the weakest candidate of
+    the group and may be a fast REJECTED.
+- **Filtering plan if built (only if per-event structure exists):** mandatory
+  kid-relevance allowlist + the shared `ADULT_BLOCKLIST`/
+  `ADULT_TITLE_BLOCKLIST` from `_filters.py`, same posture as The Skint.
+- **Missing-detection:** opt out (`window_days=None`) if built — editorial
+  rotation, not a full-window feed.
 
 ### The Skint (theskint.com) — citywide editorial RSS
 

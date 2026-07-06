@@ -2,6 +2,39 @@
 
 ## What was done (most recent first)
 
+### Session: backlog expansion — 6 new candidates (branch `claude/backlog-sources-integration-axzlam`)
+
+Added six new CANDIDATE entries to `SOURCES-BACKLOG.md` at the user's request,
+all unprobed:
+
+- **Brooklyn Museum** — fine-arts museum (First Saturdays, Brooklyn Museum
+  Kids); flagged explicitly as distinct from the already-BUILT
+  `bk_childrens_museum` source (added a note at the top of the "Candidates"
+  section to prevent that mix-up going forward).
+- **New York Hall of Science (NYSCI)** — Queens, likely a curated-kids-feed
+  shape (little/no filter needed) like `mommy_poppins`/`bk_childrens_museum`.
+- **American Museum of Natural History (AMNH)** — Manhattan, Upper West Side;
+  needs a family-strand filter (Discovery Room, sleepovers) over an adult
+  member-lecture/gala calendar.
+- **Intrepid Sea, Air & Space Museum** — Manhattan, Hell's Kitchen; family
+  camps/STEM days vs. private evening rentals.
+- **City Parks Foundation** (SummerStage, Puppet Mobile, Charlie Parker Jazz
+  Fest) — citywide multi-park aggregator, closest in shape to the permit
+  source but editorially curated. Flagged as needing **per-event
+  venue/borough** (like the NYPL requirement) since it spans many parks
+  across boroughs, plus a real filter strategy decision (Puppet Mobile is
+  all-ages; SummerStage skews adult/ticketed).
+- **Gothamist** — flagged as the **weakest candidate**, likely REJECTED on
+  first probe: its kids content is almost certainly digest/roundup articles
+  ("32 things to do with kids this weekend"), same free-text-extraction
+  problem already identified for The Skint (out of scope per
+  PHASE-3-PLAN.md). Recommended probing it first/fast specifically to settle
+  that question rather than investing more research time.
+
+The Whitney and The Skint were already in the backlog from a prior session —
+not duplicated. No code changes; docs only. Next step for any of these is
+`source-verifier`.
+
 ### Session: invited-user onboarding in README (branch `claude/add-puppetworks-source-wup5yq`)
 
 Added README § "Onboarding an invited user" under the connector docs. The
