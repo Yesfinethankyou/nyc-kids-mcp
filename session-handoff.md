@@ -2,6 +2,178 @@
 
 ## What was done (most recent first)
 
+### Session: backlog expansion — 6 new candidates (branch `claude/backlog-sources-integration-axzlam`)
+
+Added six new CANDIDATE entries to `SOURCES-BACKLOG.md` at the user's request,
+all unprobed:
+
+- **Brooklyn Museum** — fine-arts museum (First Saturdays, Brooklyn Museum
+  Kids); flagged explicitly as distinct from the already-BUILT
+  `bk_childrens_museum` source (added a note at the top of the "Candidates"
+  section to prevent that mix-up going forward).
+- **New York Hall of Science (NYSCI)** — Queens, likely a curated-kids-feed
+  shape (little/no filter needed) like `mommy_poppins`/`bk_childrens_museum`.
+- **American Museum of Natural History (AMNH)** — Manhattan, Upper West Side;
+  needs a family-strand filter (Discovery Room, sleepovers) over an adult
+  member-lecture/gala calendar.
+- **Intrepid Sea, Air & Space Museum** — Manhattan, Hell's Kitchen; family
+  camps/STEM days vs. private evening rentals.
+- **City Parks Foundation** (SummerStage, Puppet Mobile, Charlie Parker Jazz
+  Fest) — citywide multi-park aggregator, closest in shape to the permit
+  source but editorially curated. Flagged as needing **per-event
+  venue/borough** (like the NYPL requirement) since it spans many parks
+  across boroughs, plus a real filter strategy decision (Puppet Mobile is
+  all-ages; SummerStage skews adult/ticketed).
+- **Gothamist** — flagged as the **weakest candidate**, likely REJECTED on
+  first probe: its kids content is almost certainly digest/roundup articles
+  ("32 things to do with kids this weekend"), same free-text-extraction
+  problem already identified for The Skint (out of scope per
+  PHASE-3-PLAN.md). Recommended probing it first/fast specifically to settle
+  that question rather than investing more research time.
+
+The Whitney and The Skint were already in the backlog from a prior session —
+not duplicated. No code changes; docs only. Next step for any of these is
+`source-verifier`.
+
+### Session (same branch): major finding — nycgovparks.org/events is alive and much richer than tvpp-9vvx
+
+User asked why we use the permit registry (`tvpp-9vvx`) instead of
+`nycgovparks.org/events` for Parks events. Answer required digging into the
+history (`nyc_permitted_events.py` docstring + README): the original Phase 1
+spec named the NYC Parks Events Listing **Open Data dataset** (`fudw-fgrp`),
+found it frozen since 2019-12, and pivoted to `tvpp-9vvx` as the "live
+successor" — but that investigation only ever checked the Open Data catalog,
+never the live website itself (a separate system from its old Socrata
+mirror).
+
+Live re-probe (`httpx`, no anti-bot) found `nycgovparks.org/events` **very
+much alive** — 10,964 events listed out to March 2029 — with real
+schema.org `Event` microdata: descriptions (100% of a 50-row sample; the
+permit source has zero), full ISO+offset start/end times, borough +street
+address, and an NYC-Parks-curated **`kids` category** ("Best for Kids",
+directly URL-addressable at `/events/kids`, 2,427 events in a ~56-day
+window with zero client-side filtering needed). Detail pages additionally
+carry **lat/lng directly** — zero enrich-pass geocoding needed for these
+rows, unlike every other venue source. This is a substantially richer,
+more curated source than the noisy permit registry currently powering
+Phase 1.
+
+Wrote this up as a prominent "🔴 Major reassessment" section at the top of
+`SOURCES-BACKLOG.md` (not buried as a routine candidate) with the full
+findings, a pagination note (`/events/kids/p2`, path-based not query-param),
+and four open questions before committing: overlap with `tvpp-9vvx` (may be
+complementary — rec-center programming vs. permitted third-party events —
+unconfirmed), full category vocabulary (does kid-relevant content hide
+outside the `kids` tag, like Green-Wood/Prospect Park's category patterns?),
+whether per-event detail fetches for lat/lng are worth it at ~2,400
+rows/window, and site stability under a ~49-page nightly crawl. Also added
+a pointer note in README's "Why Permitted Events and not Parks" section so
+this doesn't get silently re-assumed stale. Recommended `source-verifier`
+next, given the potential upside. No code changes — probe + docs only.
+
+### Session (same branch): 8 new candidates probed live — 3 ready to build, 1 multi-site bonus, 4 open
+
+Probed all 8 sources the user asked to add (live `httpx` fetches, no
+speculation) and wrote full findings into `SOURCES-BACKLOG.md`. Sorted by
+outcome:
+
+- **🟢 Staten Island Children's Museum — CONFIRMED, ready for `source-adder`
+  today.** Real Tribe/WordPress REST API (`sichildrensmuseum.org/wp-json/
+  tribe/events/v1/events`, 51 upcoming events, single venue). Highest-value
+  find — Staten Island has near-zero coverage today. Fifth `_tribe.py`
+  subclass, no new machinery needed.
+- **🟢 Brooklyn Botanic Garden — CONFIRMED, HTML scrape (BAT-style).**
+  `bbg.org/visit/calendar` is clean server-rendered HTML with a real
+  `event-tag` category field (e.g. "Children's Garden Classes") — filterable
+  by category, not keyword-guessing.
+- **🟡 New York Family (events.newyorkfamily.com) — CONFIRMED feed, geo-filter
+  required.** Sixth Tribe instance, but it's a *regional* parenting calendar
+  (found live venues in Huntington Station, Southampton — Long Island, not
+  NYC). Needs a `venue.city` allowlist + drop-if-missing-city rule before
+  building; also has a data gotcha (~20% of returned events are bare stub
+  objects missing `id`/`title` — must be skipped). Real upside: actual
+  age-band categories ("Kids (5–8)") — first source with structured age data
+  if built.
+- **🟡 Bronx Zoo — CONFIRMED but sparse (2 items live); found a 5-site bonus.**
+  Same WCS route (`/things-to-do/events`) confirmed live on Central Park
+  Zoo, Prospect Park Zoo, Queens Zoo, and NY Aquarium too — one scraper class
+  could cover all 5. Worth checking combined yield before committing;
+  individually each may be too thin to justify.
+- **Macaroni Kid (Brooklyn NW + Lower Manhattan) — platform identified
+  (Yodel widget, `events.yodel.today`), franchise-network shape like
+  NYPL/QPL, but the widget host Cloudflare-challenged this session's fetch
+  attempts (both plain `httpx` and `curl_cffi`, the latter connection-reset
+  same as other blocked hosts this session). Needs a retry from a different
+  network, not a rejection.
+- **NYBG — dead end on the obvious path.** No Tribe/event REST routes exist
+  (196 routes checked); `/events/` is a marketing page, not a calendar.
+  Family programs likely live on a separate ticketing subdomain not found
+  this session — flagged what NOT to re-check.
+- **Snug Harbor — inconclusive**, no platform signature matched (the
+  "algolia" lead was a false positive — just search-UI CSS).
+- **Bronx River Alliance — thin**, the events page renders almost no content
+  statically; deprioritized.
+
+No code changes — probes + backlog writeup only. Recommended next action:
+hand Staten Island Children's Museum and Brooklyn Botanic Garden straight to
+`source-adder`; run `source-verifier` on New York Family (geo-filter design)
+and the WCS zoos (combined-yield check) before building those two.
+
+### Session (same branch): Time Out re-probed — rejection stands, reason updated
+
+Re-assessed the Time Out NY Kids rejection at the user's request (the
+"non-impersonating probe" lesson made the old verdict suspect). Live re-probe
+2026-07-06, plain `httpx` (no anti-bot):
+
+- The old reason is **stale**: the site is server-rendered now, not
+  JS-rendered. No headless browser needed to read it.
+- But the rejection **stands** on new grounds: the kids vertical has zero
+  dated events (evergreen listicles only), and while the main NYC monthly
+  events calendar (~58 items/month, server-rendered, detail pages with
+  structured Address/Price/Opening-hours box and a `TheaterEvent`-typed
+  JSON-LD) is real, **no `startDate` exists anywhere** — event dates are
+  mid-sentence editorial prose, which is free-text NLP extraction, out of
+  scope per PHASE-3-PLAN.md. Kid yield of the general calendar was ~5% on a
+  quick `_filters.py` pass anyway.
+- Rewrote the SOURCES-BACKLOG.md Rejected entry with the re-probe findings
+  and a concrete revisit tell (watch for `startDate` appearing in the
+  JSON-LD — the CMS already types events, it's one field away). Stub
+  tombstone unchanged. Docs only, no code.
+
+### Session (same branch): The Skint probed in depth — digest parser is buildable, yield is the open question
+
+Followed up on "is there a way to make The Skint work" by actually fetching
+the live feed (plain `httpx` — `curl_cffi` got connection-reset from this
+sandbox, the reverse of the usual pattern) and parsing all 19 available posts.
+Rewrote the `SOURCES-BACKLOG.md` entry from speculative to probed. Key
+findings:
+
+- **Item granularity resolved:** 8/19 posts are digest/roundup posts (the
+  bulk of the value), 11/19 are standalone "(SPONSORED)" ad placements
+  (mostly adult, unstructured dates) — recommend skipping standalone posts
+  entirely and only parsing digests.
+- **Digest format IS templated, not free prose** — confirmed a regex matches
+  239 of 472 `<p>` blocks across the 8 digests as `<time-phrase>: <b>title</b>:
+  description`. This is deterministic text parsing, not the AI/NLP extraction
+  PHASE-3-PLAN.md rules out — but it needs a small state machine (day-header
+  segmentation + folding ~40% multi-paragraph continuation blocks into the
+  prior event) and a separate "ongoing events roundup" blurb deliberately
+  skipped (no per-item dates).
+- **Venue extraction better than expected:** ~50% of events end with a
+  `Venue (neighborhood)` clause (e.g. "halyards (gowanus)") that could map
+  onto existing NTA labels via a small alias table — no geocoding needed for
+  those rows.
+- **Kid yield is the real gating number:** ran the actual shared filter
+  (`_filters.py`) plus a draft allowlist against all 239 parsed events — **14
+  kept (5.9%)**, roughly 3–5 truly distinct kid-relevant events/week after
+  dedup (several hits were the same recurring "Free Outdoor Movies" series
+  counted once per day-header). Above Coney Island USA's ~2% rejection floor,
+  well below the built park/museum sources' density.
+- **Not built.** This is a maintainer call: the parser is real work (messiest
+  in the codebase) for a modest yield. Full findings + the concrete parser
+  sketch are in the backlog entry. No code changes this session — probe +
+  docs only.
+
 ### Session: invited-user onboarding in README (branch `claude/add-puppetworks-source-wup5yq`)
 
 Added README § "Onboarding an invited user" under the connector docs. The
