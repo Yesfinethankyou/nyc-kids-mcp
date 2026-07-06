@@ -2,6 +2,30 @@
 
 ## What was done (most recent first)
 
+### Session (same branch, new PR — #56 already merged): Phase 3 planning docs updated — A1 closed, A3 weather design settled
+
+Docs-only follow-up after PR #56 merged. Since that PR had already landed,
+rebased these two commits onto latest `main` (force-with-lease) rather than
+stacking on the old tip:
+
+- **A1 (geocode + neighborhood) marked fully DONE** in `PHASE-3-PLAN.md` and
+  `CLAUDE.md`. The only remaining item, `near_me`/distance-from-home, was
+  explicitly declined by the maintainer as out of scope — not tracked as
+  remaining A1 work. Also caught and fixed a staleness bug: `PHASE-3-PLAN.md`
+  still listed Workstream C (tech debt #4-#6) as open, even though
+  `CLAUDE.md` already recorded it as closed.
+- **A3 (weather) caching design settled**: weather will be keyed by
+  `neighborhood` string, not per-event/per-venue coordinates. Rationale: NWS
+  forecast grid cells (~2.5km) are already coarser than per-venue precision
+  would buy, and a meaningful slice of the catalog gets `neighborhood` from
+  the offline enrich tiers (fixed-venue/park/library tables) *without ever
+  resolving lat/lng* — coordinate-keyed caching would silently skip those
+  rows. Plan: a new one-time `scripts/build_neighborhood_centroids.py` (same
+  recipe as the existing `build_*.py` scripts) plus a two-tier cache (stable
+  `neighborhood → gridpoint`, short-TTL `gridpoint → forecast`). Events with
+  `neighborhood IS NULL` get no weather, consistent with the existing
+  graceful-`None` pattern. No code written yet — A2 (indoor/outdoor) is next.
+
 ### Session (same branch): nycgovparks_events BUILT — the NYC Parks website source is live
 
 Built the source the two verification sessions below prepped, following the

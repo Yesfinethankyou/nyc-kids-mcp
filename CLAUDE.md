@@ -530,12 +530,13 @@ Known accepted residuals (see `git log` for the security-audit commit):
 - **Phase 3 (in progress — see `PHASE-3-PLAN.md`):** location-awareness,
   weather on outdoor events, an indoor/outdoor heuristic flag, more venue
   sources, and deferred tech debt. AI/LLM enrichment is explicitly out of scope.
-  - **DONE — A1 neighborhood coding + geocoding** (this pass): the `enrich.py`
+  - **DONE — A1 neighborhood coding + geocoding**, complete: the `enrich.py`
     second pass codes `neighborhood` for every locatable row and backfills
     `lat`/`lng` as a side effect (see "Neighborhood coding" above). `near_me` /
-    distance-from-home is the remaining A1 piece (the coords it needs now exist).
+    distance-from-home was considered and **declined as out of scope** — not
+    tracked as remaining A1 work.
   - **TODO:** indoor/outdoor flag (A2), weather (A3 — needs coords + A2),
-    `near_me`, more venue sources (Workstream B). Tech-debt #4/#5/#6 closed.
+    more venue sources (Workstream B). Tech-debt #4/#5/#6 closed.
   **Brooklyn Cyclones**
   is parked here too: the MLB Stats API (`teamId=453`, public JSON, no auth)
   gives the game schedule cheaply, but the themed nights (Star Wars Night
