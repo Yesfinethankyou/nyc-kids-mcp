@@ -477,43 +477,84 @@ Probe one first to learn the platform shape; copy-adapt if the others match.
 
 ### The Skint (theskint.com) — citywide editorial RSS
 
-- **Status:** CANDIDATE — proposed 2026-06-28. RSS confirmed to exist by the
-  proposer; item granularity + kid-yield NOT yet verified.
+- **Status:** CANDIDATE — probed 2026-07-06 (plain `httpx`, no anti-bot; `curl_cffi`
+  actually got connection-reset from this sandbox — the reverse of the usual
+  pattern, so try plain `httpx` first for this host). Both blocking questions
+  from the original entry are now answered. **Verdict: technically buildable
+  without AI/NLP, but yield is low — a real judgment call, not an easy win.**
 - **What it is:** a long-running NYC "free & cheap things to do" editorial blog
   (WordPress). Citywide aggregator — **not** a venue and **not** a kids feed.
-- **URLs to probe:** `https://theskint.com/feed/` (WordPress default RSS; also
-  try `/feed/atom/`, the WP REST API `https://theskint.com/wp-json/wp/v2/posts`,
-  and a kids/family category feed if one exists,
-  `https://theskint.com/category/<tag>/feed/`).
-- **Two things the probe MUST settle (they decide whether it's buildable at all):**
-  1. **One item per event, or one digest post per day?** The Skint's signature
-     format is a single daily roundup post listing many events in the body. If
-     RSS items are daily digests, there is no per-event `start_dt`/`venue`/`url`
-     to map onto our `Event` rows without parsing free-text prose — and
-     free-text event extraction is **AI/NLP, explicitly out of scope**
-     (PHASE-3-PLAN.md). Only worth building if items (or a feed/REST variant)
-     are per-event with structured dates.
-  2. **Kid yield.** The Skint skews adult — free booze, bar nights, music, art
-     openings. Like Coney Island USA, the feed can "work" technically while being
-     almost entirely non-kid-relevant. Sample 30–50 items and estimate the
-     kid-relevant fraction before committing.
-- **Platform guess (verify):** WordPress → RSS/Atom is reliable; the WP REST API
-  (`/wp-json/wp/v2/posts`) or JSON-LD may give cleaner structured fields than
-  RSS. Anti-bot is unlikely on a feed, but fall back to `curl_cffi` if a plain
-  fetch 403s.
-- **Filtering plan if built:** mandatory kid-relevance **allowlist** on
-  title/body (family, kids, all-ages, storytime, puppet, workshop) plus the
-  shared `ADULT_BLOCKLIST` / `ADULT_TITLE_BLOCKLIST` from `_filters.py`.
-  Default-exclude — this is an adult-leaning general feed, the opposite of the
-  curated-kids feeds (`mommy_poppins`, `bk_childrens_museum`) that carry no
-  filter by design.
-- **Borough/venue/neighborhood:** all per-event and **only in free text** — a
-  blog RSS item has no structured venue field. Borough/neighborhood would come
-  from the enrich pass *iff* a parseable venue string can be extracted; expect
-  many rows to resolve to `None`. Another reason to confirm item granularity first.
-- **Missing-detection:** opt **out** (`window_days=None`, like `mommy_poppins`) —
-  an editorial feed rotates posts incrementally, so an unmodified item leaving a
-  recent window isn't a cancellation.
+- **Endpoints confirmed:** `https://theskint.com/feed/` (RSS, 10 most recent
+  items) and `https://theskint.com/wp-json/wp/v2/posts?per_page=20` (REST API,
+  same recent window — **the API caps at 19 total posts**, it does not expose
+  deep history; older post URLs found via `sitemap.xml` → `sitemap-index-5.xml`
+  → `sitemap-3.xml`/`sitemap-4.xml` now 404 — looks like old posts are pruned,
+  not just unlisted, so don't plan on backfill).
+- **Q1 answered — item granularity is mixed, and only half the mix matters:**
+  Of 19 recent posts, **8 are digest/roundup posts** (title pattern
+  `"DAY-DAY, M/D-M/D: ..."` or `"...SKINT WEEKEND"`) and **11 are standalone
+  single-event posts**, mostly tagged "(SPONSORED)" — paid ad placements for
+  comedy shows/movie promos, almost all adult content, with unstructured
+  prose dates ("On July 8...", "July 21 & 22"). **Recommendation: skip
+  standalone posts entirely** — low volume, low kid-relevance, no structured
+  date field worth the parsing effort. All real value is in the 8 digest posts.
+- **Digest posts ARE templated, not free prose** — confirmed by parsing all 8
+  live: each is `<u>day-name</u>` section headers containing one `<p>` per
+  event in the form `<day/time-phrase>: <b>Title</b>: description. <a href=...>`.
+  A regex (`^(prefix text): <b>(title)</b>:?\s*(description)`, prefix chars
+  must include `:` since times like "8:30pm" contain one) matched **239 of 472
+  `<p>` blocks** across the 8 posts (~30 events/post). The remainder is mostly
+  boilerplate (day headers themselves, empty `<p>`, "sponsored"/"note:"/
+  "support us" blocks) plus one gotcha: **~40% of matched events have
+  multi-paragraph descriptions** — the continuation `<p>`s that follow don't
+  match the event-start pattern and must be folded into the previous event's
+  description (a small state machine, not a single regex pass).
+- **A separate "ongoing" section deliberately excluded:** each digest ends with
+  a "roundup of 70+/80+ ongoing events" prose blurb (standing weekly programs —
+  free pools, Shakespeare in the Park, etc.). No per-item dates exist here;
+  treat as unparseable and skip, same reasoning as not modeling a "things you
+  can do anytime" blurb as dated Events.
+- **Time-phrase → date:** the digest title's own date range (e.g. "7/3-6")
+  anchors each named weekday header to a real calendar date (combine with the
+  post's `pubDate` year). Recurring/vague phrasing inside individual events
+  ("monthly", "while supplies last", "thru the season") is real and common —
+  **no attempt to model true recurrence** (unlike Domino Park's `variant`
+  field); anchor to the day-header's date and leave the phrase in the
+  description, same "unparseable time → midnight" leniency as Brooklyn Army
+  Terminal.
+- **Venue extraction — better than expected:** ~50% of matched events end
+  their description with a `Venue Name (neighborhood)` clause before the final
+  period — e.g. "halyards (gowanus)", "caveat (les)", "the flea theater
+  (tribeca)", "pioneer works (red hook)". The neighborhood token is usually a
+  recognizable NYC-abbreviation (les/uws/dumbo/etc.) that could map onto
+  existing NTA labels via a small alias table (reuse `_neighborhoods.py`
+  machinery — **no geocoding needed** for these rows). A tighter extraction
+  regex than my quick probe is needed (naive matching grabbed garbage like
+  "with directors charlie ahearn" as a venue on a few rows) — worth getting
+  right since it's half the events. The other ~50% get `venue=None`,
+  `low_confidence=True`.
+- **Kid yield — the real gating number:** ran the actual shared filter
+  (`_filters.py` `ADULT_BLOCKLIST`/`ADULT_TITLE_BLOCKLIST`/`MEMBERS_ONLY`) plus
+  a draft kid-keyword allowlist against all 239 parsed events: **14 kept
+  (5.9%)**, e.g. "Free Outdoor Movies" (recurring, appears across several day
+  headers — likely 1 real series double-counted several times, not 6 distinct
+  events), Jersey City Fourth of July Festival, Punk Island, Free Bike Helmets,
+  Museum Mile Festival. That's roughly **3–5 truly distinct kid-relevant
+  events per week** after accounting for the recurring-series double-count —
+  well above Coney Island USA's ~2% rejection floor, but far below the density
+  of the built park/museum sources (Prospect Park ~300/60-day window,
+  Governors Island ~85/100). A real allowlist would likely do somewhat better
+  than my quick draft, but this is a low-density source, not a high-value one.
+- **`external_id`:** no per-event id upstream — `compute_id` fallback to
+  `title|date`, same pattern as Brooklyn Army Terminal.
+- **Missing-detection:** opt **out** (`window_days=None`, like `mommy_poppins`)
+  — an editorial feed rotates posts incrementally, so an unmodified item
+  leaving a recent window isn't a cancellation.
+- **Open decision:** buildable without AI/NLP, but it's the messiest parser in
+  the codebase (day-header segmentation + paragraph continuation-folding + a
+  ~50%-hit venue regex) for a modest ~3–5 events/week yield. Worth it mainly if
+  citywide breadth (vs. single-venue depth) is the priority. Not yet built —
+  maintainer call on whether the yield justifies the parser complexity.
 
 ---
 

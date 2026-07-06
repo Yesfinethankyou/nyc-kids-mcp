@@ -35,6 +35,40 @@ The Whitney and The Skint were already in the backlog from a prior session —
 not duplicated. No code changes; docs only. Next step for any of these is
 `source-verifier`.
 
+### Session (same branch): The Skint probed in depth — digest parser is buildable, yield is the open question
+
+Followed up on "is there a way to make The Skint work" by actually fetching
+the live feed (plain `httpx` — `curl_cffi` got connection-reset from this
+sandbox, the reverse of the usual pattern) and parsing all 19 available posts.
+Rewrote the `SOURCES-BACKLOG.md` entry from speculative to probed. Key
+findings:
+
+- **Item granularity resolved:** 8/19 posts are digest/roundup posts (the
+  bulk of the value), 11/19 are standalone "(SPONSORED)" ad placements
+  (mostly adult, unstructured dates) — recommend skipping standalone posts
+  entirely and only parsing digests.
+- **Digest format IS templated, not free prose** — confirmed a regex matches
+  239 of 472 `<p>` blocks across the 8 digests as `<time-phrase>: <b>title</b>:
+  description`. This is deterministic text parsing, not the AI/NLP extraction
+  PHASE-3-PLAN.md rules out — but it needs a small state machine (day-header
+  segmentation + folding ~40% multi-paragraph continuation blocks into the
+  prior event) and a separate "ongoing events roundup" blurb deliberately
+  skipped (no per-item dates).
+- **Venue extraction better than expected:** ~50% of events end with a
+  `Venue (neighborhood)` clause (e.g. "halyards (gowanus)") that could map
+  onto existing NTA labels via a small alias table — no geocoding needed for
+  those rows.
+- **Kid yield is the real gating number:** ran the actual shared filter
+  (`_filters.py`) plus a draft allowlist against all 239 parsed events — **14
+  kept (5.9%)**, roughly 3–5 truly distinct kid-relevant events/week after
+  dedup (several hits were the same recurring "Free Outdoor Movies" series
+  counted once per day-header). Above Coney Island USA's ~2% rejection floor,
+  well below the built park/museum sources' density.
+- **Not built.** This is a maintainer call: the parser is real work (messiest
+  in the codebase) for a modest yield. Full findings + the concrete parser
+  sketch are in the backlog entry. No code changes this session — probe +
+  docs only.
+
 ### Session: invited-user onboarding in README (branch `claude/add-puppetworks-source-wup5yq`)
 
 Added README § "Onboarding an invited user" under the connector docs. The
