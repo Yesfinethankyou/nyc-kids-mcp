@@ -2,6 +2,37 @@
 
 ## What was done (most recent first)
 
+### Session (same branch): nycgovparks verification CORRECTED — list pages embed full-window JSON with lat/lng
+
+Follow-up source-verifier pass on the commit below (`2a51eab`) found one
+material error in it: the "no JSON XHR in the page / lat/lng is detail-only"
+conclusion was wrong. **Every `/events/...` list page embeds
+`var eventsByLocationJSON = [...]`** (~518 KB on `/events/kids`) — a
+map-widget JSON blob carrying the **entire current window** (119 venues ×
+2,430 events at probe time), with per-venue `lat`/`lng` (all 119 present),
+`borough`, `address`, `accessible`, and per-event `title`, epoch-ms
+`startDate`/`endDate`, and the per-occurrence `link` (a perfect join key
+against the microdata cards' hrefs). Consequences, applied in place to the
+backlog entry's finding 3 + build parameters:
+
+- **Zero geocoding needed for this source** — join the page-1 blob by
+  `link` for lat/lng + parent-facility venue name; enrich tier 5 only
+  reverse-geocodes for the neighborhood label (cached per coord).
+- Only the **full untruncated description** is detail-page-exclusive
+  (list snippets are ~185 chars; tool summaries truncate at 200 anyway) —
+  detail fetches stay unnecessary.
+- Other refinements recorded: pagination terminates on an **HTTP 200 page
+  with 0 cards** (p50), not a 404; `window_days = 55` recommended (server
+  window is "today → end of next month", 55–61 days); skip rows with a
+  `CANCELLED:` title prefix (observed live); cost line `Free!` →
+  `Price.FREE`, else `UNKNOWN`.
+- Fixture `tests/fixtures/nycgovparks_events_kids_page.html` augmented in
+  the working tree with the blob (reduced to its first 6 venues, real
+  PHP-style `\/` escaping preserved) and the `parks_pages` pagination
+  markup, so the future parser can be tested against both surfaces.
+
+Still no parser/tests/registry code — next step remains `source-adder`.
+
 ### Session (same branch): nycgovparks.org/events VERIFIED — ready for source-adder
 
 Ran the source-verifier pass on the nycgovparks.org/events reassessment (the

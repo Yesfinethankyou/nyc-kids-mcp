@@ -85,11 +85,14 @@ on your laptop/NAS if a specific domain is actually blocked.
 - **Pagination confirmed:** path-based, `/events/kids/p2`, `/events/kids/p3`,
   etc. (verified `p2` returns 200) — not a query param, easy to miss if you
   only grep for `page=`.
-- **No JSON/RSS/iCal alternative found** — this would be an HTML-microdata
-  scrape (selectolax against `itemprop` attributes), not a REST API. That's
-  a very tractable scrape though — arguably easier than most of our Tribe
-  parsing since the fields are individually tagged by `itemprop`, not
-  positionally inferred from prose.
+- **No standalone JSON/RSS/iCal endpoint found** (`/events.rss`, `/events/rss`,
+  `/events.xml`, `/events.json`, `/events.ics`, `/sitemap.xml` all 404) —
+  this is an HTML-microdata scrape (selectolax against `itemprop`
+  attributes), not a REST API. That's a very tractable scrape though —
+  arguably easier than most of our Tribe parsing since the fields are
+  individually tagged by `itemprop`, not positionally inferred from prose.
+  **BUT the machine-readable surface exists in-page** — see the
+  `eventsByLocationJSON` finding below.
 - **This is not just "one more candidate"** — if built, it would plausibly
   **replace or sit alongside `tvpp-9vvx` as the Parks-Department event
   source**, with: real descriptions (permit source has none), a real
@@ -101,8 +104,10 @@ on your laptop/NAS if a specific domain is actually blocked.
   government site (could break on a redesign) rather than a versioned Open
   Data API. ~~Per-event detail-page fetches would be needed~~ — **wrong,
   see verification finding 3 below: the list page alone carries a complete
-  Event row** (only lat/lng and the untruncated description live on detail
-  pages, and both are optional).
+  Event row, INCLUDING lat/lng via the embedded `eventsByLocationJSON`
+  blob** (only the untruncated description lives exclusively on detail
+  pages, and it's optional — list snippets are ~185 chars, and listing-tool
+  summaries truncate at 200 anyway).
 - **Verification pass (2026-07-06) — the four open questions, answered:**
   1. **Overlap with `tvpp-9vvx`: effectively ZERO — complementary, not
      duplicative.** Same-day comparison (2026-07-07): the permit registry had
@@ -131,13 +136,14 @@ on your laptop/NAS if a specific domain is actually blocked.
      per-occurrence URL, `meta` startDate/endDate (full ISO + offset), venue
      (`Place > itemprop="name"`, e.g. "Multi-Use Room (in Alfred E. Smith
      Recreation Center)"), `streetAddress` (sometimes empty),
-     `addressLocality` = borough, a **~200-char truncated** description,
+     `addressLocality` = borough, a **~185-char truncated** description,
      cost line ("Free!"), category ids, accessibility icon, and the
-     `pearls-pick` flag. Only **lat/lng and the full description** require
-     the detail page — skip them for v1 and let the existing enrich pipeline
-     geocode (most venues are parks/playgrounds → `park_neighborhoods.json`
-     tier already covers them offline). `/events/kids` = **49 pages ≈ 2,430
-     events** (last page p49, window 2026-07-06 → 2026-08-31, ~56 days) —
+     `pearls-pick` flag. **And lat/lng is on the list page too**, via the
+     embedded map-widget blob (next bullet) — only the **full untruncated
+     description** requires a detail-page fetch; skip it for v1.
+     `/events/kids` = **49 pages ≈ 2,430 events** (last page p49 had 30
+     rows; **p50 returns HTTP 200 with 0 event blocks** — terminate on an
+     empty page, not a 404; window 2026-07-06 → 2026-08-31, ~56 days) —
      49 list requests/night, no per-event fetches.
   4. **IDs / recurrence: per-occurrence numeric ids — no `compute_id`
      override needed.** Recurring programs get a distinct id AND a distinct
@@ -148,30 +154,64 @@ on your laptop/NAS if a specific domain is actually blocked.
      as-is. Stability: no anti-bot (plain `httpx` + browser UA; robots.txt
      does not disallow `/events` for generic agents), 49 sequential fetches
      drew no throttling during verification.
-- **Machine-readable alternative: re-checked, none** — no RSS/iCal/JSON
-  endpoints, no JSON XHR in the page. HTML-microdata scrape confirmed as
-  the approach.
+- **Machine-readable alternative: YES, embedded in-page (missed on the
+  first sweep).** No standalone RSS/iCal/JSON endpoints, but **every
+  `/events/...` list page embeds `var eventsByLocationJSON = [...]`** in a
+  `<script>` block (~518 KB on `/events/kids`) — a map-widget JSON payload
+  containing the **entire current window, not just that page's 50 rows**:
+  119 venues × 2,430 events at probe time. Per venue: `name`, `link`
+  (facility page), `address`, `borough`, `accessible`, **`lat`/`lng`**
+  (present on all 119 venues). Per event: `title`, `startDate`/`endDate`
+  (**epoch milliseconds**), `repetitionString` (null across the whole
+  sample), and `link` — the per-occurrence detail path, i.e. a perfect join
+  key against the microdata cards' anchor hrefs. The blob lacks description
+  and cost (those are microdata-only), so the build is: paginate the
+  microdata cards, join the page-1 blob by `link` for lat/lng +
+  parent-facility venue name + accessible flag. **Coordinates therefore
+  come free from the list fetch — zero geocoding needed for this source.**
+  Raw blob uses PHP-style `\/` escaping (transparent to `json.loads`).
 - **Fixtures captured:** `tests/fixtures/nycgovparks_events_kids_page.html`
-  (real `/events/kids` p1, trimmed to the `#catpage_events_list` container +
-  first 10 cards — full page is ~630 KB) and
-  `tests/fixtures/nycgovparks_event_detail.html` (full detail page, incl.
-  `itemprop="latitude"/"longitude"` and the category link list).
+  (real `/events/kids` p1, trimmed to: the `eventsByLocationJSON` script
+  reduced to its first 6 venues, the `#catpage_events_list` container +
+  first 10 cards, and the `parks_pages` pagination markup — full page is
+  ~630 KB) and `tests/fixtures/nycgovparks_event_detail.html` (full detail
+  page, incl. `itemprop="latitude"/"longitude"` and the category link list).
 - **Build parameters for `source-adder`:**
   - Fetch: `GET https://www.nycgovparks.org/events/kids` then `/events/kids/p2`…
-    until a page yields 0 cards (~49 pages); plain `httpx` + browser UA.
+    until a page yields 0 cards (~49 pages; p50 is HTTP 200 with 0 cards,
+    not a 404); plain `httpx` + browser UA (note: `curl_cffi` sometimes gets
+    connection resets in the sandbox where httpx succeeds — prefer httpx);
+    1s polite delay between pages.
   - Parse: split on `itemscope itemtype="http://schema.org/Event"` cards;
     fields per finding 3 above. Date headers (`<h2 id="YYYY-MM-DD">`) are
-    redundant with the per-card `meta startDate` — ignore them.
+    redundant with the per-card `meta startDate` — ignore them. Dates are
+    ISO-8601 with offset — `datetime.fromisoformat` directly.
+  - **Blob join for lat/lng + venue:** regex
+    `var eventsByLocationJSON = (\[.*?\]);` on page 1 → `json.loads` →
+    build `link → (lat, lng, parent-venue name, borough, accessible)`
+    (blob covers the whole window, so page 1 alone suffices). Prefer the
+    blob's top-level venue name (`Greenbelt Recreation Center`) over the
+    microdata Place name, which is sometimes a sub-room (`Multi-Use Room`);
+    the parent name also lines up with the `park_neighborhoods.json` tier.
   - `external_id` = the numeric id from `event_title__<id>`.
+  - Price: cost-line text `Free!` → `Price.FREE`; else `Price.UNKNOWN`
+    (paid formatting never observed in the 50-row sample).
   - Kid-filter: **none** (Parks-curated category, like `mommy_poppins`) —
     but keep the shared `ADULT_BLOCKLIST` import as a cheap safety net.
-  - `window_days = 60`-ish and **opt IN to missing-detection** — the feed
-    re-lists its entire window every fetch (full-window source, unlike
+    One edge case: titles prefixed **`CANCELLED:`** appear in the feed
+    (observed live) — skip those rows at parse time (explicit upstream
+    cancellation beats our `possibly_cancelled` heuristic).
+  - `window_days = 55` (server window is "today → end of next month",
+    56 days at probe, varies ~55–61 by calendar — use the conservative
+    lower bound) and **opt IN to missing-detection** — the feed re-lists
+    its entire window every fetch (full-window source, unlike
     `mommy_poppins`' incremental sitemap).
-  - `neighborhood=None` from the source (enrich pass codes it; park-table
-    tier covers most venues offline). Borough from `addressLocality`.
+  - `neighborhood=None` from the source (enrich pass codes it; rows arrive
+    with lat/lng so tier 5 reverse-geocode covers anything the park table
+    misses — no forward geocoding). Borough from `addressLocality`.
   - Rows will be `low_confidence: false` (real description + URL) — this
-    single source roughly doubles the catalog's curated-event count.
+    single source roughly doubles the catalog's curated-event count;
+    sanity-check ingest totals and search behavior after the first run.
 
 ## Tech debt / TODO
 
