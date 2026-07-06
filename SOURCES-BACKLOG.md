@@ -26,11 +26,13 @@ coneyisland.com were all probed and fixture-captured directly from a web
 session. Try the probe from the sandbox first; only fall back to capturing
 on your laptop/NAS if a specific domain is actually blocked.
 
-## 🟢 Major reassessment: nycgovparks.org/events is alive and far richer than tvpp-9vvx
+## ✅ Major reassessment: nycgovparks.org/events is alive and far richer than tvpp-9vvx — BUILT
 
-- **Status:** 🟢 CONFIRMED + VERIFIED 2026-07-06 (source-verifier pass same
-  day — all four open questions answered below, fixtures captured) —
-  **ready for `source-adder`, not yet built.** This is a
+- **Status:** ✅ **BUILT 2026-07-06** — shipped as source `nycgovparks_events`
+  (`src/nyc_events/sources/nycgovparks_events.py`); as-built notes at the end
+  of this section. Previously: 🟢 CONFIRMED + VERIFIED 2026-07-06
+  (source-verifier pass same
+  day — all four open questions answered below, fixtures captured). This is a
   significant finding, flagged prominently rather than buried as one more
   CANDIDATE: the live NYC Parks events **website** looks substantially better
   than the permit registry (`tvpp-9vvx`) currently powering the Phase 1
@@ -212,6 +214,42 @@ on your laptop/NAS if a specific domain is actually blocked.
   - Rows will be `low_confidence: false` (real description + URL) — this
     single source roughly doubles the catalog's curated-event count;
     sanity-check ingest totals and search behavior after the first run.
+- **As-built notes (build 2026-07-06; spec above followed as written, plus):**
+  - **Category-id → tag table resolved live** (the one thing the spec left
+    open): card class lists carry `catNN` ids but the kids-page cards have no
+    "Category:" text line (only `/events` all-page cards do). The full id→slug
+    mapping was solved by intersecting class-id sets across `/events` p1–p8
+    (400 cards, using each card's Category link line as constraints) plus 10
+    per-category page probes (`/events/<slug>` — every card there carries that
+    category's id). 33 ids mapped in `_CATEGORY_TAGS` (2 arts-and-crafts,
+    4 birding, 5 education, 7 concerts, 9 dance, 10 nature, 11 exhibits/Art,
+    12 festivals, 13 film, 14 fitness, 15 games, 17 history, **18 kids**,
+    20 markets, 23 pets, 25 sports, 27 theater, 28 tours, 29 volunteer,
+    47 urbanparkrangers, 100 food, 102 kayaking, 105 shape-up-nyc, 106 talks,
+    109 waterfront, 121 outdoor-fitness, 125 astronomy, 128 fishing,
+    137 summer-sports-experience, 147 hiking, 167 wildlife, 303 gardening);
+    audience/venue-type ids (122 seniors, 205 recreation-centers, 206/211/291
+    internal markers) deliberately unmapped. Unknown ids are skipped silently.
+  - **Blob venue name is the park PROPERTY**, one level above even the
+    "(in …)" parent shown in microdata for playgrounds: "Kids In Motion:
+    Addabbo Playground" has Place "Addabbo Playground (in Tudor Park)" and
+    blob venue **"Tudor Park"** — exactly what `park_neighborhoods.json`
+    keys on. Fallback order when a link isn't in the blob: "(in <parent>)"
+    text, then Place name.
+  - Smoke test (2 live pages, 2026-07-06): 100/100 cards parsed, 100/100
+    joined blob lat/lng, all five boroughs present, all rows Free!.
+    ~49 pages × 50 cards ≈ **2,430 events/run** expected.
+  - **Known residue:** ~1% of rows (e.g. "Queens Recreation Summer Sports
+    Experience" at a bare "Play Area") have no `addressLocality` AND a null
+    blob borough → `borough=None`. They still get lat/lng from the blob, so
+    the enrich tier-5 reverse geocode codes their neighborhood; not worth
+    importing the coordinate bounding-box machinery for.
+  - `test_missing_detection.py::test_full_window_sources_opt_in` extended:
+    the opted-in census is now 10 sources and this one is the first whose
+    window isn't 60 (55, mirroring the server's ~55–61-day rolling window).
+  - No `age_min`/`age_max` (ages live in description prose only); price is
+    FREE on the "Free!" cost line else UNKNOWN (paid formatting never
+    observed).
 
 ## Tech debt / TODO
 

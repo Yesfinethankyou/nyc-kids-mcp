@@ -2,6 +2,51 @@
 
 ## What was done (most recent first)
 
+### Session (same branch): nycgovparks_events BUILT — the NYC Parks website source is live
+
+Built the source the two verification sessions below prepped, following the
+source-adder recipe and the backlog's build-parameters block as written:
+
+- **New `src/nyc_events/sources/nycgovparks_events.py`** (source
+  `nycgovparks_events`, registered in `ENABLED_SOURCES` before
+  mommy_poppins): paginates `/events/kids` → `/p2`… until an HTTP-200 page
+  with 0 microdata cards (plain `httpx` + browser UA, 1s delay, max_pages=80
+  cap), parses the schema.org Event microdata cards with selectolax, and
+  joins page 1's `eventsByLocationJSON` blob by detail-URL path for lat/lng +
+  the park-property venue name (preferred over the microdata sub-room; blob
+  venue is one level above even the "(in …)" parent — "Tudor Park" for
+  Addabbo Playground). `external_id` = the per-occurrence numeric id from
+  `event_title__<id>` (verified per-occurrence, no compute_id override).
+  Skips `CANCELLED:` titles; shared `ADULT_BLOCKLIST` as safety net only (no
+  kid filter — Parks-curated category). `window_days=55`, opted IN to
+  missing-detection. `raw_payload` = trimmed structured extract, not HTML.
+- **Category-id → tag table resolved live** (the spec left tags open): card
+  class lists carry `catNN` ids; the id→slug map was solved by intersecting
+  class-id sets across `/events` p1–p8 (400 cards, Category-link-line
+  constraints) + 10 per-category page probes. 33 ids mapped in
+  `_CATEGORY_TAGS` (18=kids, 2=arts-and-crafts, 10=nature, 12=festivals,
+  13=film, 25=sports, 47=urbanparkrangers, 303=gardening, …); audience/
+  venue-type ids (122 seniors, 205 rec-centers, 206/211/291 internal)
+  deliberately unmapped.
+- **Tests:** new `tests/test_nycgovparks_events_parse.py` (23 tests against
+  the already-captured fixture: blob parse + link join + park-property venue
+  preference, happy path, no-join fallback, CANCELLED/adult skips, empty-page
+  pagination terminator, tag mapping, DB upsert round-trip).
+  `test_missing_detection.py::test_full_window_sources_opt_in` extended (not
+  loosened): opted-in census now 10 sources, and this is the first whose
+  window isn't 60 (55, mirroring the server's ~55–61-day rolling window).
+- **Live smoke test** (2 pages): 100/100 cards parsed, 100/100 joined blob
+  lat/lng, all five boroughs, all rows FREE. Expect ~49 pages ≈ **2,430
+  events/run** — the largest curated source in the catalog; sanity-check the
+  first production ingest's totals. Known residue: ~1% of rows have no
+  `addressLocality` and a null blob borough → `borough=None` (they still get
+  lat/lng, so enrich tier-5 codes the neighborhood). No age_min/age_max
+  (ages are description prose only).
+- **Docs:** backlog reassessment section flipped to ✅ BUILT + as-built
+  block; CLAUDE.md Live list; README status line, "Why Permitted Events"
+  note (now points at the shipped source), and Phase 2 source list.
+- Suite **504 passed**, ruff clean. Nothing committed — working tree only.
+
 ### Session (same branch): nycgovparks verification CORRECTED — list pages embed full-window JSON with lat/lng
 
 Follow-up source-verifier pass on the commit below (`2a51eab`) found one
@@ -705,6 +750,10 @@ kid-relevance filters had drifted between six hand-maintained copies.
       Green-Wood `_strip_html` now uses `html.unescape()`.
 
 ## Current state
+
+Suite: **504 passed**, ruff: **clean** (after the `nycgovparks_events`
+build — new source + 23 parser tests in the working tree, uncommitted).
+Older per-branch notes below:
 
 Suite: **461 passed**, ruff: **clean**. Security issues **#33/#34/#36**
 (High + both Mediums from the 2026-07-05 review) implemented on

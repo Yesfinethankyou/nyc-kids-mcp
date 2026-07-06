@@ -241,5 +241,11 @@ def test_full_window_sources_opt_in():
         for cls in ENABLED_SOURCES
         if cls not in _MISSING_DETECTION_EXCLUDED
     }
-    assert all(days == 60 for days in opted_in.values()), opted_in
-    assert len(opted_in) == 9
+    # nycgovparks_events mirrors its server-side window ("today → end of next
+    # month", ~55-61 days depending on the calendar) with the conservative
+    # lower bound; every other full-window source uses the 60-day convention.
+    expected_days = {"NYCGovParksEventsSource": 55}
+    assert all(
+        days == expected_days.get(name, 60) for name, days in opted_in.items()
+    ), opted_in
+    assert len(opted_in) == 10
