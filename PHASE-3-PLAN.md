@@ -109,25 +109,42 @@ as remaining A1 work; revisit only if requirements change.
   ADD COLUMN` pattern).
 
 ### A3. Weather
-- Source: **NWS `api.weather.gov`** (free, no key). Needs coords (depends on
-  A1); only meaningful for **outdoor** events (depends on A2) within the
-  forecast window (~7 days).
-- **Open decision — when to compute:**
-  - *Nightly* (simple, ≤24h stale): enrich at the second pass; store forecast
-    on the row.
-  - *Read-time* (fresh, but adds latency + an external dependency to the tool
-    hot path).
-  - *Recommended:* cache forecasts by grid point with a short TTL (a few
-    hours), refresh lazily — fresh enough for weekend planning, off the hot
-    path, and NWS gridpoint lookups are coarse so the cache hit-rate is high.
+- Source: **NWS `api.weather.gov`** (free, no key). Only meaningful for
+  **outdoor**/**mixed** events (depends on A2) within the forecast window
+  (~7 days).
+- **Keyed by `neighborhood`, NOT by per-event/per-venue coordinates —
+  settled.** A citywide catalog at NWS's own grid resolution (~2.5km cells)
+  gains nothing from per-venue precision — "rain likely Saturday" doesn't
+  change block to block. More importantly, a meaningful slice of the catalog
+  gets its `neighborhood` from the **offline enrich tiers** (fixed-venue
+  constant, park-name table, library table — see "Neighborhood coding" in
+  CLAUDE.md) *without ever resolving lat/lng*, so keying off per-event coords
+  would silently skip those rows. Keying off the neighborhood string covers
+  every row that has one, coords or not, and collapses the lookup volume from
+  one-per-venue to ~150–200 total (the distinct neighborhood labels in use).
+  - **New one-time offline build** (same recipe as `build_tract_nta.py` /
+    `build_park_neighborhoods.py`): `scripts/build_neighborhood_centroids.py`
+    → `data/neighborhood_centroids.json`, one representative point per
+    neighborhood label actually seen in the catalog.
+  - **Two-tier cache**, same shape as `geocode_cache`: `neighborhood →
+    NWS gridpoint` (stable, no TTL — the mapping never changes) and
+    `gridpoint → forecast` (short TTL, a few hours, refreshed lazily).
+  - Events with `neighborhood IS NULL` get no weather — same "`None` is the
+    status quo" pattern as the rest of the enrich pipeline; not worth a
+    fallback.
+  - Tradeoff accepted: an event near a neighborhood's edge samples weather
+    from that neighborhood's centroid, which could be off by up to
+    ~a mile in a large neighborhood. Irrelevant at city-forecast granularity.
 - Tool output: attach a compact forecast (temp range + precip/condition) to
   applicable events; Claude can warn "rain likely Saturday."
 
 ### Architecture: second nightly pass + caching layer
 - Keep source `fetch()` dumb. Add an **enrichment step** that runs after
   ingest (same nightly job, second phase): geocode missing coords → attach
-  neighborhood → fetch weather for upcoming outdoor events.
-- **Caching layer:** a geocode cache (stable, no TTL — key = lookup string)
+  neighborhood → fetch weather for upcoming outdoor/mixed events by
+  neighborhood.
+- **Caching layer:** a geocode cache (stable, no TTL — key = lookup string),
+  a neighborhood→gridpoint cache (stable, no TTL — key = neighborhood name),
   and a weather cache (short TTL — key = NWS gridpoint). Decision: new tables
   in `events.db` vs. a third SQLite file. Leaning new tables in `events.db`
   (it's event-derived data), kept clearly namespaced.
@@ -181,7 +198,8 @@ shape (WCS, a museum, a library system, a parks org), then fan out.
 ## Open decisions to settle before building
 
 - Headless image: separate ingest image (recommended) vs. single image.
-- Weather: nightly vs. read-time vs. cached-with-TTL (recommended).
+- ~~Weather: when to compute~~ **SETTLED: cached-with-TTL**, keyed by
+  `neighborhood` (not per-event/per-venue coords) — see A3 above.
 - ~~Geocoder~~ **SETTLED: US Census only** (Census tract → NTA crosswalk; no
   Nominatim fallback needed in practice).
 - ~~Cache storage~~ **SETTLED: a `geocode_cache` table in `events.db`** (no TTL).
