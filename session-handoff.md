@@ -2,6 +2,114 @@
 
 ## What was done (most recent first)
 
+### Session (same branch): nycgovparks_events BUILT — the NYC Parks website source is live
+
+Built the source the two verification sessions below prepped, following the
+source-adder recipe and the backlog's build-parameters block as written:
+
+- **New `src/nyc_events/sources/nycgovparks_events.py`** (source
+  `nycgovparks_events`, registered in `ENABLED_SOURCES` before
+  mommy_poppins): paginates `/events/kids` → `/p2`… until an HTTP-200 page
+  with 0 microdata cards (plain `httpx` + browser UA, 1s delay, max_pages=80
+  cap), parses the schema.org Event microdata cards with selectolax, and
+  joins page 1's `eventsByLocationJSON` blob by detail-URL path for lat/lng +
+  the park-property venue name (preferred over the microdata sub-room; blob
+  venue is one level above even the "(in …)" parent — "Tudor Park" for
+  Addabbo Playground). `external_id` = the per-occurrence numeric id from
+  `event_title__<id>` (verified per-occurrence, no compute_id override).
+  Skips `CANCELLED:` titles; shared `ADULT_BLOCKLIST` as safety net only (no
+  kid filter — Parks-curated category). `window_days=55`, opted IN to
+  missing-detection. `raw_payload` = trimmed structured extract, not HTML.
+- **Category-id → tag table resolved live** (the spec left tags open): card
+  class lists carry `catNN` ids; the id→slug map was solved by intersecting
+  class-id sets across `/events` p1–p8 (400 cards, Category-link-line
+  constraints) + 10 per-category page probes. 33 ids mapped in
+  `_CATEGORY_TAGS` (18=kids, 2=arts-and-crafts, 10=nature, 12=festivals,
+  13=film, 25=sports, 47=urbanparkrangers, 303=gardening, …); audience/
+  venue-type ids (122 seniors, 205 rec-centers, 206/211/291 internal)
+  deliberately unmapped.
+- **Tests:** new `tests/test_nycgovparks_events_parse.py` (23 tests against
+  the already-captured fixture: blob parse + link join + park-property venue
+  preference, happy path, no-join fallback, CANCELLED/adult skips, empty-page
+  pagination terminator, tag mapping, DB upsert round-trip).
+  `test_missing_detection.py::test_full_window_sources_opt_in` extended (not
+  loosened): opted-in census now 10 sources, and this is the first whose
+  window isn't 60 (55, mirroring the server's ~55–61-day rolling window).
+- **Live smoke test** (2 pages): 100/100 cards parsed, 100/100 joined blob
+  lat/lng, all five boroughs, all rows FREE. Expect ~49 pages ≈ **2,430
+  events/run** — the largest curated source in the catalog; sanity-check the
+  first production ingest's totals. Known residue: ~1% of rows have no
+  `addressLocality` and a null blob borough → `borough=None` (they still get
+  lat/lng, so enrich tier-5 codes the neighborhood). No age_min/age_max
+  (ages are description prose only).
+- **Docs:** backlog reassessment section flipped to ✅ BUILT + as-built
+  block; CLAUDE.md Live list; README status line, "Why Permitted Events"
+  note (now points at the shipped source), and Phase 2 source list.
+- Suite **504 passed**, ruff clean. Nothing committed — working tree only.
+
+### Session (same branch): nycgovparks verification CORRECTED — list pages embed full-window JSON with lat/lng
+
+Follow-up source-verifier pass on the commit below (`2a51eab`) found one
+material error in it: the "no JSON XHR in the page / lat/lng is detail-only"
+conclusion was wrong. **Every `/events/...` list page embeds
+`var eventsByLocationJSON = [...]`** (~518 KB on `/events/kids`) — a
+map-widget JSON blob carrying the **entire current window** (119 venues ×
+2,430 events at probe time), with per-venue `lat`/`lng` (all 119 present),
+`borough`, `address`, `accessible`, and per-event `title`, epoch-ms
+`startDate`/`endDate`, and the per-occurrence `link` (a perfect join key
+against the microdata cards' hrefs). Consequences, applied in place to the
+backlog entry's finding 3 + build parameters:
+
+- **Zero geocoding needed for this source** — join the page-1 blob by
+  `link` for lat/lng + parent-facility venue name; enrich tier 5 only
+  reverse-geocodes for the neighborhood label (cached per coord).
+- Only the **full untruncated description** is detail-page-exclusive
+  (list snippets are ~185 chars; tool summaries truncate at 200 anyway) —
+  detail fetches stay unnecessary.
+- Other refinements recorded: pagination terminates on an **HTTP 200 page
+  with 0 cards** (p50), not a 404; `window_days = 55` recommended (server
+  window is "today → end of next month", 55–61 days); skip rows with a
+  `CANCELLED:` title prefix (observed live); cost line `Free!` →
+  `Price.FREE`, else `UNKNOWN`.
+- Fixture `tests/fixtures/nycgovparks_events_kids_page.html` augmented in
+  the working tree with the blob (reduced to its first 6 venues, real
+  PHP-style `\/` escaping preserved) and the `parks_pages` pagination
+  markup, so the future parser can be tested against both surfaces.
+
+Still no parser/tests/registry code — next step remains `source-adder`.
+
+### Session (same branch): nycgovparks.org/events VERIFIED — ready for source-adder
+
+Ran the source-verifier pass on the nycgovparks.org/events reassessment (the
+subagent was killed twice by a session-limit API error; the verification was
+finished inline in the main session). All four open questions from the
+"Major reassessment" backlog entry are now answered in place — the entry is
+flipped to 🟢 CONFIRMED + VERIFIED with full build parameters:
+
+- **Overlap with `tvpp-9vvx`: zero** in a same-day (2026-07-07) comparison —
+  the permit registry is third-party field reservations, the website is
+  Parks' own programming (Kids in Motion, rec-center camps, ranger events).
+  Complementary; build alongside, no dedup.
+- **Categories:** ~50 multi-tag slugs; the `kids` tag (cat_id 18) is
+  well-applied — kid events found via `nature`/`education` also carried it.
+  `/events/kids` alone is the right v1 fetch.
+- **Detail fetches NOT needed:** list cards carry a numeric per-occurrence
+  event id (`event_title__<id>`), title, URL, ISO start/end with offset,
+  venue Place name, borough, ~200-char description, cost, category ids
+  (in the card's class list!), and the pearls-pick flag. Only lat/lng +
+  full description live on detail pages — deferred to the enrich pass.
+  `/events/kids` = 49 pages ≈ 2,430 events, window 2026-07-06 → 08-31.
+- **IDs:** distinct numeric id AND dated URL per occurrence of recurring
+  programs → `external_id` = the numeric id, no compute_id override.
+- No RSS/iCal/JSON alternative (re-checked); no anti-bot (plain httpx + UA;
+  robots.txt clean for /events); 49 sequential fetches drew no throttling.
+
+Fixtures captured: `tests/fixtures/nycgovparks_events_kids_page.html`
+(p1 trimmed to the events-list container + first 10 cards) and
+`tests/fixtures/nycgovparks_event_detail.html` (full page, has lat/lng).
+No parser/tests/registry written — that's the next step, via `source-adder`,
+using the build-parameters block in the backlog entry.
+
 ### Session: backlog expansion — 6 new candidates (branch `claude/backlog-sources-integration-axzlam`)
 
 Added six new CANDIDATE entries to `SOURCES-BACKLOG.md` at the user's request,
@@ -642,6 +750,10 @@ kid-relevance filters had drifted between six hand-maintained copies.
       Green-Wood `_strip_html` now uses `html.unescape()`.
 
 ## Current state
+
+Suite: **504 passed**, ruff: **clean** (after the `nycgovparks_events`
+build — new source + 23 parser tests in the working tree, uncommitted).
+Older per-branch notes below:
 
 Suite: **461 passed**, ruff: **clean**. Security issues **#33/#34/#36**
 (High + both Mediums from the 2026-07-05 review) implemented on

@@ -14,7 +14,9 @@ tools — designed for use from the Claude mobile app while out with a kid.
   Museum, Green-Wood Cemetery (~104 events/60d), Prospect Park Alliance
   (~307 events/60d), New York Transit Museum (~10 events/60d), Brooklyn Army
   Terminal (~12 events/60d), Industry City (~8 events/60d), Governors Island
-  (~85 events/run), Domino Park (~104 events/60d) — real
+  (~85 events/run), Domino Park (~104 events/60d), NYC Parks website
+  (`nycgovparks_events`, ~2,430 events/55d — the live nycgovparks.org
+  "Best for Kids" calendar with lat/lng included) — real
   descriptions, URLs, and (where
   upstream provides them) age ranges, coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser) and Coney Island
@@ -37,9 +39,12 @@ finally a kid-keyword filter (must match at least one tag). **Note (2026-07-06):
 that decision only ever checked the Open Data catalog — the live
 `nycgovparks.org/events` website (a separate system from its old Socrata
 export) was re-probed and found very much alive, with real descriptions,
-an NYC-Parks-curated "kids" category, and lat/lng on detail pages; see the
-"Major reassessment" entry at the top of `SOURCES-BACKLOG.md` before
-assuming `tvpp-9vvx` is still the best available Parks source. The ten Phase 2
+an NYC-Parks-curated "kids" category, and lat/lng on detail pages. That
+website is now **shipped** as its own source (`nycgovparks_events`) — verified
+complementary to `tvpp-9vvx` (zero title overlap: the permit registry is
+third-party field reservations, the website is Parks' own programming), so
+both run side by side; see the "Major reassessment" entry at the top of
+`SOURCES-BACKLOG.md` for the full history. The eleven Phase 2
 editorial sources (see Status above) add higher-curated signal alongside this
 baseline.
 
@@ -457,6 +462,16 @@ Adapters with real descriptions, URLs, age ranges:
   leftover frequency ignored). Inclusive + light blocklist (curated
   family-park feed). Has lat/lng + descriptions; no price → unknown,
   venue/borough hardcoded Domino Park / Brooklyn. ~104 events/60 days.
+- ✅ **NYC Parks website** — *shipped* (`nycgovparks_events`). The live
+  nycgovparks.org events calendar (a separate, actively-maintained system
+  from the frozen `fudw-fgrp` Open Data export), scraped from its curated
+  "Best for Kids" category: schema.org Event microdata cards (plain `httpx`,
+  no anti-bot) paginated until an empty page, joined against the in-page
+  `eventsByLocationJSON` map blob for free lat/lng and park-property venue
+  names — zero geocoding needed. Real descriptions, per-occurrence ids/URLs,
+  Parks' own category taxonomy mapped to tags, "CANCELLED:" rows dropped at
+  parse. Verified zero overlap with `nyc_permitted_events`. ~2,430 events
+  per ~55-day window — the largest curated source in the catalog.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
 - ❌ **Coney Island USA** — *rejected.* Working Squarespace feed, but the

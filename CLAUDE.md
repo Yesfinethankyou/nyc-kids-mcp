@@ -493,7 +493,11 @@ Known accepted residuals (see `git log` for the security-audit commit):
   still follows `.claude/agents/source-adder.md`.
   - **Live:** Mommy Poppins, BPL, Brooklyn Children's Museum, Green-Wood
     Cemetery, Prospect Park Alliance, New York Transit Museum, Brooklyn
-    Army Terminal, Industry City, Governors Island, Domino Park.
+    Army Terminal, Industry City, Governors Island, Domino Park, NYC Parks
+    website (`nycgovparks_events` — the live nycgovparks.org "Best for Kids"
+    calendar: microdata scrape + in-page map blob so lat/lng comes free,
+    ~2,430 events / ~55-day window; complementary to `tvpp-9vvx`, verified
+    zero overlap — see SOURCES-BACKLOG.md "Major reassessment").
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.

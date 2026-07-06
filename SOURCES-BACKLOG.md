@@ -26,9 +26,13 @@ coneyisland.com were all probed and fixture-captured directly from a web
 session. Try the probe from the sandbox first; only fall back to capturing
 on your laptop/NAS if a specific domain is actually blocked.
 
-## 🔴 Major reassessment: nycgovparks.org/events is alive and far richer than tvpp-9vvx
+## ✅ Major reassessment: nycgovparks.org/events is alive and far richer than tvpp-9vvx — BUILT
 
-- **Status:** CONFIRMED 2026-07-06 (live probe) — **not yet built.** This is a
+- **Status:** ✅ **BUILT 2026-07-06** — shipped as source `nycgovparks_events`
+  (`src/nyc_events/sources/nycgovparks_events.py`); as-built notes at the end
+  of this section. Previously: 🟢 CONFIRMED + VERIFIED 2026-07-06
+  (source-verifier pass same
+  day — all four open questions answered below, fixtures captured). This is a
   significant finding, flagged prominently rather than buried as one more
   CANDIDATE: the live NYC Parks events **website** looks substantially better
   than the permit registry (`tvpp-9vvx`) currently powering the Phase 1
@@ -83,11 +87,14 @@ on your laptop/NAS if a specific domain is actually blocked.
 - **Pagination confirmed:** path-based, `/events/kids/p2`, `/events/kids/p3`,
   etc. (verified `p2` returns 200) — not a query param, easy to miss if you
   only grep for `page=`.
-- **No JSON/RSS/iCal alternative found** — this would be an HTML-microdata
-  scrape (selectolax against `itemprop` attributes), not a REST API. That's
-  a very tractable scrape though — arguably easier than most of our Tribe
-  parsing since the fields are individually tagged by `itemprop`, not
-  positionally inferred from prose.
+- **No standalone JSON/RSS/iCal endpoint found** (`/events.rss`, `/events/rss`,
+  `/events.xml`, `/events.json`, `/events.ics`, `/sitemap.xml` all 404) —
+  this is an HTML-microdata scrape (selectolax against `itemprop`
+  attributes), not a REST API. That's a very tractable scrape though —
+  arguably easier than most of our Tribe parsing since the fields are
+  individually tagged by `itemprop`, not positionally inferred from prose.
+  **BUT the machine-readable surface exists in-page** — see the
+  `eventsByLocationJSON` finding below.
 - **This is not just "one more candidate"** — if built, it would plausibly
   **replace or sit alongside `tvpp-9vvx` as the Parks-Department event
   source**, with: real descriptions (permit source has none), a real
@@ -97,37 +104,152 @@ on your laptop/NAS if a specific domain is actually blocked.
   precise borough/address (permit source's `event_location` needs regex
   cleanup — see `_clean_venue`). The tradeoff: it's an HTML scrape of a
   government site (could break on a redesign) rather than a versioned Open
-  Data API, and per-event detail-page fetches would be needed to get
-  lat/lng (the list page doesn't have it) — i.e. it's a two-tier fetch like
-  `mommy_poppins`, not a single paginated list call.
-- **Not yet checked (open questions before committing):**
-  1. **Overlap with `tvpp-9vvx`.** Do these two datasets describe the same
-     underlying permitted activities, or is `nycgovparks.org/events` NYC
-     Parks' own recurring programming (rec centers, Urban Park Rangers,
-     Shape Up NYC) that's mostly *distinct* from one-off permitted third-party
-     events? Titles sampled so far ("Summer Sports Experience: Pickleball",
-     "Line Dance Fitness") look like standing city programs, not permitted
-     third-party events — plausibly complementary rather than duplicate, but
-     unconfirmed. Spot-check for id/date/title overlap before building both.
-  2. **Full category vocabulary + non-kids-tagged-but-relevant rows** — is
-     the "kids" category comprehensive, or (like Green-Wood/Prospect Park)
-     does real kid-relevant content also hide in `nature`/`STEM`/
-     `arts-and-crafts` without also carrying the `kids` tag? Worth a category
-     Venn-diagram check before deciding whether `/events/kids` alone is
-     sufficient or a broader multi-category fetch is needed.
-  3. **Whether per-event detail-page fetches (for lat/lng) are worth the
-     request volume** at ~2,400 kids-category rows/60-day-window — may want
-     list-page fields only (borough + address text) and let the existing
-     enrich pipeline handle geocoding, skipping the extra per-event fetch.
-  4. **Site stability / rate limits** — no anti-bot encountered in this
-     probe (plain `httpx`, no `curl_cffi` needed), but a ~2,400-row fetch
-     across ~49 pages nightly is a meaningfully bigger crawl than any
-     current source except `mommy_poppins`; check for throttling.
-- **Recommendation:** this is worth a proper `source-verifier` pass
-  (fixture capture + the overlap-with-permit-source question) before
-  `source-adder` — the upside (real descriptions/categories/lat-lng/kids-tag
-  from an authoritative NYC Parks source) is large enough to justify treating
-  this as a priority item, not a routine backlog candidate.
+  Data API. ~~Per-event detail-page fetches would be needed~~ — **wrong,
+  see verification finding 3 below: the list page alone carries a complete
+  Event row, INCLUDING lat/lng via the embedded `eventsByLocationJSON`
+  blob** (only the untruncated description lives exclusively on detail
+  pages, and it's optional — list snippets are ~185 chars, and listing-tool
+  summaries truncate at 200 anyway).
+- **Verification pass (2026-07-06) — the four open questions, answered:**
+  1. **Overlap with `tvpp-9vvx`: effectively ZERO — complementary, not
+     duplicative.** Same-day comparison (2026-07-07): the permit registry had
+     1,025 Parks-Department rows, almost all third-party field reservations
+     ("Baseball - 12 and Under (Little League)", bootcamps, maintenance
+     closures, protests); `/events/kids` that day was NYC Parks' own
+     programming (Kids in Motion at ~40 playgrounds, rec-center summer camps,
+     Summer Sports Experience, ranger events). Exact- and fuzzy-name
+     intersection of the two samples: **empty**. Build it *alongside*
+     `tvpp-9vvx`, no dedup needed.
+  2. **Category vocabulary: ~50 slug categories** (`/events/<slug>` — `nature`,
+     `urbanparkrangers`, `arts-and-crafts`, `education`, `wildlife`, `games`,
+     `festivals`, `astronomy`, `fishing`, …; filter form posts `cat_id[]`,
+     kids = **18**). Categories are **multi-tag** and the `kids` tag is
+     well-applied: kid-targeted events found via *other* categories ("Nature
+     Story Time" via nature/rangers, "Foragers in the Foodway" via education)
+     also carried `kids`. One borderline miss observed: "Basic Canoeing and
+     Nature Exploration" (description says "Ages 8 and up") is
+     nature/rangers-only. **`/events/kids` alone is the right v1 fetch**;
+     a supplemental `urbanparkrangers`/`nature` pass with our keyword filter
+     is a possible later enhancement, not a launch requirement. Bonus: each
+     list card's *class list* carries its category ids (`class="row event
+     cat18 cat205 cat211"`), so tags are extractable from the list page.
+  3. **Detail-page fetches: NOT needed.** A list card alone carries:
+     **numeric event id** (`<h3 id="event_title__2205424">`), title,
+     per-occurrence URL, `meta` startDate/endDate (full ISO + offset), venue
+     (`Place > itemprop="name"`, e.g. "Multi-Use Room (in Alfred E. Smith
+     Recreation Center)"), `streetAddress` (sometimes empty),
+     `addressLocality` = borough, a **~185-char truncated** description,
+     cost line ("Free!"), category ids, accessibility icon, and the
+     `pearls-pick` flag. **And lat/lng is on the list page too**, via the
+     embedded map-widget blob (next bullet) — only the **full untruncated
+     description** requires a detail-page fetch; skip it for v1.
+     `/events/kids` = **49 pages ≈ 2,430 events** (last page p49 had 30
+     rows; **p50 returns HTTP 200 with 0 event blocks** — terminate on an
+     empty page, not a 404; window 2026-07-06 → 2026-08-31, ~56 days) —
+     49 list requests/night, no per-event fetches.
+  4. **IDs / recurrence: per-occurrence numeric ids — no `compute_id`
+     override needed.** Recurring programs get a distinct id AND a distinct
+     dated URL per occurrence (Kids in Motion @ Anne Loftus Playground:
+     2026-07-07 = id 2192210 at `/events/2026/07/07/…`, 2026-07-09 =
+     id 2192170 at `/events/2026/07/09/…`; same-day repeats get slug
+     suffixes like `…-pickleball1`). Use the numeric id as `external_id`
+     as-is. Stability: no anti-bot (plain `httpx` + browser UA; robots.txt
+     does not disallow `/events` for generic agents), 49 sequential fetches
+     drew no throttling during verification.
+- **Machine-readable alternative: YES, embedded in-page (missed on the
+  first sweep).** No standalone RSS/iCal/JSON endpoints, but **every
+  `/events/...` list page embeds `var eventsByLocationJSON = [...]`** in a
+  `<script>` block (~518 KB on `/events/kids`) — a map-widget JSON payload
+  containing the **entire current window, not just that page's 50 rows**:
+  119 venues × 2,430 events at probe time. Per venue: `name`, `link`
+  (facility page), `address`, `borough`, `accessible`, **`lat`/`lng`**
+  (present on all 119 venues). Per event: `title`, `startDate`/`endDate`
+  (**epoch milliseconds**), `repetitionString` (null across the whole
+  sample), and `link` — the per-occurrence detail path, i.e. a perfect join
+  key against the microdata cards' anchor hrefs. The blob lacks description
+  and cost (those are microdata-only), so the build is: paginate the
+  microdata cards, join the page-1 blob by `link` for lat/lng +
+  parent-facility venue name + accessible flag. **Coordinates therefore
+  come free from the list fetch — zero geocoding needed for this source.**
+  Raw blob uses PHP-style `\/` escaping (transparent to `json.loads`).
+- **Fixtures captured:** `tests/fixtures/nycgovparks_events_kids_page.html`
+  (real `/events/kids` p1, trimmed to: the `eventsByLocationJSON` script
+  reduced to its first 6 venues, the `#catpage_events_list` container +
+  first 10 cards, and the `parks_pages` pagination markup — full page is
+  ~630 KB) and `tests/fixtures/nycgovparks_event_detail.html` (full detail
+  page, incl. `itemprop="latitude"/"longitude"` and the category link list).
+- **Build parameters for `source-adder`:**
+  - Fetch: `GET https://www.nycgovparks.org/events/kids` then `/events/kids/p2`…
+    until a page yields 0 cards (~49 pages; p50 is HTTP 200 with 0 cards,
+    not a 404); plain `httpx` + browser UA (note: `curl_cffi` sometimes gets
+    connection resets in the sandbox where httpx succeeds — prefer httpx);
+    1s polite delay between pages.
+  - Parse: split on `itemscope itemtype="http://schema.org/Event"` cards;
+    fields per finding 3 above. Date headers (`<h2 id="YYYY-MM-DD">`) are
+    redundant with the per-card `meta startDate` — ignore them. Dates are
+    ISO-8601 with offset — `datetime.fromisoformat` directly.
+  - **Blob join for lat/lng + venue:** regex
+    `var eventsByLocationJSON = (\[.*?\]);` on page 1 → `json.loads` →
+    build `link → (lat, lng, parent-venue name, borough, accessible)`
+    (blob covers the whole window, so page 1 alone suffices). Prefer the
+    blob's top-level venue name (`Greenbelt Recreation Center`) over the
+    microdata Place name, which is sometimes a sub-room (`Multi-Use Room`);
+    the parent name also lines up with the `park_neighborhoods.json` tier.
+  - `external_id` = the numeric id from `event_title__<id>`.
+  - Price: cost-line text `Free!` → `Price.FREE`; else `Price.UNKNOWN`
+    (paid formatting never observed in the 50-row sample).
+  - Kid-filter: **none** (Parks-curated category, like `mommy_poppins`) —
+    but keep the shared `ADULT_BLOCKLIST` import as a cheap safety net.
+    One edge case: titles prefixed **`CANCELLED:`** appear in the feed
+    (observed live) — skip those rows at parse time (explicit upstream
+    cancellation beats our `possibly_cancelled` heuristic).
+  - `window_days = 55` (server window is "today → end of next month",
+    56 days at probe, varies ~55–61 by calendar — use the conservative
+    lower bound) and **opt IN to missing-detection** — the feed re-lists
+    its entire window every fetch (full-window source, unlike
+    `mommy_poppins`' incremental sitemap).
+  - `neighborhood=None` from the source (enrich pass codes it; rows arrive
+    with lat/lng so tier 5 reverse-geocode covers anything the park table
+    misses — no forward geocoding). Borough from `addressLocality`.
+  - Rows will be `low_confidence: false` (real description + URL) — this
+    single source roughly doubles the catalog's curated-event count;
+    sanity-check ingest totals and search behavior after the first run.
+- **As-built notes (build 2026-07-06; spec above followed as written, plus):**
+  - **Category-id → tag table resolved live** (the one thing the spec left
+    open): card class lists carry `catNN` ids but the kids-page cards have no
+    "Category:" text line (only `/events` all-page cards do). The full id→slug
+    mapping was solved by intersecting class-id sets across `/events` p1–p8
+    (400 cards, using each card's Category link line as constraints) plus 10
+    per-category page probes (`/events/<slug>` — every card there carries that
+    category's id). 33 ids mapped in `_CATEGORY_TAGS` (2 arts-and-crafts,
+    4 birding, 5 education, 7 concerts, 9 dance, 10 nature, 11 exhibits/Art,
+    12 festivals, 13 film, 14 fitness, 15 games, 17 history, **18 kids**,
+    20 markets, 23 pets, 25 sports, 27 theater, 28 tours, 29 volunteer,
+    47 urbanparkrangers, 100 food, 102 kayaking, 105 shape-up-nyc, 106 talks,
+    109 waterfront, 121 outdoor-fitness, 125 astronomy, 128 fishing,
+    137 summer-sports-experience, 147 hiking, 167 wildlife, 303 gardening);
+    audience/venue-type ids (122 seniors, 205 recreation-centers, 206/211/291
+    internal markers) deliberately unmapped. Unknown ids are skipped silently.
+  - **Blob venue name is the park PROPERTY**, one level above even the
+    "(in …)" parent shown in microdata for playgrounds: "Kids In Motion:
+    Addabbo Playground" has Place "Addabbo Playground (in Tudor Park)" and
+    blob venue **"Tudor Park"** — exactly what `park_neighborhoods.json`
+    keys on. Fallback order when a link isn't in the blob: "(in <parent>)"
+    text, then Place name.
+  - Smoke test (2 live pages, 2026-07-06): 100/100 cards parsed, 100/100
+    joined blob lat/lng, all five boroughs present, all rows Free!.
+    ~49 pages × 50 cards ≈ **2,430 events/run** expected.
+  - **Known residue:** ~1% of rows (e.g. "Queens Recreation Summer Sports
+    Experience" at a bare "Play Area") have no `addressLocality` AND a null
+    blob borough → `borough=None`. They still get lat/lng from the blob, so
+    the enrich tier-5 reverse geocode codes their neighborhood; not worth
+    importing the coordinate bounding-box machinery for.
+  - `test_missing_detection.py::test_full_window_sources_opt_in` extended:
+    the opted-in census is now 10 sources and this one is the first whose
+    window isn't 60 (55, mirroring the server's ~55–61-day rolling window).
+  - No `age_min`/`age_max` (ages live in description prose only); price is
+    FREE on the "Free!" cost line else UNKNOWN (paid formatting never
+    observed).
 
 ## Tech debt / TODO
 

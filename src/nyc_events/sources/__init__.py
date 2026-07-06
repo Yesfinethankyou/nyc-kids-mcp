@@ -11,6 +11,7 @@ from .industry_city import IndustryCitySource
 from .mommy_poppins import MommyPoppinsSource
 from .ny_transit_museum import NYTransitMuseumSource
 from .nyc_permitted_events import NYCPermittedEventsSource
+from .nycgovparks_events import NYCGovParksEventsSource
 from .prospect_park import ProspectParkSource
 
 # Phase 1 + Phase 2 sources. Time Out NY Kids (timeout_nykids.py) is a
@@ -34,5 +35,9 @@ ENABLED_SOURCES: list[type[Source]] = [
     DominoParkSource,
     NYCPermittedEventsSource,
     BPLSource,
+    # ~49 list pages at a 1s polite delay (~1 min) — expensive-ish, so it runs
+    # with the other slow crawls at the end; mommy_poppins stays last (see the
+    # ordering note above).
+    NYCGovParksEventsSource,
     MommyPoppinsSource,
 ]
