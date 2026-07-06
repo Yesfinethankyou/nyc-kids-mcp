@@ -35,6 +35,42 @@ The Whitney and The Skint were already in the backlog from a prior session —
 not duplicated. No code changes; docs only. Next step for any of these is
 `source-verifier`.
 
+### Session (same branch): major finding — nycgovparks.org/events is alive and much richer than tvpp-9vvx
+
+User asked why we use the permit registry (`tvpp-9vvx`) instead of
+`nycgovparks.org/events` for Parks events. Answer required digging into the
+history (`nyc_permitted_events.py` docstring + README): the original Phase 1
+spec named the NYC Parks Events Listing **Open Data dataset** (`fudw-fgrp`),
+found it frozen since 2019-12, and pivoted to `tvpp-9vvx` as the "live
+successor" — but that investigation only ever checked the Open Data catalog,
+never the live website itself (a separate system from its old Socrata
+mirror).
+
+Live re-probe (`httpx`, no anti-bot) found `nycgovparks.org/events` **very
+much alive** — 10,964 events listed out to March 2029 — with real
+schema.org `Event` microdata: descriptions (100% of a 50-row sample; the
+permit source has zero), full ISO+offset start/end times, borough +street
+address, and an NYC-Parks-curated **`kids` category** ("Best for Kids",
+directly URL-addressable at `/events/kids`, 2,427 events in a ~56-day
+window with zero client-side filtering needed). Detail pages additionally
+carry **lat/lng directly** — zero enrich-pass geocoding needed for these
+rows, unlike every other venue source. This is a substantially richer,
+more curated source than the noisy permit registry currently powering
+Phase 1.
+
+Wrote this up as a prominent "🔴 Major reassessment" section at the top of
+`SOURCES-BACKLOG.md` (not buried as a routine candidate) with the full
+findings, a pagination note (`/events/kids/p2`, path-based not query-param),
+and four open questions before committing: overlap with `tvpp-9vvx` (may be
+complementary — rec-center programming vs. permitted third-party events —
+unconfirmed), full category vocabulary (does kid-relevant content hide
+outside the `kids` tag, like Green-Wood/Prospect Park's category patterns?),
+whether per-event detail fetches for lat/lng are worth it at ~2,400
+rows/window, and site stability under a ~49-page nightly crawl. Also added
+a pointer note in README's "Why Permitted Events and not Parks" section so
+this doesn't get silently re-assumed stale. Recommended `source-verifier`
+next, given the potential upside. No code changes — probe + docs only.
+
 ### Session (same branch): 8 new candidates probed live — 3 ready to build, 1 multi-site bonus, 4 open
 
 Probed all 8 sources the user asked to add (live `httpx` fetches, no

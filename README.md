@@ -33,7 +33,13 @@ since 2019-12. The live successor is `tvpp-9vvx` (NYC Permitted Event
 Information) — a citywide permitting catalog, broader and noisier. The
 ingest filters to `event_agency='Parks Department'`, a kid-friendly event
 type allowlist, a title blocklist (drops Eid/load-in/RC-plane noise), and
-finally a kid-keyword filter (must match at least one tag). The ten Phase 2
+finally a kid-keyword filter (must match at least one tag). **Note (2026-07-06):**
+that decision only ever checked the Open Data catalog — the live
+`nycgovparks.org/events` website (a separate system from its old Socrata
+export) was re-probed and found very much alive, with real descriptions,
+an NYC-Parks-curated "kids" category, and lat/lng on detail pages; see the
+"Major reassessment" entry at the top of `SOURCES-BACKLOG.md` before
+assuming `tvpp-9vvx` is still the best available Parks source. The ten Phase 2
 editorial sources (see Status above) add higher-curated signal alongside this
 baseline.
 

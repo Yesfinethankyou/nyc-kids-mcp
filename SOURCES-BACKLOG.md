@@ -26,6 +26,109 @@ coneyisland.com were all probed and fixture-captured directly from a web
 session. Try the probe from the sandbox first; only fall back to capturing
 on your laptop/NAS if a specific domain is actually blocked.
 
+## 🔴 Major reassessment: nycgovparks.org/events is alive and far richer than tvpp-9vvx
+
+- **Status:** CONFIRMED 2026-07-06 (live probe) — **not yet built.** This is a
+  significant finding, flagged prominently rather than buried as one more
+  CANDIDATE: the live NYC Parks events **website** looks substantially better
+  than the permit registry (`tvpp-9vvx`) currently powering the Phase 1
+  source, and was never actually probed — only its Open Data export was.
+- **Why we're on `tvpp-9vvx` today (the actual history, from `nyc_permitted_events.py`
+  and README):** the original Phase 1 spec named the NYC Parks Events Listing
+  **Open Data dataset** `fudw-fgrp`. That SODA dataset is genuinely frozen
+  (last row 2019-12). The prior session concluded from that fact alone that
+  "NYC Parks events" as a *data source* was dead, and pivoted to `tvpp-9vvx`
+  (the citywide permit registry — broader, noisier, no descriptions, no
+  categories, no cost, no lat/lng) as the "live successor." **That
+  investigation stayed entirely inside the Open Data catalog and never
+  fetched `nycgovparks.org/events` directly** — the live website is run by
+  NYC Parks' own web team and is a separate system from whatever Socrata
+  mirror they used to publish (and stopped publishing in 2019).
+- **What the live re-probe found:** `https://www.nycgovparks.org/events` is
+  very much alive — **10,964 events** listed out to March 2029 at probe time.
+  It uses real **schema.org `Event` microdata** embedded in server-rendered
+  HTML (`itemscope itemtype="http://schema.org/Event"`), which `tvpp-9vvx`
+  has none of:
+  - `itemprop="name"` (title), `itemprop="description"` (real free text —
+    100% of a 50-row sample had one; `tvpp-9vvx` has **zero** descriptions),
+  - `meta itemprop="startDate"`/`endDate"` — full ISO-8601 **with UTC
+    offset** (`2026-07-06T07:00:00-04:00`) — no ambiguous-timezone parsing
+    needed, unlike several existing sources,
+  - `itemprop="location"` → nested `Place`/`PostalAddress` with
+    `streetAddress` **and** `addressLocality` (the borough name, e.g.
+    "Staten Island") directly on the list page,
+  - **detail pages additionally carry `itemprop="latitude"`/`"longitude"`
+    geo coordinates directly** (verified on a sample event) — this source
+    would need **zero enrich-pass geocoding** for these rows, unlike every
+    other venue source in the catalog,
+  - a real **`Category:` taxonomy** curated by NYC Parks staff — dozens of
+    categories including `arts-and-crafts`, `nature`, `birding`, `STEM`,
+    `gardening`, `urbanparkrangers`, `festivals`, `waterfront`, `theater`,
+    and critically **`kids`** (rendered as "Best for Kids" with its own
+    highlighted `pearls-pick-box` callout on list rows) — a genuine editorial
+    kid-relevance judgment from NYC Parks itself, not our own keyword
+    inference,
+  - cost info ("Free!" seen on every sampled kids row; presumably populated
+    for paid programs too — not yet sampled),
+  - registration status (e.g. "Registration is closed") and instructor name
+    on detail pages.
+- **The kids category is directly URL-addressable and already
+  date-windowed:** `https://www.nycgovparks.org/events/kids` returned
+  **2,427 events** covering "July 6, 2026 to August 31, 2026" — a ~56-day
+  rolling window server-side, close to the existing `days_ahead=60`
+  convention — with **zero client-side filtering needed** to get to
+  kid-relevant rows. All 4 sampled boroughs (Queens, Manhattan, Bronx,
+  Staten Island) appeared in a single 50-row page; Brooklyn simply didn't
+  land in that particular page, not evidence of a gap.
+- **Pagination confirmed:** path-based, `/events/kids/p2`, `/events/kids/p3`,
+  etc. (verified `p2` returns 200) — not a query param, easy to miss if you
+  only grep for `page=`.
+- **No JSON/RSS/iCal alternative found** — this would be an HTML-microdata
+  scrape (selectolax against `itemprop` attributes), not a REST API. That's
+  a very tractable scrape though — arguably easier than most of our Tribe
+  parsing since the fields are individually tagged by `itemprop`, not
+  positionally inferred from prose.
+- **This is not just "one more candidate"** — if built, it would plausibly
+  **replace or sit alongside `tvpp-9vvx` as the Parks-Department event
+  source**, with: real descriptions (permit source has none), a real
+  category taxonomy including an NYC-Parks-curated "kids" tag (permit source
+  relies on brittle keyword-matching a noisy permit title), free lat/lng on
+  detail pages (permit source needs the full enrich geocoding pipeline), and
+  precise borough/address (permit source's `event_location` needs regex
+  cleanup — see `_clean_venue`). The tradeoff: it's an HTML scrape of a
+  government site (could break on a redesign) rather than a versioned Open
+  Data API, and per-event detail-page fetches would be needed to get
+  lat/lng (the list page doesn't have it) — i.e. it's a two-tier fetch like
+  `mommy_poppins`, not a single paginated list call.
+- **Not yet checked (open questions before committing):**
+  1. **Overlap with `tvpp-9vvx`.** Do these two datasets describe the same
+     underlying permitted activities, or is `nycgovparks.org/events` NYC
+     Parks' own recurring programming (rec centers, Urban Park Rangers,
+     Shape Up NYC) that's mostly *distinct* from one-off permitted third-party
+     events? Titles sampled so far ("Summer Sports Experience: Pickleball",
+     "Line Dance Fitness") look like standing city programs, not permitted
+     third-party events — plausibly complementary rather than duplicate, but
+     unconfirmed. Spot-check for id/date/title overlap before building both.
+  2. **Full category vocabulary + non-kids-tagged-but-relevant rows** — is
+     the "kids" category comprehensive, or (like Green-Wood/Prospect Park)
+     does real kid-relevant content also hide in `nature`/`STEM`/
+     `arts-and-crafts` without also carrying the `kids` tag? Worth a category
+     Venn-diagram check before deciding whether `/events/kids` alone is
+     sufficient or a broader multi-category fetch is needed.
+  3. **Whether per-event detail-page fetches (for lat/lng) are worth the
+     request volume** at ~2,400 kids-category rows/60-day-window — may want
+     list-page fields only (borough + address text) and let the existing
+     enrich pipeline handle geocoding, skipping the extra per-event fetch.
+  4. **Site stability / rate limits** — no anti-bot encountered in this
+     probe (plain `httpx`, no `curl_cffi` needed), but a ~2,400-row fetch
+     across ~49 pages nightly is a meaningfully bigger crawl than any
+     current source except `mommy_poppins`; check for throttling.
+- **Recommendation:** this is worth a proper `source-verifier` pass
+  (fixture capture + the overlap-with-permit-source question) before
+  `source-adder` — the upside (real descriptions/categories/lat-lng/kids-tag
+  from an authoritative NYC Parks source) is large enough to justify treating
+  this as a priority item, not a routine backlog candidate.
+
 ## Tech debt / TODO
 
 **Review filter lists for all sources — DONE (maintainer review, 2026-06).**
