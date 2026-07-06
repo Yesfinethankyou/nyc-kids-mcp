@@ -35,6 +35,54 @@ The Whitney and The Skint were already in the backlog from a prior session —
 not duplicated. No code changes; docs only. Next step for any of these is
 `source-verifier`.
 
+### Session (same branch): 8 new candidates probed live — 3 ready to build, 1 multi-site bonus, 4 open
+
+Probed all 8 sources the user asked to add (live `httpx` fetches, no
+speculation) and wrote full findings into `SOURCES-BACKLOG.md`. Sorted by
+outcome:
+
+- **🟢 Staten Island Children's Museum — CONFIRMED, ready for `source-adder`
+  today.** Real Tribe/WordPress REST API (`sichildrensmuseum.org/wp-json/
+  tribe/events/v1/events`, 51 upcoming events, single venue). Highest-value
+  find — Staten Island has near-zero coverage today. Fifth `_tribe.py`
+  subclass, no new machinery needed.
+- **🟢 Brooklyn Botanic Garden — CONFIRMED, HTML scrape (BAT-style).**
+  `bbg.org/visit/calendar` is clean server-rendered HTML with a real
+  `event-tag` category field (e.g. "Children's Garden Classes") — filterable
+  by category, not keyword-guessing.
+- **🟡 New York Family (events.newyorkfamily.com) — CONFIRMED feed, geo-filter
+  required.** Sixth Tribe instance, but it's a *regional* parenting calendar
+  (found live venues in Huntington Station, Southampton — Long Island, not
+  NYC). Needs a `venue.city` allowlist + drop-if-missing-city rule before
+  building; also has a data gotcha (~20% of returned events are bare stub
+  objects missing `id`/`title` — must be skipped). Real upside: actual
+  age-band categories ("Kids (5–8)") — first source with structured age data
+  if built.
+- **🟡 Bronx Zoo — CONFIRMED but sparse (2 items live); found a 5-site bonus.**
+  Same WCS route (`/things-to-do/events`) confirmed live on Central Park
+  Zoo, Prospect Park Zoo, Queens Zoo, and NY Aquarium too — one scraper class
+  could cover all 5. Worth checking combined yield before committing;
+  individually each may be too thin to justify.
+- **Macaroni Kid (Brooklyn NW + Lower Manhattan) — platform identified
+  (Yodel widget, `events.yodel.today`), franchise-network shape like
+  NYPL/QPL, but the widget host Cloudflare-challenged this session's fetch
+  attempts (both plain `httpx` and `curl_cffi`, the latter connection-reset
+  same as other blocked hosts this session). Needs a retry from a different
+  network, not a rejection.
+- **NYBG — dead end on the obvious path.** No Tribe/event REST routes exist
+  (196 routes checked); `/events/` is a marketing page, not a calendar.
+  Family programs likely live on a separate ticketing subdomain not found
+  this session — flagged what NOT to re-check.
+- **Snug Harbor — inconclusive**, no platform signature matched (the
+  "algolia" lead was a false positive — just search-UI CSS).
+- **Bronx River Alliance — thin**, the events page renders almost no content
+  statically; deprioritized.
+
+No code changes — probes + backlog writeup only. Recommended next action:
+hand Staten Island Children's Museum and Brooklyn Botanic Garden straight to
+`source-adder`; run `source-verifier` on New York Family (geo-filter design)
+and the WCS zoos (combined-yield check) before building those two.
+
 ### Session (same branch): Time Out re-probed — rejection stands, reason updated
 
 Re-assessed the Time Out NY Kids rejection at the user's request (the

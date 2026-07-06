@@ -84,6 +84,222 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 **Note:** Brooklyn Children's Museum is already **BUILT** (source
 `bk_childrens_museum`, live in `ENABLED_SOURCES`) — not re-added here.
 
+### Staten Island Children's Museum — 🟢 CONFIRMED, ready to build
+
+- **Status:** CONFIRMED 2026-07-06 (live probe, plain `httpx`, no anti-bot).
+  **Highest-value find of this batch** — Staten Island currently has close to
+  zero coverage in the catalog.
+- **Source:** WordPress + The Events Calendar (Tribe) REST API — the same
+  plugin as Green-Wood/Prospect Park/NY Transit/Industry City. Copy-adapt
+  `_tribe.py`'s `TribeEventsSource`, don't write a new fetch loop.
+- **Endpoint:** `https://sichildrensmuseum.org/wp-json/tribe/events/v1/events`
+  — confirmed live, `total: 51`, `total_pages: 2` at `per_page=50` (near-term
+  window; category counts on individual terms run into the hundreds, so the
+  full historical catalog is much larger — expect a healthy 60-day window).
+- **Venue confirmed single-site:** every sampled event's `venue.venue` reads
+  "Staten Island Children's Museum" → a `SOURCE_NEIGHBORHOOD` constant is
+  sufficient (Snug Harbor Cultural Center campus, Livingston).
+- **Filtering plan:** likely little/no filter needed — a children's museum's
+  own event calendar is kid-relevant by construction (same posture as
+  `bk_childrens_museum`/`mommy_poppins`). Spot-check for members-only/rental
+  events before shipping with zero filter, same caution applied to the other
+  curated feeds.
+- **Sample event confirms real fields:** title, `start_date`, `cost` (present
+  but often empty), `categories` (Tribe taxonomy — "art", "Art-Making",
+  "crafts" seen live), venue object. Standard Tribe shape — no surprises
+  expected relative to the four sources already built on `_tribe.py`.
+- **Next step:** straight to `source-adder` — this is a same-day build, no
+  further verification needed.
+
+### New York Family — events.newyorkfamily.com — 🟡 CONFIRMED feed, needs a geo-filter decision
+
+- **Status:** CONFIRMED 2026-07-06 (live probe). Real structured feed, but
+  **not NYC-scoped** — needs a real filtering decision before building, not
+  just a copy-adapt.
+- **Source:** WordPress + The Events Calendar (Tribe) REST API — fifth
+  instance of the same plugin.
+- **Endpoint:** `https://events.newyorkfamily.com/wp-json/tribe/events/v1/events`
+  — confirmed live, standard Tribe shape (`id`, `title`, `start_date`,
+  `venue` object with `geo_lat`/`geo_lng`, `cost`, `categories`).
+- **Why it's interesting despite the geo problem:** categories include real
+  **age-band taxonomy terms** (e.g. "Kids (5–8)") alongside "Family" —
+  this would be the first source with structured age data rather than
+  unstructured/absent `age_min`/`age_max`. Worth the extra filtering work if
+  the geo problem is solved.
+- **The geo problem (must be solved before building):** this is a regional
+  parenting-network calendar, NOT NYC-only. A 250-event live sample showed
+  real venues in **Huntington Station, Lynbrook, and Southampton** — all
+  Long Island, well outside the five boroughs. Of the sampled events, only
+  ~36% had a `venue.city` matching an NYC-recognized city string; a striking
+  **~60% had NO `venue.city` at all** (empty/null) — those can't be
+  auto-classified in or out by city name alone and would need a fallback
+  (state field check, or drop rows with no city rather than guess).
+  **Recommendation:** filter to `venue.city` in a NYC-borough allowlist
+  (New York, Brooklyn, Bronx, Manhattan, Queens, Staten Island, + common
+  neighborhood-as-city variants) and drop rows with no city — accept losing
+  some true-NYC events with missing venue data rather than risk Long
+  Island/Westchester noise, consistent with the "aggressive filtering is
+  correct" philosophy already applied to the permit source.
+- **Data-quality gotcha:** roughly **20% of returned event objects in the
+  REST response are bare stubs** — `{"start_date": ..., "end_date": ...}`
+  with no `id`, `title`, `venue`, or any other field. Cause unconfirmed
+  (possibly malformed recurring-instance placeholders on this particular
+  Tribe install). **Any parser must skip any event object missing `id` or
+  `title`** before it reaches `parse_row` — this is new, the four sources
+  already built on `_tribe.py` don't have this issue.
+- **Next step:** `source-verifier` to nail down the city-allowlist approach
+  and confirm the stub-skip doesn't lose real events, then `source-adder`.
+
+### Brooklyn Botanic Garden (BBG) — 🟢 CONFIRMED, HTML scrape
+
+- **Status:** CONFIRMED 2026-07-06 (live probe). Real, clean, server-rendered
+  calendar — no JSON API, but a stable HTML structure to scrape (BAT-style,
+  not Tribe-style).
+- **Source:** `https://www.bbg.org/visit/calendar` — custom CMS (not
+  WordPress; no Tribe/wp-json routes, no JSON-LD `Event` blocks). Confirmed
+  server-rendered with plain `httpx`, no anti-bot encountered.
+- **HTML structure (verified live):** `<ul id="event-calendar-regular">`
+  containing `<h2>` date headers ("Wednesday, July 8, 2026") followed by
+  `<li>` event cards: `<span class="event-tag">` (a real category label,
+  e.g. **"Children's Garden Classes"** — seen live on "Garden Adventures"),
+  `<h3>` title, `<p class="event-date">` (semi-structured prose — e.g.
+  "Wednesday–Friday for two weeks starting July 8, July 22, or August 5,
+  2026 | 9 a.m.–1 p.m." — needs lenient parsing, not a clean ISO field),
+  `<p class="event-blurb">` description, wrapping `<a href>` for the URL.
+- **Filtering plan:** the `event-tag` category is a real, venue-provided
+  signal — gate on category (e.g. "Children's Garden Classes" and similar
+  family-labeled tags) rather than keyword-guessing the description, same
+  spirit as Prospect Park's category allowlist. Confirm the full tag
+  vocabulary during the build (only one tag observed in the probe).
+- **Borough/venue:** Brooklyn; single fixed venue "Brooklyn Botanic Garden",
+  Prospect Heights (adjacent to/shares neighborhood with Prospect Park) →
+  `SOURCE_NEIGHBORHOOD` constant.
+- **Next step:** `source-verifier` to capture a full fixture and enumerate
+  the category vocabulary, then `source-adder` (selectolax parse, same shape
+  as Brooklyn Army Terminal).
+
+### Bronx Zoo (+ sibling WCS zoos/aquarium) — 🟡 CONFIRMED but low density; possible 5-for-1 build
+
+- **Status:** CONFIRMED 2026-07-06 (live probe). Real content, but sparse —
+  and a genuine multi-site bonus if built.
+- **Source:** `https://bronxzoo.com/things-to-do/events` — WCS (Wildlife
+  Conservation Society) site. Server-rendered `<li class="postcard">` cards:
+  `<h4>` title, `<p class="type-caption">` date-range prose ("May 22 -
+  September 7" — a season/exhibit run, not a single dated occurrence),
+  `<p>` description, card-wrapping `<a href>`. Images load from `cdn.wcs.org`;
+  a Contentful CMS reference appears once in the page, but (unlike the
+  Brooklyn Cyclones promotions page) the listing itself is plain-HTML
+  server-rendered — no JS rendering needed here.
+- **Density is low:** only **2 items** on the live page (2026-07-06):
+  "Daniel Tiger's Neighborhood at the Bronx Zoo" (a PBS-Kids-branded seasonal
+  experience, included with admission) and "Soccer, Summer, and Wildlife".
+  This reads as a seasonal-exhibit spotlight list, not a recurring daily
+  events calendar — expect low row counts even at full build.
+- **Bonus finding — same route works on all 4 sibling WCS NYC facilities:**
+  `centralparkzoo.com`, `prospectparkzoo.com`, `queenszoo.com`, and
+  `nyaquarium.com` all confirmed live at the identical
+  `/things-to-do/events` path with the same markup shape. **One scraper
+  class, subclassed 5 ways** (or parameterized by host), would cover Bronx
+  Zoo + Central Park Zoo + Prospect Park Zoo + Queens Zoo + NY Aquarium —
+  a real coverage multiplier for Queens/Manhattan/Brooklyn/Bronx at once,
+  the same "one build unlocks many" shape as NYPL for library branches.
+  **Combined yield across all 5 needs checking before committing** — if each
+  site independently runs ~2 items, the total build may still be a small
+  source, but it's the cheapest possible 5-venue add if so.
+- **Filtering plan:** likely no filter needed at this density/curation level
+  (WCS picks what to feature) — confirm during the build that nothing
+  adult-only slips in (member preview nights, After Hours events, etc., if
+  any of the 5 sites surface them).
+- **Next step:** `source-verifier` against all 5 hosts to get a real combined
+  count before deciding whether this is worth building as one small source.
+
+### New York Botanical Garden (NYBG) — CANDIDATE, dead end on the obvious path
+
+- **Status:** CANDIDATE — probed 2026-07-06, **inconclusive**. The obvious
+  approach (WordPress REST API) is a confirmed dead end; a real events feed
+  may still exist elsewhere on the site.
+- **What the probe found:** NYBG runs WordPress (`wp-json` present, 196
+  routes enumerated) but **no Tribe/Events-Calendar routes exist** — checked
+  the full route list, nothing event- or calendar-related. `/events/`
+  redirects to the NYBG homepage and is a marketing/"Featured Programs" page
+  (Flower Power, seasonal exhibits) with **no per-event dated listing**, not
+  a calendar. 9 JSON-LD blocks on the homepage are all `Organization`/
+  `LocalBusiness` — no `Event` type.
+- **Don't repeat:** the `wp-json` route enumeration and the homepage
+  JSON-LD check — both dead ends, already done.
+- **Where to look next:** NYBG almost certainly runs family programs
+  (workshops, camps, Wonder Wheel-style seasonal features) through a
+  **separate ticketing subdomain** (common pattern for major
+  gardens/museums — c.f. Tessitura at BAM, AudienceView, etc.) not
+  discovered in this probe. Check for a `tickets.nybg.org` /
+  `calendar.nybg.org` style subdomain, or search the rendered "Featured
+  Programs" page for an outbound ticketing link and follow it.
+- **Next step:** a fresh probe specifically hunting for the ticketing
+  subdomain, not another pass at the marketing site.
+
+### Snug Harbor Cultural Center & Botanical Garden — CANDIDATE, inconclusive
+
+- **Status:** CANDIDATE — probed 2026-07-06, **inconclusive**. No platform
+  signature found; needs a different probe angle.
+- **What the probe found:** WordPress site (`wp-content`/`wp-json` present),
+  but no Tribe/MEC/other calendar-plugin tells, no `Event`-typed JSON-LD, and
+  no obvious dated-event HTML pattern on `/events-calendar/` (redirect target
+  of `/events/`) in the time probed. An "algolia" string hit turned out to be
+  on-site search UI CSS, not an event data API — a false lead, don't chase it.
+- **Next step:** a slower, more thorough probe (`source-verifier`) — look at
+  the actual rendered event listing structure by hand rather than grepping
+  for known tells, since this site didn't match any of the usual platform
+  signatures.
+
+### Bronx River Alliance — CANDIDATE, thin/low-priority
+
+- **Status:** CANDIDATE — probed 2026-07-06, **looks thin**. Deprioritize
+  relative to the other finds in this batch.
+- **What the probe found:** WordPress + Elementor site, no Tribe/events
+  plugin (`wp-json` route list has no event/calendar routes). The events
+  page (`/visit-the-river/calendar`, redirect target of `/calendar/`) renders
+  almost no content in static HTML — just a page header and a volunteer
+  interest form, no visible event listing at all in the fetched markup.
+  Either the listing is a JS-rendered widget invisible to a plain fetch, or
+  this org simply doesn't run a structured events calendar (announcements
+  may be newsletter/social-only).
+- **Next step:** low priority given the other finds in this batch; if
+  revisited, check with a real browser render before concluding either way.
+
+### Macaroni Kid (Brooklyn NW + Lower Manhattan) — CANDIDATE, platform identified but access blocked
+
+- **Status:** CANDIDATE — probed 2026-07-06. **Platform identified** (a real
+  find), but the actual data endpoint is bot-protected and this session
+  couldn't get past it — needs a retry, not a rejection.
+- **What it is:** Macaroni Kid is a nationwide network of hyperlocal
+  parenting-newsletter franchises; NYC has multiple neighborhood editions
+  (this request named `brooklynnw` and `lowermanhattan` — others likely
+  exist for other neighborhoods, unconfirmed).
+- **Platform confirmed:** every Macaroni Kid site embeds a third-party
+  widget from **Yodel** (`events.yodel.today`) via
+  `<script data-src="https://events.yodel.today/y/widget/<per-site-id>">` —
+  e.g. `brooklynnw` → `69cd3f6c94f9f559cc38ba27`, `lowermanhattan` →
+  `69cd3f4f94f9f559cc38b9f3`. Each neighborhood site has its own widget id,
+  so this is a **franchise-network platform, same shape as NYPL/QPL or the
+  Tribe sources** — cracking the Yodel widget API once likely means every
+  other Macaroni Kid NYC neighborhood is a cheap copy-adapt.
+  ⚠️ **Do not confuse this with `assets.apollo.io`** — an unrelated
+  sales-tracking pixel that also appears on these pages; it is not a
+  GraphQL/Apollo client and is not the data source.
+- **Blocked this session:** fetching the widget URL directly
+  (`https://events.yodel.today/y/widget/<id>`) hit a **Cloudflare
+  JS-challenge page** via plain `httpx`, and `curl_cffi impersonate="chrome"`
+  got the same `Recv failure: Connection reset by peer` seen on other hosts
+  this session (Puppetworks, Brooklyn Bridge Park) — can't tell if that's
+  this sandbox's egress blocking `curl_cffi` specifically, or Cloudflare
+  genuinely blocking the impersonated fingerprint too. **Retry from a
+  different network per the "sandbox egress varies" note** before concluding
+  it needs a headless browser.
+- **Next step:** retry the Yodel widget fetch with `curl_cffi` from a
+  non-blocked network; if Cloudflare still blocks it, check whether Yodel
+  has a documented public API (it's a real B2B events-widget product, not a
+  bespoke CMS) before reaching for a headless-browser fallback.
+
 ### Brooklyn Academy of Music (BAM)
 
 - **Status:** CANDIDATE — proposed 2026-06-27, unprobed.
