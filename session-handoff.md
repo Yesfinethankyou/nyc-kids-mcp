@@ -2,6 +2,38 @@
 
 ## What was done (most recent first)
 
+### Session (same branch): nycgovparks.org/events VERIFIED — ready for source-adder
+
+Ran the source-verifier pass on the nycgovparks.org/events reassessment (the
+subagent was killed twice by a session-limit API error; the verification was
+finished inline in the main session). All four open questions from the
+"Major reassessment" backlog entry are now answered in place — the entry is
+flipped to 🟢 CONFIRMED + VERIFIED with full build parameters:
+
+- **Overlap with `tvpp-9vvx`: zero** in a same-day (2026-07-07) comparison —
+  the permit registry is third-party field reservations, the website is
+  Parks' own programming (Kids in Motion, rec-center camps, ranger events).
+  Complementary; build alongside, no dedup.
+- **Categories:** ~50 multi-tag slugs; the `kids` tag (cat_id 18) is
+  well-applied — kid events found via `nature`/`education` also carried it.
+  `/events/kids` alone is the right v1 fetch.
+- **Detail fetches NOT needed:** list cards carry a numeric per-occurrence
+  event id (`event_title__<id>`), title, URL, ISO start/end with offset,
+  venue Place name, borough, ~200-char description, cost, category ids
+  (in the card's class list!), and the pearls-pick flag. Only lat/lng +
+  full description live on detail pages — deferred to the enrich pass.
+  `/events/kids` = 49 pages ≈ 2,430 events, window 2026-07-06 → 08-31.
+- **IDs:** distinct numeric id AND dated URL per occurrence of recurring
+  programs → `external_id` = the numeric id, no compute_id override.
+- No RSS/iCal/JSON alternative (re-checked); no anti-bot (plain httpx + UA;
+  robots.txt clean for /events); 49 sequential fetches drew no throttling.
+
+Fixtures captured: `tests/fixtures/nycgovparks_events_kids_page.html`
+(p1 trimmed to the events-list container + first 10 cards) and
+`tests/fixtures/nycgovparks_event_detail.html` (full page, has lat/lng).
+No parser/tests/registry written — that's the next step, via `source-adder`,
+using the build-parameters block in the backlog entry.
+
 ### Session: backlog expansion — 6 new candidates (branch `claude/backlog-sources-integration-axzlam`)
 
 Added six new CANDIDATE entries to `SOURCES-BACKLOG.md` at the user's request,

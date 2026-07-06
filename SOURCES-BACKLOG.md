@@ -26,9 +26,11 @@ coneyisland.com were all probed and fixture-captured directly from a web
 session. Try the probe from the sandbox first; only fall back to capturing
 on your laptop/NAS if a specific domain is actually blocked.
 
-## 🔴 Major reassessment: nycgovparks.org/events is alive and far richer than tvpp-9vvx
+## 🟢 Major reassessment: nycgovparks.org/events is alive and far richer than tvpp-9vvx
 
-- **Status:** CONFIRMED 2026-07-06 (live probe) — **not yet built.** This is a
+- **Status:** 🟢 CONFIRMED + VERIFIED 2026-07-06 (source-verifier pass same
+  day — all four open questions answered below, fixtures captured) —
+  **ready for `source-adder`, not yet built.** This is a
   significant finding, flagged prominently rather than buried as one more
   CANDIDATE: the live NYC Parks events **website** looks substantially better
   than the permit registry (`tvpp-9vvx`) currently powering the Phase 1
@@ -97,37 +99,79 @@ on your laptop/NAS if a specific domain is actually blocked.
   precise borough/address (permit source's `event_location` needs regex
   cleanup — see `_clean_venue`). The tradeoff: it's an HTML scrape of a
   government site (could break on a redesign) rather than a versioned Open
-  Data API, and per-event detail-page fetches would be needed to get
-  lat/lng (the list page doesn't have it) — i.e. it's a two-tier fetch like
-  `mommy_poppins`, not a single paginated list call.
-- **Not yet checked (open questions before committing):**
-  1. **Overlap with `tvpp-9vvx`.** Do these two datasets describe the same
-     underlying permitted activities, or is `nycgovparks.org/events` NYC
-     Parks' own recurring programming (rec centers, Urban Park Rangers,
-     Shape Up NYC) that's mostly *distinct* from one-off permitted third-party
-     events? Titles sampled so far ("Summer Sports Experience: Pickleball",
-     "Line Dance Fitness") look like standing city programs, not permitted
-     third-party events — plausibly complementary rather than duplicate, but
-     unconfirmed. Spot-check for id/date/title overlap before building both.
-  2. **Full category vocabulary + non-kids-tagged-but-relevant rows** — is
-     the "kids" category comprehensive, or (like Green-Wood/Prospect Park)
-     does real kid-relevant content also hide in `nature`/`STEM`/
-     `arts-and-crafts` without also carrying the `kids` tag? Worth a category
-     Venn-diagram check before deciding whether `/events/kids` alone is
-     sufficient or a broader multi-category fetch is needed.
-  3. **Whether per-event detail-page fetches (for lat/lng) are worth the
-     request volume** at ~2,400 kids-category rows/60-day-window — may want
-     list-page fields only (borough + address text) and let the existing
-     enrich pipeline handle geocoding, skipping the extra per-event fetch.
-  4. **Site stability / rate limits** — no anti-bot encountered in this
-     probe (plain `httpx`, no `curl_cffi` needed), but a ~2,400-row fetch
-     across ~49 pages nightly is a meaningfully bigger crawl than any
-     current source except `mommy_poppins`; check for throttling.
-- **Recommendation:** this is worth a proper `source-verifier` pass
-  (fixture capture + the overlap-with-permit-source question) before
-  `source-adder` — the upside (real descriptions/categories/lat-lng/kids-tag
-  from an authoritative NYC Parks source) is large enough to justify treating
-  this as a priority item, not a routine backlog candidate.
+  Data API. ~~Per-event detail-page fetches would be needed~~ — **wrong,
+  see verification finding 3 below: the list page alone carries a complete
+  Event row** (only lat/lng and the untruncated description live on detail
+  pages, and both are optional).
+- **Verification pass (2026-07-06) — the four open questions, answered:**
+  1. **Overlap with `tvpp-9vvx`: effectively ZERO — complementary, not
+     duplicative.** Same-day comparison (2026-07-07): the permit registry had
+     1,025 Parks-Department rows, almost all third-party field reservations
+     ("Baseball - 12 and Under (Little League)", bootcamps, maintenance
+     closures, protests); `/events/kids` that day was NYC Parks' own
+     programming (Kids in Motion at ~40 playgrounds, rec-center summer camps,
+     Summer Sports Experience, ranger events). Exact- and fuzzy-name
+     intersection of the two samples: **empty**. Build it *alongside*
+     `tvpp-9vvx`, no dedup needed.
+  2. **Category vocabulary: ~50 slug categories** (`/events/<slug>` — `nature`,
+     `urbanparkrangers`, `arts-and-crafts`, `education`, `wildlife`, `games`,
+     `festivals`, `astronomy`, `fishing`, …; filter form posts `cat_id[]`,
+     kids = **18**). Categories are **multi-tag** and the `kids` tag is
+     well-applied: kid-targeted events found via *other* categories ("Nature
+     Story Time" via nature/rangers, "Foragers in the Foodway" via education)
+     also carried `kids`. One borderline miss observed: "Basic Canoeing and
+     Nature Exploration" (description says "Ages 8 and up") is
+     nature/rangers-only. **`/events/kids` alone is the right v1 fetch**;
+     a supplemental `urbanparkrangers`/`nature` pass with our keyword filter
+     is a possible later enhancement, not a launch requirement. Bonus: each
+     list card's *class list* carries its category ids (`class="row event
+     cat18 cat205 cat211"`), so tags are extractable from the list page.
+  3. **Detail-page fetches: NOT needed.** A list card alone carries:
+     **numeric event id** (`<h3 id="event_title__2205424">`), title,
+     per-occurrence URL, `meta` startDate/endDate (full ISO + offset), venue
+     (`Place > itemprop="name"`, e.g. "Multi-Use Room (in Alfred E. Smith
+     Recreation Center)"), `streetAddress` (sometimes empty),
+     `addressLocality` = borough, a **~200-char truncated** description,
+     cost line ("Free!"), category ids, accessibility icon, and the
+     `pearls-pick` flag. Only **lat/lng and the full description** require
+     the detail page — skip them for v1 and let the existing enrich pipeline
+     geocode (most venues are parks/playgrounds → `park_neighborhoods.json`
+     tier already covers them offline). `/events/kids` = **49 pages ≈ 2,430
+     events** (last page p49, window 2026-07-06 → 2026-08-31, ~56 days) —
+     49 list requests/night, no per-event fetches.
+  4. **IDs / recurrence: per-occurrence numeric ids — no `compute_id`
+     override needed.** Recurring programs get a distinct id AND a distinct
+     dated URL per occurrence (Kids in Motion @ Anne Loftus Playground:
+     2026-07-07 = id 2192210 at `/events/2026/07/07/…`, 2026-07-09 =
+     id 2192170 at `/events/2026/07/09/…`; same-day repeats get slug
+     suffixes like `…-pickleball1`). Use the numeric id as `external_id`
+     as-is. Stability: no anti-bot (plain `httpx` + browser UA; robots.txt
+     does not disallow `/events` for generic agents), 49 sequential fetches
+     drew no throttling during verification.
+- **Machine-readable alternative: re-checked, none** — no RSS/iCal/JSON
+  endpoints, no JSON XHR in the page. HTML-microdata scrape confirmed as
+  the approach.
+- **Fixtures captured:** `tests/fixtures/nycgovparks_events_kids_page.html`
+  (real `/events/kids` p1, trimmed to the `#catpage_events_list` container +
+  first 10 cards — full page is ~630 KB) and
+  `tests/fixtures/nycgovparks_event_detail.html` (full detail page, incl.
+  `itemprop="latitude"/"longitude"` and the category link list).
+- **Build parameters for `source-adder`:**
+  - Fetch: `GET https://www.nycgovparks.org/events/kids` then `/events/kids/p2`…
+    until a page yields 0 cards (~49 pages); plain `httpx` + browser UA.
+  - Parse: split on `itemscope itemtype="http://schema.org/Event"` cards;
+    fields per finding 3 above. Date headers (`<h2 id="YYYY-MM-DD">`) are
+    redundant with the per-card `meta startDate` — ignore them.
+  - `external_id` = the numeric id from `event_title__<id>`.
+  - Kid-filter: **none** (Parks-curated category, like `mommy_poppins`) —
+    but keep the shared `ADULT_BLOCKLIST` import as a cheap safety net.
+  - `window_days = 60`-ish and **opt IN to missing-detection** — the feed
+    re-lists its entire window every fetch (full-window source, unlike
+    `mommy_poppins`' incremental sitemap).
+  - `neighborhood=None` from the source (enrich pass codes it; park-table
+    tier covers most venues offline). Borough from `addressLocality`.
+  - Rows will be `low_confidence: false` (real description + URL) — this
+    single source roughly doubles the catalog's curated-event count.
 
 ## Tech debt / TODO
 
