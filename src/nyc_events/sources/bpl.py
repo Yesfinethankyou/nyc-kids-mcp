@@ -78,6 +78,19 @@ _KID_AGE_HINTS = (
 # Explicit adult-only bands (no kid signal).
 _ADULT_AGES = {"adults", "older adults", "adult"}
 
+# Whole-word hints for the title/tags fallback (used only when there's no
+# usable age band). Matched with word boundaries so "kid" doesn't fire on
+# "kidney" etc. (issue #40/#62); this is an inclusion gate, so a false
+# positive admits an adult event into the kids catalog. Kept separate from
+# _KID_AGE_HINTS, whose substring match against a structured age *label*
+# ("birth to five years") is correct.
+_KID_TITLE_HINTS = (
+    "kid", "kids", "teen", "teens", "child", "children", "baby", "babies",
+    "infant", "infants", "toddler", "toddlers", "preschool", "preschooler",
+    "storytime", "story time", "lapsit", "youth", "family", "families",
+    "all ages", "kindergarten",
+)
+
 # Kid-relevant keyword -> tag mapping (mirrors mommy_poppins / earlier draft).
 _KID_KEYWORDS: list[tuple[str, tuple[str, ...]]] = [
     ("story time", ("story time", "storytime", "story hour", "read aloud", "lapsit", "lap sit")),
@@ -150,10 +163,11 @@ def _is_kid_relevant(doc: dict[str, Any]) -> bool:
         if age in _KID_AGE_BANDS or any(h in age for h in _KID_AGE_HINTS):
             return True
         # Unknown non-adult band: fall through to keyword check.
-    # No usable age band — look for kid signals in title/tags.
+    # No usable age band — look for kid signals in title/tags. Word-boundary
+    # matched so a mid-word hit ("kid" in "kidney") can't admit an adult event.
     haystack = (doc.get("ts_title") or "").lower()
     haystack += " " + " ".join(str(t).lower() for t in (doc.get("sm_event_tags") or []))
-    return any(h in haystack for h in _KID_AGE_HINTS)
+    return any(re.search(rf"\b{re.escape(h)}\b", haystack) for h in _KID_TITLE_HINTS)
 
 
 def _extract_price(body_text: str) -> Price:

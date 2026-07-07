@@ -255,6 +255,15 @@ isn't per-occurrence.
 - The `geocode_cache` table lives in `events.db` (it's event-derived). It's a
   plain `CREATE TABLE IF NOT EXISTS` in `EVENTS_SCHEMA`, not a `_migrate_*`
   column-add — a whole new table is idempotent on its own.
+- **Ingest telemetry (issue #65):** the `ingest_runs` table (also a plain
+  `CREATE TABLE` in `EVENTS_SCHEMA`) records one row per source per nightly run
+  (`fetched`/`inserted`/`updated`/`marked_missing`/`duration_s`/`outcome`,
+  grouped by `run_id`). `ingest.main` writes it on every source exit path and
+  compares each source's `fetched` against the median of its recent successful
+  runs (`db.fetch_drift_baseline`, needs ≥3 prior `ok` runs); a fetch below
+  `DRIFT_RATIO` (60%) of that median prints a warning and makes the run exit
+  **4**. Self-bootstrapping: an empty table never false-alarms. This is the
+  data model the planned dashboard's `source_health()` reads.
 - **Never run `VACUUM` on `data/events.db` without immediately rebuilding the
   FTS index.** `events` has a TEXT primary key (no `INTEGER PRIMARY KEY` alias),
   so SQLite may renumber its implicit rowids on VACUUM. `events_fts` is an
@@ -337,9 +346,15 @@ Neighborhoods are populated by a **second pass** (`enrich.py`) that runs after
 ingest, NOT by sources. Sources still yield `neighborhood=None`; keeping
 `fetch()` dumb is deliberate (same split as missing-detection). `ingest.main`
 calls `enrich.run` at the end, guarded so a geocoder hiccup can't fail the
-sources — but a failed pass exits the ingest with code **3** (0 = clean,
-2 = source failure(s), which takes precedence) so the nightly cron alerts.
-`ENRICH=0` skips it for offline dev.
+sources — but a failed pass exits the ingest with code **3**. `ENRICH=0`
+skips it for offline dev.
+
+**Ingest exit codes** (highest precedence first): **0** = clean, **2** =
+one or more sources failed, **3** = sources fine but the enrich pass failed,
+**4** = sources + enrich fine but a source's yield dropped below its recent
+norm (issue #65 — see "Ingest telemetry" below). The nightly cron should
+alert on any non-zero; 4 is a soft "a scraper may be silently degrading"
+signal, not a hard failure.
 
 **Resolution ladder** (`enrich.resolve`, first hit wins, only for rows where
 `neighborhood IS NULL`):

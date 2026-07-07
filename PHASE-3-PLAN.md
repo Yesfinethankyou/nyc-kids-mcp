@@ -182,7 +182,7 @@ platform family. Also: every new source is a permanent maintenance annuity
 paid in scraper-decay risk, and with ~2,400 events already flowing from
 nycgovparks alone, the marginal source is worth less than in Phase 2 — be
 pickier than this list. Prerequisite before adding any: land the canonical
-tag vocabulary (issue #66) so new sources don't widen the fragmentation.
+tag vocabulary (issue #44) so new sources don't widen the fragmentation.
 
 - **WCS (zoos + aquarium):** Bronx Zoo, Prospect Park Zoo, Central Park Zoo,
   NY Aquarium. Likely share one CMS — probe Bronx Zoo first; if the others
@@ -222,7 +222,7 @@ shape (WCS, a museum, a library system, a parks org), then fan out.
 4. **A2 indoor/outdoor** — cheap; needed to scope weather.
 5. **A3 weather** — depends on A1 + A2.
 6. **New sources (Workstream B)** — borough-gap ordering (see above), tag
-   vocabulary (#66) landed first, no headless.
+   vocabulary (#44) landed first, no headless.
 
 ## Open decisions to settle before building
 

@@ -278,6 +278,17 @@ def test_fts_query_with_filters_combined(conn):
     assert results[0].borough == Borough.BROOKLYN
 
 
+def test_whitespace_only_query_does_not_crash(conn):
+    # A whitespace-only query tokenizes to no FTS terms; it must degrade to a
+    # text-unfiltered search rather than raising an FTS5 syntax error (issue #61).
+    db.upsert_events(conn, [
+        _ev(external_id="a", title="Storytime"),
+        _ev(external_id="b", title="Nature Walk"),
+    ])
+    assert len(db.search(conn, query="   ")) == 2
+    assert len(db.search(conn, query="\n\t")) == 2
+
+
 # --- prune_stale ---------------------------------------------------------
 
 

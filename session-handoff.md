@@ -2,6 +2,65 @@
 
 ## What was done (most recent first)
 
+### Session: ingest telemetry + yield-drift alerting — issue #65 (branch `claude/code-review-bugs-3zzddi`, PR #70)
+
+Implemented #65 (the review's highest-leverage item; guards the silent
+per-source decay class that #59 exemplified). 519 → 532 passing, ruff clean.
+
+- **New `ingest_runs` table** in `EVENTS_SCHEMA` (plain `CREATE TABLE`, like
+  `geocode_cache`): one row per source per run —
+  `run_id`/`source`/`started_at`/`finished_at`/`outcome`/`fetched`/`inserted`/
+  `updated`/`marked_missing`/`duration_s`.
+- **`db.record_ingest_run`** (writes a row) and **`db.fetch_drift_baseline`**
+  (median `fetched` over a source's recent `ok` runs; None until ≥3 exist).
+- **`ingest.main`** now records a run on every source exit path (ok /
+  fetch_failed / upsert_failed) and, after each ok source, compares `fetched`
+  against the prior-runs baseline via `ingest._looks_like_drift` (< 60% =
+  drift). Missing-detection control flow was restructured (early-`continue` →
+  nested `if`) so recording always happens; behavior otherwise unchanged.
+- **New exit code 4** = sources + enrich fine but ≥1 source drifted low.
+  Precedence 2 > 3 > 4. Documented in CLAUDE.md ("Ingest exit codes" +
+  "Ingest telemetry").
+- Tests: `tests/test_ingest_runs.py` — db helpers, the drift predicate, and an
+  integration test driving `ingest.main` with a fake source through the
+  drift→exit-4 and fetch-failure→exit-2 paths (no network; `ENRICH=0`).
+- Deliberately did NOT rewire `_fetch_looks_complete` to use this baseline
+  (the issue's side-benefit) — kept scope to the telemetry + alert; noted as a
+  follow-up on #65.
+
+### Session: fix the 5 most critical issues (branch `claude/code-review-bugs-3zzddi`, PR #70)
+
+Fixed and tested five issues (each has a new regression test; 504 → 519
+passing, ruff clean):
+
+- **#39 (P0)** mommy_poppins time shift. `_parse_local_dt` now reads the
+  JSON-LD wall-clock component as America/New_York and ignores the mislabelled
+  offset (MP emits both `-04:00` and `+00:00` for the same 10am ET event). The
+  captured fixture uses `-04:00` so its instant is unchanged; the bug was the
+  live `+00:00` rows landing 4-5h early.
+- **#40 (P0)** + **#62** permit/BPL substring gating. `nyc_permitted_events._infer_tags`
+  now matches via `_kw_hit` (leading word-boundary prefix; trailing-space
+  keyword = whole word), so "craft"≠"aircraft", "sing"≠"closing", "kid"≠"kidney".
+  "Shape Up NYC" (adult fitness) added to the title blocklist + dropped from the
+  music keywords; "aircraft" added to the blocklist. BPL's title/tags fallback
+  now whole-word matches a dedicated `_KID_TITLE_HINTS` set. Residual (noted,
+  not fixed): "Fair Housing…" still gets a `festival` tag via the real word
+  "fair" — a semantic, not substring, false positive.
+- **#59 (P1)** Domino recurrence. `_occurrence_dates` fast-forwards to the first
+  in-window occurrence and caps on *emitted* occurrences, so a far-past series
+  start no longer exhausts `MAX_OCCURRENCES` walking pre-window dates and
+  returning zero.
+- **#35 (security)** negative-limit cap bypass. The three listing tools now
+  clamp `max(1, min(limit, 50))`.
+- **#61 (P3)** whitespace-only query. `db.search` computes the FTS expression
+  first and skips the MATCH when it's empty, degrading to a text-unfiltered
+  search instead of raising an FTS5 syntax error.
+
+**Deliberately NOT taken: #41 (P0, wrong-borough parks).** A real fix needs
+`park_neighborhoods.json` rebuilt with a borough-keyed schema (like the library
+table), which requires the Census network — not doable/verifiable in-sandbox.
+Left open; it's the top remaining P0.
+
 ### Session: full-repo bug review + architectural review (branch `claude/code-review-bugs-3zzddi`)
 
 Two-part review session. **No production code changed** — findings were
@@ -24,7 +83,8 @@ passed, before and after):
   (permit-source `_infer_tags`, bpl `_is_kid_relevant`) admits junk
   ("Closing Ceremony"→music, "Kidney Walk"→best for kids); the word-boundary
   consolidation pass only fixed the non-gating editorial sources, so the
-  CLAUDE.md claim was stale.
+  CLAUDE.md claim was stale. **[Later closed as a duplicate of the older
+  #40 (P0); detail folded into #40's thread.]**
 - **#63 (P3)** unauth OAuth endpoints 500 on malformed input (non-ASCII
   consent code → compare_digest TypeError; JSON-array /register body;
   non-ASCII PKCE verifier — which also burns the auth code before verify).
@@ -41,7 +101,8 @@ instrumentation**. Follow-up issues filed:
   "optional/severable" framing (doc updated).
 - **#66 (P2)** canonical tag vocabulary in `_filters.py` — spellings have
   fragmented ("arts & crafts" ×5 vs "arts and crafts" ×4, "movie"/"movies");
-  land before any new Workstream B source.
+  land before any new Workstream B source. **[Later closed as a duplicate of
+  the older #44 (P1); detail folded into #44's thread.]**
 - **#67 (P2)** remove the FTS/VACUUM footgun structurally (explicit INTEGER
   PRIMARY KEY rowid; fallback: startup FTS-integrity probe).
 - **#68 (P3)** split ingest into its own compose service (kills the
@@ -58,7 +119,7 @@ instrumentation**. Follow-up issues filed:
   MULTI-USER-PLAN.md + CLAUDE.md out-of-scope bullet amended.
 - **Workstream B ordering: borough-coverage gap is the explicit tiebreaker**
   (7 of 11 live sources are Brooklyn venues) — PHASE-3-PLAN.md Workstream B
-  intro amended; tag vocabulary (#66) is a prerequisite for new sources.
+  intro amended; tag vocabulary (#44, née #66) is a prerequisite for new sources.
 - **Sequencing**: #65 pulled ahead of A2/A3 in PHASE-3-PLAN.md.
 - **New "Doc hygiene" section in CLAUDE.md**: one home per fact class
   (docstring > CLAUDE.md > backlog), and session-handoff entries older than
@@ -924,15 +985,16 @@ propagate them implicitly is gone (that wipe was the bug).
 (Reset 2026-07-07 after the architectural review; the old list was stale —
 `near_me` was declined, PR #21 merged long ago.)
 
-1. **#65 — `ingest_runs` + yield-drift alerting.** First, before anything
-   else in Phase 3; see PHASE-3-PLAN.md sequencing.
-2. **#59 — Domino recurrence-cap bug.** The one P1 correctness bug; small,
-   well-isolated fix in `_occurrence_dates` + a regression test with a
-   far-past series start.
-3. **One careful auth.py PR batching #63 + #64 + #69** (robustness 500s,
+(Fixed this session: #39, #40/#62, #59, #35, #61, and #65 — see the top two entries.)
+
+1. **#41 (P0) — wrong-borough park→NTA.** Now the top remaining P0. Needs
+   `park_neighborhoods.json` rebuilt borough-keyed (Census network) + a
+   borough guard in `static_neighborhood`'s park tier.
+2. **One careful auth.py PR batching #63 + #64 + #69** (robustness 500s,
    GET /token log redaction, master-bearer rate-limit exemption) — it's the
    do-not-regress surface, so one reviewed PR with tests, not drive-bys.
-4. **#66 — canonical tag vocabulary** — prerequisite for any new source.
-5. Then A2 indoor/outdoor → A3 weather → Workstream B (borough-gap order).
+3. **#44 — canonical tag vocabulary** (was re-filed as #66, now closed dup of
+   #44) — prerequisite for any new source.
+4. Then A2 indoor/outdoor → A3 weather → Workstream B (borough-gap order).
 - **BAM** is queued in `SOURCES-BACKLOG.md` (CANDIDATE) — probe with
   `source-verifier` (likely Tessitura) before building.

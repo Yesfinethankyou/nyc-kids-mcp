@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 import pathlib
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from nyc_events.models import Borough, Price
 from nyc_events.sources.domino_park import (
@@ -128,6 +128,31 @@ def test_occurrences_bounded_by_window_end():
         date(2026, 6, 20), date(2026, 7, 4),
     )
     assert dates == [date(2026, 6, 20), date(2026, 6, 27), date(2026, 7, 4)]
+
+
+def test_far_past_start_still_yields_in_window_occurrences():
+    # Regression for issue #59: the occurrence cap used to count steps from the
+    # series' original start, so a series begun long ago exhausted it walking
+    # pre-window dates and returned nothing. Fast-forward must land in-window.
+    win_start = date(2026, 7, 7)
+    win_end = win_start + timedelta(days=60)
+
+    weekly = _occurrence_dates(
+        win_start - timedelta(weeks=210), None, "weekly", 1, win_start, win_end
+    )
+    assert weekly, "far-past weekly series produced no occurrences"
+    assert all(win_start <= d <= win_end for d in weekly)
+    assert weekly[0].weekday() == (win_start - timedelta(weeks=210)).weekday()
+
+    daily = _occurrence_dates(
+        win_start - timedelta(days=250), None, "daily", 1, win_start, win_end
+    )
+    assert daily and daily[0] == win_start
+
+    monthly = _occurrence_dates(
+        date(2020, 1, 15), None, "monthly", 1, win_start, win_end
+    )
+    assert monthly and all(d.day == 15 for d in monthly)
 
 
 # ---------------------------------------------------------------------------

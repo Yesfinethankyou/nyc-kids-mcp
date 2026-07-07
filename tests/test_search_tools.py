@@ -86,6 +86,26 @@ def test_bad_date_format_raises(seeded_db):
         tools.search_events(start_date="08/13/2026")
 
 
+def test_negative_limit_is_clamped(seeded_db):
+    # SQLite treats LIMIT -1 as unbounded; min(limit, 50) alone let a negative
+    # value through and returned the whole catalog (issue #35). Clamp the floor.
+    all_three = tools.search_events(
+        start_date="2026-08-01", end_date="2026-08-31", limit=99
+    )
+    assert len(all_three) == 3
+    clamped = tools.search_events(
+        start_date="2026-08-01", end_date="2026-08-31", limit=-1
+    )
+    assert len(clamped) == 1
+
+
+def test_events_on_date_clamps_negative_limit(seeded_db):
+    # Same clamp on the other listing tools. Aug 14 has exactly one event;
+    # a negative limit must not turn into "unbounded".
+    results = tools.events_on_date("2026-08-14", limit=-5)
+    assert len(results) == 1
+
+
 def test_exclude_low_confidence_threads_through(tmp_path, monkeypatch):
     path = str(tmp_path / "events.db")
     monkeypatch.setattr(config, "DB_PATH", path)

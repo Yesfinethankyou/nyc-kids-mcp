@@ -234,13 +234,15 @@ def _occurrence_dates(
     hi = min(end, win_end) if end else win_end
     out: list[date] = []
     d = start
-    i = 0
     if frequency == "monthly":
-        while d <= hi and i < MAX_OCCURRENCES:
-            if d >= win_start:
-                out.append(d)
+        # Fast-forward to the first occurrence in the window instead of
+        # counting every step from `start`. A series authored long ago must
+        # not exhaust the occurrence cap walking pre-window dates (issue #59).
+        while d < win_start and d <= hi:
             d = _add_months(d, step_interval)
-            i += 1
+        while d <= hi and len(out) < MAX_OCCURRENCES:
+            out.append(d)
+            d = _add_months(d, step_interval)
     else:
         # weekly (default) or daily
         step = (
@@ -248,11 +250,17 @@ def _occurrence_dates(
             if frequency == "daily"
             else timedelta(weeks=step_interval)
         )
-        while d <= hi and i < MAX_OCCURRENCES:
-            if d >= win_start:
-                out.append(d)
+        if d < win_start:
+            # Arithmetic jump to the first on-or-after-win_start occurrence, so
+            # the cap below counts emitted occurrences, not the age of the
+            # series (issue #59: a far-past start previously yielded zero rows).
+            skip = (win_start - d) // step
+            d = d + step * skip
+            while d < win_start:
+                d = d + step
+        while d <= hi and len(out) < MAX_OCCURRENCES:
+            out.append(d)
             d = d + step
-            i += 1
     return out
 
 

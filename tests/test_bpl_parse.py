@@ -61,6 +61,16 @@ class TestKidRelevant:
         assert _is_kid_relevant({"ss_event_age": "", "ts_title": "Quiet Study Room"}) is False
         assert _is_kid_relevant({}) is False
 
+    def test_midword_substring_does_not_admit_adult_event(self):
+        # "kid" must not match "kidney" in the title fallback (issue #40/#62).
+        assert _is_kid_relevant(
+            {"ss_event_age": "", "ts_title": "Kidney Health Screening"}
+        ) is False
+        # Real whole words still admit the event.
+        assert _is_kid_relevant(
+            {"ss_event_age": "", "ts_title": "Kids Craft Hour"}
+        ) is True
+
 
 # --- Age band mapping --------------------------------------------------------
 

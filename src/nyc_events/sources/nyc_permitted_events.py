@@ -64,7 +64,10 @@ TITLE_BLOCKLIST = re.compile(
     r"load[\s\-]?in|load[\s\-]?out|"
     r"set[\s\-]?up|breakdown|"
     r"construction|"
-    r"radio[\s\-]?control|rc[\s\-]?model|model[\s\-]?plane|model[\s\-]?helicopter|"
+    r"radio[\s\-]?control|rc[\s\-]?model|model[\s\-]?plane|model[\s\-]?helicopter|aircraft|"
+    # Shape Up NYC is an adult fitness series (Zumba / cardio / intenSati),
+    # not kid programming — drop it outright (issue #40).
+    r"shape[\s\-]?up|"
     # NYC school identifiers: PS (elementary), I.S. (intermediate), JHS,
     # MS (middle), HS (high), plus a couple of program-specific markers
     # the user surfaced. Each requires \d+ so we don't false-positive on
@@ -97,14 +100,17 @@ KID_KEYWORDS: list[tuple[str, tuple[str, ...]]] = [
     ("nature", ("nature", "garden", "stewardship", "outdoor", "wildlife",
                 "birding", "tree ", "park tour")),
     ("music", (
-        "music", "concert", "sing", "shape up", "dance party", "dance class", "drum",
+        "music", "concert", "sing", "dance party", "dance class", "drum",
         "performance", "recital", "free concert",
     )),
     ("sports", ("kids sports", "youth sports", "junior", "little league", "play day", "sport ")),
     ("educational", ("workshop", "stem", "science", "history", "lesson", "class")),
     ("festival", ("festival", "fair ", "block party", "celebration")),
     ("best for kids", (
-        "kid", "child", "tot", "toddler", "preschool", "youth",
+        # "kids"/"tots" prefix-match plurals; "kid "/"tot " (trailing space =
+        # whole-word, see _kw_hit) match the singular without catching
+        # "kidney"/"total" (issue #40).
+        "kids", "kid ", "child", "tots", "tot ", "toddler", "preschool", "youth",
         # NOTE: "field day" was here but is now blocklisted — those are
         # school-private events, not public ones.
     )),
@@ -367,10 +373,29 @@ def _clean_venue(venue: str) -> str:
     return head.strip().rstrip(",").strip()
 
 
+def _kw_hit(haystack: str, kw: str) -> bool:
+    """Keyword match for the (inclusion-gating) tag inference.
+
+    Bare substring matching admitted junk and fabricated tags — "craft" hit
+    "air**craft**", "sing" hit "clo**sing**", "kid" hit "**kid**ney" — and here
+    a keyword hit is what keeps the row (tag-empty rows are dropped), so a false
+    positive both admits noise and mislabels it (issue #40).
+
+    - A keyword given with a trailing space (e.g. "kid ", "sport ") is matched
+      as a whole word (`\\bkw\\b`) — the historical guard against
+      "sport"→"sportsmanship", extended to "kid"→"kidney".
+    - Otherwise a leading word boundary (`\\bkw`) keeps useful prefix matches
+      ("craft"→"crafts") while dropping mid-word hits ("aircraft").
+    """
+    if kw.endswith(" "):
+        return re.search(rf"\b{re.escape(kw.strip())}\b", haystack) is not None
+    return re.search(rf"\b{re.escape(kw)}", haystack) is not None
+
+
 def _infer_tags(title: str, event_type: str) -> list[str]:
     haystack = f"{title.lower()} {event_type.lower()}"
     tags: list[str] = []
     for tag, keywords in KID_KEYWORDS:
-        if any(kw in haystack for kw in keywords):
+        if any(_kw_hit(haystack, kw) for kw in keywords):
             tags.append(tag)
     return tags

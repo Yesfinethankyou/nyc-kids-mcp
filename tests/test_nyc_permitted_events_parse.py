@@ -78,6 +78,40 @@ def test_stable_id_is_deterministic():
 # --- type / agency filtering ---------------------------------------------
 
 
+# --- keyword matching is word-boundary aware (issue #40) -----------------
+# Tags gate inclusion here (tag-empty rows are dropped), so a substring
+# false-positive both admits noise and mislabels it.
+
+
+@pytest.mark.parametrize(
+    "title",
+    [
+        "Closing Ceremony",       # "sing" must not match "clo-sing"
+        "NYC Kidney Walk",        # "kid" must not match "kid-ney"
+        "Model Aircraft Flying",  # "craft" must not match "air-craft"
+    ],
+)
+def test_no_tag_from_midword_substring(title):
+    assert _infer_tags(title, "Special Event") == []
+
+
+def test_midword_substring_row_is_dropped():
+    # No real keyword hit -> no tag -> row excluded from the catalog.
+    assert _parse(_row(event_name="Model Aircraft Flying")) is None
+    assert _parse(_row(event_name="Closing Ceremony")) is None
+
+
+def test_real_keyword_prefixes_still_match():
+    assert "arts & crafts" in _infer_tags("Kids Arts & Crafts", "Special Event")
+    assert "best for kids" in _infer_tags("Toddler Story Hour", "Special Event")
+    assert "best for kids" in _infer_tags("Kids Day", "Special Event")
+
+
+def test_shape_up_nyc_adult_fitness_is_dropped():
+    # Shape Up NYC is adult fitness (Zumba/cardio), not kid programming.
+    assert _parse(_row(event_name="Shape Up NYC: Cardio Sculpt")) is None
+
+
 def test_sport_youth_is_filtered_out():
     # Sport-Youth rows are league field permits, not events for the public.
     assert _parse(_row(event_type="Sport - Youth")) is None

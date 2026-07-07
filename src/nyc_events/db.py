@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import sqlite3
+import statistics
 from collections.abc import Iterable
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
@@ -77,6 +78,27 @@ CREATE TABLE IF NOT EXISTS geocode_cache (
     nta_name TEXT,
     resolved_at TEXT NOT NULL
 );
+
+-- Per-source ingest telemetry (issue #65). One row per source per nightly run
+-- so a source that quietly stops yielding (upstream redesign, a feed cap
+-- starting to truncate) is visible as a drop in `fetched` over time instead of
+-- inferred from mutated `last_seen`. `run_id` groups all sources in one run.
+-- Plain CREATE TABLE (idempotent on its own), not a _migrate_* column-add.
+CREATE TABLE IF NOT EXISTS ingest_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id TEXT NOT NULL,
+    source TEXT NOT NULL,
+    started_at TEXT NOT NULL,
+    finished_at TEXT NOT NULL,
+    outcome TEXT NOT NULL,          -- 'ok' | 'fetch_failed' | 'upsert_failed'
+    fetched INTEGER NOT NULL DEFAULT 0,
+    inserted INTEGER NOT NULL DEFAULT 0,
+    updated INTEGER NOT NULL DEFAULT 0,
+    marked_missing INTEGER NOT NULL DEFAULT 0,
+    duration_s REAL NOT NULL DEFAULT 0
+);
+
+CREATE INDEX IF NOT EXISTS idx_ingest_runs_source ON ingest_runs(source, id);
 """
 
 # OAuth state lives in a separate SQLite file (data/oauth.db) so that wiping
@@ -435,9 +457,14 @@ def search(
     where: list[str] = []
 
     if query:
-        sql += " JOIN events_fts f ON f.rowid = e.rowid"
-        where.append("events_fts MATCH ?")
-        params.append(_fts_query(query))
+        # A whitespace-only query is truthy but tokenizes to no terms; an empty
+        # MATCH string is an FTS5 syntax error. Fall through to a text-unfiltered
+        # (date/facet-only) search instead of raising (issue #61).
+        fts = _fts_query(query)
+        if fts:
+            sql += " JOIN events_fts f ON f.rowid = e.rowid"
+            where.append("events_fts MATCH ?")
+            params.append(fts)
 
     if borough:
         where.append("e.borough = ?")
@@ -648,6 +675,71 @@ def list_sources(conn: sqlite3.Connection) -> list[dict]:
         """
     ).fetchall()
     return [dict(r) for r in rows]
+
+
+# ---- ingest telemetry (issue #65) -------------------------------------------
+
+
+def record_ingest_run(
+    conn: sqlite3.Connection,
+    *,
+    run_id: str,
+    source: str,
+    started_at: datetime,
+    finished_at: datetime,
+    outcome: str,
+    fetched: int,
+    inserted: int,
+    updated: int,
+    marked_missing: int,
+) -> None:
+    """Append one source's result for a nightly run. `duration_s` is derived
+    from the timestamps. Commits immediately so a later source crashing can't
+    lose earlier sources' telemetry."""
+    duration = (finished_at - started_at).total_seconds()
+    conn.execute(
+        "INSERT INTO ingest_runs (run_id, source, started_at, finished_at, "
+        "outcome, fetched, inserted, updated, marked_missing, duration_s) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            run_id,
+            source,
+            _iso(started_at),
+            _iso(finished_at),
+            outcome,
+            fetched,
+            inserted,
+            updated,
+            marked_missing,
+            duration,
+        ),
+    )
+    conn.commit()
+
+
+def fetch_drift_baseline(
+    conn: sqlite3.Connection,
+    source: str,
+    *,
+    window: int = 7,
+    min_history: int = 3,
+) -> float | None:
+    """Median `fetched` over this source's most recent successful runs, or
+    None when there isn't enough history to judge (fewer than `min_history`
+    prior 'ok' runs). Callers compare the current fetch against this to catch a
+    source that quietly stopped yielding. Query the baseline BEFORE recording
+    the current run so it reflects prior runs only."""
+    counts = [
+        r["fetched"]
+        for r in conn.execute(
+            "SELECT fetched FROM ingest_runs WHERE source = ? AND outcome = 'ok' "
+            "ORDER BY id DESC LIMIT ?",
+            (source, window),
+        )
+    ]
+    if len(counts) < min_history:
+        return None
+    return statistics.median(counts)
 
 
 def list_facets(conn: sqlite3.Connection) -> dict[str, list[str]]:

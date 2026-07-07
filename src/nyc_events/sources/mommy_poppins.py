@@ -27,6 +27,7 @@ import xml.etree.ElementTree as ET
 from collections.abc import Iterable
 from datetime import UTC, datetime, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from curl_cffi import requests as cffi_requests
 from selectolax.parser import HTMLParser
@@ -35,6 +36,8 @@ from ..models import Borough, Event, Price, compute_id
 from .base import Source
 
 logger = logging.getLogger(__name__)
+
+NYC_TZ = ZoneInfo("America/New_York")
 
 SITEMAP_INDEX_URL = "https://mommypoppins.com/sitemap.xml"
 NYC_EVENT_URL_PREFIX = "https://mommypoppins.com/new-york-city-kids/event/"
@@ -124,6 +127,29 @@ _AGE_PLUS_RX = re.compile(r"(?:age[s]?[:\s]+)(\d{1,2})\+", re.IGNORECASE)
 
 # nid extraction from googletag setTargeting call
 _NID_RX = re.compile(r"setTargeting\('nid',\s*'(\d+)'\)")
+
+# Trailing UTC designator or numeric offset on an ISO datetime.
+_TZ_SUFFIX_RX = re.compile(r"(?:Z|[+-]\d{2}:?\d{2})$")
+
+
+def _parse_local_dt(raw: str | None) -> datetime | None:
+    """Parse an MP JSON-LD datetime as America/New_York wall-clock time.
+
+    MP stamps NYC wall-clock time but mislabels the zone: the same 10 a.m. ET
+    event has been seen published as both ``...T10:00:00-04:00`` (correct) and
+    ``...T10:00:00+00:00`` (the wall-time relabelled UTC). Trusting the offset
+    shifted every ``+00:00`` row 4-5h early (issue #39). We take the wall-clock
+    component and attach ``America/New_York``, ignoring any offset — the same
+    treatment the Governors Island source applies to its "floating" timestamps.
+    """
+    if not raw:
+        return None
+    s = _TZ_SUFFIX_RX.sub("", raw.strip())
+    try:
+        dt = datetime.fromisoformat(s)
+    except ValueError:
+        return None
+    return dt.replace(tzinfo=NYC_TZ)
 
 
 # --- Pure helper functions (testable without network) ---
@@ -370,28 +396,15 @@ def _parse_detail_page(html_text: str, page_url: str) -> Event | None:
     if not title:
         return None
 
-    # Start date is required — skip events without it
-    start_dt = None
-    if jsonld and jsonld.get("startDate"):
-        try:
-            start_dt = datetime.fromisoformat(jsonld["startDate"])
-            if start_dt.tzinfo is None:
-                start_dt = start_dt.replace(tzinfo=UTC)
-        except ValueError:
-            pass
+    # Start date is required — skip events without it. Parsed as NYC local
+    # wall-time (see _parse_local_dt / issue #39).
+    start_dt = _parse_local_dt(jsonld.get("startDate")) if jsonld else None
     if start_dt is None:
         logger.debug("mommy_poppins: skipping %s — no parseable startDate", page_url)
         return None
 
     # End date (optional)
-    end_dt = None
-    if jsonld and jsonld.get("endDate"):
-        try:
-            end_dt = datetime.fromisoformat(jsonld["endDate"])
-            if end_dt.tzinfo is None:
-                end_dt = end_dt.replace(tzinfo=UTC)
-        except ValueError:
-            pass
+    end_dt = _parse_local_dt(jsonld.get("endDate")) if jsonld else None
 
     # Description
     description = jsonld.get("description") if jsonld else None
