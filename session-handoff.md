@@ -2,6 +2,32 @@
 
 ## What was done (most recent first)
 
+### Session: dashboard design doc (branch `claude/connector-health-dashboard-dex7nx`)
+
+User asked whether a web page showing connector health + event counts, with
+self-serve event browsing/filtering, would make sense. Assessment: yes for a
+**read-only** page, but only if it never rides the public Funnel hostname or
+touches `auth.py` — a browser UI on the MCP server would need session auth on
+the do-not-regress surface. Chosen shape (user picked the "read-only app"
+flavor, docs-only for now): a separate Starlette process on port 8766, same
+image as a second compose service, `events.db` opened `mode=ro`, GET-only,
+exposed via **`tailscale serve` (tailnet-only), never `funnel`** — tailnet
+membership is the auth.
+
+- **New `DASHBOARD-PLAN.md`** — full design for future work: routes (`/`
+  health, `/events` browse mapping 1:1 onto existing `db.search` kwargs,
+  `/event/{id}`, `/healthz`), a new `db.source_health()` +
+  `db.connect_events_ro()` (dashboard must never call `init_events`), the
+  WAL read-only gotcha (don't mount `./data` as `:ro`; enforce at the
+  connection), compose service sketch (no `env_file` — the dashboard must
+  never see `MCP_AUTH_TOKEN`), test plan (XSS guard on scraped fields,
+  GET-only assertion, missing-DB page), and open decisions — the main one
+  being an optional `ingest_runs` log table so health stops being inferred
+  from `MAX(last_seen)` (severable; v1 ships without it).
+- **CLAUDE.md** out-of-scope bullet amended: "Admin UI" now carries the
+  planned narrow exception pointing at `DASHBOARD-PLAN.md`.
+- **No code changes.** Nothing implemented; suite untouched.
+
 ### Session (same branch, new PR — #56 already merged): Phase 3 planning docs updated — A1 closed, A3 weather design settled
 
 Docs-only follow-up after PR #56 merged. Since that PR had already landed,

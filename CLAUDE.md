@@ -551,7 +551,10 @@ Known accepted residuals (see `git log` for the security-audit commit):
   but everyone sees the same shared catalog: no per-user data, preferences,
   or isolation. The OAuth shim still trusts any client_id.
 - Federated identity / SSO.
-- Admin UI / browser config. The Claude client IS the UI.
+- Admin UI / browser config. The Claude client IS the UI. **Planned narrow
+  exception:** a read-only, tailnet-only health/browse dashboard — designed
+  but not built; see `DASHBOARD-PLAN.md`. Anything beyond that (writes, auth
+  forms, public exposure) stays out of scope.
 - HTTP retries / queue workers. SQLite + sync httpx is fine at this scale.
 
 ## Local container dev
