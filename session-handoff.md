@@ -2,6 +2,32 @@
 
 ## What was done (most recent first)
 
+### Session: ingest telemetry + yield-drift alerting — issue #65 (branch `claude/code-review-bugs-3zzddi`, PR #70)
+
+Implemented #65 (the review's highest-leverage item; guards the silent
+per-source decay class that #59 exemplified). 519 → 532 passing, ruff clean.
+
+- **New `ingest_runs` table** in `EVENTS_SCHEMA` (plain `CREATE TABLE`, like
+  `geocode_cache`): one row per source per run —
+  `run_id`/`source`/`started_at`/`finished_at`/`outcome`/`fetched`/`inserted`/
+  `updated`/`marked_missing`/`duration_s`.
+- **`db.record_ingest_run`** (writes a row) and **`db.fetch_drift_baseline`**
+  (median `fetched` over a source's recent `ok` runs; None until ≥3 exist).
+- **`ingest.main`** now records a run on every source exit path (ok /
+  fetch_failed / upsert_failed) and, after each ok source, compares `fetched`
+  against the prior-runs baseline via `ingest._looks_like_drift` (< 60% =
+  drift). Missing-detection control flow was restructured (early-`continue` →
+  nested `if`) so recording always happens; behavior otherwise unchanged.
+- **New exit code 4** = sources + enrich fine but ≥1 source drifted low.
+  Precedence 2 > 3 > 4. Documented in CLAUDE.md ("Ingest exit codes" +
+  "Ingest telemetry").
+- Tests: `tests/test_ingest_runs.py` — db helpers, the drift predicate, and an
+  integration test driving `ingest.main` with a fake source through the
+  drift→exit-4 and fetch-failure→exit-2 paths (no network; `ENRICH=0`).
+- Deliberately did NOT rewire `_fetch_looks_complete` to use this baseline
+  (the issue's side-benefit) — kept scope to the telemetry + alert; noted as a
+  follow-up on #65.
+
 ### Session: fix the 5 most critical issues (branch `claude/code-review-bugs-3zzddi`, PR #70)
 
 Fixed and tested five issues (each has a new regression test; 504 → 519
@@ -959,18 +985,16 @@ propagate them implicitly is gone (that wipe was the bug).
 (Reset 2026-07-07 after the architectural review; the old list was stale —
 `near_me` was declined, PR #21 merged long ago.)
 
-(#39, #40/#62, #59, #35, #61 fixed this session — see the top entry.)
+(Fixed this session: #39, #40/#62, #59, #35, #61, and #65 — see the top two entries.)
 
 1. **#41 (P0) — wrong-borough park→NTA.** Now the top remaining P0. Needs
    `park_neighborhoods.json` rebuilt borough-keyed (Census network) + a
    borough guard in `static_neighborhood`'s park tier.
-2. **#65 — `ingest_runs` + yield-drift alerting.** First real Phase-3 item;
-   see PHASE-3-PLAN.md sequencing.
-3. **One careful auth.py PR batching #63 + #64 + #69** (robustness 500s,
+2. **One careful auth.py PR batching #63 + #64 + #69** (robustness 500s,
    GET /token log redaction, master-bearer rate-limit exemption) — it's the
    do-not-regress surface, so one reviewed PR with tests, not drive-bys.
-4. **#44 — canonical tag vocabulary** (was re-filed as #66, now closed dup of
+3. **#44 — canonical tag vocabulary** (was re-filed as #66, now closed dup of
    #44) — prerequisite for any new source.
-5. Then A2 indoor/outdoor → A3 weather → Workstream B (borough-gap order).
+4. Then A2 indoor/outdoor → A3 weather → Workstream B (borough-gap order).
 - **BAM** is queued in `SOURCES-BACKLOG.md` (CANDIDATE) — probe with
   `source-verifier` (likely Tessitura) before building.
