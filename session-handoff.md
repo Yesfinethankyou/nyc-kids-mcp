@@ -24,7 +24,8 @@ passed, before and after):
   (permit-source `_infer_tags`, bpl `_is_kid_relevant`) admits junk
   ("Closing Ceremony"→music, "Kidney Walk"→best for kids); the word-boundary
   consolidation pass only fixed the non-gating editorial sources, so the
-  CLAUDE.md claim was stale.
+  CLAUDE.md claim was stale. **[Later closed as a duplicate of the older
+  #40 (P0); detail folded into #40's thread.]**
 - **#63 (P3)** unauth OAuth endpoints 500 on malformed input (non-ASCII
   consent code → compare_digest TypeError; JSON-array /register body;
   non-ASCII PKCE verifier — which also burns the auth code before verify).
@@ -41,7 +42,8 @@ instrumentation**. Follow-up issues filed:
   "optional/severable" framing (doc updated).
 - **#66 (P2)** canonical tag vocabulary in `_filters.py` — spellings have
   fragmented ("arts & crafts" ×5 vs "arts and crafts" ×4, "movie"/"movies");
-  land before any new Workstream B source.
+  land before any new Workstream B source. **[Later closed as a duplicate of
+  the older #44 (P1); detail folded into #44's thread.]**
 - **#67 (P2)** remove the FTS/VACUUM footgun structurally (explicit INTEGER
   PRIMARY KEY rowid; fallback: startup FTS-integrity probe).
 - **#68 (P3)** split ingest into its own compose service (kills the
@@ -58,7 +60,7 @@ instrumentation**. Follow-up issues filed:
   MULTI-USER-PLAN.md + CLAUDE.md out-of-scope bullet amended.
 - **Workstream B ordering: borough-coverage gap is the explicit tiebreaker**
   (7 of 11 live sources are Brooklyn venues) — PHASE-3-PLAN.md Workstream B
-  intro amended; tag vocabulary (#66) is a prerequisite for new sources.
+  intro amended; tag vocabulary (#44, née #66) is a prerequisite for new sources.
 - **Sequencing**: #65 pulled ahead of A2/A3 in PHASE-3-PLAN.md.
 - **New "Doc hygiene" section in CLAUDE.md**: one home per fact class
   (docstring > CLAUDE.md > backlog), and session-handoff entries older than
@@ -932,7 +934,8 @@ propagate them implicitly is gone (that wipe was the bug).
 3. **One careful auth.py PR batching #63 + #64 + #69** (robustness 500s,
    GET /token log redaction, master-bearer rate-limit exemption) — it's the
    do-not-regress surface, so one reviewed PR with tests, not drive-bys.
-4. **#66 — canonical tag vocabulary** — prerequisite for any new source.
+4. **#44 — canonical tag vocabulary** (was re-filed as #66, now closed dup of
+   #44) — prerequisite for any new source.
 5. Then A2 indoor/outdoor → A3 weather → Workstream B (borough-gap order).
 - **BAM** is queued in `SOURCES-BACKLOG.md` (CANDIDATE) — probe with
   `source-verifier` (likely Tessitura) before building.
