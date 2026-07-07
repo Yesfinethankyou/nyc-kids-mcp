@@ -21,7 +21,19 @@ in a later phase. Indoor/outdoor here is heuristic, not model-derived (see A2).
 
 ---
 
-## Decision: adopt a headless browser (Playwright) as a *fallback* render tool
+## Decision: headless browser (Playwright) — STRUCK (2026-07-07 review)
+
+**Resolved: not adopting headless, not even as the contained fallback.**
+Maintainer call after the 2026-07-07 architectural review. The benefit side of
+the ledger is thin: every named Phase-3 venue is *expected* to have a
+structured feed, and the real Phase-2 lesson was "re-probe with `curl_cffi`
+impersonation before believing 'no feed'" (three sources were rescued that
+way), not "we need Chromium". The rejected JS venues (Time Out, the Cyclones'
+themed nights) are nice-to-haves. A standing capability maintained for
+hypothetical sources is exactly the over-engineering this project otherwise
+avoids. **Re-open only when a specific, high-value source has survived a full
+probe and demonstrably needs rendering.** The cost analysis below is kept for
+that future decision's record.
 
 None of the Phase-3 venues below are known to require JS rendering — they're
 zoos / museums / libraries / parks that are probably plain REST / JSON-LD /
@@ -58,10 +70,12 @@ the NAS).
   container) to `docker compose run --rm ingest` against the ingest image — a
   small DSM Task Scheduler change.
 
-**Recommendation:** adopt it as (a) opt-in per source, (b) a sync `_render`
-helper, (c) a separate ingest image. Then headless is weight on the nightly
-job, not complexity smeared across the app. **Open decision:** separate ingest
-image (recommended) vs. baking Chromium into the single image.
+**Original recommendation (superseded by the STRUCK decision above):** adopt
+it as (a) opt-in per source, (b) a sync `_render` helper, (c) a separate
+ingest image. The one piece that survives on its own merits: **the separate
+ingest compose service is happening anyway** (issue #68) — it removes the
+Watchtower-kills-mid-run race regardless of headless, and it's just a compose
+stanza + DSM Task Scheduler edit with no image changes.
 
 ---
 
@@ -155,8 +169,20 @@ as remaining A1 work; revisit only if requirements change.
 
 Each via the standard source-adder recipe (probe → fixture → parser →
 registry → parser test → docs), with the `window_days` opt-in and
-indoor/outdoor default decided per source. Headless `_render` is the fallback
-only if a probe finds no structured feed.
+indoor/outdoor default decided per source. A probe that finds no structured
+feed means REJECT (headless was struck — see the decision above), same as
+Phase 2.
+
+**Ordering (2026-07-07 review): borough-coverage gap is the explicit
+tiebreaker, ahead of platform-family learning.** Seven of eleven live sources
+are Brooklyn venues; Queens, the Bronx, and Staten Island lean almost entirely
+on the permit registry + nycgovparks. So Bronx Zoo, Queens Museum, NYPL/QPL,
+SI Children's Museum come first — which conveniently still covers one of each
+platform family. Also: every new source is a permanent maintenance annuity
+paid in scraper-decay risk, and with ~2,400 events already flowing from
+nycgovparks alone, the marginal source is worth less than in Phase 2 — be
+pickier than this list. Prerequisite before adding any: land the canonical
+tag vocabulary (issue #66) so new sources don't widen the fragmentation.
 
 - **WCS (zoos + aquarium):** Bronx Zoo, Prospect Park Zoo, Central Park Zoo,
   NY Aquarium. Likely share one CMS — probe Bronx Zoo first; if the others
@@ -190,14 +216,19 @@ shape (WCS, a museum, a library system, a parks org), then fan out.
 
 1. ~~Tech debt #4–#6 + caching-layer scaffolding~~ — done.
 2. ~~A1 geocode + neighborhood~~ — done.
-3. **A2 indoor/outdoor** — cheap; needed to scope weather. Next up.
-4. **A3 weather** — depends on A1 + A2.
-5. **New sources (Workstream B)** — cheap REST/JSON-LD first; adopt the
-   headless ingest image only when a probed source actually needs it.
+3. **Ingest observability** (issue #65: `ingest_runs` table + yield-drift
+   alerting) — pulled ahead of everything else by the 2026-07-07 review; it
+   protects all subsequent work and feeds the dashboard.
+4. **A2 indoor/outdoor** — cheap; needed to scope weather.
+5. **A3 weather** — depends on A1 + A2.
+6. **New sources (Workstream B)** — borough-gap ordering (see above), tag
+   vocabulary (#66) landed first, no headless.
 
 ## Open decisions to settle before building
 
-- Headless image: separate ingest image (recommended) vs. single image.
+- ~~Headless image~~ **SETTLED 2026-07-07: headless STRUCK entirely** (see the
+  decision section at the top). The ingest-container split proceeds on its own
+  merits (issue #68).
 - ~~Weather: when to compute~~ **SETTLED: cached-with-TTL**, keyed by
   `neighborhood` (not per-event/per-venue coords) — see A3 above.
 - ~~Geocoder~~ **SETTLED: US Census only** (Census tract → NTA crosswalk; no

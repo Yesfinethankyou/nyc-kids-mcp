@@ -1,5 +1,13 @@
 # Multi-user plan (friends & family scale)
 
+> **STATUS: COMPLETE AND FROZEN (2026-07-07 architectural review).** Phases
+> A–C all shipped 2026-07-05 (Phase C's two remaining items are NAS ops, not
+> code). Maintainer call: no further multi-user phases. What exists — per-
+> person invite codes, hashed-at-rest tokens, per-user revocation — is already
+> a lot of machinery on the security-critical surface for a shared catalog
+> with no per-user data; keep it, maintain it, don't extend it. Any future
+> "Phase D" idea should be argued against this freeze first.
+
 Plan for opening the server to a small circle of trusted users (~5–20 people:
 friends and family). Written 2026-07-05; implementation not started. This
 supersedes the "Out-of-scope: Multi-user" line in CLAUDE.md — update that

@@ -2,6 +2,69 @@
 
 ## What was done (most recent first)
 
+### Session: full-repo bug review + architectural review (branch `claude/code-review-bugs-3zzddi`)
+
+Two-part review session. **No production code changed** — findings were
+recorded as issues + doc-decision edits.
+
+**Part 1 — line-level bug review** of the whole codebase, each finding
+verified by executing the code path before filing (suite was green, 504
+passed, before and after):
+
+- **#59 (P1)** `domino_park._occurrence_dates`: the `MAX_OCCURRENCES` cap
+  counts loop steps from the series' original `startDate`, not emitted
+  occurrences — a weekly series started >200 weeks ago (daily: >200 days)
+  yields ZERO events, and because domino opts into missing-detection its
+  previously-ingested future rows then get falsely flagged
+  `possibly_cancelled`. Series age into brokenness silently.
+- **#60 (P2)** negative `limit` bypasses the 50 cap (`min(limit, 50)` has no
+  floor; SQLite `LIMIT -1` = unlimited → whole catalog in one tool response).
+- **#61 (P3)** whitespace-only `query` → empty FTS5 MATCH → OperationalError.
+- **#62 (P3)** substring keyword matching on the two GATING filters
+  (permit-source `_infer_tags`, bpl `_is_kid_relevant`) admits junk
+  ("Closing Ceremony"→music, "Kidney Walk"→best for kids); the word-boundary
+  consolidation pass only fixed the non-gating editorial sources, so the
+  CLAUDE.md claim was stale.
+- **#63 (P3)** unauth OAuth endpoints 500 on malformed input (non-ASCII
+  consent code → compare_digest TypeError; JSON-array /register body;
+  non-ASCII PKCE verifier — which also burns the auth code before verify).
+- **#64 (P3)** GET /token fully issues tokens with code+verifier in the query
+  string; `RedactAuthorizeQueryFilter` only scrubs `/authorize?`.
+
+**Part 2 — architectural review** (strategic pass; full text in the session
+transcript). Verdict: core architecture sound, don't rewrite anything; the
+dominant risk is **silent per-source data decay managed by prose instead of
+instrumentation**. Follow-up issues filed:
+
+- **#65 (P1)** `ingest_runs` table + per-source yield-drift alerting — the
+  highest-leverage item anywhere; supersedes DASHBOARD-PLAN's
+  "optional/severable" framing (doc updated).
+- **#66 (P2)** canonical tag vocabulary in `_filters.py` — spellings have
+  fragmented ("arts & crafts" ×5 vs "arts and crafts" ×4, "movie"/"movies");
+  land before any new Workstream B source.
+- **#67 (P2)** remove the FTS/VACUUM footgun structurally (explicit INTEGER
+  PRIMARY KEY rowid; fallback: startup FTS-integrity probe).
+- **#68 (P3)** split ingest into its own compose service (kills the
+  Watchtower-restarts-mid-ingest race; settles the PHASE-3 open decision).
+- **#69 (P3)** exempt the master bearer from the per-token MCP rate limit
+  (batch with #63/#64 into one careful auth.py PR).
+
+**Maintainer decisions recorded (user approved the review's recommendations):**
+
+- **Headless browser STRUCK from Phase 3** — PHASE-3-PLAN.md decision section
+  rewritten; re-open only for a specific probed source that demonstrably
+  needs rendering. Ingest-image split (#68) proceeds independently.
+- **Multi-user FROZEN at the shipped Phases A–C** — freeze note atop
+  MULTI-USER-PLAN.md + CLAUDE.md out-of-scope bullet amended.
+- **Workstream B ordering: borough-coverage gap is the explicit tiebreaker**
+  (7 of 11 live sources are Brooklyn venues) — PHASE-3-PLAN.md Workstream B
+  intro amended; tag vocabulary (#66) is a prerequisite for new sources.
+- **Sequencing**: #65 pulled ahead of A2/A3 in PHASE-3-PLAN.md.
+- **New "Doc hygiene" section in CLAUDE.md**: one home per fact class
+  (docstring > CLAUDE.md > backlog), and session-handoff entries older than
+  ~3 sessions may be compressed to one-liners (existing history left intact
+  this session — compress opportunistically).
+
 ### Session: dashboard design doc (branch `claude/connector-health-dashboard-dex7nx`)
 
 User asked whether a web page showing connector health + event counts, with
@@ -858,15 +921,18 @@ propagate them implicitly is gone (that wipe was the bug).
 
 ## Recommended next steps
 
-- **Distance-from-home / `near_me`** finishes Phase 3 A1 — the coords the
-  enrich pass backfills now exist. Needs a home-location config (env vs row —
-  still open in PHASE-3-PLAN.md).
-- On first production ingest after deploy, the enrich pass will geocode all
-  unmapped/freeform venues once (then cache). Spot-check `list_sources` /
-  a few `get_event_detail` calls to confirm neighborhoods look sane.
-- Optional follow-up for fuller coverage: the ~9% of permit parks whose names
-  don't match the open-data table (BPL branches are now covered by the library
-  table).
+(Reset 2026-07-07 after the architectural review; the old list was stale —
+`near_me` was declined, PR #21 merged long ago.)
+
+1. **#65 — `ingest_runs` + yield-drift alerting.** First, before anything
+   else in Phase 3; see PHASE-3-PLAN.md sequencing.
+2. **#59 — Domino recurrence-cap bug.** The one P1 correctness bug; small,
+   well-isolated fix in `_occurrence_dates` + a regression test with a
+   far-past series start.
+3. **One careful auth.py PR batching #63 + #64 + #69** (robustness 500s,
+   GET /token log redaction, master-bearer rate-limit exemption) — it's the
+   do-not-regress surface, so one reviewed PR with tests, not drive-bys.
+4. **#66 — canonical tag vocabulary** — prerequisite for any new source.
+5. Then A2 indoor/outdoor → A3 weather → Workstream B (borough-gap order).
 - **BAM** is queued in `SOURCES-BACKLOG.md` (CANDIDATE) — probe with
   `source-verifier` (likely Tessitura) before building.
-- Merge **PR #21** (filter-review pass) — separate branch.

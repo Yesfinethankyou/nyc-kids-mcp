@@ -41,6 +41,19 @@ it BEFORE opening a PR.** This is enforced: a PreToolUse hook
 been touched for the current branch (dirty, changed vs `origin/main`, or in the
 latest commit). Update the handoff first and the PR proceeds.
 
+## Doc hygiene (2026-07-07 review)
+
+One home per fact class; prose that duplicates code drifts (a stale CLAUDE.md
+claim is worse than none — agents trust it completely):
+- **Per-source behavior** (quirks, filter strategy, id semantics) → the
+  module docstring. CLAUDE.md keeps cross-cutting invariants only;
+  SOURCES-BACKLOG.md keeps probe history. When you touch a source and find
+  the same fact in two of these, prune the copy that isn't the docstring.
+- **`session-handoff.md` is not append-forever**: keep the last ~3 sessions
+  verbatim; when adding a new entry, feel free to compress entries older than
+  that to a one-line summary + PR link. The hook only checks the file was
+  touched.
+
 ## Layout
 
 - `src/nyc_events/models.py` — `Event` + `Borough` / `Price` enums + `compute_id()`
@@ -549,7 +562,9 @@ Known accepted residuals (see `git log` for the security-audit commit):
 - Multi-*tenancy*. Friends-and-family multi-user is supported at the auth
   layer (per-person invite codes — see "OAuth model" and MULTI-USER-PLAN.md),
   but everyone sees the same shared catalog: no per-user data, preferences,
-  or isolation. The OAuth shim still trusts any client_id.
+  or isolation. The OAuth shim still trusts any client_id. **Multi-user is
+  COMPLETE AND FROZEN as of 2026-07-07** (Phases A–C shipped; maintainer call:
+  no further phases — see the freeze note atop MULTI-USER-PLAN.md).
 - Federated identity / SSO.
 - Admin UI / browser config. The Claude client IS the UI. **Planned narrow
   exception:** a read-only, tailnet-only health/browse dashboard — designed
