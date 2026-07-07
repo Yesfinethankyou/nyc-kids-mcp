@@ -206,15 +206,19 @@ setting up: `tailscale funnel status` should still list only 8765.)
 
 ## Open decisions (settle at implementation time)
 
-1. **`ingest_runs` log table (recommended follow-up, not required for v1).**
-   Today "ingest health" is inferred from `MAX(last_seen)` — a proxy that
-   can't distinguish "source returned 0 rows" from "ingest never ran", and
-   exit codes 2/3 vanish into the cron log. A small append-only table
-   (`source`, `started_at`, `finished_at`, `rows_upserted`, `status`)
-   written by `ingest.main` would make the dashboard's health column
-   first-class and give `/ingest-health` real data too. It's the only part
-   of this plan that touches ingest code, which is why it's severable: v1
-   ships on `last_seen` alone.
+1. ~~**`ingest_runs` log table (recommended follow-up, not required for
+   v1).**~~ **SETTLED 2026-07-07 (architectural review): promoted to a
+   prerequisite, tracked as issue #65 — build it first, standalone, before
+   the dashboard.** The review's argument: the project's dominant risk is
+   silent per-source data decay, and `ingest_runs` + a yield-drift check in
+   `ingest.main` is the single highest-leverage investment on any list — it
+   converts the silent-failure class into a next-morning cron email and hands
+   this dashboard its `source_health()` data model for free. v1 of the
+   dashboard therefore ships *on top of* `ingest_runs`, not on `MAX(last_seen)`
+   inference. (Original framing kept for the record: a small append-only
+   table — `source`, `started_at`, `finished_at`, `rows_upserted`, `status` —
+   written by `ingest.main`; it's the only part of this plan that touches
+   ingest code.)
 2. **Port** — 8766 assumed throughout; any free port works, change compose +
    `tailscale serve` together.
 3. **Auto-refresh** — a `<meta http-equiv="refresh" content="300">` on `/`
