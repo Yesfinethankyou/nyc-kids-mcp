@@ -15,6 +15,7 @@ import pytest
 
 from nyc_events.models import Borough, Price
 from nyc_events.sources.mommy_poppins import (
+    NYC_TZ,
     _extract_age_range,
     _extract_drupal_settings,
     _extract_jsonld,
@@ -22,6 +23,7 @@ from nyc_events.sources.mommy_poppins import (
     _infer_borough,
     _infer_tags,
     _parse_detail_page,
+    _parse_local_dt,
     _parse_sitemap_index,
     _parse_sitemap_page,
 )
@@ -33,6 +35,33 @@ SITEMAP_XML = (FIXTURES / "mommy_poppins_sitemap_page.xml").read_text()
 
 DETAIL_URL = "https://mommypoppins.com/new-york-city-kids/event/free-family-fun-day-prospect-park"
 NO_DATE_URL = "https://mommypoppins.com/new-york-city-kids/event/summer-reading-party"
+
+
+# --- Datetime localization (issue #39) --------------------------------------
+
+
+class TestParseLocalDt:
+    def test_utc_labeled_walltime_is_read_as_nyc_local(self):
+        # MP mislabels NYC wall-time as UTC; a 10am ET event arrives as
+        # "+00:00" and must not be shifted 4-5h earlier.
+        dt = _parse_local_dt("2026-07-05T10:00:00+00:00")
+        assert dt is not None
+        local = dt.astimezone(NYC_TZ)
+        assert (local.hour, local.minute) == (10, 0)
+
+    def test_z_suffix_also_read_as_local(self):
+        dt = _parse_local_dt("2026-07-05T16:00:00Z")
+        assert dt.astimezone(NYC_TZ).hour == 16
+
+    def test_correct_offset_still_yields_same_walltime(self):
+        # The already-correct "-04:00" form must be unchanged (10am stays 10am).
+        dt = _parse_local_dt("2026-06-15T10:00:00-04:00")
+        assert dt.astimezone(NYC_TZ).hour == 10
+
+    def test_empty_and_garbage(self):
+        assert _parse_local_dt(None) is None
+        assert _parse_local_dt("") is None
+        assert _parse_local_dt("not-a-date") is None
 
 
 # --- Sitemap parsing --------------------------------------------------------

@@ -2,6 +2,39 @@
 
 ## What was done (most recent first)
 
+### Session: fix the 5 most critical issues (branch `claude/code-review-bugs-3zzddi`, PR #70)
+
+Fixed and tested five issues (each has a new regression test; 504 → 519
+passing, ruff clean):
+
+- **#39 (P0)** mommy_poppins time shift. `_parse_local_dt` now reads the
+  JSON-LD wall-clock component as America/New_York and ignores the mislabelled
+  offset (MP emits both `-04:00` and `+00:00` for the same 10am ET event). The
+  captured fixture uses `-04:00` so its instant is unchanged; the bug was the
+  live `+00:00` rows landing 4-5h early.
+- **#40 (P0)** + **#62** permit/BPL substring gating. `nyc_permitted_events._infer_tags`
+  now matches via `_kw_hit` (leading word-boundary prefix; trailing-space
+  keyword = whole word), so "craft"≠"aircraft", "sing"≠"closing", "kid"≠"kidney".
+  "Shape Up NYC" (adult fitness) added to the title blocklist + dropped from the
+  music keywords; "aircraft" added to the blocklist. BPL's title/tags fallback
+  now whole-word matches a dedicated `_KID_TITLE_HINTS` set. Residual (noted,
+  not fixed): "Fair Housing…" still gets a `festival` tag via the real word
+  "fair" — a semantic, not substring, false positive.
+- **#59 (P1)** Domino recurrence. `_occurrence_dates` fast-forwards to the first
+  in-window occurrence and caps on *emitted* occurrences, so a far-past series
+  start no longer exhausts `MAX_OCCURRENCES` walking pre-window dates and
+  returning zero.
+- **#35 (security)** negative-limit cap bypass. The three listing tools now
+  clamp `max(1, min(limit, 50))`.
+- **#61 (P3)** whitespace-only query. `db.search` computes the FTS expression
+  first and skips the MATCH when it's empty, degrading to a text-unfiltered
+  search instead of raising an FTS5 syntax error.
+
+**Deliberately NOT taken: #41 (P0, wrong-borough parks).** A real fix needs
+`park_neighborhoods.json` rebuilt with a borough-keyed schema (like the library
+table), which requires the Census network — not doable/verifiable in-sandbox.
+Left open; it's the top remaining P0.
+
 ### Session: full-repo bug review + architectural review (branch `claude/code-review-bugs-3zzddi`)
 
 Two-part review session. **No production code changed** — findings were
@@ -926,11 +959,13 @@ propagate them implicitly is gone (that wipe was the bug).
 (Reset 2026-07-07 after the architectural review; the old list was stale —
 `near_me` was declined, PR #21 merged long ago.)
 
-1. **#65 — `ingest_runs` + yield-drift alerting.** First, before anything
-   else in Phase 3; see PHASE-3-PLAN.md sequencing.
-2. **#59 — Domino recurrence-cap bug.** The one P1 correctness bug; small,
-   well-isolated fix in `_occurrence_dates` + a regression test with a
-   far-past series start.
+(#39, #40/#62, #59, #35, #61 fixed this session — see the top entry.)
+
+1. **#41 (P0) — wrong-borough park→NTA.** Now the top remaining P0. Needs
+   `park_neighborhoods.json` rebuilt borough-keyed (Census network) + a
+   borough guard in `static_neighborhood`'s park tier.
+2. **#65 — `ingest_runs` + yield-drift alerting.** First real Phase-3 item;
+   see PHASE-3-PLAN.md sequencing.
 3. **One careful auth.py PR batching #63 + #64 + #69** (robustness 500s,
    GET /token log redaction, master-bearer rate-limit exemption) — it's the
    do-not-regress surface, so one reviewed PR with tests, not drive-bys.

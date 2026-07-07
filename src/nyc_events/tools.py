@@ -221,7 +221,7 @@ def search_events(
             get_event_detail(event_id) to drill into a specific result.
     """
     days_ahead = min(days_ahead, 365)
-    limit = min(limit, 50)
+    limit = max(1, min(limit, 50))
     now = datetime.now(NYC_TZ)
     start = (
         datetime.combine(_local_date(start_date), time(0, 0), NYC_TZ)
@@ -291,7 +291,7 @@ def events_this_weekend(
         limit: max events to return (default 10, max 50). Use
             get_event_detail(event_id) to drill into a specific result.
     """
-    limit = min(limit, 50)
+    limit = max(1, min(limit, 50))
     window_start, sunday_end = _weekend_window(datetime.now(NYC_TZ))
     with db.connect_events(config.DB_PATH) as conn:
         events = db.search(
@@ -329,7 +329,7 @@ def events_on_date(
         limit: max events to return (default 10, max 50). Use
             get_event_detail(event_id) to drill into a specific result.
     """
-    limit = min(limit, 50)
+    limit = max(1, min(limit, 50))
     d = _local_date(date)
     day_start = datetime.combine(d, time(0, 0), NYC_TZ)
     day_end = datetime.combine(d, time(23, 59, 59), NYC_TZ)

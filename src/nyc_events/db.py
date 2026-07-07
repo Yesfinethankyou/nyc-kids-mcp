@@ -435,9 +435,14 @@ def search(
     where: list[str] = []
 
     if query:
-        sql += " JOIN events_fts f ON f.rowid = e.rowid"
-        where.append("events_fts MATCH ?")
-        params.append(_fts_query(query))
+        # A whitespace-only query is truthy but tokenizes to no terms; an empty
+        # MATCH string is an FTS5 syntax error. Fall through to a text-unfiltered
+        # (date/facet-only) search instead of raising (issue #61).
+        fts = _fts_query(query)
+        if fts:
+            sql += " JOIN events_fts f ON f.rowid = e.rowid"
+            where.append("events_fts MATCH ?")
+            params.append(fts)
 
     if borough:
         where.append("e.borough = ?")
