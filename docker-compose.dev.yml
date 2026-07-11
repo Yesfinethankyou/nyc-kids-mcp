@@ -15,6 +15,11 @@ services:
     image: nyc-kids-mcp:dev
     user: "1000:1000"
 
+  nyc-events-dashboard:
+    build: .
+    image: nyc-kids-mcp:dev
+    user: "1000:1000"
+
   watchtower:
     # Profile that we never activate -> watchtower won't start in dev.
     profiles: ["never"]

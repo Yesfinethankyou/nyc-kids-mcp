@@ -24,6 +24,11 @@ OAUTH_DB_PATH = os.environ.get("OAUTH_DB_PATH", "data/oauth.db")
 
 PORT = int(os.environ.get("PORT", "8765"))
 
+# Port for the read-only tailnet dashboard (nyc_events.dashboard) — a
+# separate process from the MCP server; exposed via `tailscale serve`
+# (tailnet-only), never Funnel. See DASHBOARD-PLAN.md.
+DASHBOARD_PORT = int(os.environ.get("DASHBOARD_PORT", "8766"))
+
 # Comma-separated list of source IPs (or CIDR ranges) whose X-Forwarded-*
 # headers uvicorn should trust. Default: loopback only (the Tailscale Funnel
 # tailscaled daemon forwards from 127.0.0.1 on the host). For Docker on

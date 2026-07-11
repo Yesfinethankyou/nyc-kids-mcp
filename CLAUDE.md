@@ -17,6 +17,7 @@ permit data only (one source); Phase 2 = editorial scrapers.
 
 ```bash
 .venv/bin/python -m nyc_events.server           # run HTTP server (needs MCP_AUTH_TOKEN)
+.venv/bin/python -m nyc_events.dashboard        # read-only tailnet dashboard (port 8766, no secrets needed)
 .venv/bin/python -m nyc_events.ingest           # one-shot ingest (runs the enrich pass at the end)
 .venv/bin/python -m nyc_events.enrich           # second pass alone: code new/uncoded rows (network)
 .venv/bin/python -m nyc_events.enrich --recode-all  # re-resolve EVERY row (after static-table changes)
@@ -114,9 +115,18 @@ claim is worse than none — agents trust it completely):
 - `src/nyc_events/auth.py` — the "do not regress" security surface: bearer
   middleware (+ OAuth token cache), rate limiter, redirect-URI allowlist,
   OAuth discovery/`/register`/`/authorize`/`/token` handlers, consent page.
+- `src/nyc_events/dashboard.py` — the read-only tailnet dashboard
+  (DASHBOARD-PLAN.md, shipped): its own Starlette app + `python -m
+  nyc_events.dashboard` entry point on `config.DASHBOARD_PORT` (8766).
+  GET routes only; DB access only via `db.connect_events_ro` (`mode=ro` —
+  it never calls `init_events`); never opens `oauth.db`. **Import rule:
+  `db` + `config` + the sources registry only** — importing `auth` or
+  `tools` from it is the same red flag as a tool PR touching `auth.py`.
+  Exposed via `tailscale serve` (tailnet-only), NEVER Funnel; tailnet
+  membership is the auth, so no login code exists (or should).
 - `src/nyc_events/config.py` — env-derived settings (`DB_PATH`,
-  `OAUTH_DB_PATH`, `PORT`, `FORWARDED_ALLOW_IPS`, `OAUTH_TOKEN_TTL_DAYS`,
-  redirect allowlist), read once at import. Consumers do attribute access
+  `OAUTH_DB_PATH`, `PORT`, `DASHBOARD_PORT`, `FORWARDED_ALLOW_IPS`,
+  `OAUTH_TOKEN_TTL_DAYS`, redirect allowlist), read once at import. Consumers do attribute access
   (`config.DB_PATH`) so tests monkeypatch attributes here. Credentials
   (`MCP_AUTH_TOKEN`/`MCP_CONSENT_PASSWORD`) deliberately stay call-time
   env reads in auth.py/server.py.
@@ -181,6 +191,11 @@ touches `auth.py` is a red flag.
   backfills lat/lng.
 - `tests/test_event_projection.py` — `_event_summary`/`_event_detail` shape
   (neighborhood is now surfaced in list summaries, not just detail).
+- `tests/test_dashboard.py` — the tailnet dashboard's HTTP surface via
+  Starlette TestClient (rendering, filter threading, 400/404 paths, the
+  XSS guard on scraped fields, the GET-only contract, missing-DB page).
+  The db-layer numbers (`source_health`/`catalog_stats`/`connect_events_ro`)
+  are covered in `test_db.py`.
 - New sources: add a fixture under `tests/fixtures/` from a real upstream
   response, then a `test_<source>_parse.py` that exercises the parser
   directly. Don't mock httpx — the parser takes a dict, not a response.
@@ -629,10 +644,10 @@ Known accepted residuals (see `git log` for the security-audit commit):
   COMPLETE AND FROZEN as of 2026-07-07** (Phases A–C shipped; maintainer call:
   no further phases — see the freeze note atop MULTI-USER-PLAN.md).
 - Federated identity / SSO.
-- Admin UI / browser config. The Claude client IS the UI. **Planned narrow
-  exception:** a read-only, tailnet-only health/browse dashboard — designed
-  but not built; see `DASHBOARD-PLAN.md`. Anything beyond that (writes, auth
-  forms, public exposure) stays out of scope.
+- Admin UI / browser config. The Claude client IS the UI. **Shipped narrow
+  exception:** the read-only, tailnet-only health/browse dashboard
+  (`dashboard.py` — see Layout and `DASHBOARD-PLAN.md`). Anything beyond
+  that (writes, auth forms, public exposure) stays out of scope.
 - HTTP retries / queue workers. SQLite + sync httpx is fine at this scale.
 
 ## Local container dev
