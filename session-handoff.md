@@ -2,6 +2,43 @@
 
 ## What was done (most recent first)
 
+### Session: issue-label taxonomy + source-backlog candidate (branch `claude/code-review-bugs-3zzddi`, new PR — the prior PR on this branch, #71, had already merged)
+
+Docs-only, no application code changed. Three commits, rebased onto fresh
+`main` after discovering PR #71 (this branch's previous PR) had already
+merged before these landed — per the merged-PR-branch convention, kept the
+commits and rebased rather than reusing #71 or discarding the work.
+
+- **CLAUDE.md**: new "Issue labeling" section — `type:`
+  (bug/data-quality/security/enhancement/chore, pick one), `priority:`
+  (P0–P3, pick one), `status:` (triage/ready/in-progress/blocked, open
+  issues only), `area:` (auth/sources/db/ingest/tools/infra, multi-select).
+  Replaces the old flat labels and title-embedded `[P0]`-style severity.
+  Also documents a real tool-gap: the GitHub MCP server here has no label
+  create/update/delete endpoint, only `get_label` (read) and
+  `issue_write`'s `labels` field, which auto-creates unrecognized names
+  with a flat default color and empty description.
+- **19 new labels created + applied to all 18 open issues** via the GitHub
+  API directly (not part of the repo diff). Full retag mapping and the
+  color/description reference table are in the session transcript.
+- **`scripts/cleanup_labels.sh`**: one-time admin script (landed via the
+  stop-hook's untracked-files auto-commit, then kept — it fits the existing
+  `scripts/build_*.py` one-shot-utility convention) that deletes the
+  superseded flat labels and sets color/description on the new ones via
+  `gh label edit`, closing the cosmetic gap the API-only path couldn't
+  reach. Run locally with `gh` authenticated.
+- **SOURCES-BACKLOG.md**: added `brooklynbridgeparents.com` as an unprobed
+  `CANDIDATE` (Brooklyn-focused family content site, WordPress, dedicated
+  `/events/` section) — explicitly disambiguated from the existing
+  "Brooklyn Bridge Park" entry (different site: that one's the physical
+  park's own calendar). Flagged that events look user/business-submitted
+  rather than editorially curated; `source-verifier` is the documented
+  next step, not done here.
+- Noticed but not acted on: **#60 still open**, looks like a live
+  duplicate of the now-closed #35 (same negative-limit bug) — flagged to
+  the user, not closed unilaterally mid-labeling-task.
+- 532 passing, ruff clean (checked post-rebase).
+
 ### Session: ingest telemetry + yield-drift alerting — issue #65 (branch `claude/code-review-bugs-3zzddi`, PR #70)
 
 Implemented #65 (the review's highest-leverage item; guards the silent
