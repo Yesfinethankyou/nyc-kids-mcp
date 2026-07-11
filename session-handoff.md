@@ -62,6 +62,16 @@ table, not `MAX(last_seen)` inference alone. Full suite green, ruff clean.
   other DB failures raise instead of rendering as "no database yet".
   3 new tests (scheme-smuggling canary, headers on every page type,
   unrelated-error re-raise). 556 → 559 passed, ruff clean.
+- **LAN exposure opt-in (same session, docs/compose only):** at the user's
+  request for their Portainer/NAS deployment, changed the dashboard port
+  binding from `127.0.0.1:8766:8766` to `0.0.0.0` (`- "8766:8766"`) so it's
+  reachable on the LAN (`http://<nas-ip>:8766`) in addition to
+  `tailscale serve` (0.0.0.0 includes loopback, so serve still works). A
+  deliberate relaxation of DASHBOARD-PLAN.md's tailnet-only stance — safe
+  because the dashboard is read-only, never opens oauth.db, and holds no
+  secrets, but it has NO login, so LAN-only-if-trusted. Compose comment +
+  README "LAN access (optional)" paragraph document the trade and how to
+  revert. The MCP server (8765) stays loopback-bound — unchanged.
 
 ### Session: issue-label taxonomy + source-backlog candidate (branch `claude/code-review-bugs-3zzddi`, new PR — the prior PR on this branch, #71, had already merged)
 

@@ -72,7 +72,15 @@ services:
     volumes:
       - ./data:/data
     ports:
-      - "127.0.0.1:8766:8766"
+      # Bound to all interfaces so the dashboard is reachable on the LAN
+      # (http://<nas-lan-ip>:8766) in addition to `tailscale serve`, which
+      # keeps working because 0.0.0.0 includes loopback. DELIBERATE relaxation
+      # of DASHBOARD-PLAN.md's tailnet-only stance: the dashboard is read-only,
+      # never opens oauth.db, and carries no secrets, so LAN exposure leaks only
+      # public event data + scraper health — and it has NO login, so only do
+      # this on a trusted LAN. Revert to "127.0.0.1:8766:8766" for tailnet-only.
+      # The MCP server (8765) is the auth surface and must stay loopback-bound.
+      - "8766:8766"
     labels:
       com.centurylinklabs.watchtower.enable: "true"
     healthcheck:

@@ -224,8 +224,19 @@ tailnet membership IS the auth, and that's the entire security model. The
 existing Funnel config for 8765 is untouched; after setting up, sanity-check
 that `tailscale funnel status` still lists only 8765.
 
-Like the main service, the compose file binds the dashboard to
-`127.0.0.1:8766` on the host, so `tailscale serve` is the only path in.
+**LAN access (optional).** The compose file binds the dashboard to
+`0.0.0.0:8766` (the `- "8766:8766"` port line), so besides `tailscale serve`
+it's also reachable on your local network at `http://<nas-lan-ip>:8766`.
+Because `0.0.0.0` includes loopback, `tailscale serve` keeps working too — you
+get tailnet HTTPS and LAN HTTP at once. This is a deliberate relaxation of the
+tailnet-only design: the dashboard is read-only, never opens `oauth.db`, and
+carries no secrets, so LAN exposure only leaks public event data and scraper
+health — but it has **no login**, so only do this on a trusted LAN. To keep it
+tailnet-only, change the port line back to `- "127.0.0.1:8766:8766"` and reach
+it solely via `tailscale serve`.
+
+Whichever you pick, the MCP server (8765) stays loopback-bound — that one is
+the auth surface and must only be reached via Tailscale Funnel, never the LAN.
 
 ## Checkpoint A — verify the HTTP + auth + tools path
 
