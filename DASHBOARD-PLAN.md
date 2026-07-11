@@ -1,6 +1,16 @@
 # Dashboard plan — read-only tailnet web UI
 
-Design for future work; nothing here is implemented yet. A small read-only
+> **STATUS: IMPLEMENTED (2026-07-11).** Shipped as designed:
+> `src/nyc_events/dashboard.py` (+ `db.connect_events_ro` /
+> `db.source_health` / `db.catalog_stats`, `config.DASHBOARD_PORT`, the
+> `nyc-events-dashboard` compose service, `tests/test_dashboard.py`).
+> v1 rides the `ingest_runs` telemetry (issue #65) per settled decision 1;
+> decision 3 (auto-refresh on `/`) taken — `meta refresh` every 300s.
+> Host-side step still manual: `tailscale serve --bg --https=8766
+> http://127.0.0.1:8766` (see README "Tailnet dashboard"). This document
+> stays as the design rationale; the living rules are in CLAUDE.md Layout.
+
+A small read-only
 browser dashboard showing connector/ingest health plus an event browse/filter
 page, reachable **only from inside the tailnet** — never via Tailscale Funnel.
 

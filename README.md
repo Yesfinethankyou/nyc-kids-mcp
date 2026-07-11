@@ -201,6 +201,32 @@ external pinger (e.g. UptimeRobot) is the more honest check. The NAS +
 Funnel remain a single point of failure by design; set that expectation
 with users instead of engineering around it.
 
+### 6. Tailnet dashboard (optional, read-only)
+
+A small browser dashboard — per-source ingest health at `/`, an event
+browse/filter page at `/events` — answering "did last night's ingest work?"
+from a phone without going through Claude. It runs as the
+`nyc-events-dashboard` compose service (same image, own process, port 8766)
+and is **read-only by construction**: it opens `events.db` with a `mode=ro`
+SQLite URI, serves GET routes only, never touches `oauth.db`, and gets no
+`.env` secrets (no `MCP_AUTH_TOKEN` in its environment).
+
+Expose it to your tailnet **with `tailscale serve`, NOT `funnel`**:
+
+```bash
+sudo tailscale serve --bg --https=8766 http://127.0.0.1:8766
+# → https://<your-host>.ts.net:8766 — tailnet member devices only
+```
+
+**Never funnel port 8766.** `serve` publishes to tailnet members only;
+`funnel` is the public-internet command. The dashboard has no login —
+tailnet membership IS the auth, and that's the entire security model. The
+existing Funnel config for 8765 is untouched; after setting up, sanity-check
+that `tailscale funnel status` still lists only 8765.
+
+Like the main service, the compose file binds the dashboard to
+`127.0.0.1:8766` on the host, so `tailscale serve` is the only path in.
+
 ## Checkpoint A — verify the HTTP + auth + tools path
 
 Seeds 6 hardcoded events across all 5 boroughs, starts the server, and proves
@@ -530,6 +556,7 @@ See `CLAUDE.md` `## Layout` for the authoritative per-module map.
 | `FORWARDED_ALLOW_IPS`          | `127.0.0.1`                                                                            | Source IPs whose `X-Forwarded-*` headers uvicorn trusts. In Docker, name the bridge gateway exactly (compose pins it to `172.28.0.1`). Never `"*"` — that lets a client spoof `X-Forwarded-For` and mint fresh per-IP rate-limit buckets on the OAuth endpoints. |
 | `OAUTH_REDIRECT_URI_ALLOWLIST` | `https://claude.ai/api/mcp/auth_callback,http://localhost,http://127.0.0.1`            | Comma-separated allowlist for OAuth `redirect_uri`, matched by URL components (exact scheme+host, port if pinned, path prefix). Blocks open-redirect / phishing. |
 | `OAUTH_TOKEN_TTL_DAYS`         | `90`                                                                                   | Default lifetime of an OAuth-issued access token. Bounds an undetected leak.                     |
+| `DASHBOARD_PORT`               | `8766`                                                                                 | Port for the read-only tailnet dashboard process (`nyc_events.dashboard`). Expose via `tailscale serve` only — never Funnel. |
 
 ### Auth rotation model
 

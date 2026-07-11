@@ -58,10 +58,10 @@ def _venue_map_url(venue: str | None, borough: str | None) -> str | None:
 _DESCRIPTION_PREVIEW_CHARS = 200
 
 # How long an event must be continuously missing from its source's ingest
-# before tools surface possibly_cancelled. 30h ≈ two consecutive nightly
-# runs: a one-night blip stamps rows, the next night clears them, and no
-# user ever sees the flag.
-_MISSING_GRACE_HOURS = 30
+# before tools surface possibly_cancelled. The number lives in db.py
+# (db.MISSING_GRACE_HOURS) so the dashboard's health counts use the same
+# threshold without importing this module.
+_MISSING_GRACE_HOURS = db.MISSING_GRACE_HOURS
 
 
 def _possibly_cancelled(ev: Event) -> bool:

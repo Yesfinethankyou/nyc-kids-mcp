@@ -101,6 +101,13 @@ CREATE TABLE IF NOT EXISTS ingest_runs (
 CREATE INDEX IF NOT EXISTS idx_ingest_runs_source ON ingest_runs(source, id);
 """
 
+# How long an event must be continuously missing from its source's ingest
+# before it counts as possibly cancelled. 30h ≈ two consecutive nightly runs:
+# a one-night blip stamps rows, the next night clears them, and no user ever
+# sees the flag. Single home for the number — tools.py (the MCP projections)
+# and dashboard.py (the health page) both read it from here.
+MISSING_GRACE_HOURS = 30
+
 # OAuth state lives in a separate SQLite file (data/oauth.db) so that wiping
 # data/events.db during ingest iteration does NOT invalidate the access tokens
 # claude.ai has cached for the custom connector — that previously caused the
@@ -214,6 +221,25 @@ def connect_events(path: str):
     """Plain per-call connection to the events DB. Assumes init_events() has
     already run for this path (server startup / CLI entry point)."""
     conn = _connect(path)
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
+@contextmanager
+def connect_events_ro(path: str):
+    """Read-only per-call connection to the events DB (dashboard use).
+
+    Opens via a `mode=ro` URI so this connection physically cannot write —
+    the read-only guarantee lives here, not in file permissions or mounts
+    (see DASHBOARD-PLAN.md: the ./data mount must stay rw for WAL sidecar
+    access; a `:ro` mount would break readers). Never runs DDL: if the DB
+    file or its tables don't exist yet, callers get sqlite3.OperationalError
+    and should render a friendly "no database yet" state, not init_events().
+    """
+    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
     try:
         yield conn
     finally:
@@ -675,6 +701,108 @@ def list_sources(conn: sqlite3.Connection) -> list[dict]:
         """
     ).fetchall()
     return [dict(r) for r in rows]
+
+
+def source_health(
+    conn: sqlite3.Connection,
+    now: datetime,
+    registered: Iterable[str] = (),
+) -> list[dict]:
+    """Per-source health rollup for the tailnet dashboard (DASHBOARD-PLAN.md).
+
+    One dict per source in the union of `registered` (the ENABLED_SOURCES
+    ids — passed in so db.py stays ignorant of the sources package) and the
+    sources actually present in the DB. A registered source with zero rows
+    still gets a dict (all-zero counts, `event_count=0`) — that's the
+    "scraper broke" signal list_sources alone can't give, since it only
+    GROUPs over rows that exist. list_sources stays as-is; it's the MCP
+    tool's shape.
+
+    Counts use MISSING_GRACE_HOURS for the flagged (possibly-cancelled)
+    population, matching what the MCP tools surface. The latest ingest_runs
+    row per source (issue #65 telemetry) is joined in when present.
+    """
+    if now.tzinfo is None:
+        raise ValueError("now must be tz-aware")
+    now_iso = _iso(now)
+    grace_iso = _iso(now - timedelta(hours=MISSING_GRACE_HOURS))
+    stats: dict[str, dict] = {}
+    for r in conn.execute(
+        """
+        SELECT source,
+               COUNT(*) AS event_count,
+               SUM(CASE WHEN start_dt > ? THEN 1 ELSE 0 END) AS future_count,
+               MIN(start_dt) AS earliest_event,
+               MAX(start_dt) AS latest_event,
+               MAX(last_seen) AS last_seen,
+               SUM(CASE WHEN missing_since IS NOT NULL
+                         AND missing_since < ? THEN 1 ELSE 0 END) AS flagged_missing,
+               SUM(CASE WHEN description IS NULL AND url IS NULL
+                        THEN 1 ELSE 0 END) AS low_confidence
+        FROM events
+        GROUP BY source
+        """,
+        (now_iso, grace_iso),
+    ):
+        stats[r["source"]] = dict(r)
+    runs: dict[str, dict] = {}
+    for r in conn.execute(
+        """
+        SELECT source, outcome, finished_at, fetched, duration_s
+        FROM ingest_runs
+        WHERE id IN (SELECT MAX(id) FROM ingest_runs GROUP BY source)
+        """
+    ):
+        runs[r["source"]] = dict(r)
+    empty = {
+        "event_count": 0,
+        "future_count": 0,
+        "earliest_event": None,
+        "latest_event": None,
+        "last_seen": None,
+        "flagged_missing": 0,
+        "low_confidence": 0,
+    }
+    out = []
+    registered_set = set(registered)
+    for source in sorted(registered_set | stats.keys() | runs.keys()):
+        row = {"source": source, "registered": source in registered_set}
+        row.update(stats.get(source, empty))
+        run = runs.get(source)
+        row["last_run_outcome"] = run["outcome"] if run else None
+        row["last_run_finished_at"] = run["finished_at"] if run else None
+        row["last_run_fetched"] = run["fetched"] if run else None
+        row["last_run_duration_s"] = run["duration_s"] if run else None
+        out.append(row)
+    return out
+
+
+def catalog_stats(conn: sqlite3.Connection, now: datetime) -> dict:
+    """Catalog-level rollup for the dashboard's header strip: totals,
+    neighborhood coverage, geocode-cache size."""
+    if now.tzinfo is None:
+        raise ValueError("now must be tz-aware")
+    row = conn.execute(
+        """
+        SELECT COUNT(*) AS total_events,
+               SUM(CASE WHEN start_dt > ? THEN 1 ELSE 0 END) AS future_events,
+               SUM(CASE WHEN neighborhood IS NOT NULL THEN 1 ELSE 0 END)
+                   AS with_neighborhood
+        FROM events
+        """,
+        (_iso(now),),
+    ).fetchone()
+    geocode_rows = conn.execute("SELECT COUNT(*) FROM geocode_cache").fetchone()[0]
+    total = row["total_events"] or 0
+    return {
+        "total_events": total,
+        "future_events": row["future_events"] or 0,
+        "with_neighborhood": row["with_neighborhood"] or 0,
+        "neighborhood_pct": round(100 * (row["with_neighborhood"] or 0) / total, 1)
+        if total
+        else 0.0,
+        "geocode_cache_rows": geocode_rows,
+    }
 
 
 # ---- ingest telemetry (issue #65) -------------------------------------------

@@ -9,7 +9,8 @@ Covers what Phase 1 promised:
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+import sqlite3
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -404,3 +405,116 @@ def test_compute_id_excludes_start_dt_so_time_changes_update_in_place(conn):
     rows = list(db.search(conn))
     assert len(rows) == 1
     assert rows[0].start_dt.hour == 14  # the revised time
+
+
+# --- source_health / catalog_stats (dashboard queries) --------------------
+
+_NOW = datetime(2026, 6, 20, 12, 0, tzinfo=UTC)
+
+
+def test_source_health_zero_row_registered_source_still_appears(conn):
+    db.upsert_events(conn, [_ev(external_id="e1", source="srcA")])
+    rows = db.source_health(conn, _NOW, registered=["srcA", "srcB"])
+    by_source = {r["source"]: r for r in rows}
+    assert by_source["srcB"]["event_count"] == 0
+    assert by_source["srcB"]["registered"] is True
+    assert by_source["srcB"]["last_seen"] is None
+    assert by_source["srcA"]["event_count"] == 1
+
+
+def test_source_health_counts(conn):
+    db.upsert_events(
+        conn,
+        [
+            # future, curated
+            _ev(external_id="f1", source="s", start_dt=_NOW + timedelta(days=1)),
+            # past
+            _ev(external_id="p1", source="s", start_dt=_NOW - timedelta(days=1)),
+            # future, low-confidence (no description, no url)
+            _ev(
+                external_id="lc1",
+                source="s",
+                start_dt=_NOW + timedelta(days=2),
+                description=None,
+                url=None,
+            ),
+        ],
+    )
+    # One row flagged missing long enough ago to count; one too recently.
+    old = (_NOW - timedelta(hours=40)).isoformat()
+    fresh = (_NOW - timedelta(hours=2)).isoformat()
+    ids = [r["id"] for r in conn.execute("SELECT id FROM events ORDER BY start_dt")]
+    conn.execute("UPDATE events SET missing_since = ? WHERE id = ?", (old, ids[0]))
+    conn.execute("UPDATE events SET missing_since = ? WHERE id = ?", (fresh, ids[1]))
+    conn.commit()
+    (row,) = db.source_health(conn, _NOW, registered=["s"])
+    assert row["event_count"] == 3
+    assert row["future_count"] == 2
+    assert row["low_confidence"] == 1
+    assert row["flagged_missing"] == 1  # only the 40h-old stamp; 2h is in grace
+
+
+def test_source_health_unregistered_source_with_rows_appears(conn):
+    db.upsert_events(conn, [_ev(external_id="e1", source="ghost")])
+    rows = db.source_health(conn, _NOW, registered=[])
+    assert rows[0]["source"] == "ghost"
+    assert rows[0]["registered"] is False
+
+
+def test_source_health_joins_latest_ingest_run(conn):
+    db.upsert_events(conn, [_ev(external_id="e1", source="s")])
+    for i, outcome in enumerate(["ok", "fetch_failed"]):
+        db.record_ingest_run(
+            conn,
+            run_id=f"r{i}",
+            source="s",
+            started_at=_NOW - timedelta(hours=2 - i),
+            finished_at=_NOW - timedelta(hours=2 - i, minutes=-5),
+            outcome=outcome,
+            fetched=10 + i,
+            inserted=0,
+            updated=0,
+            marked_missing=0,
+        )
+    (row,) = db.source_health(conn, _NOW, registered=["s"])
+    assert row["last_run_outcome"] == "fetch_failed"  # the latest run wins
+    assert row["last_run_fetched"] == 11
+
+
+def test_source_health_requires_aware_now(conn):
+    with pytest.raises(ValueError):
+        db.source_health(conn, datetime(2026, 6, 20, 12, 0), registered=[])
+
+
+def test_catalog_stats(conn):
+    db.upsert_events(
+        conn,
+        [
+            _ev(external_id="f1", start_dt=_NOW + timedelta(days=1)),
+            _ev(external_id="p1", start_dt=_NOW - timedelta(days=1), neighborhood=None),
+        ],
+    )
+    db.put_geocode(conn, "fwd:x|y", None, None, None)
+    stats = db.catalog_stats(conn, _NOW)
+    assert stats["total_events"] == 2
+    assert stats["future_events"] == 1
+    assert stats["with_neighborhood"] == 1
+    assert stats["neighborhood_pct"] == 50.0
+    assert stats["geocode_cache_rows"] == 1
+
+
+def test_catalog_stats_empty_db(conn):
+    stats = db.catalog_stats(conn, _NOW)
+    assert stats["total_events"] == 0
+    assert stats["neighborhood_pct"] == 0.0
+
+
+def test_connect_events_ro_rejects_writes(tmp_path):
+    path = str(tmp_path / "ro.db")
+    db.init_events(path)
+    with db.connect_events_ro(path) as conn:
+        # reads work
+        assert conn.execute("SELECT COUNT(*) FROM events").fetchone()[0] == 0
+        # writes are physically impossible on a mode=ro connection
+        with pytest.raises(sqlite3.OperationalError):
+            conn.execute("INSERT INTO geocode_cache (lookup_key, resolved_at) VALUES ('x', 'y')")

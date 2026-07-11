@@ -50,6 +50,38 @@ services:
       retries: 3
       start_period: 10s
 
+  # Read-only tailnet dashboard (DASHBOARD-PLAN.md). Same image, second
+  # process: a dashboard crash can't take the connector down and the
+  # single-worker MCP/OAuth process stays byte-identical. Deliberately NO
+  # env_file — this process must never see MCP_AUTH_TOKEN. The ./data mount
+  # stays rw (SQLite WAL readers need write access to the -shm sidecar);
+  # read-only-ness is enforced at the connection (mode=ro URI) and at the
+  # HTTP layer (GET-only routes).
+  #
+  # Expose via `tailscale serve --bg --https=8766 http://127.0.0.1:8766`
+  # (tailnet members only) — NEVER `tailscale funnel`; that's the entire
+  # security model. See README "Tailnet dashboard".
+  nyc-events-dashboard:
+    image: ghcr.io/yesfinethankyou/nyc-kids-mcp:latest
+    container_name: nyc-events-dashboard
+    command: ["python", "-m", "nyc_events.dashboard"]
+    restart: unless-stopped
+    environment:
+      DB_PATH: /data/events.db
+      DASHBOARD_PORT: "8766"
+    volumes:
+      - ./data:/data
+    ports:
+      - "127.0.0.1:8766:8766"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket,sys; s=socket.socket(); s.settimeout(3); sys.exit(0) if s.connect_ex(('127.0.0.1',8766))==0 else sys.exit(1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
   watchtower:
     # Version-pinned (issue #36): Watchtower holds the Docker socket
     # (root-equivalent on the host), so it must not itself float on :latest.

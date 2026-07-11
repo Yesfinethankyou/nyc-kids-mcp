@@ -2,6 +2,67 @@
 
 ## What was done (most recent first)
 
+### Session: tailnet dashboard BUILT (branch `claude/ui-feature-planning-build-3w0aup`)
+
+Implemented DASHBOARD-PLAN.md as designed — the plan's prerequisite
+(`ingest_runs`, issue #65) had already shipped, so v1 rides the telemetry
+table, not `MAX(last_seen)` inference alone. Full suite green, ruff clean.
+
+- **New `src/nyc_events/dashboard.py`** — own Starlette app +
+  `python -m nyc_events.dashboard` entry point (uvicorn on
+  `config.DASHBOARD_PORT`, default 8766). Routes, all GET-only: `/` (per-
+  source health table + catalog strip, `meta refresh` 300s — plan decision 3
+  taken), `/events` (filter form mapping 1:1 onto `db.search` kwargs,
+  bookmarkable GET params, limit default 50 / cap 200), `/event/{id}`
+  (full record + collapsible raw payload), `/healthz`. Stdlib f-string
+  templating with `html.escape` on every interpolated value; no JS, no CDN
+  assets. Imports `db` + `config` + the sources registry ONLY (never
+  `auth`/`tools`); catches `sqlite3.OperationalError` → friendly
+  "no database yet" page instead of a 500. Small duplications accepted by
+  design (local `_venue_map_url`, `_local_date`) — the import rule wins.
+- **`db.py` additions**: `connect_events_ro` (`mode=ro` URI, no DDL —
+  read-only enforced at the connection; per the WAL gotcha the mount stays
+  rw), `source_health(conn, now, registered)` (union of ENABLED_SOURCES ids —
+  passed in, so db.py stays sources-agnostic — and sources present in the DB;
+  a registered zero-row source still appears = the "scraper broke" signal;
+  joins the latest `ingest_runs` row per source), `catalog_stats`. The 30h
+  grace constant moved to its single home `db.MISSING_GRACE_HOURS`;
+  `tools._MISSING_GRACE_HOURS` now reads it from there (tools behavior
+  unchanged).
+- **`config.DASHBOARD_PORT`** (env `DASHBOARD_PORT`, default 8766).
+- **Deploy**: `nyc-events-dashboard` compose service (same image, second
+  process; **no `env_file`** — never sees `MCP_AUTH_TOKEN`; binds
+  `127.0.0.1:8766`; Watchtower label + TCP healthcheck) + dev-override
+  build/uid entry. README § "Tailnet dashboard": `tailscale serve --bg
+  --https=8766 http://127.0.0.1:8766`, **never funnel 8766**, env-table row.
+- **Tests**: `tests/test_dashboard.py` (TestClient: every enabled source
+  renders, filters thread through, bad date/age/limit → 400 page, unknown id
+  → 404, XSS canary event renders escaped-only on listing + detail, GET-only
+  route assertion, POST → 405, missing-DB friendly page) and `test_db.py`
+  additions (`source_health` counts/zero-row/unregistered/latest-run join/
+  aware-now guard, `catalog_stats`, ro-connection write raises).
+- **Docs**: DASHBOARD-PLAN.md marked IMPLEMENTED (kept as design rationale);
+  CLAUDE.md Commands + Layout entry (with the import rule) + test-architecture
+  line + out-of-scope bullet flipped to "shipped narrow exception".
+- **Host actions remaining for the operator** (not repo code): `docker
+  compose up -d` to start the new service, run the `tailscale serve` command
+  on the NAS, optionally verify `tailscale funnel status` still lists only
+  8765.
+- **Security-review hardening (same session, follow-up commit)** after a
+  branch-diff security pass: (1) scraped event `url`s are now scheme-gated
+  (`_safe_url`) before rendering as anchors — a `javascript:`/`data:` URL
+  from a compromised feed renders as text, never a clickable link; (2) every
+  page now sends the same security-header set as the consent page
+  (CSP `default-src 'none'` + `style-src 'unsafe-inline'` +
+  `form-action 'self'`, `X-Frame-Options: DENY`, nosniff,
+  `Referrer-Policy: no-referrer` — the last also stops the private
+  `*.ts.net` hostname leaking to venue sites via Referer), and external
+  anchors carry `rel='noopener noreferrer'`; (3) the missing-DB
+  `OperationalError` catch narrowed to the two real absent-DB messages so
+  other DB failures raise instead of rendering as "no database yet".
+  3 new tests (scheme-smuggling canary, headers on every page type,
+  unrelated-error re-raise). 556 → 559 passed, ruff clean.
+
 ### Session: issue-label taxonomy + source-backlog candidate (branch `claude/code-review-bugs-3zzddi`, new PR — the prior PR on this branch, #71, had already merged)
 
 Docs-only, no application code changed. Three commits, rebased onto fresh
