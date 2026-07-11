@@ -607,6 +607,38 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
   Park-Slope-based venue, not part of the park itself. Treat these as two
   distinct candidates; don't conflate their venues/neighborhoods if both get built.
 
+### Brooklyn Bridge Parents — brooklynbridgeparents.com
+
+- **Status:** CANDIDATE — proposed 2026-07-07, unprobed (single homepage
+  fetch only; no endpoint/platform probe run yet).
+- **Not to be confused with** the "Brooklyn Bridge Park" entry above
+  (`brooklynbridgepark.org`) — that's the physical waterfront park's own
+  event calendar; this is a separate Brooklyn-focused parenting magazine/
+  directory site, closer in kind to the New York Family entry below than
+  to a single-venue source.
+- **Why:** Brooklyn-focused family content site with a dedicated events
+  section, school guides, and camps/after-school listings. Brooklyn-only
+  scope would sidestep New York Family's regional (Long Island-bleeding)
+  geo-filter problem, if the feed holds up.
+- **Site type:** WordPress (`/wp-content/` paths visible on fetch); a
+  hybrid blog + events calendar + local-business directory ("CONNECT").
+  Not a single-purpose event calendar — most of the site is unrelated
+  content (restaurants, real estate, school guides), so whatever feed
+  probing finds will need real filtering, not a bare pass-through.
+- **URLs to probe:** `https://brooklynbridgeparents.com/events/` (the
+  events listing). Check for a Tribe Events Calendar REST endpoint first
+  (`/wp-json/tribe/events/v1/events`) — five sources already built on that
+  plugin, worth ruling in/out before assuming a custom scrape is needed.
+- **Caution — user-submitted events:** the site has a public
+  `/post-an-event/` submission form and an `/event-dashboard/` — events
+  look user/business-submitted, not editorially curated like Mommy
+  Poppins/BPL. Expect more promotional noise and inconsistent quality than
+  the curated sources; may need a stricter filter than the "inclusive +
+  blocklist" sources use.
+- **Next step:** `source-verifier` — confirm the Tribe endpoint (or
+  identify the real platform if it's not Tribe), sample real event rows,
+  and assess submission-noise levels before committing to `source-adder`.
+
 ### NYC public libraries — system map (read before building any of the four below)
 
 NYC has **three** public-library systems, not five:

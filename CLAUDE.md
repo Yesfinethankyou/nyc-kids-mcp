@@ -41,7 +41,55 @@ it BEFORE opening a PR.** This is enforced: a PreToolUse hook
 been touched for the current branch (dirty, changed vs `origin/main`, or in the
 latest commit). Update the handoff first and the PR proceeds.
 
-## Doc hygiene (2026-07-07 review)
+## Issue labeling (2026-07-07)
+
+Every issue gets exactly one label from **Type** and one from **Priority**;
+**Status** and **Area** are optional/supplementary. Apply all of these via
+`issue_write`'s `labels` array (it silently creates a label if the name
+doesn't already exist — see the tool-gap note below — so a typo'd label name
+won't error, it'll just create a stray one; double-check spelling).
+
+- **Type** (`type:`, pick one): `bug` (code does something other than
+  intended), `data-quality` (code runs as designed but the data it produces
+  is wrong/misleading — bad tags, wrong borough, dropped upstream detail;
+  this repo's largest issue class), `security` (auth/OAuth/rate-limiting/
+  injection/secrets — always gets extra review regardless of priority),
+  `enhancement` (new capability, or a deliberate improvement to something
+  that already works correctly), `chore` (refactor, dependency bump,
+  doc-only, housekeeping — no user-facing behavior change).
+- **Priority** (`priority:`, pick one): `P0` (incorrect output/crash/
+  corruption in normal operation), `P1` (incorrect behavior in common edge
+  cases), `P2` (incorrect behavior in rare edge cases), `P3` (minor/cosmetic).
+  This is the label — **don't also embed `[P0]` etc. in the issue title**;
+  the title-bracket convention predates the label existing for every tier
+  and is now redundant (and driftable).
+- **Status** (`status:`, open issues only — closed issues use GitHub's
+  `state_reason`, not a label): `triage` (not yet verified/reproduced),
+  `ready` (verified, scoped, safe to start without re-deriving context),
+  `in-progress` (pair with a linked PR), `blocked` (external dependency —
+  **always leave a comment explaining what unblocks it**, e.g. issue #41).
+- **Area** (`area:`, multi-select, 1–2 typical): `auth` (`auth.py`/
+  `oauth.py`/`users.py` — the do-not-regress surface), `sources` (any
+  scraper module), `db` (`db.py`, schema, migrations, FTS), `ingest`
+  (`ingest.py`/`enrich.py`, missing-detection, telemetry), `tools`
+  (`tools.py`, the MCP surface/projections), `infra` (Dockerfile, compose,
+  CI). Flags "review this more carefully" (`area:auth`) beyond what priority
+  alone captures.
+
+**Provenance stays in the issue body, not a label**: "Finding from X review
+(date)" + the session URL is already a consistent convention across this
+repo's issues — searchable text, no taxonomy needed for it.
+
+**Tool-gap note**: the GitHub MCP server available in this environment has no
+label create/update/delete endpoint — only `get_label` (read) and
+`issue_write`'s `labels` field, which *does* auto-create an unrecognized
+label name but only with a flat default color (`#ededed`) and empty
+description. There's no way to set color/description via these tools; that
+has to be done once, by hand, in the repo's Settings → Labels UI. Colors are
+cosmetic only — the taxonomy is fully functional (filterable, searchable)
+without them.
+
+
 
 One home per fact class; prose that duplicates code drifts (a stale CLAUDE.md
 claim is worse than none — agents trust it completely):
