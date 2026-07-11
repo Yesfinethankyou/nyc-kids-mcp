@@ -48,6 +48,20 @@ table, not `MAX(last_seen)` inference alone. Full suite green, ruff clean.
   compose up -d` to start the new service, run the `tailscale serve` command
   on the NAS, optionally verify `tailscale funnel status` still lists only
   8765.
+- **Security-review hardening (same session, follow-up commit)** after a
+  branch-diff security pass: (1) scraped event `url`s are now scheme-gated
+  (`_safe_url`) before rendering as anchors — a `javascript:`/`data:` URL
+  from a compromised feed renders as text, never a clickable link; (2) every
+  page now sends the same security-header set as the consent page
+  (CSP `default-src 'none'` + `style-src 'unsafe-inline'` +
+  `form-action 'self'`, `X-Frame-Options: DENY`, nosniff,
+  `Referrer-Policy: no-referrer` — the last also stops the private
+  `*.ts.net` hostname leaking to venue sites via Referer), and external
+  anchors carry `rel='noopener noreferrer'`; (3) the missing-DB
+  `OperationalError` catch narrowed to the two real absent-DB messages so
+  other DB failures raise instead of rendering as "no database yet".
+  3 new tests (scheme-smuggling canary, headers on every page type,
+  unrelated-error re-raise). 556 → 559 passed, ruff clean.
 
 ### Session: issue-label taxonomy + source-backlog candidate (branch `claude/code-review-bugs-3zzddi`, new PR — the prior PR on this branch, #71, had already merged)
 

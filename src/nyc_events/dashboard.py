@@ -81,11 +81,39 @@ dd { margin-left: 0; }
 """
 
 
+# Same header set as the consent page in auth.py: event fields are scraped
+# from the public web, so the CSP is defense-in-depth against any escaping
+# slip (script-src 'none' via default-src also blocks javascript: navigation),
+# and Referrer-Policy stops the private *.ts.net dashboard hostname leaking
+# to venue sites when someone clicks an event link.
+_SECURITY_HEADERS = {
+    "X-Frame-Options": "DENY",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "Content-Security-Policy": (
+        "default-src 'none'; "
+        "style-src 'unsafe-inline'; "  # inline <style> in the template
+        "form-action 'self'; "
+        "base-uri 'none'; "
+        "frame-ancestors 'none'"
+    ),
+}
+
+
 def _esc(value: object) -> str:
     """Escape any value for HTML interpolation; None renders as an em dash."""
     if value is None:
         return "<span class='muted'>—</span>"
     return html.escape(str(value))
+
+
+def _safe_url(url: str | None) -> str | None:
+    """Gate a scraped URL before rendering it as an anchor: html.escape stops
+    attribute breakout but not a javascript:/data: scheme, which would execute
+    on click. Anything that isn't plain http(s) renders as text, not a link."""
+    if url and url.lower().startswith(("https://", "http://")):
+        return url
+    return None
 
 
 def _page(title: str, body: str, *, status: int = 200, refresh: int | None = None) -> HTMLResponse:
@@ -99,7 +127,15 @@ def _page(title: str, body: str, *, status: int = 200, refresh: int | None = Non
         '<nav><a href="/">Health</a><a href="/events">Browse events</a></nav>'
         f"{body}</body></html>"
     )
-    return HTMLResponse(doc, status_code=status)
+    return HTMLResponse(doc, status_code=status, headers=_SECURITY_HEADERS)
+
+
+def _is_missing_db(exc: sqlite3.OperationalError) -> bool:
+    """True for the two errors a mode=ro open of an absent/uninitialized DB
+    produces. Anything else re-raises — mislabeling a real query failure as
+    "no database yet" would hide it."""
+    msg = str(exc).lower()
+    return "unable to open database file" in msg or "no such table" in msg
 
 
 def _no_db_page() -> HTMLResponse:
@@ -190,7 +226,9 @@ async def health_page(_: Request) -> HTMLResponse:
         with db.connect_events_ro(config.DB_PATH) as conn:
             rows = db.source_health(conn, now, registered)
             stats = db.catalog_stats(conn, now)
-    except sqlite3.OperationalError:
+    except sqlite3.OperationalError as exc:
+        if not _is_missing_db(exc):
+            raise
         return _no_db_page()
 
     try:
@@ -354,7 +392,9 @@ async def events_page(request: Request) -> HTMLResponse:
         with db.connect_events_ro(config.DB_PATH) as conn:
             facets = db.list_facets(conn)
             events = db.search(conn, **kwargs)
-    except sqlite3.OperationalError:
+    except sqlite3.OperationalError as exc:
+        if not _is_missing_db(exc):
+            raise
         return _no_db_page()
 
     trs = []
@@ -365,11 +405,20 @@ async def events_page(request: Request) -> HTMLResponse:
         if _possibly_cancelled(ev.missing_since, now):
             flags.append("possibly cancelled")
         links = []
-        if ev.url:
-            links.append(f"<a href='{html.escape(ev.url, quote=True)}'>event</a>")
+        safe_url = _safe_url(ev.url)
+        if safe_url:
+            links.append(
+                f"<a href='{html.escape(safe_url, quote=True)}'"
+                " rel='noopener noreferrer'>event</a>"
+            )
+        elif ev.url:
+            links.append(_esc(ev.url))  # non-http(s) scheme: show, don't link
         map_url = _venue_map_url(ev.venue_name, ev.borough.value if ev.borough else None)
         if map_url:
-            links.append(f"<a href='{html.escape(map_url, quote=True)}'>map</a>")
+            links.append(
+                f"<a href='{html.escape(map_url, quote=True)}'"
+                " rel='noopener noreferrer'>map</a>"
+            )
         trs.append(
             "<tr>"
             f"<td>{_esc(ev.start_dt.astimezone(NYC_TZ).strftime('%Y-%m-%d %H:%M'))}</td>"
@@ -403,7 +452,9 @@ async def event_detail_page(request: Request) -> HTMLResponse:
     try:
         with db.connect_events_ro(config.DB_PATH) as conn:
             ev = db.get_event_by_id(conn, event_id)
-    except sqlite3.OperationalError:
+    except sqlite3.OperationalError as exc:
+        if not _is_missing_db(exc):
+            raise
         return _no_db_page()
     if ev is None:
         return _page(
@@ -413,6 +464,7 @@ async def event_detail_page(request: Request) -> HTMLResponse:
             status=404,
         )
     map_url = _venue_map_url(ev.venue_name, ev.borough.value if ev.borough else None)
+    safe_url = _safe_url(ev.url)
     raw = None
     if ev.raw_payload:
         try:
@@ -444,13 +496,15 @@ async def event_detail_page(request: Request) -> HTMLResponse:
         ("Tags", _esc(", ".join(ev.tags) or None)),
         (
             "URL",
-            f"<a href='{html.escape(ev.url, quote=True)}'>{_esc(ev.url)}</a>"
-            if ev.url
-            else _esc(None),
+            f"<a href='{html.escape(safe_url, quote=True)}'"
+            f" rel='noopener noreferrer'>{_esc(safe_url)}</a>"
+            if safe_url
+            else _esc(ev.url),  # non-http(s) scheme renders as text, not a link
         ),
         (
             "Map",
-            f"<a href='{html.escape(map_url, quote=True)}'>{_esc(map_url)}</a>"
+            f"<a href='{html.escape(map_url, quote=True)}'"
+            f" rel='noopener noreferrer'>{_esc(map_url)}</a>"
             if map_url
             else _esc(None),
         ),

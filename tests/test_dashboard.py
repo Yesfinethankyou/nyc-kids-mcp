@@ -9,6 +9,7 @@ fields, the GET-only contract, and the missing-DB friendly page.
 
 from __future__ import annotations
 
+import sqlite3
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -73,6 +74,13 @@ def client(tmp_path, monkeypatch):
                     title="Permit Row",
                     description=None,
                     url=None,
+                ),
+                # scheme-smuggling canary: html.escape alone wouldn't stop
+                # this executing on click if it were rendered as an anchor
+                _ev(
+                    external_id="evil-url",
+                    title="Scheme Smuggler",
+                    url="javascript:alert(1)",
                 ),
             ],
         )
@@ -187,6 +195,27 @@ def test_event_detail_unknown_id_404(client):
 # --- XSS guard ---------------------------------------------------------------
 
 
+def test_non_http_url_schemes_are_never_rendered_as_links(client):
+    listing = client.get("/events")
+    assert "href='javascript:" not in listing.text
+    assert "Scheme Smuggler" in listing.text  # row still renders, url as text
+
+    event_id = compute_id("testsrc", external_id="evil-url")
+    detail = client.get(f"/event/{event_id}")
+    assert "href='javascript:" not in detail.text
+    assert "javascript:alert(1)" in detail.text  # visible as text, unlinked
+
+
+def test_security_headers_on_every_page(client):
+    event_id = compute_id("testsrc", external_id="e2")
+    for url in ("/", "/events", f"/event/{event_id}", "/events?start_date=junk"):
+        resp = client.get(url)
+        assert resp.headers["X-Frame-Options"] == "DENY", url
+        assert resp.headers["X-Content-Type-Options"] == "nosniff", url
+        assert resp.headers["Referrer-Policy"] == "no-referrer", url
+        assert "default-src 'none'" in resp.headers["Content-Security-Policy"], url
+
+
 def test_scraped_fields_are_escaped_on_listing_and_detail(client):
     listing = client.get("/events")
     assert XSS not in listing.text
@@ -222,3 +251,12 @@ def test_missing_db_renders_friendly_page(tmp_path, monkeypatch):
         resp = client.get(url)
         assert resp.status_code == 200, url
         assert "No database yet" in resp.text
+
+
+def test_unrelated_operational_error_is_not_mislabeled_as_missing_db(client, monkeypatch):
+    def boom(*args, **kwargs):
+        raise sqlite3.OperationalError("disk I/O error")
+
+    monkeypatch.setattr(db, "source_health", boom)
+    with pytest.raises(sqlite3.OperationalError):
+        client.get("/")
