@@ -2,6 +2,34 @@
 
 ## What was done (most recent first)
 
+### Session: dashboard browse-page UI improvements (branch `claude/ui-search-improvements-ej30h6`)
+
+Maintainer asked for aesthetic + functional improvements to the `/events`
+browse page, explicitly directed at a "craigslist minimal" look. All changes
+contained in `dashboard.py` + `test_dashboard.py`; no db/tools/auth changes.
+Verified end-to-end against a seeded fake DB (seed_fake + live server +
+headless Chromium screenshots). Suite 582 green (5 new tests), ruff clean.
+
+- **Restyle (CSS only, still no JS — the CSP has no script-src and that's
+  deliberate):** default underlined blue/purple links, hairline
+  `border-bottom` row separators instead of full cell borders, no gray form
+  box, Arial. The two non-decorative additions: sticky `th` and subtle zebra
+  striping (`tr:nth-child(even)` — the header row is child 1, so data rows
+  stripe correctly; the `.ok/.warn/.bad` td backgrounds still win over the
+  tr-level stripe). Date column `td.when { white-space: nowrap }`.
+- **Neighborhood `<datalist>` autocomplete** from `facets["neighborhoods"]`
+  (already fetched per-render, previously unused).
+- **Date-preset links** (today / this weekend / next 7 days) that carry the
+  active non-date filters (`_CARRY_PARAMS`). Weekend math mirrors
+  `tools._weekend_window` (duplicated, not imported — the import rule wins,
+  same precedent as `_venue_map_url`).
+- **"limit reached — more may match" hint** when `len(events) == limit`;
+  **reset link** next to the Filter button; **truncated-description tooltip**
+  (`title` attr, escaped) on each row's title link.
+- Declined by design: tag filter (needs a `db.search` kwarg — noted as a
+  possible follow-up), sortable columns/pagination, match highlighting,
+  dark mode, pill badges (maintainer wants craigslist-plain).
+
 ### Session: New York Family source verified AND BUILT (branch `claude/backlog-sources-review-22f37d`)
 
 Backlog review session; maintainer picked **New York Family

@@ -30,7 +30,7 @@ import json
 import os
 import sqlite3
 from datetime import UTC, date, datetime, time, timedelta
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlencode
 from zoneinfo import ZoneInfo
 
 import uvicorn
@@ -56,13 +56,22 @@ _STALE_BAD_HOURS = 54
 _DEFAULT_LIMIT = 50
 _MAX_LIMIT = 200
 
+# Deliberately craigslist-plain: default underlined blue/purple links, no
+# boxes or badges, horizontal rules instead of cell borders. The only
+# "modern" touches are load-bearing, not decorative: a sticky header row and
+# subtle zebra striping so a 200-row table stays scannable.
 _STYLE = """
-body { font-family: system-ui, sans-serif; margin: 1.5rem; color: #1a1a1a; }
-h1 { font-size: 1.3rem; } h2 { font-size: 1.1rem; }
+body { font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem;
+       margin: 1.25rem; color: #222; background: #fff; }
+h1 { font-size: 1.15rem; } h2 { font-size: 1rem; }
 table { border-collapse: collapse; font-size: 0.85rem; }
-th, td { border: 1px solid #ccc; padding: 0.3rem 0.5rem; text-align: left;
+th, td { border: 0; border-bottom: 1px solid #e6e6e6;
+         padding: 0.25rem 0.9rem 0.25rem 0; text-align: left;
          vertical-align: top; }
-th { background: #f0f0f0; }
+th { position: sticky; top: 0; background: #fff;
+     border-bottom: 1px solid #888; }
+tr:nth-child(even) { background: #f7f7f7; }
+td.when { white-space: nowrap; }
 .ok { background: #e6f4e6; }
 .warn { background: #fff3cd; }
 .bad { background: #f8d7da; }
@@ -70,10 +79,9 @@ th { background: #f0f0f0; }
 .strip { margin: 0.75rem 0; }
 .strip span { display: inline-block; margin-right: 1.25rem; }
 .strip b { font-size: 1.05rem; }
-form.filters { margin: 0.75rem 0; padding: 0.6rem; background: #f7f7f7;
-               border: 1px solid #ddd; max-width: 60rem; }
-form.filters label { display: inline-block; margin: 0.15rem 0.9rem 0.15rem 0;
-                     font-size: 0.85rem; }
+form.filters { margin: 0.75rem 0; }
+form.filters label { display: inline-block; margin: 0.15rem 0.9rem 0.15rem 0; }
+.presets { margin: 0.25rem 0 0.5rem; }
 .error { color: #a00; font-weight: bold; }
 nav a { margin-right: 1rem; }
 dt { font-weight: bold; margin-top: 0.5rem; }
@@ -345,6 +353,36 @@ def _options(values: list[str], selected: str) -> str:
     return "".join(opts)
 
 
+# Non-date filter params carried into the preset links, so "this weekend"
+# narrows the current filter set instead of resetting it.
+_CARRY_PARAMS = (
+    "q", "borough", "neighborhood", "source", "age",
+    "free_only", "exclude_low_confidence", "limit",
+)
+
+
+def _preset_links(params) -> str:
+    """Quick date-window links. Weekend math mirrors tools._weekend_window
+    (not imported — see the module-docstring import rule): the current or
+    upcoming Sat–Sun, starting today if today already is the weekend."""
+    keep = [(k, v) for k in _CARRY_PARAMS if (v := (params.get(k) or "").strip())]
+    today = datetime.now(NYC_TZ).date()
+    sunday = today + timedelta(days=(6 - today.weekday()) % 7)
+    saturday = max(today, sunday - timedelta(days=1))
+    presets = [
+        ("today", today, today),
+        ("this weekend", saturday, sunday),
+        ("next 7 days", today, today + timedelta(days=7)),
+    ]
+    links = []
+    for label, start, end in presets:
+        qs = urlencode(
+            keep + [("start_date", start.isoformat()), ("end_date", end.isoformat())]
+        )
+        links.append(f"<a href='/events?{html.escape(qs, quote=True)}'>{label}</a>")
+    return f"<p class='presets'>{' · '.join(links)}</p>"
+
+
 def _browse_form(params, facets: dict[str, list[str]]) -> str:
     def val(key: str) -> str:
         return html.escape(params.get(key) or "", quote=True)
@@ -359,13 +397,18 @@ def _browse_form(params, facets: dict[str, list[str]]) -> str:
     )
     borough_opts = _options(facets["boroughs"], params.get("borough") or "")
     source_opts = _options(facets["sources"], params.get("source") or "")
+    nbhd_opts = "".join(
+        f"<option value='{html.escape(v, quote=True)}'>"
+        for v in facets["neighborhoods"]
+    )
     xlc = checked("exclude_low_confidence")
     return (
         "<form class='filters' method='get' action='/events'>"
         f"<label>Text <input name='q' value='{val('q')}'></label>"
         f"<label>Borough <select name='borough'>{borough_opts}</select></label>"
         "<label>Neighborhood <input name='neighborhood' size='14'"
-        f" value='{val('neighborhood')}'></label>"
+        f" list='nbhd-list' value='{val('neighborhood')}'></label>"
+        f"<datalist id='nbhd-list'>{nbhd_opts}</datalist>"
         f"<label>Source <select name='source'>{source_opts}</select></label>"
         f"<label>Age <input name='age' size='3' value='{val('age')}'></label>"
         "<label>From <input name='start_date' type='date'"
@@ -376,7 +419,8 @@ def _browse_form(params, facets: dict[str, list[str]]) -> str:
         "<label><input type='checkbox' name='exclude_low_confidence' value='1'"
         f"{xlc}> hide low-confidence</label>"
         f"<label>Limit <select name='limit'>{limit_opts}</select></label>"
-        "<button type='submit'>Filter</button>"
+        "<button type='submit'>Filter</button> "
+        "<a href='/events'>reset</a>"
         "</form>"
     )
 
@@ -419,10 +463,15 @@ async def events_page(request: Request) -> HTMLResponse:
                 f"<a href='{html.escape(map_url, quote=True)}'"
                 " rel='noopener noreferrer'>map</a>"
             )
+        # Truncated description as a hover tooltip — a peek without a click
+        # through to the detail page. Scraped text, so escaped like the rest.
+        desc = (ev.description or "").strip()
+        tip = f" title='{html.escape(desc[:200], quote=True)}'" if desc else ""
+        when = ev.start_dt.astimezone(NYC_TZ).strftime("%Y-%m-%d %H:%M")
         trs.append(
             "<tr>"
-            f"<td>{_esc(ev.start_dt.astimezone(NYC_TZ).strftime('%Y-%m-%d %H:%M'))}</td>"
-            f"<td><a href='/event/{html.escape(ev.id, quote=True)}'>{_esc(ev.title)}</a></td>"
+            f"<td class='when'>{_esc(when)}</td>"
+            f"<td><a href='/event/{html.escape(ev.id, quote=True)}'{tip}>{_esc(ev.title)}</a></td>"
             f"<td>{_esc(ev.venue_name)}</td>"
             f"<td>{_esc(ev.neighborhood)}</td>"
             f"<td>{_esc(ev.borough.value if ev.borough else None)}</td>"
@@ -439,10 +488,15 @@ async def events_page(request: Request) -> HTMLResponse:
         if events
         else "<p class='muted'>No events match.</p>"
     )
+    # At exactly `limit` rows the count is ambiguous — say so rather than
+    # letting "50 result(s)" read as "50 matches total".
+    count = f"{len(events)} result(s)"
+    if len(events) == kwargs["limit"]:
+        count += " (limit reached — more may match)"
     return _page(
         "nyc-events — browse",
-        f"<h1>Browse events</h1>{_browse_form(params, facets)}"
-        f"<p class='muted'>{len(events)} result(s)</p>{table}",
+        f"<h1>Browse events</h1>{_browse_form(params, facets)}{_preset_links(params)}"
+        f"<p class='muted'>{count}</p>{table}",
     )
 
 
