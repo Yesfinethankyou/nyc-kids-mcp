@@ -1,0 +1,1605 @@
+{
+ "events": [
+  {
+   "id": 851611,
+   "global_id": "events.newyorkfamily.com?id=851611",
+   "global_id_lineage": [
+    "events.newyorkfamily.com?id=851611"
+   ],
+   "author": "27",
+   "status": "publish",
+   "date": "2026-05-21 06:13:37",
+   "date_utc": "2026-05-21 10:13:37",
+   "modified": "2026-05-21 06:13:37",
+   "modified_utc": "2026-05-21 10:13:37",
+   "url": "https://events.newyorkfamily.com/event/free-canoeing-on-the-gowanus-canal/",
+   "rest_url": "https://events.newyorkfamily.com/wp-json/tribe/events/v1/events/851611",
+   "title": "Free Canoeing on the Gowanus Canal",
+   "description": "<div class=\"StructuredModuleRenderer_structuredContent__k7mNB StructuredModuleRenderer_text__GaXOv\" data-testid=\"text-content\">\n<div>\n<p>Join the Gowanus Dredgers for free, self-guided canoe trips on the Gowanus Canal. No experience required! Hop into a Gowanus Dredgers canoe and paddle at your own pace inside the protected Gowanus Canal. Enjoy discovering the canal’s unique mix of wildlife and urban waterway infrastructure, practice your paddling skills, or take a guided audio tour and learn more about the history, cleanup and revitalization of our favorite urban waterway.</p>\n<p>You&#8217;ll be outfitted with a life jacket (which must be worn at all times) and paddle, and receive some basic instruction on how to paddle and safety tips on how to use a canoe, and help you set off on your own self-guided journey. Trips may be limited to 20 minutes if there’s a crowd — but usually they just expect you to return to the dock 15 min. prior to closing.</p>\n</div>\n</div>\n<div class=\"StructuredModuleRenderer_structuredContent__k7mNB StructuredModuleRenderer_text__GaXOv\" data-testid=\"text-content\">\n<p>Free walk-up canoeing is open to all ages. Groups, families, solo paddlers, and intrepid first dates are all welcome! Minors require a guardian&#8217;s signature to participate, and all participants must sign a waiver</p>\n<p>Dress for the weather: wear sunscreen, hats, and bring a water bottle — and bring layers if there&#8217;s a breeze! Close-toed shoes are recommended, and wear clothing you don’t mind potentially being splashed.</p>\n<p>See website for complete schedule.</p>\n</div>",
+   "excerpt": "",
+   "slug": "free-canoeing-on-the-gowanus-canal",
+   "image": {
+    "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51",
+    "id": 73200,
+    "extension": "jpg",
+    "width": 2000,
+    "height": 1639,
+    "filesize": 68803,
+    "sizes": {
+     "thumbnail": {
+      "width": 192,
+      "height": 192,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=192&h=192&crop=1"
+     },
+     "medium": {
+      "width": 700,
+      "height": 574,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=700"
+     },
+     "medium_large": {
+      "width": 768,
+      "height": 629,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=768"
+     },
+     "large": {
+      "width": 1200,
+      "height": 983,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=1200"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1259,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=1536"
+     },
+     "thumbnail-double": {
+      "width": 384,
+      "height": 315,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=384"
+     },
+     "splash": {
+      "width": 900,
+      "height": 738,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=900"
+     },
+     "huge": {
+      "width": 1600,
+      "height": 1311,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=1600"
+     },
+     "concierge-thumb": {
+      "width": 50,
+      "height": 41,
+      "mime-type": "image/jpeg",
+      "filesize": 68803,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-outdoors.jpg?quality=51&w=50"
+     }
+    }
+   },
+   "all_day": true,
+   "start_date": "2026-07-18 00:00:00",
+   "end_date": "2026-07-18 23:59:59",
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Free",
+   "website": "https://www.eventbrite.com/e/free-canoeing-on-the-gowanus-canal-tickets-1988124753657",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    "Family",
+    "Free",
+    "Outdoors",
+    "Sports"
+   ],
+   "tags": [
+    "Brooklyn",
+    "Gowanus",
+    "New York Metro Area",
+    "NYC"
+   ],
+   "venue": {
+    "id": 383104,
+    "status": "publish",
+    "date": "2023-06-05 12:03:21",
+    "date_utc": "2023-06-05 16:03:21",
+    "modified": "2023-06-05 12:03:21",
+    "modified_utc": "2023-06-05 16:03:21",
+    "url": "https://events.newyorkfamily.com/venue/gowanus-dredgers-canoe-club-boathouse/",
+    "venue": "Gowanus Dredgers Canoe Club Boathouse",
+    "slug": "gowanus-dredgers-canoe-club-boathouse",
+    "address": "165 2nd Street",
+    "city": "Brooklyn",
+    "country": "United States",
+    "state": "NY",
+    "zip": "11231",
+    "website": "http://www.gowanuscanal.org",
+    "stateprovince": "NY",
+    "geo_lat": 40.6771323,
+    "geo_lng": -73.9901435,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "events.newyorkfamily.com?id=383104",
+    "global_id_lineage": [
+     "events.newyorkfamily.com?id=383104"
+    ]
+   },
+   "organizer": [],
+   "communities": [
+    "Brooklyn",
+    "Gowanus",
+    "New York Metro Area",
+    "NYC"
+   ],
+   "recurrence_description": "<span class=\"recurrence-desc\"><span class=\"timegroup weeklyish\"><span class=\"timegroup-single\"><span class=\"dows\"><span class=\"datespan\">Saturdays and Sundays<span class=\"punct\">,</span> </span><span class=\"timespan\">various<span class=\"punct\">,</span> </span></span><span class=\"overallspan\">through Oct. 18<span class=\"punct\">;</span> </span></span></span></span>",
+   "recurrence": {
+    "rules": [
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "7",
+         "6"
+        ]
+       },
+       "same-time": "yes",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-10-18",
+      "EventStartDate": "2026-05-23 00:00:00",
+      "EventEndDate": "2026-05-23 23:59:59"
+     }
+    ],
+    "exclusions": [],
+    "description": null
+   },
+   "_ecp_custom_2": [
+    ""
+   ],
+   "_ecp_custom_3": [
+    "Gowanus"
+   ],
+   "_ecp_custom_5": [
+    "Brooklyn"
+   ],
+   "debug": 1
+  },
+  {
+   "id": 830753,
+   "global_id": "events.newyorkfamily.com?id=830753",
+   "global_id_lineage": [
+    "events.newyorkfamily.com?id=830753"
+   ],
+   "author": "43",
+   "status": "publish",
+   "date": "2026-03-09 05:21:14",
+   "date_utc": "2026-03-09 09:21:14",
+   "modified": "2026-03-09 05:21:14",
+   "modified_utc": "2026-03-09 09:21:14",
+   "url": "https://events.newyorkfamily.com/event/the-museum-of-modern-art-presents-frida-and-diego-the-last-dream/",
+   "rest_url": "https://events.newyorkfamily.com/wp-json/tribe/events/v1/events/830753",
+   "title": "The Museum of Modern Art Presents Frida and Diego: The Last Dream",
+   "description": "<p>The Museum of Modern Art announces an art exhibition, <em>Frida and Diego: The Last Dream.</em></p>\n<p><em>Frida and Diego: The Last Dream</em> celebrates Frida Kahlo and Diego Rivera—two of Mexico&#8217;s most beloved icons of 20th-century art—in a first-of-its-kind collaboration with the Metropolitan Opera. Presented in conjunction with the Met&#8217;s new production of <em>El Último Sueño de Frida y Diego</em> (May 14–June 5, 2026), composed by Gabriela Lena Frank with a libretto by Nilo Cruz, the exhibition features artworks by Kahlo and Rivera in an elaborate installation designed by Jon Bausor, the set and co-costume designer of the opera. For both the opera and exhibition, Bausor weaves visual references from the artists&#8217; lives and artworks into his theatrical designs.</p>\n<p>Key participants in a movement to redefine Mexican culture and identity after the revolution of 1910–20—Rivera through monumental murals and Kahlo through intimate self-portraits—the artists were romantically involved from 1928 until Kahlo&#8217;s death in 1954. The fictional narrative of <em>El Último Sueño de Frida y Diego</em> begins three years after Kahlo&#8217;s death and follows an aging Rivera as he summons the deceased Kahlo back to life on the Day of the Dead, a Mexican holiday honoring passed loved ones. As the opera and exhibition design attest, the pair continue to have an enduring influence on artists across the visual and performing arts.</p>",
+   "excerpt": "",
+   "slug": "the-museum-of-modern-art-presents-frida-and-diego-the-last-dream",
+   "image": {
+    "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51",
+    "id": 61147,
+    "extension": "jpg",
+    "width": 2000,
+    "height": 1615,
+    "filesize": 69004,
+    "sizes": {
+     "thumbnail": {
+      "width": 192,
+      "height": 192,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=192&h=192&crop=1"
+     },
+     "medium": {
+      "width": 700,
+      "height": 565,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=700"
+     },
+     "medium_large": {
+      "width": 768,
+      "height": 620,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=768"
+     },
+     "large": {
+      "width": 1200,
+      "height": 969,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=1200"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1240,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=1536"
+     },
+     "thumbnail-double": {
+      "width": 384,
+      "height": 310,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=384"
+     },
+     "splash": {
+      "width": 900,
+      "height": 727,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=900"
+     },
+     "huge": {
+      "width": 1600,
+      "height": 1292,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=1600"
+     },
+     "concierge-thumb": {
+      "width": 50,
+      "height": 40,
+      "mime-type": "image/jpeg",
+      "filesize": 69004,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/ny-parenting-liberty-logo-family-brandcolors-placeholder-1.jpg?quality=51&w=50"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-18 10:30:00",
+   "end_date": "2026-07-18 17:30:00",
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Included with admission: $17-$30; free for ages 16 and younger",
+   "website": "https://www.moma.org/calendar/exhibitions/5882",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    "Art",
+    "Family"
+   ],
+   "tags": [
+    "Hudson Yards",
+    "Manhattan",
+    "New York",
+    "New York Metro Area",
+    "NYC"
+   ],
+   "venue": {
+    "id": 172720,
+    "author": "10",
+    "status": "publish",
+    "date": "2023-01-19 04:07:15",
+    "date_utc": "2023-01-19 09:07:15",
+    "modified": "2026-04-21 13:05:19",
+    "modified_utc": "2026-04-21 17:05:19",
+    "url": "https://events.newyorkfamily.com/venue/the-museum-of-modern-art/",
+    "venue": "The Museum of Modern Art",
+    "slug": "the-museum-of-modern-art",
+    "address": "11 W. 53rd St.",
+    "city": "New York",
+    "country": "United States",
+    "geo_lat": 40.7613258,
+    "geo_lng": -73.9774014,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "events.newyorkfamily.com?id=172720",
+    "global_id_lineage": [
+     "events.newyorkfamily.com?id=172720"
+    ]
+   },
+   "organizer": [],
+   "communities": [
+    "Hudson Yards",
+    "Manhattan",
+    "New York Metro Area",
+    "NYC"
+   ],
+   "recurrence_description": "<span class=\"recurrence-desc\"><span class=\"timegroup weeklyish\"><span class=\"timegroup-single\"><span class=\"dows\"><span class=\"datespan\">Saturdays – Thursdays<span class=\"punct\">,</span> </span><span class=\"timespan\">10:30 am &#8211; 5:30 pm<span class=\"punct\">,</span> </span><span class=\"datespan\">Fridays<span class=\"punct\">,</span> </span><span class=\"timespan\">10:30 am &#8211; 8:30 pm<span class=\"punct\">,</span> </span></span><span class=\"overallspan\">through Sept. 12<span class=\"punct\">;</span> </span></span></span></span>",
+   "recurrence": {
+    "rules": [
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "7",
+         "1",
+         "2",
+         "3",
+         "4",
+         "6"
+        ]
+       },
+       "same-time": "yes",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-09-12",
+      "EventStartDate": "2026-03-21 10:30:00",
+      "EventEndDate": "2026-03-21 17:30:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "5"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "10:30am",
+       "end-time": "8:30pm",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-09-12",
+      "EventStartDate": "2026-03-21 10:30:00",
+      "EventEndDate": "2026-03-21 17:30:00"
+     }
+    ],
+    "exclusions": [],
+    "description": null
+   },
+   "_ecp_custom_2": [
+    ""
+   ],
+   "_ecp_custom_3": [
+    "Hudson Yards"
+   ],
+   "_ecp_custom_5": [
+    "Manhattan"
+   ],
+   "debug": 1
+  },
+  {
+   "id": 853667,
+   "global_id": "events.newyorkfamily.com?id=853667",
+   "global_id_lineage": [
+    "events.newyorkfamily.com?id=853667"
+   ],
+   "author": "43",
+   "status": "publish",
+   "date": "2026-06-02 13:38:26",
+   "date_utc": "2026-06-02 17:38:26",
+   "modified": "2026-07-10 17:21:46",
+   "modified_utc": "2026-07-10 21:21:46",
+   "url": "https://events.newyorkfamily.com/event/the-very-hungry-caterpillar-show/",
+   "rest_url": "https://events.newyorkfamily.com/wp-json/tribe/events/v1/events/853667",
+   "title": "The Very Hungry Caterpillar Show",
+   "description": "<p style=\"font-weight: 400;\"><em>The Very Hungry Caterpillar Show</em> brings four classic Eric Carle stories off-the-page and onto-the-stage, told with 75 Magical Puppets.  Alongside <em>The Very Hungry Caterpillar</em>, your family will journey across the seas with <em>10 Little Rubber Ducks</em>, search the night with <em>The Very Lonely Firefly</em>, and, as a special treat this summer only, meet the colorful characters of <em>Brown Bear, Brown Bear</em>.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>",
+   "excerpt": "",
+   "slug": "the-very-hungry-caterpillar-show",
+   "image": {
+    "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51",
+    "id": 853669,
+    "extension": "jpg",
+    "width": 3684,
+    "height": 2447,
+    "filesize": 4142462,
+    "sizes": {
+     "thumbnail": {
+      "width": 192,
+      "height": 192,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=192&h=192&crop=1"
+     },
+     "medium": {
+      "width": 700,
+      "height": 465,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=700"
+     },
+     "medium_large": {
+      "width": 768,
+      "height": 510,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=768"
+     },
+     "large": {
+      "width": 1200,
+      "height": 797,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=1200"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1020,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=1536"
+     },
+     "2048x2048": {
+      "width": 2048,
+      "height": 1360,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=2048"
+     },
+     "thumbnail-double": {
+      "width": 384,
+      "height": 255,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=384"
+     },
+     "splash": {
+      "width": 900,
+      "height": 598,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=900"
+     },
+     "huge": {
+      "width": 1600,
+      "height": 1063,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=1600"
+     },
+     "concierge-thumb": {
+      "width": 50,
+      "height": 33,
+      "mime-type": "image/jpeg",
+      "filesize": 4142462,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/VHC-Caterpillar-004.jpg?quality=51&w=50"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-18 09:30:00",
+   "end_date": "2026-07-18 09:30:00",
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Tickets start at $49",
+   "website": "hungrycaterpillarshow.com/nyc",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    "Family",
+    "Theater"
+   ],
+   "tags": [
+    "Manhattan",
+    "New York",
+    "New York Metro Area",
+    "NYC",
+    "Union Square"
+   ],
+   "venue": {
+    "id": 853668,
+    "status": "publish",
+    "date": "2026-06-02 13:38:26",
+    "date_utc": "2026-06-02 17:38:26",
+    "modified": "2026-06-02 13:38:26",
+    "modified_utc": "2026-06-02 17:38:26",
+    "url": "https://events.newyorkfamily.com/venue/dr2/",
+    "venue": "DR2",
+    "slug": "dr2",
+    "address": "103 East 15th Street",
+    "city": "New York",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10003",
+    "phone": "212-239-6200",
+    "website": "https://www.darylroththeatre.com",
+    "stateprovince": "NY",
+    "geo_lat": 40.7352749,
+    "geo_lng": -73.9893848,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "events.newyorkfamily.com?id=853668",
+    "global_id_lineage": [
+     "events.newyorkfamily.com?id=853668"
+    ]
+   },
+   "organizer": [],
+   "communities": [
+    "Manhattan",
+    "New York Metro Area",
+    "NYC",
+    "Union Square"
+   ],
+   "recurrence_description": "<span class=\"recurrence-desc\"><span class=\"timegroup weeklyish\"><span class=\"timegroup-single\"><span class=\"dows\"><span class=\"datespan\">Saturdays<span class=\"punct\">,</span> </span><span class=\"timespan\">9:30 am<span class=\"punct\">,</span> </span><span class=\"datespan\">Saturdays<span class=\"punct\">,</span> </span><span class=\"timespan\">11:30 am<span class=\"punct\">,</span> </span><span class=\"datespan\">Saturdays<span class=\"punct\">,</span> </span><span class=\"timespan\">3:30 pm<span class=\"punct\">,</span> </span><span class=\"datespan\">Sundays<span class=\"punct\">,</span> </span><span class=\"timespan\">10 am<span class=\"punct\">,</span> </span><span class=\"datespan\">Sundays<span class=\"punct\">,</span> </span><span class=\"timespan\">noon<span class=\"punct\">,</span> </span><span class=\"datespan\">Sundays<span class=\"punct\">,</span> </span><span class=\"timespan\">2 pm<span class=\"punct\">,</span> </span><span class=\"datespan\">Sundays<span class=\"punct\">,</span> </span><span class=\"timespan\">4 pm<span class=\"punct\">,</span> </span><span class=\"datespan\">Thursdays and Fridays<span class=\"punct\">,</span> </span><span class=\"timespan\">11 am<span class=\"punct\">,</span> </span></span><span class=\"overallspan\">through Aug. 30<span class=\"punct\">;</span> </span></span></span><span class=\"timegroup exclusions\"> except Aug. 20 and 27</span></span>",
+   "recurrence": {
+    "rules": [
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "6"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "9:30am",
+       "end-time": "9:30am",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-08-30",
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "6"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "11:30am",
+       "end-time": "11:30am",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-08-30",
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "6"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "3:30pm",
+       "end-time": "3:30pm",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-08-30",
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "7"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "10:00am",
+       "end-time": "10:00am",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-08-30",
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "7"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "12:00pm",
+       "end-time": "12:00pm",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-08-30",
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "7"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "2:00pm",
+       "end-time": "2:00pm",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-08-30",
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "7"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "4:00pm",
+       "end-time": "4:00pm",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-08-30",
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "4",
+         "5"
+        ]
+       },
+       "same-time": "no",
+       "start-time": "11:00am",
+       "end-time": "11:00am",
+       "end-day": "0",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-08-30",
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     }
+    ],
+    "exclusions": [
+     {
+      "type": "Custom",
+      "custom": {
+       "date": {
+        "date": "2026-08-20"
+       },
+       "same-time": "yes",
+       "type": "Date",
+       "interval": 1
+      },
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     },
+     {
+      "type": "Custom",
+      "custom": {
+       "date": {
+        "date": "2026-08-27"
+       },
+       "same-time": "yes",
+       "type": "Date",
+       "interval": 1
+      },
+      "EventStartDate": "2026-06-27 08:00:00",
+      "EventEndDate": "2026-06-27 17:00:00"
+     }
+    ],
+    "description": null
+   },
+   "_ecp_custom_2": [
+    ""
+   ],
+   "_ecp_custom_3": [
+    "Union Square"
+   ],
+   "_ecp_custom_5": [
+    "Manhattan"
+   ],
+   "debug": 1
+  },
+  {
+   "id": 862697,
+   "global_id": "events.newyorkfamily.com?id=862697",
+   "global_id_lineage": [
+    "events.newyorkfamily.com?id=862697"
+   ],
+   "author": "43",
+   "status": "publish",
+   "date": "2026-07-09 02:04:34",
+   "date_utc": "2026-07-09 06:04:34",
+   "modified": "2026-07-09 02:04:34",
+   "modified_utc": "2026-07-09 06:04:34",
+   "url": "https://events.newyorkfamily.com/event/music-adventure-for-toddlers-with-treasure-trunk-free/",
+   "rest_url": "https://events.newyorkfamily.com/wp-json/tribe/events/v1/events/862697",
+   "title": "Music Adventure for Toddlers with Treasure Trunk",
+   "description": "<p>A magical musical adventure for little ones at Corlears School! Led by Treasure Trunk&#8217;s Mr. Kyle, this imaginative class blends storytelling, costumes, and music to spark movement, connection, and joyful play. Plus, Corlears Admissions will be on hand to share more about our Toddler Program for toddlers ages 10–24 months.</p>",
+   "excerpt": "",
+   "slug": "music-adventure-for-toddlers-with-treasure-trunk-free",
+   "image": {
+    "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51",
+    "id": 73192,
+    "extension": "jpg",
+    "width": 2000,
+    "height": 1639,
+    "filesize": 50333,
+    "sizes": {
+     "thumbnail": {
+      "width": 192,
+      "height": 192,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=192&h=192&crop=1"
+     },
+     "medium": {
+      "width": 700,
+      "height": 574,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=700"
+     },
+     "medium_large": {
+      "width": 768,
+      "height": 629,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=768"
+     },
+     "large": {
+      "width": 1200,
+      "height": 983,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=1200"
+     },
+     "1536x1536": {
+      "width": 1536,
+      "height": 1259,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=1536"
+     },
+     "thumbnail-double": {
+      "width": 384,
+      "height": 315,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=384"
+     },
+     "splash": {
+      "width": 900,
+      "height": 738,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=900"
+     },
+     "huge": {
+      "width": 1600,
+      "height": 1311,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=1600"
+     },
+     "concierge-thumb": {
+      "width": 50,
+      "height": 41,
+      "mime-type": "image/jpeg",
+      "filesize": 50333,
+      "url": "https://events.amny.com/wp-content/uploads/2022/11/family-placeholder-music.jpg?quality=51&w=50"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-18 11:30:00",
+   "end_date": "2026-07-18 12:00:00",
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Free",
+   "website": "https://events.humanitix.com/music-adventures-for-toddlers-with-treasure-trunk?c=nyf",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    "Baby &amp; Toddler (0–2)",
+    "Classes",
+    "Dance",
+    "Family",
+    "Free",
+    "Music"
+   ],
+   "tags": [
+    "Lower Manhattan",
+    "Manhattan",
+    "New York",
+    "New York Metro Area",
+    "NYC"
+   ],
+   "venue": {
+    "id": 690970,
+    "author": "27",
+    "status": "publish",
+    "date": "2024-11-04 13:00:24",
+    "date_utc": "2024-11-04 18:00:24",
+    "modified": "2025-10-09 16:49:36",
+    "modified_utc": "2025-10-09 20:49:36",
+    "url": "https://events.newyorkfamily.com/venue/corlears-school/",
+    "venue": "Corlears School",
+    "slug": "corlears-school",
+    "address": "324 W. 15th St.",
+    "city": "New York",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10011",
+    "phone": "212-741-2800",
+    "website": "https://www.corlearsschool.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.7407773,
+    "geo_lng": -74.0032338,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "events.newyorkfamily.com?id=690970",
+    "global_id_lineage": [
+     "events.newyorkfamily.com?id=690970"
+    ]
+   },
+   "organizer": [],
+   "communities": [
+    "Lower Manhattan",
+    "Manhattan",
+    "New York Metro Area",
+    "NYC"
+   ],
+   "recurrence_description": "<span class=\"tribe-event-date-start\">July 18, 11:30 am</span> – <span class=\"tribe-event-time\">noon</span>. ",
+   "recurrence": {
+    "rules": [],
+    "exclusions": [],
+    "description": null
+   },
+   "_ecp_custom_2": [
+    ""
+   ],
+   "_ecp_custom_3": [
+    "Lower Manhattan"
+   ],
+   "_ecp_custom_5": [
+    "Manhattan"
+   ],
+   "debug": 1
+  },
+  {
+   "id": 784737,
+   "global_id": "events.newyorkfamily.com?id=784737",
+   "global_id_lineage": [
+    "events.newyorkfamily.com?id=784737"
+   ],
+   "author": "43",
+   "status": "publish",
+   "date": "2025-07-30 17:59:51",
+   "date_utc": "2025-07-30 21:59:51",
+   "modified": "2025-07-30 17:59:51",
+   "modified_utc": "2025-07-30 21:59:51",
+   "url": "https://events.newyorkfamily.com/event/walt-whitman-birthplace-museum-girl-scout-programs/",
+   "rest_url": "https://events.newyorkfamily.com/wp-json/tribe/events/v1/events/784737",
+   "title": "Walt Whitman Birthplace Museum &#8211; Girl Scout Programs!",
+   "description": "<p><strong><span style=\"font-family: helvetica, arial, sans-serif;\">Discover, Create, and Earn Badges at the Walt Whitman Birthplace Museum!</span></strong><br />\n<span style=\"font-family: helvetica, arial, sans-serif;\">Girl Scouts can step into history, explore the life of Walt Whitman, and express their creativity through fun, hands-on activities. Our badge-earning programs inspire leadership, literacy, and a love of the arts. Book your troop’s visit today for an unforgettable experience!</span></p>\n<p>&nbsp;</p>",
+   "excerpt": "",
+   "slug": "walt-whitman-birthplace-museum-girl-scout-programs",
+   "image": {
+    "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51",
+    "id": 784738,
+    "extension": "png",
+    "width": 1545,
+    "height": 2000,
+    "filesize": 277509,
+    "sizes": {
+     "thumbnail": {
+      "width": 192,
+      "height": 192,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=192&h=192&crop=1"
+     },
+     "medium": {
+      "width": 541,
+      "height": 700,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=541"
+     },
+     "medium_large": {
+      "width": 768,
+      "height": 994,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=768"
+     },
+     "large": {
+      "width": 927,
+      "height": 1200,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=927"
+     },
+     "1536x1536": {
+      "width": 1187,
+      "height": 1536,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=1187"
+     },
+     "thumbnail-double": {
+      "width": 297,
+      "height": 384,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=297"
+     },
+     "splash": {
+      "width": 695,
+      "height": 900,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=695"
+     },
+     "huge": {
+      "width": 1236,
+      "height": 1600,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=1236"
+     },
+     "concierge-thumb": {
+      "width": 39,
+      "height": 50,
+      "mime-type": "image/png",
+      "filesize": 277509,
+      "url": "https://events.amny.com/wp-content/uploads/2025/07/Girl-Scout-Programs.png?quality=51&w=39"
+     }
+    }
+   },
+   "all_day": true,
+   "start_date": "2026-07-18 00:00:00",
+   "end_date": "2026-07-18 23:59:59",
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Pricing ranges from $15 to $20 per registered Scout, depending on the program selected.",
+   "website": "https://waltwhitman.org/scout-programs/",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    "Art",
+    "Classes",
+    "Community",
+    "Craft &amp; DIY",
+    "Family",
+    "History &amp; Culture",
+    "Kids (5–8)",
+    "Special Needs",
+    "Tours",
+    "Tweens (9–12)"
+   ],
+   "tags": [
+    "Huntington",
+    "Huntington Station",
+    "Long Island",
+    "New York Metro Area",
+    "Suffolk"
+   ],
+   "venue": {
+    "id": 170241,
+    "status": "publish",
+    "date": "2023-01-22 07:33:13",
+    "date_utc": "2023-01-22 12:33:13",
+    "modified": "2026-01-09 10:15:58",
+    "modified_utc": "2026-01-09 15:15:58",
+    "url": "https://events.newyorkfamily.com/venue/walt-whitman-birthplace/",
+    "venue": "Walt Whitman Birthplace",
+    "slug": "walt-whitman-birthplace",
+    "address": "246 Old Walt Whitman Road",
+    "city": "Huntington Station",
+    "country": "United States",
+    "state": "NY",
+    "zip": "11746",
+    "phone": "631-427-3240 ext. 113",
+    "website": "www.waltwhitman.org",
+    "stateprovince": "NY",
+    "geo_lat": 40.8171812,
+    "geo_lng": -73.4115752,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "events.newyorkfamily.com?id=170241",
+    "global_id_lineage": [
+     "events.newyorkfamily.com?id=170241"
+    ]
+   },
+   "organizer": [],
+   "communities": [
+    "Huntington",
+    "Long Island",
+    "New York Metro Area",
+    "Suffolk"
+   ],
+   "recurrence_description": "<span class=\"recurrence-desc\"><span class=\"timegroup weeklyish\"><span class=\"timegroup-single\"><span class=\"dows\"><span class=\"datespan\">Saturdays and Sundays<span class=\"punct\">,</span> </span><span class=\"timespan\">all day<span class=\"punct\">,</span> </span></span><span class=\"overallspan\">through July 31<span class=\"punct\">;</span> </span></span></span></span>",
+   "recurrence": {
+    "rules": [
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "7",
+         "6"
+        ]
+       },
+       "same-time": "yes",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-07-31",
+      "EventStartDate": "2025-07-30 00:00:00",
+      "EventEndDate": "2025-07-30 23:59:59"
+     }
+    ],
+    "exclusions": [],
+    "description": null
+   },
+   "_ecp_custom_2": [
+    ""
+   ],
+   "_ecp_custom_3": [
+    "Huntington "
+   ],
+   "_ecp_custom_5": [
+    "Long Island"
+   ],
+   "debug": 1
+  },
+  {
+   "id": 859254,
+   "global_id": "events.newyorkfamily.com?id=859254",
+   "global_id_lineage": [
+    "events.newyorkfamily.com?id=859254"
+   ],
+   "author": "43",
+   "status": "publish",
+   "date": "2026-06-24 02:32:35",
+   "date_utc": "2026-06-24 06:32:35",
+   "modified": "2026-06-24 02:32:35",
+   "modified_utc": "2026-06-24 06:32:35",
+   "url": "https://events.newyorkfamily.com/event/eisenhower-park-free-concert-w-audawind/",
+   "rest_url": "https://events.newyorkfamily.com/wp-json/tribe/events/v1/events/859254",
+   "title": "Eisenhower Park FREE Concert w/ AUDAWIND",
+   "description": "<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\">It&#8217;s Country Night at Eisenhower Park! Audawind is bringing their high energy coastal country rock to The Harry Chapin Lakeside Theater on July 18th at 7PM. After our show, Simply Stapleton will take the stage to play all of your favorite Chris Stapleton tunes. This is an outdoor concert, so bring a lawn chair&#8230;cowboy hats and boots are highly encouraged!</div>\n<div dir=\"auto\"></div>\n</div>\n<div dir=\"auto\">This is a HUGE FREE show, make sure to get there early and secure your seat!</div>\n<div dir=\"auto\"></div>\n<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\"><span class=\"html-span xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs\"><a class=\"event-cta x1i10hfl xjbqb8w x1ejq31n x18oe1m7 x1sy0etr xstzfhl x972fbf x10w94by x1qhh985 x14e42zd x9f619 x1ypdohk xt0psk2 x3ct3a4 xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz xkrqix3 x1sur9pj x1fey0fg x1s688f\" role=\"link\" href=\"https://www.facebook.com/hashtag/longislandmusic?__cft__[0]=AZaNNbxL0bcM6pMZcMipW9-9ASxEkp2nSdWekqZbI-NnKULm-w0ZfNJNsLexh7t7CcEil5PEnfQVkA74ub81M-ODmGqIAP271_lzHf0ALus7oMLZM7Mj-ZbiLUe4G7rK_tYgtPxtS-Gu4K-00ypUNgR3tSMYFOfH5FM-X12Q87T8Cdbfz6FTjzVP-fVuepjxSxU&amp;__tn__=*NK-R\" target=\"_blank\" rel=\"noopener\">#longislandmusic</a></span> <span class=\"html-span xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs\"><a class=\"event-cta x1i10hfl xjbqb8w x1ejq31n x18oe1m7 x1sy0etr xstzfhl x972fbf x10w94by x1qhh985 x14e42zd x9f619 x1ypdohk xt0psk2 x3ct3a4 xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz xkrqix3 x1sur9pj x1fey0fg x1s688f\" role=\"link\" href=\"https://www.facebook.com/hashtag/eisenhowerpark?__cft__[0]=AZaNNbxL0bcM6pMZcMipW9-9ASxEkp2nSdWekqZbI-NnKULm-w0ZfNJNsLexh7t7CcEil5PEnfQVkA74ub81M-ODmGqIAP271_lzHf0ALus7oMLZM7Mj-ZbiLUe4G7rK_tYgtPxtS-Gu4K-00ypUNgR3tSMYFOfH5FM-X12Q87T8Cdbfz6FTjzVP-fVuepjxSxU&amp;__tn__=*NK-R\" target=\"_blank\" rel=\"noopener\">#EisenhowerPark</a></span> <span class=\"html-span xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs\"><a class=\"event-cta x1i10hfl xjbqb8w x1ejq31n x18oe1m7 x1sy0etr xstzfhl x972fbf x10w94by x1qhh985 x14e42zd x9f619 x1ypdohk xt0psk2 x3ct3a4 xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz xkrqix3 x1sur9pj x1fey0fg x1s688f\" role=\"link\" href=\"https://www.facebook.com/hashtag/band?__cft__[0]=AZaNNbxL0bcM6pMZcMipW9-9ASxEkp2nSdWekqZbI-NnKULm-w0ZfNJNsLexh7t7CcEil5PEnfQVkA74ub81M-ODmGqIAP271_lzHf0ALus7oMLZM7Mj-ZbiLUe4G7rK_tYgtPxtS-Gu4K-00ypUNgR3tSMYFOfH5FM-X12Q87T8Cdbfz6FTjzVP-fVuepjxSxU&amp;__tn__=*NK-R\" target=\"_blank\" rel=\"noopener\">#band</a></span></div>\n</div>",
+   "excerpt": "",
+   "slug": "eisenhower-park-free-concert-w-audawind",
+   "image": {
+    "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51",
+    "id": 859255,
+    "extension": "png",
+    "width": 3451,
+    "height": 1923,
+    "filesize": 8214519,
+    "sizes": {
+     "thumbnail": {
+      "width": 192,
+      "height": 192,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=192&h=192&crop=1"
+     },
+     "medium": {
+      "width": 509,
+      "height": 700,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=700"
+     },
+     "medium_large": {
+      "width": 768,
+      "height": 1056,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=768"
+     },
+     "large": {
+      "width": 873,
+      "height": 1200,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=1200"
+     },
+     "1536x1536": {
+      "width": 1117,
+      "height": 1536,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=1536"
+     },
+     "2048x2048": {
+      "width": 1490,
+      "height": 2048,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=2048"
+     },
+     "thumbnail-double": {
+      "width": 279,
+      "height": 384,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=384"
+     },
+     "splash": {
+      "width": 655,
+      "height": 900,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=900"
+     },
+     "huge": {
+      "width": 1164,
+      "height": 1600,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=1600"
+     },
+     "concierge-thumb": {
+      "width": 36,
+      "height": 50,
+      "mime-type": "image/png",
+      "filesize": 8214519,
+      "url": "https://events.amny.com/wp-content/uploads/2026/06/Copy-of-The-Bitter-End-e1782282747285.png?quality=51&w=50"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-18 19:00:00",
+   "end_date": "2026-07-18 21:30:00",
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Free",
+   "website": "https://audawind.com",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    "Baby &amp; Toddler (0–2)",
+    "Family",
+    "Free",
+    "Kids (5–8)",
+    "Music",
+    "Nightlife",
+    "Outdoors",
+    "Parents",
+    "Preschoolers (3–4)",
+    "Teens (13–18)",
+    "Tweens (9–12)"
+   ],
+   "tags": [
+    "East Meadow",
+    "Long Island",
+    "Nassau",
+    "New York Metro Area"
+   ],
+   "venue": {
+    "id": 429251,
+    "author": "27",
+    "status": "publish",
+    "date": "2023-06-27 10:21:02",
+    "date_utc": "2023-06-27 14:21:02",
+    "modified": "2023-06-27 10:21:02",
+    "modified_utc": "2023-06-27 14:21:02",
+    "url": "https://events.newyorkfamily.com/venue/eisenhower-park-lakeside-theater/",
+    "venue": "Eisenhower Park- Lakeside Theater",
+    "slug": "eisenhower-park-lakeside-theater",
+    "address": "Merrick and Stewart Avenues",
+    "city": "East Meadow",
+    "country": "United States",
+    "state": "NY",
+    "zip": "11554",
+    "stateprovince": "NY",
+    "geo_lat": 40.7375188,
+    "geo_lng": -73.5722133,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "events.newyorkfamily.com?id=429251",
+    "global_id_lineage": [
+     "events.newyorkfamily.com?id=429251"
+    ]
+   },
+   "organizer": [],
+   "communities": [
+    "East Meadow",
+    "Long Island",
+    "Nassau",
+    "New York Metro Area"
+   ],
+   "recurrence_description": "<span class=\"tribe-event-date-start\">July 18, 7 pm</span> – <span class=\"tribe-event-time\">9:30 pm</span>. ",
+   "recurrence": {
+    "rules": [],
+    "exclusions": [],
+    "description": null
+   },
+   "_ecp_custom_2": [
+    ""
+   ],
+   "_ecp_custom_3": [
+    "East Meadow"
+   ],
+   "_ecp_custom_5": [
+    "Long Island"
+   ],
+   "debug": 1
+  },
+  {
+   "id": 848151,
+   "global_id": "events.newyorkfamily.com?id=848151",
+   "global_id_lineage": [
+    "events.newyorkfamily.com?id=848151"
+   ],
+   "author": "43",
+   "status": "publish",
+   "date": "2026-05-05 22:06:27",
+   "date_utc": "2026-05-06 02:06:27",
+   "modified": "2026-05-05 22:06:27",
+   "modified_utc": "2026-05-06 02:06:27",
+   "url": "https://events.newyorkfamily.com/event/volunteer-with-eqa-community-garden/",
+   "rest_url": "https://events.newyorkfamily.com/wp-json/tribe/events/v1/events/848151",
+   "title": "Volunteer with EQA: Community Garden",
+   "description": "<p><u>Calling All lovers of Gardening! We Need Your Help!</u></p>\n<p>The Eastern Queens Alliance has created a <b><i>Community</i></b><b><i> Peace Garden</i></b> right outside of the Idlewild Environmental Center on an unused street lot. The project is in process and needs volunteers to work with the EQA Gardener. It is our mission to create beautiful spaces that will have positive impacts on our local community at large .</p>\n<p><b><u>Saturdays between 9 am to 2 pm </u></b></p>\n<p><i><b><u>Prior volunteers can redo this form to update their availability for gardening sessions! </u></b></i></p>",
+   "excerpt": "",
+   "slug": "volunteer-with-eqa-community-garden",
+   "image": {
+    "url": "https://events.amny.com/wp-content/uploads/2026/05/PeaceGardenVolunteerFlyer-1-1-e1778033180356.png?quality=51",
+    "id": 848152,
+    "extension": "png",
+    "width": 1080,
+    "height": 645,
+    "filesize": 2510638,
+    "sizes": {
+     "thumbnail": {
+      "width": 192,
+      "height": 192,
+      "mime-type": "image/png",
+      "filesize": 2510638,
+      "url": "https://events.amny.com/wp-content/uploads/2026/05/PeaceGardenVolunteerFlyer-1-1-e1778033180356.png?quality=51&w=192&h=192&crop=1"
+     },
+     "medium": {
+      "width": 700,
+      "height": 418,
+      "mime-type": "image/png",
+      "filesize": 2510638,
+      "url": "https://events.amny.com/wp-content/uploads/2026/05/PeaceGardenVolunteerFlyer-1-1-e1778033180356.png?quality=51&w=700"
+     },
+     "medium_large": {
+      "width": 768,
+      "height": 459,
+      "mime-type": "image/png",
+      "filesize": 2510638,
+      "url": "https://events.amny.com/wp-content/uploads/2026/05/PeaceGardenVolunteerFlyer-1-1-e1778033180356.png?quality=51&w=768"
+     },
+     "thumbnail-double": {
+      "width": 384,
+      "height": 229,
+      "mime-type": "image/png",
+      "filesize": 2510638,
+      "url": "https://events.amny.com/wp-content/uploads/2026/05/PeaceGardenVolunteerFlyer-1-1-e1778033180356.png?quality=51&w=384"
+     },
+     "splash": {
+      "width": 900,
+      "height": 538,
+      "mime-type": "image/png",
+      "filesize": 2510638,
+      "url": "https://events.amny.com/wp-content/uploads/2026/05/PeaceGardenVolunteerFlyer-1-1-e1778033180356.png?quality=51&w=900"
+     },
+     "concierge-thumb": {
+      "width": 50,
+      "height": 30,
+      "mime-type": "image/png",
+      "filesize": 2510638,
+      "url": "https://events.amny.com/wp-content/uploads/2026/05/PeaceGardenVolunteerFlyer-1-1-e1778033180356.png?quality=51&w=50"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-18 09:00:00",
+   "end_date": "2026-07-18 14:00:00",
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "Free",
+   "website": "https://forms.gle/2D1xDZerxmvqLvFEA",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    "Community",
+    "Environment",
+    "Family",
+    "Free",
+    "Outdoors",
+    "Parents",
+    "Teens (13–18)",
+    "Tweens (9–12)",
+    "Volunteering"
+   ],
+   "tags": [
+    "New York Metro Area",
+    "NYC",
+    "Queens",
+    "Springfield Gardens",
+    "Springfields Garden"
+   ],
+   "venue": {
+    "id": 171835,
+    "author": "3",
+    "status": "publish",
+    "date": "2023-01-19 03:37:24",
+    "date_utc": "2023-01-19 08:37:24",
+    "modified": "2025-08-20 09:56:58",
+    "modified_utc": "2025-08-20 13:56:58",
+    "url": "https://events.newyorkfamily.com/venue/idlewild-environmental-center/",
+    "venue": "Idlewild Environmental Center",
+    "slug": "idlewild-environmental-center",
+    "address": "222-02 149th Avenue",
+    "city": "Springfield Gardens",
+    "country": "United States",
+    "geo_lat": 40.6576287,
+    "geo_lng": -73.7604495,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "events.newyorkfamily.com?id=171835",
+    "global_id_lineage": [
+     "events.newyorkfamily.com?id=171835"
+    ]
+   },
+   "organizer": [],
+   "communities": [
+    "New York Metro Area",
+    "NYC",
+    "Queens",
+    "Springfield Gardens"
+   ],
+   "recurrence_description": "<span class=\"recurrence-desc\"><span class=\"timegroup weeklyish\"><span class=\"timegroup-single\"><span class=\"dows\"><span class=\"datespan\">Saturdays<span class=\"punct\">,</span> </span><span class=\"timespan\">9 am &#8211; 2 pm<span class=\"punct\">,</span> </span></span><span class=\"overallspan\">through July 31<span class=\"punct\">;</span> </span></span></span></span>",
+   "recurrence": {
+    "rules": [
+     {
+      "type": "Custom",
+      "custom": {
+       "interval": "1",
+       "week": {
+        "day": [
+         "6"
+        ]
+       },
+       "same-time": "yes",
+       "type": "Weekly"
+      },
+      "end-type": "On",
+      "end": "2026-07-31",
+      "EventStartDate": "2026-05-09 09:00:00",
+      "EventEndDate": "2026-05-09 14:00:00"
+     }
+    ],
+    "exclusions": [],
+    "description": null
+   },
+   "_ecp_custom_2": [
+    ""
+   ],
+   "_ecp_custom_3": [
+    "Springfields Garden"
+   ],
+   "_ecp_custom_5": [
+    "Queens"
+   ],
+   "debug": 1
+  },
+  {
+   "id": 842240,
+   "global_id": "events.newyorkfamily.com?id=842240",
+   "global_id_lineage": [
+    "events.newyorkfamily.com?id=842240"
+   ],
+   "author": "43",
+   "status": "publish",
+   "date": "2026-04-08 06:03:44",
+   "date_utc": "2026-04-08 10:03:44",
+   "modified": "2026-04-08 06:03:44",
+   "modified_utc": "2026-04-08 10:03:44",
+   "url": "https://events.newyorkfamily.com/event/miles-for-the-future-5k/",
+   "rest_url": "https://events.newyorkfamily.com/wp-json/tribe/events/v1/events/842240",
+   "title": "Miles for the Future 5K",
+   "description": "<p>July 18, 2026<br />\n8:30AM Start &#8211; Rain or Shine</p>\n<p>Van Cortlandt Park</p>\n<p>Across the street from Lloyd’s Carrot Cake located at 6087 Broadway, Bronx, NY<br />\n(LOOK FOR THE TORTOISE &amp; HARE STATUE)</p>\n<p>Race day registration and check in will be located near the tortoise and hare statue.</p>\n<p>Miles for the Future 5K is proudly hosted by the Nu Chi Chi Chapter of Chi Eta Phi Sorority, Inc. to support the advancement of nursing and service within our community. Proceeds from this event will directly fund our undergraduate and graduate nursing scholarship programs, while also strengthening our chapter’s community service initiatives. Through this race, we invest in the future of healthcare and continue our commitment to service for humanity.</p>\n<p>AMENITIES<br />\nMedals to all finishers<br />\nRegistrants recieve a shirt<br />\nRefreshments<br />\nLIVE / text / email results<br />\nFREE finish line photos<br />\nPersonalized bib if registered 3 weeks in advance</p>\n<p>AWARDS<br />\nTop 3 F/M/X Overall</p>\n<p>&nbsp;</p>",
+   "excerpt": "",
+   "slug": "miles-for-the-future-5k",
+   "image": {
+    "url": "https://events.amny.com/wp-content/uploads/2026/04/Miles-for-the-Future-5K-3.jpg?quality=51",
+    "id": 842241,
+    "extension": "jpg",
+    "width": 1000,
+    "height": 500,
+    "filesize": 35070,
+    "sizes": {
+     "thumbnail": {
+      "width": 192,
+      "height": 192,
+      "mime-type": "image/jpeg",
+      "filesize": 35070,
+      "url": "https://events.amny.com/wp-content/uploads/2026/04/Miles-for-the-Future-5K-3.jpg?quality=51&w=192&h=192&crop=1"
+     },
+     "medium": {
+      "width": 700,
+      "height": 350,
+      "mime-type": "image/jpeg",
+      "filesize": 35070,
+      "url": "https://events.amny.com/wp-content/uploads/2026/04/Miles-for-the-Future-5K-3.jpg?quality=51&w=700"
+     },
+     "medium_large": {
+      "width": 768,
+      "height": 384,
+      "mime-type": "image/jpeg",
+      "filesize": 35070,
+      "url": "https://events.amny.com/wp-content/uploads/2026/04/Miles-for-the-Future-5K-3.jpg?quality=51&w=768"
+     },
+     "thumbnail-double": {
+      "width": 384,
+      "height": 192,
+      "mime-type": "image/jpeg",
+      "filesize": 35070,
+      "url": "https://events.amny.com/wp-content/uploads/2026/04/Miles-for-the-Future-5K-3.jpg?quality=51&w=384"
+     },
+     "splash": {
+      "width": 900,
+      "height": 450,
+      "mime-type": "image/jpeg",
+      "filesize": 35070,
+      "url": "https://events.amny.com/wp-content/uploads/2026/04/Miles-for-the-Future-5K-3.jpg?quality=51&w=900"
+     },
+     "concierge-thumb": {
+      "width": 50,
+      "height": 25,
+      "mime-type": "image/jpeg",
+      "filesize": 35070,
+      "url": "https://events.amny.com/wp-content/uploads/2026/04/Miles-for-the-Future-5K-3.jpg?quality=51&w=50"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-18 08:30:00",
+   "end_date": "2026-07-18 12:30:00",
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "$49.33",
+   "website": "https://eventvesta.com/events/141048/t/tickets",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    "Family",
+    "Fundraisers",
+    "Kids (5–8)",
+    "Parents",
+    "Sports",
+    "Teens (13–18)",
+    "Tweens (9–12)"
+   ],
+   "tags": [
+    "Bronx",
+    "New York Metro Area",
+    "NYC"
+   ],
+   "venue": {
+    "id": 171696,
+    "author": "3",
+    "status": "publish",
+    "date": "2023-01-19 03:13:44",
+    "date_utc": "2023-01-19 08:13:44",
+    "modified": "2026-04-08 06:03:45",
+    "modified_utc": "2026-04-08 10:03:45",
+    "url": "https://events.newyorkfamily.com/venue/van-cortlandt-park/",
+    "venue": "Van Cortlandt Park",
+    "slug": "van-cortlandt-park",
+    "address": "Broadway and Mosholu Avenue",
+    "city": "Bronx",
+    "country": "United States",
+    "geo_lat": 40.904505,
+    "geo_lng": -73.896411,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "events.newyorkfamily.com?id=171696",
+    "global_id_lineage": [
+     "events.newyorkfamily.com?id=171696"
+    ]
+   },
+   "organizer": [],
+   "communities": [
+    "Bronx",
+    "New York Metro Area",
+    "NYC"
+   ],
+   "recurrence_description": "<span class=\"tribe-event-date-start\">July 18, 8:30 am</span> – <span class=\"tribe-event-time\">12:30 pm</span>. ",
+   "recurrence": {
+    "rules": [],
+    "exclusions": [],
+    "description": null
+   },
+   "_ecp_custom_2": [
+    ""
+   ],
+   "_ecp_custom_3": [
+    ""
+   ],
+   "_ecp_custom_5": [
+    "Bronx"
+   ],
+   "debug": 1
+  },
+  {
+   "start_date": "2026-07-18 00:00:00",
+   "end_date": "2026-07-18 23:59:59"
+  }
+ ]
+}

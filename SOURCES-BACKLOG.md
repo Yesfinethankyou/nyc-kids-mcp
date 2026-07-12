@@ -336,16 +336,21 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 - **Next step:** straight to `source-adder` — this is a same-day build, no
   further verification needed.
 
-### New York Family — events.newyorkfamily.com — 🔶 RE-VERIFIED 2026-07-12: API deliberately hobbled; buildable only as a bespoke day-walk crawler — maintainer call
+### New York Family — events.newyorkfamily.com — ✅ BUILT 2026-07-12 (day-walk crawler over a deliberately hobbled API)
 
-- **Status:** re-verified 2026-07-12 (live, plain `httpx`, no anti-bot). The
-  7-06 "fifth Tribe copy-adapt + city allowlist" framing is **obsolete** —
+- **Status:** ✅ **BUILT 2026-07-12** — shipped as source `new_york_family`
+  (`src/nyc_events/sources/new_york_family.py`); as-built notes at the end of
+  this section. Same-day sequence: re-verified (findings below), maintainer
+  chose the day-walk-crawler build over the lossy 16/day version or parking
+  it. The verification record is kept verbatim because it documents the API
+  quirks the build depends on.
+- **Re-verification (2026-07-12, live, plain `httpx`, no anti-bot):** the
+  7-06 "fifth Tribe copy-adapt + city allowlist" framing was **obsolete** —
   the network operator (Schneps Media) has crippled the Tribe REST API, and
   it changed *between the two probes* (7-06 saw a `total: 51` envelope;
   7-12 has no envelope at all), so it is under active modification. Both
-  original open questions (geo filter, stubs) ARE solved below — but a new,
-  bigger problem replaced them. **Not built; maintainer call pending on
-  cost/benefit.**
+  original open questions (geo filter, stubs) were solved — but a new,
+  bigger problem replaced them.
 - **What the API actually does now (all verified live 2026-07-12):**
   - Response envelope is `{"events": [...]}` only — no `total`/
     `total_pages`/`next_rest_url`. The `TribeEventsSource` pagination loop
@@ -423,13 +428,58 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 - **Fragility warning:** the API shape changed in the six days between
   probes, in the direction of locking down. A source here rides on
   quirks (which params the cache honors) that Schneps can remove any week.
-- **Verdict:** buildable without a headless browser, and the content is
-  genuinely good (Manhattan coverage — the catalog's weakest borough — plus
-  structured ages), but it would be the heaviest, most fragile fetch in the
-  codebase with documented incompleteness on peak days. **Maintainer call:
-  build the day-walk crawler, build a lossy-but-cheap 16/day version, or
-  park it.** If parked, re-probe before any future build — the API will
-  have changed again.
+- **Verdict (as decided):** buildable without a headless browser, and the
+  content is genuinely good (Manhattan coverage — the catalog's weakest
+  borough — plus structured ages), but it is the heaviest, most fragile
+  fetch in the codebase with documented incompleteness on peak days.
+  Maintainer chose the full day-walk crawler (2026-07-12).
+- **As-built notes (build 2026-07-12; design above followed, plus):**
+  - **Fetch loop:** `NewYorkFamilySource` subclasses `Source` directly (NOT
+    `TribeEventsSource` — see the module docstring for why nothing there
+    fits). Day-walk of a **35-day window** (`window_days=35`, opted INTO
+    missing-detection; the census test now expects 35 for this source), one
+    base query per day + adaptive within-day slices: while a slice returns
+    the 16-row cap, re-query with `start_date` advanced to the latest start
+    seen (`_next_slice_start`), +2h when stuck (all visible rows ongoing),
+    max 12 slices/day, dedupe on `(id, start_date)`. Plain `httpx` — no
+    anti-bot on this API host.
+  - **Smoke run (6 days, 2026-07-11→16):** 48 requests, 85 NYC events, zero
+    duplicate ids, all five boroughs present, 100% rows with lat/lng, 26/85
+    with age bands, free/paid ≈ 44/41. Every sampled July day hit the 16-cap
+    several times (~8 slices/day) → expect **~280 requests and ~500 events
+    per 35-day nightly run** (summer; winter likely fewer slices).
+  - **Geo filter as built:** coordinate boxes copied verbatim from
+    `mommy_poppins.py`, checked BEFORE the city map; `_CITY_BOROUGH` string
+    fallback covers borough names, common misspellings ("Manhatten"), and
+    Queens neighborhood-as-city values. No borough → row dropped.
+  - **Ages/tags/price:** `_AGE_BAND_RX` parses "(N–M)" from any category
+    name (en dash or hyphen), min-of-mins/max-of-maxes;
+    `Baby & Toddler`/`Preschoolers`/`Kids (`/`Tweens` prefixes add
+    "best for kids" (Teens alone doesn't); `_CATEGORY_TAGS` maps ~25 topical
+    names onto the existing tag vocabulary; "family" is unconditional.
+    `_tribe.parse_cost` on the free-text `cost`, with a "Free" category
+    backstopping an empty cost. NOTE `parse_cost` returns FREE for
+    "Included with admission: $17–$30; free for ages 16 and younger" —
+    accepted shared-helper behavior, not worth a fork.
+  - **No kid-relevance filter** (100% of rows are family-tagged upstream;
+    the site is the filter); shared `ADULT_BLOCKLIST`/`ADULT_TITLE_BLOCKLIST`
+    + `MEMBERS_ONLY` (title) as the safety net. Upstream `Nightlife`
+    category deliberately NOT hard-excluded — their category tagging is
+    spray-everything (a family concert carried every age band plus
+    Nightlife), and the observed cases are Long Island rows the geo filter
+    already drops.
+  - **Multi-day/ongoing listings** (exhibitions, attraction runs like The
+    BEAST) are re-listed by the server with a per-day `start_date`, so they
+    yield one row per day of the window — same per-occurrence model as
+    nycgovparks' daily programs; not a bug, don't "fix" the dedupe.
+  - **Fixture:** `tests/fixtures/new_york_family_sample.json` — 8 real rows
+    (Brooklyn/Manhattan/Bronx/Queens keeps, Huntington Station + East Meadow
+    drops, the shared-id recurring Caterpillar row, an age-band row) + 1
+    real page-2 husk. 18 tests in `tests/test_new_york_family_parse.py`.
+  - **Fragility watch:** if this source goes quiet, re-probe the API shape
+    FIRST (`?start_date=` honored? still 16-cap? envelope back?) — it
+    changed once in the six days before the build and will change again.
+    The drift alarm (ingest exit 4) is the expected first symptom.
 
 ### Brooklyn Botanic Garden (BBG) — 🟢 CONFIRMED, HTML scrape
 

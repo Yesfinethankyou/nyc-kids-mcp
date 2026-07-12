@@ -588,7 +588,12 @@ Known accepted residuals (see `git log` for the security-audit commit):
     website (`nycgovparks_events` — the live nycgovparks.org "Best for Kids"
     calendar: microdata scrape + in-page map blob so lat/lng comes free,
     ~2,430 events / ~55-day window; complementary to `tvpp-9vvx`, verified
-    zero overlap — see SOURCES-BACKLOG.md "Major reassessment").
+    zero overlap — see SOURCES-BACKLOG.md "Major reassessment"), New York
+    Family (`new_york_family` — Schneps-network Tribe API deliberately capped
+    at 16 rows/query with broken pagination, so it day-walks a 35-day window
+    with adaptive time slices; NYC-filtered by coordinate boxes; the first
+    source with structured age bands; ~500 events/run — read the module
+    docstring before touching it, the API is under active lockdown upstream).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.

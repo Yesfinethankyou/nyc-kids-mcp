@@ -16,7 +16,9 @@ tools — designed for use from the Claude mobile app while out with a kid.
   Terminal (~12 events/60d), Industry City (~8 events/60d), Governors Island
   (~85 events/run), Domino Park (~104 events/60d), NYC Parks website
   (`nycgovparks_events`, ~2,430 events/55d — the live nycgovparks.org
-  "Best for Kids" calendar with lat/lng included) — real
+  "Best for Kids" calendar with lat/lng included), New York Family
+  (`new_york_family`, ~500 events/35d — Schneps parenting-magazine calendar
+  with structured age bands, NYC-filtered by coordinates) — real
   descriptions, URLs, and (where
   upstream provides them) age ranges, coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser) and Coney Island
@@ -509,6 +511,16 @@ Adapters with real descriptions, URLs, age ranges:
   Parks' own category taxonomy mapped to tags, "CANCELLED:" rows dropped at
   parse. Verified zero overlap with `nyc_permitted_events`. ~2,430 events
   per ~55-day window — the largest curated source in the catalog.
+- ✅ **New York Family** — *shipped* (`new_york_family`). The Schneps Media
+  parenting-magazine events calendar (a regional, network-wide pool — Long
+  Island venues appear alongside the five boroughs). The upstream Tribe REST
+  API is deliberately capped at 16 rows/query with broken pagination, so the
+  source day-walks the window with adaptive within-day time slices (plain
+  `httpx`) and unions the results; rows outside the five boroughs are dropped
+  via coordinate bounding boxes (`venue.geo_lat/lng` is on ~100% of rows).
+  First source with **structured age bands** ("Kids (5–8)" → `age_min`/
+  `age_max`), strong Manhattan coverage, real descriptions/URLs/prices and
+  free lat/lng. 35-day window; ~500 events/run at ~280 requests/night.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
 - ❌ **Coney Island USA** — *rejected.* Working Squarespace feed, but the

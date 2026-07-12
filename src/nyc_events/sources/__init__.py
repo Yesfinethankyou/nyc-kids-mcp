@@ -9,6 +9,7 @@ from .governors_island import GovernorsIslandSource
 from .greenwood_cemetery import GreenWoodCemeterySource
 from .industry_city import IndustryCitySource
 from .mommy_poppins import MommyPoppinsSource
+from .new_york_family import NewYorkFamilySource
 from .ny_transit_museum import NYTransitMuseumSource
 from .nyc_permitted_events import NYCPermittedEventsSource
 from .nycgovparks_events import NYCGovParksEventsSource
@@ -39,5 +40,9 @@ ENABLED_SOURCES: list[type[Source]] = [
     # with the other slow crawls at the end; mommy_poppins stays last (see the
     # ordering note above).
     NYCGovParksEventsSource,
+    # Day-walk over a capped API: ~35 base requests plus extra slices on busy
+    # days (~50-120 total at a 0.75s delay) — slow-ish, so it runs with the
+    # crawls; mommy_poppins stays last (see the ordering note above).
+    NewYorkFamilySource,
     MommyPoppinsSource,
 ]
