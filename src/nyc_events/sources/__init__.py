@@ -11,13 +11,18 @@ from .industry_city import IndustryCitySource
 from .mommy_poppins import MommyPoppinsSource
 from .new_york_family import NewYorkFamilySource
 from .ny_transit_museum import NYTransitMuseumSource
-from .nyc_permitted_events import NYCPermittedEventsSource
 from .nycgovparks_events import NYCGovParksEventsSource
 from .prospect_park import ProspectParkSource
 
-# Phase 1 + Phase 2 sources. Time Out NY Kids (timeout_nykids.py) is a
-# JS-rendered editorial site with no event feed — not buildable without a
-# headless browser; stub left in place but not enabled.
+# Phase 2 sources. Time Out NY Kids (timeout_nykids.py) is a JS-rendered
+# editorial site with no event feed — not buildable without a headless
+# browser; stub left in place but not enabled.
+#
+# nyc_permitted_events (tvpp-9vvx, the Phase 1 permit registry) was DISABLED
+# 2026-07-12 by maintainer decision: every row it yields is low-confidence
+# (no description, no URL) and nycgovparks_events now covers the curated
+# Parks calendar, so the permit rows were unused noise. Module + tests kept
+# for easy re-enable; see its module docstring.
 #
 # Order matters: the loop in ingest.py is strictly sequential with no
 # per-source time budget, so a slow source starves everything after it. We
@@ -34,7 +39,6 @@ ENABLED_SOURCES: list[type[Source]] = [
     IndustryCitySource,
     GovernorsIslandSource,
     DominoParkSource,
-    NYCPermittedEventsSource,
     BPLSource,
     # ~49 list pages at a 1s polite delay (~1 min) — expensive-ish, so it runs
     # with the other slow crawls at the end; mommy_poppins stays last (see the

@@ -119,7 +119,11 @@ on your laptop/NAS if a specific domain is actually blocked.
      programming (Kids in Motion at ~40 playgrounds, rec-center summer camps,
      Summer Sports Experience, ranger events). Exact- and fuzzy-name
      intersection of the two samples: **empty**. Build it *alongside*
-     `tvpp-9vvx`, no dedup needed.
+     `tvpp-9vvx`, no dedup needed. *(Epilogue 2026-07-12: `tvpp-9vvx` was
+     disabled anyway — maintainer found the permit rows unused in practice
+     once this source shipped. Zero-overlap means dropping it loses the
+     field-reservation-style permits entirely, which is exactly what was
+     wanted. Module kept; see `nyc_permitted_events.py` docstring.)*
   2. **Category vocabulary: ~50 slug categories** (`/events/<slug>` — `nature`,
      `urbanparkrangers`, `arts-and-crafts`, `education`, `wildlife`, `games`,
      `festivals`, `astronomy`, `fishing`, …; filter form posts `cat_id[]`,

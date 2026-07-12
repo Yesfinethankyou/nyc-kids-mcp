@@ -30,6 +30,18 @@ headless Chromium screenshots). Suite 582 green (5 new tests), ruff clean.
   possible follow-up), sortable columns/pagination, match highlighting,
   dark mode, pill badges (maintainer wants craigslist-plain).
 
+Second commit, same session: **`nyc_permitted_events` (tvpp-9vvx) DISABLED**
+— maintainer said the permit rows go unused now that `nycgovparks_events`
+covers the Parks calendar (offered disable / hide-by-default / leave-alone;
+they chose disable). Removed from `ENABLED_SOURCES` only; module + parser
+tests kept for easy re-enable (steps in the module docstring).
+`test_full_window_sources_opt_in` count 11 → 10; CLAUDE.md + backlog notes
+updated. **Operator follow-up on the NAS** (optional, keeps the health page
+clean — existing permit rows are never flagged missing once the source stops
+running): `sqlite3 data/events.db "DELETE FROM events WHERE
+source='nyc_permitted_events';"` then rebuild FTS per the db-maintenance
+skill if you also VACUUM.
+
 ### Session: New York Family source verified AND BUILT (branch `claude/backlog-sources-review-22f37d`)
 
 Backlog review session; maintainer picked **New York Family
