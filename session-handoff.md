@@ -2,6 +2,36 @@
 
 ## What was done (most recent first)
 
+### Session: New York Family source verification (branch `claude/backlog-sources-review-22f37d`)
+
+Backlog review session; maintainer picked **New York Family
+(events.newyorkfamily.com)** to verify before building. Verification ran
+2026-07-12 against the live API; **no source was built** — the findings
+changed the cost/benefit materially and the build decision is with the
+maintainer. Everything learned is written into the New York Family entry in
+`SOURCES-BACKLOG.md` (now headed "RE-VERIFIED 2026-07-12"); read that entry
+first — the short version:
+
+- The Schneps-network Tribe REST API is deliberately hobbled: hard 16-row
+  cap (`per_page`/`page` ignored; `page>1` returns the same rows as empty
+  husks — which is what the 7-06 probe's "20% stubs" actually were), no
+  response envelope, and no `utc_*` date fields — so neither
+  `TribeEventsSource`'s pagination loop nor `_tribe.parse_row` is reusable.
+  `start_date`/`end_date`/`categories` params ARE honored.
+- Both original blockers are solved: geo → 100% of rows carry
+  `venue.geo_lat/lng` (use mommy_poppins bounding boxes, not city strings);
+  stubs → page>1 artifact, never fetched by a day-walk design.
+- Real volume is ~4× what one query returns (Sat 7-18: 69 distinct rows vs
+  16 visible), so an honest build is a day-walk + slice-union crawler at
+  ~200–600 requests/night with documented residual truncation — the
+  heaviest and most fragile fetch in the codebase. API shape changed between
+  7-06 and 7-12, so it's under active lockdown.
+- Unique payoff if built: structured age bands (`Kids (5–8)` etc. →
+  `age_min`/`age_max`) and Manhattan coverage. `external_id` MUST be
+  `f"{id}:{start.isoformat()}"` (occurrences share the parent id).
+
+No code changes; docs only (this file + SOURCES-BACKLOG.md).
+
 ### Session: tailnet dashboard BUILT (branch `claude/ui-feature-planning-build-3w0aup`)
 
 Implemented DASHBOARD-PLAN.md as designed — the plan's prerequisite
