@@ -336,8 +336,12 @@ isn't per-occurrence.
 
 ## Source-data hygiene philosophy
 
-The Phase-1 source (`tvpp-9vvx`) is a permit registry, not a curated event
-listing. **Aggressive filtering is correct**, not over-engineering:
+The Phase-1 source (`tvpp-9vvx`) — **disabled 2026-07-12** (maintainer call:
+its all-low-confidence rows went unused once `nycgovparks_events` covered the
+Parks calendar; module + tests kept, re-enable steps in its docstring) — is a
+permit registry, not a curated event listing. The philosophy below still
+governs any future registry-style source. **Aggressive filtering is
+correct**, not over-engineering:
 - Agency allowlist (e.g. `event_agency='Parks Department'`)
 - `event_type` allowlist (drops sport-league permits, parades, religious events)
 - Title regex blocklist (school identifiers `PS \d+ / I.S. \d+`, religious
@@ -576,8 +580,10 @@ Known accepted residuals (see `git log` for the security-audit commit):
 
 ## Phase roadmap
 
-- **Phase 1 (done):** `tvpp-9vvx` only. Permit data, no descriptions, all
-  ingested rows `low_confidence: true`. ~700 events / 60-day window.
+- **Phase 1 (done, source since RETIRED):** `tvpp-9vvx` only. Permit data,
+  no descriptions, all ingested rows `low_confidence: true`. ~700 events /
+  60-day window. **Disabled 2026-07-12** — unused by the maintainer once
+  `nycgovparks_events` shipped (see "Source-data hygiene philosophy").
 - **Phase 2 (done):** editorial scrapers — real descriptions, URLs,
   age ranges. The buildable backlog is cleared (every CONFIRMED venue is
   built, rejected, or deferred to Phase 3 — see below). Adding more sources

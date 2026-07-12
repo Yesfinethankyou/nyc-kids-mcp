@@ -1,5 +1,13 @@
 """NYC Permitted Event Information (tvpp-9vvx) source.
 
+**DISABLED 2026-07-12** (removed from ENABLED_SOURCES, module + tests kept):
+maintainer wasn't using the permit rows — every one is low-confidence by
+construction (no description, no URL), and nycgovparks_events now covers the
+curated NYC Parks calendar (verified zero overlap, so this was pure noise on
+top, not a duplicate). To re-enable, add NYCPermittedEventsSource back to
+ENABLED_SOURCES and bump the opted-in count in
+tests/test_missing_detection.py::test_full_window_sources_opt_in.
+
 The Phase 1 spec originally named NYC Parks Events Listing (fudw-fgrp), but
 that dataset is dead — last row is 2019-12, zero rows for any date >= today.
 tvpp-9vvx is the live successor: a citywide permitting catalog updated daily.

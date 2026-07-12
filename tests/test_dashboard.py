@@ -166,6 +166,43 @@ def test_events_bad_age_and_limit_render_400(client):
     assert client.get("/events", params={"limit": "lots"}).status_code == 400
 
 
+def test_neighborhood_datalist_offers_ingested_values(client):
+    # The neighborhood input autocompletes from the live facets — no more
+    # guessing NTA spellings blind.
+    resp = client.get("/events")
+    assert "list='nbhd-list'" in resp.text
+    assert "<datalist id='nbhd-list'>" in resp.text
+    assert "<option value='Astoria'>" in resp.text
+
+
+def test_preset_links_preserve_active_filters(client):
+    resp = client.get("/events", params={"borough": "Queens", "free_only": "1"})
+    for label in ("today", "this weekend", "next 7 days"):
+        assert f"{label}</a>" in resp.text
+    # Non-date filters ride along in the preset hrefs (form renders them as
+    # <select>/checkbox state, so a query-string form only occurs in presets).
+    assert "borough=Queens" in resp.text
+    assert "free_only=1" in resp.text
+    assert resp.text.count("start_date=") == 3
+
+
+def test_result_count_flags_reaching_the_limit(client):
+    resp = client.get("/events", params={"limit": "1"})
+    assert "limit reached" in resp.text
+    resp = client.get("/events")  # 5 seeded rows, default limit 50
+    assert "limit reached" not in resp.text
+
+
+def test_title_tooltip_carries_truncated_description(client):
+    resp = client.get("/events")
+    assert "title='Sing-along for ages 1-4.'" in resp.text
+
+
+def test_reset_link_present(client):
+    resp = client.get("/events")
+    assert "<a href='/events'>reset</a>" in resp.text
+
+
 def test_limit_is_clamped_to_max():
     kwargs = dashboard._parse_browse_params({"limit": "9999"})
     assert kwargs["limit"] == dashboard._MAX_LIMIT
