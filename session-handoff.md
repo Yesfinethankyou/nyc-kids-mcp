@@ -2,6 +2,40 @@
 
 ## What was done (most recent first)
 
+### Session: New York Family source verified AND BUILT (branch `claude/backlog-sources-review-22f37d`)
+
+Backlog review session; maintainer picked **New York Family
+(events.newyorkfamily.com)**. Two phases, same session: (1) live
+re-verification (first commit, docs only), which found the Schneps network
+had deliberately hobbled the Tribe REST API since the 7-06 probe; (2) the
+maintainer chose the full day-walk-crawler build over a lossy 16/day version
+or parking it, so the source was **built and shipped** as `new_york_family`.
+The SOURCES-BACKLOG.md entry (now "✅ BUILT 2026-07-12") holds both the
+verification record and the as-built notes — read it before touching this
+source. Short version:
+
+- **API quirks the build rides on:** hard 16-row cap (`per_page`/`page`
+  ignored; `page>1` returns the same rows as empty husks — the 7-06 "20%
+  stubs" explained), `{"events": [...]}`-only envelope, no `utc_*` date
+  fields (local `start_date` + `timezone` instead), but
+  `start_date`/`end_date` honored with "ongoing at" semantics. So the source
+  subclasses `Source` directly (NOT `TribeEventsSource`) and day-walks a
+  35-day window with adaptive within-day time slices, deduping on
+  `(id, start_date)`. Plain `httpx`.
+- **New capabilities for the catalog:** first source with structured age
+  bands (category "(N–M)" → `age_min`/`age_max`), strong Manhattan coverage,
+  100% of rows arrive with lat/lng. NYC membership by mommy_poppins
+  coordinate boxes (city strings are a trap); non-NYC rows (Long Island /
+  East End) dropped. `external_id = f"{id}:{start.isoformat()}"` —
+  occurrences share the parent id upstream.
+- **Numbers:** smoke run 2026-07-11→16: 48 requests → 85 NYC events, 0 dup
+  ids; extrapolates to ~280 requests / ~500 events per nightly 35-day run.
+  Registered in `ENABLED_SOURCES` before mommy_poppins (slow-crawl block);
+  opted INTO missing-detection (window 35 — census test updated to 11
+  sources). 18 new parser tests; full suite 577 green, ruff clean.
+- **If it breaks:** re-probe the API shape first — it changed in the six
+  days between probes; the module docstring documents what to check.
+
 ### Session: tailnet dashboard BUILT (branch `claude/ui-feature-planning-build-3w0aup`)
 
 Implemented DASHBOARD-PLAN.md as designed — the plan's prerequisite

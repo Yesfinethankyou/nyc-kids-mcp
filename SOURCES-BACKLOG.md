@@ -336,44 +336,150 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 - **Next step:** straight to `source-adder` — this is a same-day build, no
   further verification needed.
 
-### New York Family — events.newyorkfamily.com — 🟡 CONFIRMED feed, needs a geo-filter decision
+### New York Family — events.newyorkfamily.com — ✅ BUILT 2026-07-12 (day-walk crawler over a deliberately hobbled API)
 
-- **Status:** CONFIRMED 2026-07-06 (live probe). Real structured feed, but
-  **not NYC-scoped** — needs a real filtering decision before building, not
-  just a copy-adapt.
-- **Source:** WordPress + The Events Calendar (Tribe) REST API — fifth
-  instance of the same plugin.
-- **Endpoint:** `https://events.newyorkfamily.com/wp-json/tribe/events/v1/events`
-  — confirmed live, standard Tribe shape (`id`, `title`, `start_date`,
-  `venue` object with `geo_lat`/`geo_lng`, `cost`, `categories`).
-- **Why it's interesting despite the geo problem:** categories include real
-  **age-band taxonomy terms** (e.g. "Kids (5–8)") alongside "Family" —
-  this would be the first source with structured age data rather than
-  unstructured/absent `age_min`/`age_max`. Worth the extra filtering work if
-  the geo problem is solved.
-- **The geo problem (must be solved before building):** this is a regional
-  parenting-network calendar, NOT NYC-only. A 250-event live sample showed
-  real venues in **Huntington Station, Lynbrook, and Southampton** — all
-  Long Island, well outside the five boroughs. Of the sampled events, only
-  ~36% had a `venue.city` matching an NYC-recognized city string; a striking
-  **~60% had NO `venue.city` at all** (empty/null) — those can't be
-  auto-classified in or out by city name alone and would need a fallback
-  (state field check, or drop rows with no city rather than guess).
-  **Recommendation:** filter to `venue.city` in a NYC-borough allowlist
-  (New York, Brooklyn, Bronx, Manhattan, Queens, Staten Island, + common
-  neighborhood-as-city variants) and drop rows with no city — accept losing
-  some true-NYC events with missing venue data rather than risk Long
-  Island/Westchester noise, consistent with the "aggressive filtering is
-  correct" philosophy already applied to the permit source.
-- **Data-quality gotcha:** roughly **20% of returned event objects in the
-  REST response are bare stubs** — `{"start_date": ..., "end_date": ...}`
-  with no `id`, `title`, `venue`, or any other field. Cause unconfirmed
-  (possibly malformed recurring-instance placeholders on this particular
-  Tribe install). **Any parser must skip any event object missing `id` or
-  `title`** before it reaches `parse_row` — this is new, the four sources
-  already built on `_tribe.py` don't have this issue.
-- **Next step:** `source-verifier` to nail down the city-allowlist approach
-  and confirm the stub-skip doesn't lose real events, then `source-adder`.
+- **Status:** ✅ **BUILT 2026-07-12** — shipped as source `new_york_family`
+  (`src/nyc_events/sources/new_york_family.py`); as-built notes at the end of
+  this section. Same-day sequence: re-verified (findings below), maintainer
+  chose the day-walk-crawler build over the lossy 16/day version or parking
+  it. The verification record is kept verbatim because it documents the API
+  quirks the build depends on.
+- **Re-verification (2026-07-12, live, plain `httpx`, no anti-bot):** the
+  7-06 "fifth Tribe copy-adapt + city allowlist" framing was **obsolete** —
+  the network operator (Schneps Media) has crippled the Tribe REST API, and
+  it changed *between the two probes* (7-06 saw a `total: 51` envelope;
+  7-12 has no envelope at all), so it is under active modification. Both
+  original open questions (geo filter, stubs) were solved — but a new,
+  bigger problem replaced them.
+- **What the API actually does now (all verified live 2026-07-12):**
+  - Response envelope is `{"events": [...]}` only — no `total`/
+    `total_pages`/`next_rest_url`. The `TribeEventsSource` pagination loop
+    (keyed on `next_rest_url`) can never advance.
+  - **`per_page` and `page` are ignored; every query returns at most 16
+    rows** (the route's self-documented `per_page` default is the string
+    `"16"`). Not a CDN cache artifact — cache-busters don't change it.
+  - **`page>1` returns the SAME rows as page 1, serialized as empty husks**
+    `{"start_date", "end_date"}` (verified: identical start-time multiset).
+    This fully explains the 7-06 probe's "20% bare stubs" — they're not
+    malformed recurrences, they're what any page>1 fetch gets. A day-walk
+    fetch never requests page>1; keep a skip-if-no-`id`/`title` guard anyway.
+  - **`start_date`/`end_date`/`categories` ARE honored** (smells like a
+    REST-cache param allowlist). `ticketed` returns nothing useful.
+  - `start_date` has **"ongoing at" semantics** — all-day and multi-day
+    events return for every instant they span, and results are sorted by
+    start ascending, so ongoing rows permanently occupy the head of the
+    16-row window. A within-day time cursor therefore advances only slowly;
+    a naive `start_date` cursor walk gets stuck entirely.
+  - Rows have **no `utc_start_date`/`utc_end_date`** (both null) — only
+    local `start_date` + a `timezone` field. `_tribe.parse_row` keys on
+    `utc_start_date`, so it would drop every row. Only `strip_html`/
+    `parse_cost` are reusable from `_tribe.py`; the fetch loop and row
+    skeleton are not.
+- **No clean side door (all checked 2026-07-12):** the event pool is shared
+  across the Schneps network (row meta: `schneps_events_site_url =
+  events.amny.com`); the hub API is hobbled identically (16-row cap, no
+  envelope). `wp/v2/tribe_events` honors pagination but carries no
+  occurrence dates (post objects only). The iCal export (`/events/?ical=1`)
+  returns one stale 2025 event. Categories endpoint
+  (`/tribe/events/v1/categories`) is fully functional — 58 slugs,
+  network-wide counts.
+- **True volume vs. what one query sees:** Saturday 2026-07-18, union across
+  the base query + all 49 event-bearing category slices = **69 distinct
+  (id, start) rows; the base query alone returns 16 (23%)**, systematically
+  biased to all-day/morning events (first-16-by-start-time). Six categories
+  hit the 16-cap themselves that day (`family-kids`, `free`, `kids`,
+  `teens`, `tweens`, `attractions`), so even a full category union has
+  residual silent truncation on busy days. Weekday volume not sampled but
+  presumably lower (some days may fit in one query).
+- **Geo problem: SOLVED — use coordinates, not city strings.**
+  `venue.geo_lat`/`geo_lng` was present on **100% of 85 sampled rows**
+  (the 7-06 "60% no city" figure came from counting page>1 husks). Classify
+  five-borough membership by the `mommy_poppins.py` coordinate bounding
+  boxes, with a city-string allowlist as fallback; drop non-NYC. ~72% of the
+  7-18 union is five-borough; the rest is Long Island/East End (Huntington
+  Station, Long Beach, Bridgehampton…). City strings alone are a trap:
+  "New York City", "new york", "Manhatten" (sic), "Woodhaven",
+  "Springfield Gardens" all appear.
+- **Age bands: CONFIRMED, the unique payoff.** Category names carry
+  structured bands — `Baby & Toddler (0–2)`, `Preschoolers (3–4)`,
+  `Kids (5–8)`, `Tweens (9–12)`, `Teens (13–18)` — mappable to
+  `age_min`/`age_max` (min-of-mins/max-of-maxes when several appear). No
+  current source has structured ages. `Family` is on **100% of rows** (the
+  site itself is the family filter — network events without a family tag
+  don't syndicate here), so no kid-relevance filter is needed beyond the
+  shared adult blocklists as a safety net (one `Nightlife`-tagged row seen).
+- **Recurrence / external_id — differs from the four built Tribe sources:**
+  the server expands recurring events per-occurrence *per queried day*, but
+  occurrences share the parent's numeric `id` ("The Very Hungry Caterpillar
+  Show" id 853667 appears at 11:30 AND 15:30 the same day; "Summer of
+  Moomin" id 858274 appears daily through Sept). So
+  `external_id = f"{id}:{start.isoformat()}"` (the permit-source pattern) is
+  **mandatory**, not optional. A `recurrence` rules blob exists on rows but
+  never needs client-side expansion — the day queries do it.
+- **Build design, if built:** day-walk the window (one `start_date=<day>
+  00:00:00&end_date=<day> 23:59:59` query per day), then, per day, either
+  (a) adaptive time-slices (re-query with `start_date=<day> HH:00` while the
+  previous slice returned 16 rows) or (b) a curated category fan-out —
+  dedupe on `(id, start_date)` either way. Budget realistically
+  **~200–600 requests/night** depending on design and window (vs ~49 for
+  the next-heaviest source); a 28–35-day window instead of 60 halves it.
+  Residual known loss: instants where >16 events are simultaneously ongoing.
+  Full-window day-walk = opt IN to missing-detection if built.
+- **Fragility warning:** the API shape changed in the six days between
+  probes, in the direction of locking down. A source here rides on
+  quirks (which params the cache honors) that Schneps can remove any week.
+- **Verdict (as decided):** buildable without a headless browser, and the
+  content is genuinely good (Manhattan coverage — the catalog's weakest
+  borough — plus structured ages), but it is the heaviest, most fragile
+  fetch in the codebase with documented incompleteness on peak days.
+  Maintainer chose the full day-walk crawler (2026-07-12).
+- **As-built notes (build 2026-07-12; design above followed, plus):**
+  - **Fetch loop:** `NewYorkFamilySource` subclasses `Source` directly (NOT
+    `TribeEventsSource` — see the module docstring for why nothing there
+    fits). Day-walk of a **35-day window** (`window_days=35`, opted INTO
+    missing-detection; the census test now expects 35 for this source), one
+    base query per day + adaptive within-day slices: while a slice returns
+    the 16-row cap, re-query with `start_date` advanced to the latest start
+    seen (`_next_slice_start`), +2h when stuck (all visible rows ongoing),
+    max 12 slices/day, dedupe on `(id, start_date)`. Plain `httpx` — no
+    anti-bot on this API host.
+  - **Smoke run (6 days, 2026-07-11→16):** 48 requests, 85 NYC events, zero
+    duplicate ids, all five boroughs present, 100% rows with lat/lng, 26/85
+    with age bands, free/paid ≈ 44/41. Every sampled July day hit the 16-cap
+    several times (~8 slices/day) → expect **~280 requests and ~500 events
+    per 35-day nightly run** (summer; winter likely fewer slices).
+  - **Geo filter as built:** coordinate boxes copied verbatim from
+    `mommy_poppins.py`, checked BEFORE the city map; `_CITY_BOROUGH` string
+    fallback covers borough names, common misspellings ("Manhatten"), and
+    Queens neighborhood-as-city values. No borough → row dropped.
+  - **Ages/tags/price:** `_AGE_BAND_RX` parses "(N–M)" from any category
+    name (en dash or hyphen), min-of-mins/max-of-maxes;
+    `Baby & Toddler`/`Preschoolers`/`Kids (`/`Tweens` prefixes add
+    "best for kids" (Teens alone doesn't); `_CATEGORY_TAGS` maps ~25 topical
+    names onto the existing tag vocabulary; "family" is unconditional.
+    `_tribe.parse_cost` on the free-text `cost`, with a "Free" category
+    backstopping an empty cost. NOTE `parse_cost` returns FREE for
+    "Included with admission: $17–$30; free for ages 16 and younger" —
+    accepted shared-helper behavior, not worth a fork.
+  - **No kid-relevance filter** (100% of rows are family-tagged upstream;
+    the site is the filter); shared `ADULT_BLOCKLIST`/`ADULT_TITLE_BLOCKLIST`
+    + `MEMBERS_ONLY` (title) as the safety net. Upstream `Nightlife`
+    category deliberately NOT hard-excluded — their category tagging is
+    spray-everything (a family concert carried every age band plus
+    Nightlife), and the observed cases are Long Island rows the geo filter
+    already drops.
+  - **Multi-day/ongoing listings** (exhibitions, attraction runs like The
+    BEAST) are re-listed by the server with a per-day `start_date`, so they
+    yield one row per day of the window — same per-occurrence model as
+    nycgovparks' daily programs; not a bug, don't "fix" the dedupe.
+  - **Fixture:** `tests/fixtures/new_york_family_sample.json` — 8 real rows
+    (Brooklyn/Manhattan/Bronx/Queens keeps, Huntington Station + East Meadow
+    drops, the shared-id recurring Caterpillar row, an age-band row) + 1
+    real page-2 husk. 18 tests in `tests/test_new_york_family_parse.py`.
+  - **Fragility watch:** if this source goes quiet, re-probe the API shape
+    FIRST (`?start_date=` honored? still 16-cap? envelope back?) — it
+    changed once in the six days before the build and will change again.
+    The drift alarm (ingest exit 4) is the expected first symptom.
 
 ### Brooklyn Botanic Garden (BBG) — 🟢 CONFIRMED, HTML scrape
 
