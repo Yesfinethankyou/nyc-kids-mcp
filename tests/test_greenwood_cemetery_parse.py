@@ -50,6 +50,39 @@ def test_strip_html_replaces_entities():
     assert "&amp;" in _strip_html("<p>&amp;</p>") or "&" in _strip_html("<p>&amp;</p>")
 
 
+def test_strip_html_drops_style_script_button_contents():
+    # Green-Wood's Stackable theme embeds these in `description`; de-tagging
+    # alone leaks the CSS/JS text into the event description (the ".stk-…
+    # {margin…}" bug).
+    raw = (
+        "<style>.stk-abc {margin:0 !important;}</style>"
+        "<p>Real prose.</p>"
+        "<script>var cb = function() {};</script>"
+        "<button type='button'>Buy Tickets</button>"
+        "<!-- a comment -->"
+    )
+    assert _strip_html(raw) == "Real prose."
+
+
+def test_strip_html_drops_leading_schedule_comma():
+    # Tribe's schedule header de-tags to a bare "," before the prose starts.
+    raw = "<div><span></span><span>, </span></div><p>Hello.</p>"
+    assert _strip_html(raw) == "Hello."
+
+
+def test_fixture_descriptions_carry_no_css_or_js():
+    # Every fixture row embeds <style> (some also <script>) in `description`
+    # — the parsed Event description must never leak CSS/JS text.
+    for row in _load_events():
+        ev = _parse_row(row)
+        if ev is None or ev.description is None:
+            continue
+        assert ".stk-" not in ev.description, ev.title
+        assert "!important" not in ev.description, ev.title
+        assert "var exampleCallback" not in ev.description, ev.title
+        assert not ev.description.startswith(","), ev.title
+
+
 def test_parse_utc_dt_valid():
     result = _parse_utc_dt("2026-06-05 23:30:00")
     assert result == datetime(2026, 6, 5, 23, 30, 0, tzinfo=UTC)

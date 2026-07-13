@@ -30,6 +30,21 @@ headless Chromium screenshots). Suite 582 green (5 new tests), ruff clean.
   possible follow-up), sortable columns/pagination, match highlighting,
   dark mode, pill badges (maintainer wants craigslist-plain).
 
+Fourth commit, same session: **Green-Wood CSS/JS bleed-through fixed in the
+shared Tribe `strip_html`** — maintainer reported a description reading
+".stk-w5jb2gk {margin-right:0px !important…}". Green-Wood's Stackable theme
+embeds `<style>`/`<script>`/`<button>` inside the Tribe `description` HTML;
+de-tagging alone left their text content in the prose (the module docstring
+had even noted the bleed-through and wrongly claimed the 2000-char trim
+handled it — the CSS comes *first*, so it ate the whole preview).
+`strip_html` now drops those elements' contents + HTML comments before
+tag-stripping, and lstrips the stray leading ", " the empty Tribe schedule
+header leaves behind. Fix is shared → all four Tribe sources benefit.
+Verified against the live API row the maintainer reported (id 10037316).
+**Existing DB rows self-heal**: the nightly upsert rewrites `description`
+in place for every row still in the upstream window — no DB surgery needed,
+just deploy + one nightly ingest.
+
 Third commit, same session: **time ranges surfaced in listings** — maintainer
 reported a noon–4pm Prospect Park event presenting as bare "12". Diagnosis:
 the DB had start AND end correct all along (Tribe sources capture `end_dt`);
