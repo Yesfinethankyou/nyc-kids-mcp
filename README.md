@@ -25,7 +25,15 @@ tools — designed for use from the Claude mobile app while out with a kid.
   (`brooklyn_bridge_park`, ~139 events/60d — free waterfront programming
   with per-pier venues), Snug Harbor Cultural Center
   (`snug_harbor`, ~10 events/60d — Staten Island cultural park, WP REST
-  list + per-detail JSON-LD dates, audience-taxonomy kid filter) — real
+  list + per-detail JSON-LD dates, audience-taxonomy kid filter), City Parks
+  Foundation (`city_parks_foundation`, ~49 events/60d — free citywide park
+  programming: all SummerStage concerts + the PuppetMobile kids' shows, via
+  the Tribe REST API, borough per-event), and NYPL
+  (`nypl`, the New York Public Library's Manhattan / Bronx / Staten Island
+  branch calendar — thousands of free youth/family library programs
+  (storytimes, craft afternoons, teen labs) scraped from the server-rendered
+  Drupal listing, borough from the site's own `city[]` filter; this is what
+  unlocks Bronx + Staten Island library coverage) — real
   descriptions, URLs, and (where upstream provides them) age ranges,
   coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser), Coney Island

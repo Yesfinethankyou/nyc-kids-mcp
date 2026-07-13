@@ -1,0 +1,1984 @@
+{
+  "events": [
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 99,
+          "description": "",
+          "filter": "raw",
+          "id": 32,
+          "name": "PuppetMobile",
+          "parent": 0,
+          "slug": "puppetmobile",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 32,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/32"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "",
+        "currency_position": "prefix",
+        "currency_symbol": "",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-04-30 13:45:11",
+      "date_utc": "2026-04-30 17:45:11",
+      "description": "<p>During the 2026 season, the PuppetMobile will present a fresh take on the classic fairytale Pinocchio written by Julia Darden and directed by Bruce Cannon, with set design by Zlata Godunova and costume design by Charlie DelRisco.</p>\n<p>In this new telling, Geppetto is a New York City kid with a talent for invention, going as far as creating a robot friend in the form of Pinocchio. The story follows the pair as they tour around classic locales, from the Swedish Cottage Marionette Theatre in Central Park to the Victorian Gardens Amusement Park, and the hijinks they get into along the way. </p>\n<p>The production features hand-made marionettes crafted by Swedish Cottage Marionette Theatre puppet builder Kevin White. In addition to the artistry of the production, viewers will be treated to original songs written and orchestrated by Daryl Kojak performed by the marionettes.</p>",
+      "end_date": "2026-07-13 12:00:00",
+      "end_date_details": {
+        "day": "13",
+        "hour": "12",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=19967",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=19967"
+      ],
+      "hide_from_listings": false,
+      "id": 19967,
+      "image": {
+        "extension": "webp",
+        "filesize": 126590,
+        "height": 700,
+        "id": 19935,
+        "sizes": {
+          "1536x1536": {
+            "filesize": 113446,
+            "height": 597,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-1536x597.webp",
+            "width": 1536
+          },
+          "large": {
+            "filesize": 66802,
+            "height": 398,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-1024x398.webp",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 10622,
+            "height": 117,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-300x117.webp",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 44674,
+            "height": 299,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-768x299.webp",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 7366,
+            "height": 150,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-150x150.webp",
+            "width": 150
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1.webp",
+        "width": 1800
+      },
+      "is_virtual": false,
+      "modified": "2026-04-30 13:45:11",
+      "modified_utc": "2026-04-30 17:45:11",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:27:08",
+          "date_utc": "2025-03-05 18:27:08",
+          "global_id": "cityparksfoundation.org?id=764",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=764"
+          ],
+          "id": 764,
+          "modified": "2025-03-20 15:17:58",
+          "modified_utc": "2025-03-20 19:17:58",
+          "organizer": "Family",
+          "slug": "family",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/family/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/19967",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "pinocchio-and-gepettos-big-apple-adventure-23",
+      "start_date": "2026-07-13 11:00:00",
+      "start_date_details": {
+        "day": "13",
+        "hour": "11",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "Pinocchio and Gepetto&#8217;s Big Apple Adventure",
+      "url": "https://cityparksfoundation.org/events/pinocchio-and-gepettos-big-apple-adventure-23/",
+      "utc_end_date": "2026-07-13 16:00:00",
+      "utc_end_date_details": {
+        "day": "13",
+        "hour": "16",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-13 15:00:00",
+      "utc_start_date_details": {
+        "day": "13",
+        "hour": "15",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:33:24",
+        "date_utc": "2025-03-03 19:33:24",
+        "global_id": "cityparksfoundation.org?id=681",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=681"
+        ],
+        "id": 681,
+        "modified": "2025-03-03 14:33:24",
+        "modified_utc": "2025-03-03 19:33:24",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "staten-island",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/staten-island/",
+        "venue": "Staten Island"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 99,
+          "description": "",
+          "filter": "raw",
+          "id": 32,
+          "name": "PuppetMobile",
+          "parent": 0,
+          "slug": "puppetmobile",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 32,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/32"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "",
+        "currency_position": "prefix",
+        "currency_symbol": "",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-04-30 13:45:12",
+      "date_utc": "2026-04-30 17:45:12",
+      "description": "<p>During the 2026 season, the PuppetMobile will present a fresh take on the classic fairytale Pinocchio written by Julia Darden and directed by Bruce Cannon, with set design by Zlata Godunova and costume design by Charlie DelRisco.</p>\n<p>In this new telling, Geppetto is a New York City kid with a talent for invention, going as far as creating a robot friend in the form of Pinocchio. The story follows the pair as they tour around classic locales, from the Swedish Cottage Marionette Theatre in Central Park to the Victorian Gardens Amusement Park, and the hijinks they get into along the way. </p>\n<p>The production features hand-made marionettes crafted by Swedish Cottage Marionette Theatre puppet builder Kevin White. In addition to the artistry of the production, viewers will be treated to original songs written and orchestrated by Daryl Kojak performed by the marionettes.</p>",
+      "end_date": "2026-07-15 12:00:00",
+      "end_date_details": {
+        "day": "15",
+        "hour": "12",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=19968",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=19968"
+      ],
+      "hide_from_listings": false,
+      "id": 19968,
+      "image": {
+        "extension": "webp",
+        "filesize": 126590,
+        "height": 700,
+        "id": 19935,
+        "sizes": {
+          "1536x1536": {
+            "filesize": 113446,
+            "height": 597,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-1536x597.webp",
+            "width": 1536
+          },
+          "large": {
+            "filesize": 66802,
+            "height": 398,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-1024x398.webp",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 10622,
+            "height": 117,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-300x117.webp",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 44674,
+            "height": 299,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-768x299.webp",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 7366,
+            "height": 150,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-150x150.webp",
+            "width": 150
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1.webp",
+        "width": 1800
+      },
+      "is_virtual": false,
+      "modified": "2026-04-30 13:45:12",
+      "modified_utc": "2026-04-30 17:45:12",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:27:08",
+          "date_utc": "2025-03-05 18:27:08",
+          "global_id": "cityparksfoundation.org?id=764",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=764"
+          ],
+          "id": 764,
+          "modified": "2025-03-20 15:17:58",
+          "modified_utc": "2025-03-20 19:17:58",
+          "organizer": "Family",
+          "slug": "family",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/family/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/19968",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "pinocchio-and-gepettos-big-apple-adventure-24",
+      "start_date": "2026-07-15 11:00:00",
+      "start_date_details": {
+        "day": "15",
+        "hour": "11",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "Pinocchio and Gepetto&#8217;s Big Apple Adventure",
+      "url": "https://cityparksfoundation.org/events/pinocchio-and-gepettos-big-apple-adventure-24/",
+      "utc_end_date": "2026-07-15 16:00:00",
+      "utc_end_date_details": {
+        "day": "15",
+        "hour": "16",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-15 15:00:00",
+      "utc_start_date_details": {
+        "day": "15",
+        "hour": "15",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:33:00",
+        "date_utc": "2025-03-03 19:33:00",
+        "global_id": "cityparksfoundation.org?id=680",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=680"
+        ],
+        "id": 680,
+        "modified": "2025-03-03 14:33:00",
+        "modified_utc": "2025-03-03 19:33:00",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "bronx",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/bronx/",
+        "venue": "Bronx"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 99,
+          "description": "",
+          "filter": "raw",
+          "id": 32,
+          "name": "PuppetMobile",
+          "parent": 0,
+          "slug": "puppetmobile",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 32,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/32"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "currency_symbol": "$",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-04-30 13:45:14",
+      "date_utc": "2026-04-30 17:45:14",
+      "description": "<p>During the 2026 season, the PuppetMobile will present a fresh take on the classic fairytale Pinocchio written by Julia Darden and directed by Bruce Cannon, with set design by Zlata Godunova and costume design by Charlie DelRisco.</p>\n<p>In this new telling, Geppetto is a New York City kid with a talent for invention, going as far as creating a robot friend in the form of Pinocchio. The story follows the pair as they tour around classic locales, from the Swedish Cottage Marionette Theatre in Central Park to the Victorian Gardens Amusement Park, and the hijinks they get into along the way.</p>\n<p>The production features hand-made marionettes crafted by Swedish Cottage Marionette Theatre puppet builder Kevin White. In addition to the artistry of the production, viewers will be treated to original songs written and orchestrated by Daryl Kojak performed by the marionettes.</p>",
+      "end_date": "2026-07-21 11:00:00",
+      "end_date_details": {
+        "day": "21",
+        "hour": "11",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=19971",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=19971"
+      ],
+      "hide_from_listings": false,
+      "id": 19971,
+      "image": {
+        "extension": "webp",
+        "filesize": 126590,
+        "height": 700,
+        "id": 19935,
+        "sizes": {
+          "1536x1536": {
+            "filesize": 113446,
+            "height": 597,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-1536x597.webp",
+            "width": 1536
+          },
+          "large": {
+            "filesize": 66802,
+            "height": 398,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-1024x398.webp",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 10622,
+            "height": 117,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-300x117.webp",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 44674,
+            "height": 299,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-768x299.webp",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 7366,
+            "height": 150,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1-150x150.webp",
+            "width": 150
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/pinocho_1800x700-1.webp",
+        "width": 1800
+      },
+      "is_virtual": false,
+      "modified": "2026-06-09 15:03:17",
+      "modified_utc": "2026-06-09 19:03:17",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:27:08",
+          "date_utc": "2025-03-05 18:27:08",
+          "global_id": "cityparksfoundation.org?id=764",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=764"
+          ],
+          "id": 764,
+          "modified": "2025-03-20 15:17:58",
+          "modified_utc": "2025-03-20 19:17:58",
+          "organizer": "Family",
+          "slug": "family",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/family/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/19971",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "pinocchio-and-gepettos-big-apple-adventure-27",
+      "start_date": "2026-07-21 10:00:00",
+      "start_date_details": {
+        "day": "21",
+        "hour": "10",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "Pinocchio and Gepetto&#8217;s Big Apple Adventure",
+      "url": "https://cityparksfoundation.org/events/pinocchio-and-gepettos-big-apple-adventure-27/",
+      "utc_end_date": "2026-07-21 15:00:00",
+      "utc_end_date_details": {
+        "day": "21",
+        "hour": "15",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-21 14:00:00",
+      "utc_start_date_details": {
+        "day": "21",
+        "hour": "14",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:27:33",
+        "date_utc": "2025-03-03 19:27:33",
+        "global_id": "cityparksfoundation.org?id=677",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=677"
+        ],
+        "id": 677,
+        "modified": "2025-03-03 14:27:33",
+        "modified_utc": "2025-03-03 19:27:33",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "manhattan",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/manhattan/",
+        "venue": "Manhattan"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 144,
+          "description": "",
+          "filter": "raw",
+          "id": 25,
+          "name": "SummerStage",
+          "parent": 0,
+          "slug": "summerstage",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 25,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/25"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "currency_symbol": "$",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-04-28 11:50:12",
+      "date_utc": "2026-04-28 15:50:12",
+      "description": "<p><span style=\"font-weight: 400;\">In association with the Moroccan Ministry of Youth, Culture, and Communication, the Council of the Moroccan Community Abroad, and Maroc Festivals, SummerStage brings a handful of artists showcasing the diversity of sounds and rhythms from the North African nation to Central Park. Headlining is Hoba Hoba Spirit, a Moroccan rock band from Casablanca that fuses rock, reggae and Gnawa (a Sufi style brought from West Africa) into a sound they call \u201chaiha\u201d\u2014evoking the controlled chaos and randomness of their live experience. They joined by Hamid El Kasri, a Gnawa master trained in the Chemeli style with a distinctively deep and rich voice who performs with the three-stringed bass guembri; Dakhla Casa Xpress beginning with the stillness and warmth of the desert, and building toward the electric energy of the city; Mr ID, the DJ and producer who brought American rap beats, funk rhythms and the spirit of Jazz back home with him to Morocco, where he fused the sounds with violin airs and African percussion; and NDRK, a rising star on the dance floors of Marrakech, Casablanca, and Dubai, who also produces gems like the track selected as the anthem for the Paris 2024 Olympic Games</span></p>",
+      "end_date": "2026-07-15 22:00:00",
+      "end_date_details": {
+        "day": "15",
+        "hour": "22",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "<p>Celebration of Moroccan music featuring a mix of rock, rap, funk, jazz, and more </p>",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=19772",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=19772"
+      ],
+      "hide_from_listings": false,
+      "id": 19772,
+      "image": {
+        "extension": "webp",
+        "filesize": 144348,
+        "height": 700,
+        "id": 20893,
+        "sizes": {
+          "1536x1536": {
+            "filesize": 130920,
+            "height": 597,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/morocco_webphoto-1536x597.webp",
+            "width": 1536
+          },
+          "large": {
+            "filesize": 73540,
+            "height": 398,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/morocco_webphoto-1024x398.webp",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 11030,
+            "height": 117,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/morocco_webphoto-300x117.webp",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 48018,
+            "height": 299,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/morocco_webphoto-768x299.webp",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 6786,
+            "height": 150,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/morocco_webphoto-150x150.webp",
+            "width": 150
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/morocco_webphoto.webp",
+        "width": 1800
+      },
+      "is_virtual": false,
+      "modified": "2026-07-02 16:11:48",
+      "modified_utc": "2026-07-02 20:11:48",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:23:12",
+          "date_utc": "2025-03-05 18:23:12",
+          "global_id": "cityparksfoundation.org?id=758",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=758"
+          ],
+          "id": 758,
+          "modified": "2025-03-20 15:17:06",
+          "modified_utc": "2025-03-20 19:17:06",
+          "organizer": "Music",
+          "slug": "music",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/music/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/19772",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "morocco-from-dakhla-to-casablanca",
+      "start_date": "2026-07-15 18:00:00",
+      "start_date_details": {
+        "day": "15",
+        "hour": "18",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "Morocco: From Dakhla to Casablanca: Hoba Hoba Spirit / Hamid El Kasri / Dakhla Casa Xpress / Mr ID / NDRK",
+      "url": "https://cityparksfoundation.org/events/morocco-from-dakhla-to-casablanca/",
+      "utc_end_date": "2026-07-16 02:00:00",
+      "utc_end_date_details": {
+        "day": "16",
+        "hour": "02",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-15 22:00:00",
+      "utc_start_date_details": {
+        "day": "15",
+        "hour": "22",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:27:33",
+        "date_utc": "2025-03-03 19:27:33",
+        "global_id": "cityparksfoundation.org?id=677",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=677"
+        ],
+        "id": 677,
+        "modified": "2025-03-03 14:27:33",
+        "modified_utc": "2025-03-03 19:27:33",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "manhattan",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/manhattan/",
+        "venue": "Manhattan"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 144,
+          "description": "",
+          "filter": "raw",
+          "id": 25,
+          "name": "SummerStage",
+          "parent": 0,
+          "slug": "summerstage",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 25,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/25"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "currency_symbol": "$",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-04-28 11:50:40",
+      "date_utc": "2026-04-28 15:50:40",
+      "description": "<p>At the dawn of the \u201890s, when the most popular hip-hop was neck-deep in intimidating street tales, New Yorkers De La Soul offered an alternate take, striving for peace and harmony with creative rhyme styles on their critically acclaimed debut <em>3 Feet High and Rising.</em> Prince Paul\u2019s heavily sample-based production style and inventive skits remain massively influential, even as hip-hop aesthetics have shifted from the jazz, soul, and classic R&amp;B sounds he drew from. The group continued to evolve, leaving behind the flowery aesthetic that mistakenly branded them as \u201chippies\u201d for a darker tone on records like <em>De La Soul is Dead</em> and <em>Buhloone</em> <em>Mindstate</em>. Though this current lineup is without Trugoy the Dove\u2014who passed in 2023\u2014the group has experienced a resurgence of interest with new 2025 release <em>Cabin in the Sky.</em> They\u2019re joined by Bronx legend Pete Rock, producer and occasional MC best known for his collaborations with CL Smooth (&#8220;They Reminisce Over You (T.R.O.Y.)&#8221;) and his production work on classic albums by Nas, AZ, Rakim, and his cousin Heavy D. Widely considered one of the most renowned hip-hop producers of the \u201890s, his hazy, jazz-centric sample style is both distinctive and widely influential. His recent studio collaboration with Common, The Auditorium Vol. 1, earned him a GRAMMY nomination last year. Actor, comedian, and musician Hannibal Buress will open the evening with a DJ set.</p>",
+      "end_date": "2026-07-17 21:00:00",
+      "end_date_details": {
+        "day": "17",
+        "hour": "21",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "<p>Hip-hop innovators with a genre-defining legacy come to Queens</p>",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=19774",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=19774"
+      ],
+      "hide_from_listings": false,
+      "id": 19774,
+      "image": {
+        "extension": "webp",
+        "filesize": 118774,
+        "height": 700,
+        "id": 20797,
+        "sizes": {
+          "1536x1536": {
+            "filesize": 101058,
+            "height": 597,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/delapete_webphoto-1536x597.webp",
+            "width": 1536
+          },
+          "large": {
+            "filesize": 51904,
+            "height": 398,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/delapete_webphoto-1024x398.webp",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 7538,
+            "height": 117,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/delapete_webphoto-300x117.webp",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 32682,
+            "height": 299,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/delapete_webphoto-768x299.webp",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 4038,
+            "height": 150,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/delapete_webphoto-150x150.webp",
+            "width": 150
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2026/06/delapete_webphoto.webp",
+        "width": 1800
+      },
+      "is_virtual": false,
+      "modified": "2026-07-07 10:46:35",
+      "modified_utc": "2026-07-07 14:46:35",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:23:12",
+          "date_utc": "2025-03-05 18:23:12",
+          "global_id": "cityparksfoundation.org?id=758",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=758"
+          ],
+          "id": 758,
+          "modified": "2025-03-20 15:17:06",
+          "modified_utc": "2025-03-20 19:17:06",
+          "organizer": "Music",
+          "slug": "music",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/music/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/19774",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "de-la-soul-pete-rock",
+      "start_date": "2026-07-17 18:00:00",
+      "start_date_details": {
+        "day": "17",
+        "hour": "18",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "De La Soul / Pete Rock / DJ Hannibal Buress",
+      "url": "https://cityparksfoundation.org/events/de-la-soul-pete-rock/",
+      "utc_end_date": "2026-07-18 01:00:00",
+      "utc_end_date_details": {
+        "day": "18",
+        "hour": "01",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-17 22:00:00",
+      "utc_start_date_details": {
+        "day": "17",
+        "hour": "22",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:31:00",
+        "date_utc": "2025-03-03 19:31:00",
+        "global_id": "cityparksfoundation.org?id=679",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=679"
+        ],
+        "id": 679,
+        "modified": "2025-03-03 14:32:50",
+        "modified_utc": "2025-03-03 19:32:50",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "queens",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/queens/",
+        "venue": "Queens"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 144,
+          "description": "",
+          "filter": "raw",
+          "id": 25,
+          "name": "SummerStage",
+          "parent": 0,
+          "slug": "summerstage",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 25,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/25"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "currency_symbol": "$",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-04-28 11:50:38",
+      "date_utc": "2026-04-28 15:50:38",
+      "description": "<p>Linda Viera Caballero quickly made a name for herself as La India, one of the biggest voices in salsa. But before Celia Cruz would dub her the &#8220;Princess of Salsa,&#8221; she got her start in the South Bronx, where she was a founding member of the Latin Freestyle group TKA, and cut a solo record with Freestyle legends John &#8220;Jellybean&#8221; Benitez and her husband &#8220;Little&#8221; Louie Vega. After &#8220;Lleg\u00f3 La India via Eddie Palmieri,&#8221; she blossomed into salsa royalty and never looked back, going on to work with Cruz and Tito Puente, and winning Best Salsa Album Latin GRAMMY for her album<em> Intensamente India Con Canciones De Juan Gabriel.\u00a0</em>She&#8217;s joined by DJ Tony Touch of The Originals on the ones and twos.</p>",
+      "end_date": "2026-07-30 21:00:00",
+      "end_date_details": {
+        "day": "30",
+        "hour": "21",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "<p>The Princess of Salsa brings her sound to the Bronx</p>",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=19780",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=19780"
+      ],
+      "hide_from_listings": false,
+      "id": 19780,
+      "image": {
+        "extension": "webp",
+        "filesize": 112236,
+        "height": 700,
+        "id": 20242,
+        "sizes": {
+          "1536x1536": {
+            "filesize": 91018,
+            "height": 597,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/05/laindia_webphoto-1536x597.webp",
+            "width": 1536
+          },
+          "large": {
+            "filesize": 45130,
+            "height": 398,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/05/laindia_webphoto-1024x398.webp",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 6140,
+            "height": 117,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/05/laindia_webphoto-300x117.webp",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 28068,
+            "height": 299,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/05/laindia_webphoto-768x299.webp",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 3982,
+            "height": 150,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/05/laindia_webphoto-150x150.webp",
+            "width": 150
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2026/05/laindia_webphoto.webp",
+        "width": 1800
+      },
+      "is_virtual": false,
+      "modified": "2026-07-01 13:59:36",
+      "modified_utc": "2026-07-01 17:59:36",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:23:12",
+          "date_utc": "2025-03-05 18:23:12",
+          "global_id": "cityparksfoundation.org?id=758",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=758"
+          ],
+          "id": 758,
+          "modified": "2025-03-20 15:17:06",
+          "modified_utc": "2025-03-20 19:17:06",
+          "organizer": "Music",
+          "slug": "music",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/music/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/19780",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "la-india-bronx-26",
+      "start_date": "2026-07-30 18:00:00",
+      "start_date_details": {
+        "day": "30",
+        "hour": "18",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "La India &#038; MD Bobby Allende / DJ Tony Touch / DJ Lucho",
+      "url": "https://cityparksfoundation.org/events/la-india-bronx-26/",
+      "utc_end_date": "2026-07-31 01:00:00",
+      "utc_end_date_details": {
+        "day": "31",
+        "hour": "01",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-30 22:00:00",
+      "utc_start_date_details": {
+        "day": "30",
+        "hour": "22",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:33:00",
+        "date_utc": "2025-03-03 19:33:00",
+        "global_id": "cityparksfoundation.org?id=680",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=680"
+        ],
+        "id": 680,
+        "modified": "2025-03-03 14:33:00",
+        "modified_utc": "2025-03-03 19:33:00",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "bronx",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/bronx/",
+        "venue": "Bronx"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 144,
+          "description": "",
+          "filter": "raw",
+          "id": 25,
+          "name": "SummerStage",
+          "parent": 0,
+          "slug": "summerstage",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 25,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/25"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "currency_symbol": "$",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-04-28 11:50:59",
+      "date_utc": "2026-04-28 15:50:59",
+      "description": "<p>When you\u2019re a personality as big as Funk Flex, you celebrate your birthday all weekend. This party, on the second day of the New York hip-hop institution\u2019s birthday weekend, features another collection of legacy acts from Funk Flex\u2019s considerable sphere of influence. The headliner is Crystal Waters, the house and dance music singer known for hits like \u201c100% Pure Love\u201d and house staple \u201cGypsy Woman (She\u2019s Homeless).\u201d She\u2019s joined by Cynthia, the Puerto Rican freestyle singer who had a hit with her Johnny O collaboration &#8220;Dreamboy/Dreamgirl&#8221; and her cover of the Stylistics\u2019 &#8220;Break Up to Make Up&#8221;; Frankie Cutlass, a member of Funk Flex\u2019s DJ collective The Flip Squad whose hook from his classic single \u201cPuerto Rico\u201d became a staple of Funk Flex\u2019s sets; Force MDs, Staten Island\u2019s own R&amp;B group that fused doo wop and hip-hop and peaked with their Top 10 pop hit &#8220;Tender Love&#8221; in 1985; Sunshine Anderson, the North Carolina R&amp;B and soul singer who had a hit in 2001 with her debut single &#8220;Heard It All Before&#8221;; Mr Cheeks, formerly of the Lost Boyz, the Queens trio responsible for &#8220;Lifestyles of the Rich &amp; Shameless\u201d and \u201cRenee,\u201d who went solo in 1999 and had a hit with his Missy Elliott and Petey Pablo collaboration &#8220;Lights, Camera, Action!&#8221;; and CL Smooth, one half of the duo with Pete Rock responsible for foundational works such as \u201cThey Reminisce Over You (T.O.N.Y.).\u201d</p>",
+      "end_date": "2026-08-08 21:00:00",
+      "end_date_details": {
+        "day": "08",
+        "hour": "21",
+        "minutes": "00",
+        "month": "08",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "<p>Birthday jam for Funk Flex chock full of big beats, monster hooks, and a wave of classics</p>",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=19787",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=19787"
+      ],
+      "hide_from_listings": false,
+      "id": 19787,
+      "image": {
+        "extension": "webp",
+        "filesize": 133104,
+        "height": 700,
+        "id": 19701,
+        "sizes": {
+          "1536x1536": {
+            "filesize": 123582,
+            "height": 597,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/ffcw_webphoto-1536x597.webp",
+            "width": 1536
+          },
+          "large": {
+            "filesize": 67850,
+            "height": 398,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/ffcw_webphoto-1024x398.webp",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 10536,
+            "height": 117,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/ffcw_webphoto-300x117.webp",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 44468,
+            "height": 299,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/ffcw_webphoto-768x299.webp",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 6054,
+            "height": 150,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/ffcw_webphoto-150x150.webp",
+            "width": 150
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2026/04/ffcw_webphoto.webp",
+        "width": 1800
+      },
+      "is_virtual": false,
+      "modified": "2026-06-18 10:33:06",
+      "modified_utc": "2026-06-18 14:33:06",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:23:12",
+          "date_utc": "2025-03-05 18:23:12",
+          "global_id": "cityparksfoundation.org?id=758",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=758"
+          ],
+          "id": 758,
+          "modified": "2025-03-20 15:17:06",
+          "modified_utc": "2025-03-20 19:17:06",
+          "organizer": "Music",
+          "slug": "music",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/music/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/19787",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "funk-flex-birthday-fest-26",
+      "start_date": "2026-08-08 18:00:00",
+      "start_date_details": {
+        "day": "08",
+        "hour": "18",
+        "minutes": "00",
+        "month": "08",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "Funk Flex Birthday Fest: Crystal Waters / Cynthia / Frankie Cutlass / Force MDs / Sunshine Anderson / Greg Nice/ CL Smooth",
+      "url": "https://cityparksfoundation.org/events/funk-flex-birthday-fest-26/",
+      "utc_end_date": "2026-08-09 01:00:00",
+      "utc_end_date_details": {
+        "day": "09",
+        "hour": "01",
+        "minutes": "00",
+        "month": "08",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-08-08 22:00:00",
+      "utc_start_date_details": {
+        "day": "08",
+        "hour": "22",
+        "minutes": "00",
+        "month": "08",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:33:24",
+        "date_utc": "2025-03-03 19:33:24",
+        "global_id": "cityparksfoundation.org?id=681",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=681"
+        ],
+        "id": 681,
+        "modified": "2025-03-03 14:33:24",
+        "modified_utc": "2025-03-03 19:33:24",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "staten-island",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/staten-island/",
+        "venue": "Staten Island"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "18",
+      "categories": [
+        {
+          "count": 11,
+          "description": "",
+          "filter": "raw",
+          "id": 53,
+          "name": "Grants and More",
+          "parent": 0,
+          "slug": "grants-more",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 53,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/53"
+          }
+        },
+        {
+          "count": 13,
+          "description": "",
+          "filter": "raw",
+          "id": 52,
+          "name": "Partnerships for Parks",
+          "parent": 28,
+          "slug": "partnerships-for-parks",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 52,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/52",
+            "up": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/28"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "currency_symbol": "$",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-07-08 03:00:25",
+      "date_utc": "2026-07-08 07:00:25",
+      "description": "<p>Looking for funding to activate a local park or open space? The NYC Green Fund Grassroots grant program offers funding from $1,000 to $40,000 per year, for up to two years, to community groups and organizations providing open space programming and stewardship across NYC. This grant program is intended to advance grassroots initiatives across public spaces in all five boroughs.</p>\n<p>Join us at an info session and learn everything you need to know about applying for funding. <strong>The deadline to apply is 11:59 p.m. on Friday, August 14, 2026.</strong></p>\n<div><em>Registration for this session is required and will close the day before the event. Y<strong>ou will receive information on how to join the webinar once you register.</strong> Questions? Reach out to <a href=\"mailto:GreenFundGrassroots@cityparksfoundation.org\">GreenFundGrassroots@cityparksfoundation.org</a>.</em></div>",
+      "end_date": "2026-07-13 19:30:00",
+      "end_date_details": {
+        "day": "13",
+        "hour": "19",
+        "minutes": "30",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "<p>Learn everything you need to know about applying for the NYC Green Fund Grassroots grant.</p>",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=20953",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=20953"
+      ],
+      "hide_from_listings": false,
+      "id": 20953,
+      "image": {
+        "extension": "webp",
+        "filesize": 334236,
+        "height": 1667,
+        "id": 20954,
+        "sizes": {
+          "1536x1536": {
+            "filesize": 252278,
+            "height": 1024,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/07/Friends-of-McGolrick-Park-1-1-1536x1024.webp",
+            "width": 1536
+          },
+          "2048x2048": {
+            "filesize": 338794,
+            "height": 1366,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/07/Friends-of-McGolrick-Park-1-1-2048x1366.webp",
+            "width": 2048
+          },
+          "large": {
+            "filesize": 166898,
+            "height": 683,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/07/Friends-of-McGolrick-Park-1-1-1024x683.webp",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 51134,
+            "height": 200,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/07/Friends-of-McGolrick-Park-1-1-300x200.webp",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 124284,
+            "height": 512,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/07/Friends-of-McGolrick-Park-1-1-768x512.webp",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 37928,
+            "height": 150,
+            "mime-type": "image/webp",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2026/07/Friends-of-McGolrick-Park-1-1-150x150.webp",
+            "width": 150
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2026/07/Friends-of-McGolrick-Park-1-1.webp",
+        "width": 2500
+      },
+      "is_virtual": false,
+      "modified": "2026-07-08 15:01:05",
+      "modified_utc": "2026-07-08 19:01:05",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:27:24",
+          "date_utc": "2025-03-05 18:27:24",
+          "global_id": "cityparksfoundation.org?id=765",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=765"
+          ],
+          "id": 765,
+          "modified": "2025-03-20 15:18:14",
+          "modified_utc": "2025-03-20 19:18:14",
+          "organizer": "Panel/Webinar",
+          "slug": "panel-webinar",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/panel-webinar/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/20953",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "nyc-green-fund-grassroots-grant-info-session-fall26-1",
+      "start_date": "2026-07-13 18:00:00",
+      "start_date_details": {
+        "day": "13",
+        "hour": "18",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "NYC Green Fund Grassroots Grant Info Session",
+      "url": "https://cityparksfoundation.org/events/nyc-green-fund-grassroots-grant-info-session-fall26-1/",
+      "utc_end_date": "2026-07-13 23:30:00",
+      "utc_end_date_details": {
+        "day": "13",
+        "hour": "23",
+        "minutes": "30",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-13 22:00:00",
+      "utc_start_date_details": {
+        "day": "13",
+        "hour": "22",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "8",
+        "date": "2025-07-11 14:18:26",
+        "date_utc": "2025-07-11 18:18:26",
+        "global_id": "cityparksfoundation.org?id=15739",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=15739"
+        ],
+        "id": 15739,
+        "modified": "2025-07-11 14:18:26",
+        "modified_utc": "2025-07-11 18:18:26",
+        "show_map": false,
+        "show_map_link": true,
+        "slug": "online",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/online/",
+        "venue": "Online"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 1155,
+          "description": "",
+          "filter": "raw",
+          "id": 28,
+          "name": "Volunteer: It's My Park",
+          "parent": 0,
+          "slug": "volunteer",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 28,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/28"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "",
+        "currency_position": "prefix",
+        "currency_symbol": "",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-06-16 12:18:52",
+      "date_utc": "2026-06-16 16:18:52",
+      "description": "<p>This It&#8217;s My Park season, volunteer with Parent-Child Relationship Association to beautify Sunset Park. We look forward to cleaning up the park with you!</p>\n<p>Volunteers should meet at the recreation center in Sunset Park.</p>\n<p>For more information, please email volunteer.pcrnyc@gmail.com.</p>",
+      "end_date": "2026-07-14 12:00:00",
+      "end_date_details": {
+        "day": "14",
+        "hour": "12",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "<p>Volunteer with Parent-Child Relationship Association to beautify Sunset Park.</p>",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=20697",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=20697"
+      ],
+      "hide_from_listings": false,
+      "id": 20697,
+      "image": {
+        "extension": "jpg",
+        "filesize": 103153,
+        "height": 802,
+        "id": 11034,
+        "sizes": {
+          "large": {
+            "filesize": 104963,
+            "height": 721,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/02/IMP_widget_2023_centr_1-1-1-1-1-2-1-3-1-2-2-1-1-1-3-2-1-1-3-1-2-1-3-1-5-1-2-1-1-1-3-1-1-1-1-3-3-1-5-4-1-2-1-3-1024x721.jpg",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 17166,
+            "height": 211,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/02/IMP_widget_2023_centr_1-1-1-1-1-2-1-3-1-2-2-1-1-1-3-2-1-1-3-1-2-1-3-1-5-1-2-1-1-1-3-1-1-1-1-3-3-1-5-4-1-2-1-3-300x211.jpg",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 68471,
+            "height": 541,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/02/IMP_widget_2023_centr_1-1-1-1-1-2-1-3-1-2-2-1-1-1-3-2-1-1-3-1-2-1-3-1-5-1-2-1-1-1-3-1-1-1-1-3-3-1-5-4-1-2-1-3-768x541.jpg",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 7348,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/02/IMP_widget_2023_centr_1-1-1-1-1-2-1-3-1-2-2-1-1-1-3-2-1-1-3-1-2-1-3-1-5-1-2-1-1-1-3-1-1-1-1-3-3-1-5-4-1-2-1-3-150x150.jpg",
+            "width": 150
+          },
+          "woocommerce_gallery_thumbnail": {
+            "filesize": 3900,
+            "height": 100,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/02/IMP_widget_2023_centr_1-1-1-1-1-2-1-3-1-2-2-1-1-1-3-2-1-1-3-1-2-1-3-1-5-1-2-1-1-1-3-1-1-1-1-3-3-1-5-4-1-2-1-3-100x100.jpg",
+            "width": 100
+          },
+          "woocommerce_thumbnail": {
+            "filesize": 21116,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "uncropped": false,
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/02/IMP_widget_2023_centr_1-1-1-1-1-2-1-3-1-2-2-1-1-1-3-2-1-1-3-1-2-1-3-1-5-1-2-1-1-1-3-1-1-1-1-3-3-1-5-4-1-2-1-3-300x300.jpg",
+            "width": 300
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2025/02/IMP_widget_2023_centr_1-1-1-1-1-2-1-3-1-2-2-1-1-1-3-2-1-1-3-1-2-1-3-1-5-1-2-1-1-1-3-1-1-1-1-3-3-1-5-4-1-2-1-3.jpg",
+        "width": 1139
+      },
+      "is_virtual": false,
+      "modified": "2026-06-16 12:18:52",
+      "modified_utc": "2026-06-16 16:18:52",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:26:56",
+          "date_utc": "2025-03-05 18:26:56",
+          "global_id": "cityparksfoundation.org?id=763",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=763"
+          ],
+          "id": 763,
+          "modified": "2025-03-20 15:17:47",
+          "modified_utc": "2025-03-20 19:17:47",
+          "organizer": "Volunteer",
+          "slug": "volunteer",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/volunteer/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/20697",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "its-my-park-at-sunset-park-88",
+      "start_date": "2026-07-14 10:00:00",
+      "start_date_details": {
+        "day": "14",
+        "hour": "10",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "It&#8217;s My Park at Sunset Park",
+      "url": "https://cityparksfoundation.org/events/its-my-park-at-sunset-park-88/",
+      "utc_end_date": "2026-07-14 16:00:00",
+      "utc_end_date_details": {
+        "day": "14",
+        "hour": "16",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-14 14:00:00",
+      "utc_start_date_details": {
+        "day": "14",
+        "hour": "14",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:30:54",
+        "date_utc": "2025-03-03 19:30:54",
+        "global_id": "cityparksfoundation.org?id=678",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=678"
+        ],
+        "id": 678,
+        "modified": "2025-03-03 14:30:54",
+        "modified_utc": "2025-03-03 19:30:54",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "brooklyn",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/brooklyn/",
+        "venue": "Brooklyn"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    },
+    {
+      "all_day": false,
+      "author": "8",
+      "categories": [
+        {
+          "count": 1155,
+          "description": "",
+          "filter": "raw",
+          "id": 28,
+          "name": "Volunteer: It's My Park",
+          "parent": 0,
+          "slug": "volunteer",
+          "taxonomy": "tribe_events_cat",
+          "term_group": 0,
+          "term_taxonomy_id": 28,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/categories/28"
+          }
+        }
+      ],
+      "cost": "Free",
+      "cost_details": {
+        "currency_code": "",
+        "currency_position": "prefix",
+        "currency_symbol": "",
+        "values": [
+          "0"
+        ]
+      },
+      "custom_fields": [],
+      "date": "2026-06-22 15:44:21",
+      "date_utc": "2026-06-22 19:44:21",
+      "description": "<p>This It&#8217;s My Park season, volunteer with Friends of Brower Park to beautify Brower Park. We look forward to cleaning up the park with you!</p>\n<p>Volunteers should meet at Monarch butterfly habitat / pollinator garden.</p>\n<p>For more information, please email friendsofbrowerpark@gmail.com.</p>",
+      "end_date": "2026-07-15 12:30:00",
+      "end_date_details": {
+        "day": "15",
+        "hour": "12",
+        "minutes": "30",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "excerpt": "<p>Volunteer with Friends of Brower Park to beautify Brower Park.</p>",
+      "featured": false,
+      "global_id": "cityparksfoundation.org?id=20770",
+      "global_id_lineage": [
+        "cityparksfoundation.org?id=20770"
+      ],
+      "hide_from_listings": false,
+      "id": 20770,
+      "image": {
+        "extension": "jpg",
+        "filesize": 184766,
+        "height": 802,
+        "id": 13233,
+        "sizes": {
+          "large": {
+            "filesize": 173664,
+            "height": 721,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/03/IMP_widget_2023_lft_1-2-1-1-2-2-2-1-1-3-4-3-2-3-5-1-1-3-2-1-1-1-16-2-3-1-2-1-10-1-3-1-2-1-2-1-4-1-1-6-2-5-3-1-1-1-4-1-3-1024x721.jpg",
+            "width": 1024
+          },
+          "medium": {
+            "filesize": 19959,
+            "height": 211,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/03/IMP_widget_2023_lft_1-2-1-1-2-2-2-1-1-3-4-3-2-3-5-1-1-3-2-1-1-1-16-2-3-1-2-1-10-1-3-1-2-1-2-1-4-1-1-6-2-5-3-1-1-1-4-1-3-300x211.jpg",
+            "width": 300
+          },
+          "medium_large": {
+            "filesize": 105552,
+            "height": 541,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/03/IMP_widget_2023_lft_1-2-1-1-2-2-2-1-1-3-4-3-2-3-5-1-1-3-2-1-1-1-16-2-3-1-2-1-10-1-3-1-2-1-2-1-4-1-1-6-2-5-3-1-1-1-4-1-3-768x541.jpg",
+            "width": 768
+          },
+          "thumbnail": {
+            "filesize": 7963,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/03/IMP_widget_2023_lft_1-2-1-1-2-2-2-1-1-3-4-3-2-3-5-1-1-3-2-1-1-1-16-2-3-1-2-1-10-1-3-1-2-1-2-1-4-1-1-6-2-5-3-1-1-1-4-1-3-150x150.jpg",
+            "width": 150
+          },
+          "woocommerce_gallery_thumbnail": {
+            "filesize": 4056,
+            "height": 100,
+            "mime-type": "image/jpeg",
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/03/IMP_widget_2023_lft_1-2-1-1-2-2-2-1-1-3-4-3-2-3-5-1-1-3-2-1-1-1-16-2-3-1-2-1-10-1-3-1-2-1-2-1-4-1-1-6-2-5-3-1-1-1-4-1-3-100x100.jpg",
+            "width": 100
+          },
+          "woocommerce_thumbnail": {
+            "filesize": 26484,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "uncropped": false,
+            "url": "https://cityparksfoundation.org/wp-content/uploads/2025/03/IMP_widget_2023_lft_1-2-1-1-2-2-2-1-1-3-4-3-2-3-5-1-1-3-2-1-1-1-16-2-3-1-2-1-10-1-3-1-2-1-2-1-4-1-1-6-2-5-3-1-1-1-4-1-3-300x300.jpg",
+            "width": 300
+          }
+        },
+        "url": "https://cityparksfoundation.org/wp-content/uploads/2025/03/IMP_widget_2023_lft_1-2-1-1-2-2-2-1-1-3-4-3-2-3-5-1-1-3-2-1-1-1-16-2-3-1-2-1-10-1-3-1-2-1-2-1-4-1-1-6-2-5-3-1-1-1-4-1-3.jpg",
+        "width": 1139
+      },
+      "is_virtual": false,
+      "modified": "2026-06-22 15:44:21",
+      "modified_utc": "2026-06-22 19:44:21",
+      "organizer": [
+        {
+          "author": "1",
+          "date": "2025-03-05 13:26:56",
+          "date_utc": "2025-03-05 18:26:56",
+          "global_id": "cityparksfoundation.org?id=763",
+          "global_id_lineage": [
+            "cityparksfoundation.org?id=763"
+          ],
+          "id": 763,
+          "modified": "2025-03-20 15:17:47",
+          "modified_utc": "2025-03-20 19:17:47",
+          "organizer": "Volunteer",
+          "slug": "volunteer",
+          "status": "publish",
+          "url": "https://cityparksfoundation.org/organizer/volunteer/"
+        }
+      ],
+      "rest_url": "https://cityparksfoundation.org/wp-json/tribe/events/v1/events/20770",
+      "show_map": false,
+      "show_map_link": false,
+      "slug": "its-my-park-at-brower-park-15",
+      "start_date": "2026-07-15 10:00:00",
+      "start_date_details": {
+        "day": "15",
+        "hour": "10",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "status": "publish",
+      "sticky": false,
+      "tags": [
+        {
+          "count": 1390,
+          "description": "",
+          "filter": "raw",
+          "id": 29,
+          "name": "Free",
+          "parent": 0,
+          "slug": "free",
+          "taxonomy": "post_tag",
+          "term_group": 0,
+          "term_taxonomy_id": 29,
+          "urls": {
+            "collection": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags",
+            "self": "https://cityparksfoundation.org/wp-json/tribe/events/v1/tags/29"
+          }
+        }
+      ],
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "title": "It&#8217;s My Park at Brower Park",
+      "url": "https://cityparksfoundation.org/events/its-my-park-at-brower-park-15/",
+      "utc_end_date": "2026-07-15 16:30:00",
+      "utc_end_date_details": {
+        "day": "15",
+        "hour": "16",
+        "minutes": "30",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "utc_start_date": "2026-07-15 14:00:00",
+      "utc_start_date_details": {
+        "day": "15",
+        "hour": "14",
+        "minutes": "00",
+        "month": "07",
+        "seconds": "00",
+        "year": "2026"
+      },
+      "venue": {
+        "author": "1",
+        "date": "2025-03-03 14:30:54",
+        "date_utc": "2025-03-03 19:30:54",
+        "global_id": "cityparksfoundation.org?id=678",
+        "global_id_lineage": [
+          "cityparksfoundation.org?id=678"
+        ],
+        "id": 678,
+        "modified": "2025-03-03 14:30:54",
+        "modified_utc": "2025-03-03 19:30:54",
+        "show_map": true,
+        "show_map_link": true,
+        "slug": "brooklyn",
+        "status": "publish",
+        "url": "https://cityparksfoundation.org/venue/brooklyn/",
+        "venue": "Brooklyn"
+      },
+      "virtual_url": null,
+      "virtual_video_source": "",
+      "website": ""
+    }
+  ]
+}

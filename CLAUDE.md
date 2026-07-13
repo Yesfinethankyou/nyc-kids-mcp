@@ -613,7 +613,19 @@ Known accepted residuals (see `git log` for the security-audit commit):
     the plain WP REST API but the date lives ONLY in each detail page's JSON-LD
     `Event` node, so it lists cheaply then crawls each event like
     `mommy_poppins`; kid filter is the `audience` taxonomy resolved by name;
-    ~150 detail fetches/run).
+    ~150 detail fetches/run), City Parks Foundation (`city_parks_foundation`
+    — sixth Tribe source; category allowlist `{PuppetMobile, SummerStage}`
+    with ALL SummerStage kept (maintainer call, so NO shared adult blocklist
+    here); `venue.venue` holds the BOROUGH string not a park, so borough is
+    per-event and `venue_name` is None; ~49 events/60d), New York Public
+    Library (`nypl` — Manhattan/Bronx/Staten Island branch calendar; the
+    Incapsula-walled server-rendered Drupal listing scraped per borough via
+    the site's `city[]` filter (borough comes free, no detail crawl), kid
+    gate is the audience cell (the server audience filter is loose), and
+    `external_id = url:start_iso` because the URL repeats across recurring
+    occurrences AND the audience-union duplicates rows; **high volume —
+    thousands of events over a 60-day window, the largest source; unlocks
+    Bronx + Staten Island library coverage**; ~160 listing pages/run).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
