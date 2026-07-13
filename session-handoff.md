@@ -43,6 +43,17 @@ build, so I built it well rather than forcing three shaky sources:
   our existing `brooklyn_army_terminal` source — aggregator dedup risk, not
   net-new); Puppetworks (JS-rendered `edit.site` builder — headless-tier);
   NYSCI (Eventbrite-embed, no plain feed); BAM (JS SPA).
+- **Anti-bot candidates left for a non-proxied session, with probe findings
+  recorded in each source's own backlog entry** (per maintainer request): QPL
+  (F5/BIG-IP WAF wall), NYPL (Imperva Incapsula JS-challenge), AMNH/Intrepid/
+  City Parks Foundation (403 Cloudflare), the Met (429), BAM (JS SPA). Each
+  entry now says exactly what blocked it here and what to try next with
+  `curl_cffi impersonate` from a non-proxied session. NYSCI is NOT anti-bot
+  (reachable) but delegates to Eventbrite — noted as a different build shape.
+  No new neighborhood-coding work was needed for the libraries (the shipped
+  `library_neighborhoods.json` already covers all QPL/NYPL branches), so the
+  only reusable artifact from this session beyond `snug_harbor` is the probe
+  intelligence itself.
 
 Full suite 652 green (was 630), ruff clean.
 
