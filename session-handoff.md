@@ -2,6 +2,50 @@
 
 ## What was done (most recent first)
 
+### Session (cont'd): backlog source expansion — built Snug Harbor; anti-bot candidates blocked by the web-sandbox proxy
+
+Asked to "add the next top 3 candidates" from SOURCES-BACKLOG.md. Probed the
+backlog against what this environment can actually reach and found a hard
+constraint: **`curl_cffi` browser-TLS impersonation is broken in the
+Claude-Code-on-web sandbox** — the MITM egress proxy connection-resets the
+impersonated ClientHello (verified failing even on `example.com`; plain
+`httpx` and non-impersonated `curl_cffi` work). So every anti-bot candidate
+(the two library systems QPL/NYPL behind WAF/Incapsula — the highest-value
+unbuilt leads; AMNH/Met/Intrepid 403; City Parks Foundation Cloudflare)
+**can't be fixture-captured here** and must be built from a non-proxied
+session. Recorded this in SOURCES-BACKLOG.md's cross-cutting notes.
+
+Of the plain-httpx-reachable candidates, only **one** was a clean, high-value
+build, so I built it well rather than forcing three shaky sources:
+
+- **BUILT: `snug_harbor`** (Snug Harbor Cultural Center, Staten Island — the
+  catalog's thinnest borough). WordPress custom `event` post type on the plain
+  WP REST API, but **the event date lives only in each detail page's JSON-LD
+  `Event` node** (`acf` empty, post `date` = creation date), so it lists the
+  youth/family events cheaply then crawls each detail page for its date — the
+  `mommy_poppins` shape. Kid filter = the `audience` taxonomy (Kids/Families/
+  All Ages/Teens) resolved by NAME (survives term-id renumber) and queried as
+  an OR filter; shared adult blocklists as a title-scope safety net. All
+  taxonomies resolved id→name once/run (`cost-tier`→price, `genre`/`program`→
+  tags). Venue/borough hardcoded (single campus) → `SOURCE_NEIGHBORHOOD
+  ["snug_harbor"]="Snug Harbor"`. `window_days=60`, opted into
+  missing-detection. New module `sources/snug_harbor.py` + registry wiring +
+  `_neighborhoods.py` entry; fixture `tests/fixtures/snug_harbor_sample.json`
+  (a `terms` block + 12 real `{item, jsonld}` rows) + 22 tests in
+  `tests/test_snug_harbor_parse.py` (pure `parse_event`, no httpx mock).
+  Verified live end-to-end (147 youth/family events listed, real Staten Island
+  rows yielded with correct dates/price/tags). Docs updated: SOURCES-BACKLOG
+  (CANDIDATE→BUILT + the "enumerate wp-json for custom post types" lesson),
+  README, CLAUDE.md live-sources list. `test_missing_detection` census bumped
+  13→14.
+- **Deprioritized / rejected (recorded in the backlog):** Brooklyn Bridge
+  Parents (WP Event Manager works but only 9 events, and they're re-posts of
+  our existing `brooklyn_army_terminal` source — aggregator dedup risk, not
+  net-new); Puppetworks (JS-rendered `edit.site` builder — headless-tier);
+  NYSCI (Eventbrite-embed, no plain feed); BAM (JS SPA).
+
+Full suite 652 green (was 630), ruff clean.
+
 ### Session: fixed the top 3 open issues (#78, #77, #76) — all code-review findings from 2026-07-12
 
 Picked the three most-recently-filed `status:ready` issues, each with a

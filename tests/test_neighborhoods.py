@@ -22,6 +22,7 @@ def test_tier1_fixed_venue_sources_resolve():
     assert nb.static_neighborhood("industry_city", "whatever") == "Sunset Park"
     assert nb.static_neighborhood("bk_childrens_museum", None) == "Crown Heights"
     assert nb.static_neighborhood("prospect_park", None) == "Prospect Park"
+    assert nb.static_neighborhood("snug_harbor", "Great Hall") == "Snug Harbor"
 
 
 def test_tier2_enumerated_multisite_resolve():

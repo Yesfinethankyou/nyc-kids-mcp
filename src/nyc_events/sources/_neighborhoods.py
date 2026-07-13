@@ -37,6 +37,9 @@ SOURCE_NEIGHBORHOOD: dict[str, str] = {
     # Snug Harbor Cultural Center campus, Livingston/New Brighton shoreline —
     # "Snug Harbor" is the destination name people actually search.
     "si_childrens_museum": "Snug Harbor",
+    # Same Livingston/New Brighton campus as si_childrens_museum — the whole
+    # cultural center is the destination people search by name.
+    "snug_harbor": "Snug Harbor",
     "bbg": "Prospect Heights",
     # The park is its own destination spanning DUMBO→Cobble Hill piers; the
     # park name as label follows the Prospect Park / Governors Island precedent.

@@ -607,7 +607,13 @@ Known accepted residuals (see `git log` for the security-audit commit):
     Brooklyn Botanic Garden (`bbg` — custom-CMS month-page HTML scrape,
     family-category allowlist; ~28 events/window), Brooklyn Bridge Park
     (`brooklyn_bridge_park` — WP REST + ACF, NOT Tribe; recurring-parent vs
-    dated-post dedup is the load-bearing quirk; ~139 events/window).
+    dated-post dedup is the load-bearing quirk; ~139 events/window), Snug
+    Harbor Cultural Center (`snug_harbor` — second Staten Island source, same
+    Livingston campus as `si_childrens_museum`; WP custom `event` post type on
+    the plain WP REST API but the date lives ONLY in each detail page's JSON-LD
+    `Event` node, so it lists cheaply then crawls each event like
+    `mommy_poppins`; kid filter is the `audience` taxonomy resolved by name;
+    ~150 detail fetches/run).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.

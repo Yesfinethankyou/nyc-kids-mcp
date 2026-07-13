@@ -1,0 +1,569 @@
+{
+ "terms": {
+  "audience": {
+   "26": "Adults",
+   "29": "All Ages",
+   "28": "Families",
+   "25": "Kids",
+   "27": "Seniors",
+   "96": "Teachers",
+   "94": "Teens"
+  },
+  "cost-tier": {
+   "110": "#N/A",
+   "23": "$10 &amp; Under",
+   "24": "$25 &amp; Under",
+   "31": "$50 &amp; under",
+   "95": "Above $50",
+   "21": "Free",
+   "22": "Pay What You Wish"
+  },
+  "genre": {
+   "42": "Architecture",
+   "49": "Artist Residency",
+   "50": "Community Celebration",
+   "34": "Composting",
+   "54": "Cooking",
+   "17": "Dance",
+   "101": "Environment",
+   "47": "Exhibition",
+   "48": "Exhibition Event",
+   "53": "Festival",
+   "19": "Film",
+   "100": "Food and drink",
+   "43": "Fundraiser",
+   "98": "Gardens",
+   "57": "Giveaway",
+   "39": "Hands-on Activity",
+   "113": "Heritage Farm Stand",
+   "41": "History",
+   "51": "Informational",
+   "44": "Job Training",
+   "16": "Music",
+   "52": "Nature",
+   "97": "Performing Arts",
+   "38": "Shopping",
+   "45": "Sustainability",
+   "18": "Theatre",
+   "37": "Tour",
+   "33": "Tree Care",
+   "36": "Urban Growing",
+   "20": "Visual Art",
+   "35": "Volunteer",
+   "55": "Wellness",
+   "104": "Workforce",
+   "56": "Youth Program"
+  },
+  "program": {
+   "105": "Artist residencies",
+   "62": "Artist Residency",
+   "61": "Composting",
+   "109": "Educational",
+   "58": "Environmental Education",
+   "99": "Event",
+   "60": "Job Training",
+   "108": "Performances",
+   "66": "Snug Harbor Break Youth Program",
+   "59": "Stewardship",
+   "63": "Tours",
+   "64": "Tree Care",
+   "65": "Urban Growing",
+   "107": "Workshop"
+  },
+  "venue": {
+   "67": "Allée",
+   "68": "Art Lab",
+   "11": "ArtLab Gallery",
+   "69": "Building P",
+   "70": "Carl Grillo Glass House",
+   "71": "Carpenter's Shop",
+   "15": "Children’s Museum",
+   "12": "Chinese Scholar’s Garden",
+   "32": "Community Event",
+   "103": "Community Hall",
+   "72": "Cottage B",
+   "73": "Cottage E",
+   "74": "Cottage Row",
+   "75": "Dance Center",
+   "76": "Gazebo Row",
+   "77": "Great Hall",
+   "78": "Healing Garden",
+   "79": "Heritage Farm",
+   "80": "Lot 4 by West Gate",
+   "81": "Music Hall Annex Lawn",
+   "82": "Newhouse Center",
+   "13": "Noble Maritime Collection",
+   "83": "North Gate",
+   "84": "Northeast Meadow",
+   "85": "Pond",
+   "106": "Public Gardens",
+   "86": "RCSF Tuscan Garden",
+   "87": "South Meadow",
+   "14": "Staten Island Museum",
+   "88": "Sustainability Center",
+   "89": "Tropical Border",
+   "102": "Tuscan Garden",
+   "91": "Virtual event",
+   "90": "Visitor Info Booth",
+   "92": "Wetlands",
+   "93": "White Garden"
+  },
+  "event-type": {
+   "112": "Newhouse Center",
+   "111": "Public Art"
+  }
+ },
+ "events": [
+  {
+   "item": {
+    "id": 4059,
+    "link": "https://snug-harbor.org/event/farm-cooking-club-with-pam-silvestri-herb-fritters/",
+    "title": {
+     "rendered": "Farm Cooking Club with Pam Silvestri: Herb Fritters"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     28,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     99
+    ],
+    "venue": [
+     88
+    ],
+    "genre": [
+     54
+    ],
+    "cost-tier": [
+     23
+    ]
+   },
+   "jsonld": {
+    "name": "Farm Cooking Club with Pam Silvestri: Herb Fritters | Snug Harbor",
+    "startDate": "2026-07-18T10:30:00-04:00",
+    "endDate": "2026-07-18T12:00:00-04:00",
+    "description": "Experience a flavorful workshop at Snug Harbor exploring creative uses for fresh herbs, plus easy composting and gardening tips.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/farm-cooking-club-with-pam-silvestri-herb-fritters/"
+   }
+  },
+  {
+   "item": {
+    "id": 4017,
+    "link": "https://snug-harbor.org/event/sounds-of-summer-concert-series/",
+    "title": {
+     "rendered": "Sounds of Summer Concert Series"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     29,
+     28,
+     25,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     99
+    ],
+    "venue": [
+     87
+    ],
+    "genre": [
+     16
+    ],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "Sounds of Summer Concert Series | Snug Harbor",
+    "startDate": "2026-07-30T19:00:00-04:00",
+    "endDate": "2026-07-30T21:00:00-04:00",
+    "description": "Celebrate summer at Snug Harbor with live music from Joan Caddell & The Midnight Choir as part of the Sounds of Summer Concert Series.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/sounds-of-summer-concert-series/"
+   }
+  },
+  {
+   "item": {
+    "id": 3986,
+    "link": "https://snug-harbor.org/event/world-cup-watch-party-at-snug-harbor/",
+    "title": {
+     "rendered": "World Cup Watch Party"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     29,
+     28,
+     25,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     99
+    ],
+    "venue": [
+     87
+    ],
+    "genre": [],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "World Cup Watch Party | Snug Harbor",
+    "startDate": "2026-07-18T14:00:00-04:00",
+    "endDate": "2026-07-18T21:00:00-04:00",
+    "description": "Snug Harbor will host the World Cup Bronze Final Watch Party on Saturday, July 18 for an afternoon of food, fun, and international soccer.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/world-cup-watch-party-at-snug-harbor/"
+   }
+  },
+  {
+   "item": {
+    "id": 3969,
+    "link": "https://snug-harbor.org/event/community-recycling-event/",
+    "title": {
+     "rendered": "Community Recycling Event"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     29,
+     28,
+     25,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     99
+    ],
+    "venue": [],
+    "genre": [
+     35
+    ],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "Community Recycling Event | Snug Harbor",
+    "startDate": "2026-07-26T10:00:00-04:00",
+    "endDate": "2026-07-26T14:00:00-04:00",
+    "description": "Recycle more at Snug Harbor by dropping off items that aren't accepted through curbside sanitation collection.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/community-recycling-event/"
+   }
+  },
+  {
+   "item": {
+    "id": 3960,
+    "link": "https://snug-harbor.org/event/growing-at-snug-harbor-intern-qa/",
+    "title": {
+     "rendered": "Growing at Snug Harbor: Intern Q&amp;A"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     25,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     109,
+     99
+    ],
+    "venue": [
+     69
+    ],
+    "genre": [
+     51
+    ],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "Growing at Snug Harbor: Intern Q&amp;A | Snug Harbor",
+    "startDate": "2026-08-07T15:30:00-04:00",
+    "endDate": "2026-08-07T16:30:00-04:00",
+    "description": "Discover what it's like to live and work at Snug Harbor while exploring urban agriculture, horticulture, and historic cottage life.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/growing-at-snug-harbor-intern-qa/"
+   }
+  },
+  {
+   "item": {
+    "id": 3954,
+    "link": "https://snug-harbor.org/event/serpentine-sibyls-opening-with-shakuhachi-flute-performance/",
+    "title": {
+     "rendered": "Serpentine Sibyls: Opening with Shakuhachi Flute Performance"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     29,
+     28,
+     25,
+     27,
+     94
+    ],
+    "program": [
+     99,
+     108
+    ],
+    "venue": [
+     85
+    ],
+    "genre": [
+     97
+    ],
+    "cost-tier": [
+     22
+    ]
+   },
+   "jsonld": {
+    "name": "Serpentine Sibyls: Opening with Shakuhachi Flute Performance | Snug Harbor",
+    "startDate": "2026-07-11T15:00:00-04:00",
+    "endDate": "2026-07-11T18:00:00-04:00",
+    "description": "Enjoy the opening of Serpentine Sibyls at Snug Harbor with immersive music and Daniel Rothbart's thought-provoking public art.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/serpentine-sibyls-opening-with-shakuhachi-flute-performance/"
+   }
+  },
+  {
+   "item": {
+    "id": 3912,
+    "link": "https://snug-harbor.org/event/art-meditation-in-the-chinese-scholars-garden/",
+    "title": {
+     "rendered": "Art &amp; Meditation in the Chinese Scholar’s Garden"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     99
+    ],
+    "venue": [
+     73
+    ],
+    "genre": [
+     52
+    ],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "Art &amp; Meditation in the Chinese Scholar’s Garden | Snug Harbor",
+    "startDate": "2026-07-03T15:00:00-04:00",
+    "endDate": "2026-09-04T16:30:00-04:00",
+    "description": "Experience art and meditation at Snug Harbor's New York Chinese Scholar's Garden with a guided tour and ink wash painting.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/art-meditation-in-the-chinese-scholars-garden/"
+   }
+  },
+  {
+   "item": {
+    "id": 3894,
+    "link": "https://snug-harbor.org/event/serpentine-sibyls-a-floating-sculptural-installation-by-daniel-rothbart/",
+    "title": {
+     "rendered": "Serpentine Sibyls &#8211; A Floating Sculptural Installation by Daniel Rothbart"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     29,
+     28,
+     25,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     99
+    ],
+    "venue": [
+     85
+    ],
+    "genre": [
+     20
+    ],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "Serpentine Sibyls - A Floating Sculptural Installation by Daniel Rothbart | Snug Harbor",
+    "startDate": "2026-07-11T08:00:00-04:00",
+    "endDate": "2026-09-28T18:00:00-04:00",
+    "description": "Experience Daniel Rothbart's Serpentine Sibyls at Snug Harbor, a floating sculpture installation exploring climate, memory, and the future.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/serpentine-sibyls-a-floating-sculptural-installation-by-daniel-rothbart/"
+   }
+  },
+  {
+   "item": {
+    "id": 3892,
+    "link": "https://snug-harbor.org/event/a-great-day-jazz-is-staten-island-photoville-installation/",
+    "title": {
+     "rendered": "A Great Day: Jazz Is Staten Island &#8211; Photoville Installation"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     29,
+     28,
+     25,
+     27,
+     96,
+     94
+    ],
+    "program": [],
+    "venue": [
+     76
+    ],
+    "genre": [
+     20
+    ],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "A Great Day: Jazz Is Staten Island - Photoville Installation | Snug Harbor",
+    "startDate": "2026-06-17T08:00:00-04:00",
+    "endDate": "2026-09-28T18:00:00-04:00",
+    "description": "Discover A Great Day: Jazz Is Staten Island at Snug Harbor, a public art installation honoring Staten Island's local jazz legends.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/a-great-day-jazz-is-staten-island-photoville-installation/"
+   }
+  },
+  {
+   "item": {
+    "id": 3889,
+    "link": "https://snug-harbor.org/event/soundtrack-to-a-coup-detat-presented-by-african-film-festival-snug-harbor-universal-temple-of-the-arts/",
+    "title": {
+     "rendered": "Soundtrack to a Coup d&#8217;Etat presented by African Film Festival, Snug Harbor &amp; Universal Temple of the Arts"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     29,
+     28,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     99
+    ],
+    "venue": [
+     87
+    ],
+    "genre": [
+     19
+    ],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "Soundtrack to a Coup d'Etat presented by African Film Festival, Snug Harbor &amp; Universal Temple of the Arts | Snug Harbor",
+    "startDate": "2026-07-16T19:45:00-04:00",
+    "endDate": "2026-07-16T22:30:00-04:00",
+    "description": "Watch Soundtrack to a Coup d'Etat at Snug Harbor, presented in partnership with the African Film Festival and Universal Temple of the Arts.",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/soundtrack-to-a-coup-detat-presented-by-african-film-festival-snug-harbor-universal-temple-of-the-arts/"
+   }
+  },
+  {
+   "item": {
+    "id": 3841,
+    "link": "https://snug-harbor.org/event/money-skills-bingo-presented-by-chase/",
+    "title": {
+     "rendered": "Money Skills Bingo Presented by Chase"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     29,
+     28,
+     25,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     109,
+     99
+    ],
+    "venue": [
+     69
+    ],
+    "genre": [
+     39
+    ],
+    "cost-tier": [
+     21
+    ]
+   },
+   "jsonld": {
+    "name": "Money Skills Bingo Presented by Chase | Snug Harbor",
+    "startDate": "2026-07-02T17:00:00-04:00",
+    "endDate": "2026-08-13T18:30:00-04:00",
+    "description": "Money Skills Bingo presented by Chase is a fun family event at Snug Harbor where kids and teens play a game to learn money and budgeting",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/money-skills-bingo-presented-by-chase/"
+   }
+  },
+  {
+   "item": {
+    "id": 3832,
+    "link": "https://snug-harbor.org/event/staten-island-shakespearean-theatre-company-presents-a-midsummer-nights-dream-by-william-shakespeare/",
+    "title": {
+     "rendered": "Staten Island Shakespearean Theatre Company Presents: A Midsummer Night&#8217;s Dream by William Shakespeare"
+    },
+    "event-type": [],
+    "audience": [
+     26,
+     27,
+     96,
+     94
+    ],
+    "program": [
+     99,
+     108
+    ],
+    "venue": [],
+    "genre": [
+     18
+    ],
+    "cost-tier": [
+     31
+    ]
+   },
+   "jsonld": {
+    "name": "Staten Island Shakespearean Theatre Company Presents: A Midsummer Night's Dream by William Shakespeare | Snug Harbor",
+    "startDate": "2026-06-05T20:00:00-04:00",
+    "endDate": "2026-06-13T22:45:00-04:00",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": "https://snug-harbor.org/event/staten-island-shakespearean-theatre-company-presents-a-midsummer-nights-dream-by-william-shakespeare/"
+   }
+  }
+ ]
+}
