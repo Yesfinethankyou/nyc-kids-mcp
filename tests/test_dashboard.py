@@ -1,4 +1,4 @@
-"""Tailnet dashboard tests (DASHBOARD-PLAN.md).
+"""Tailnet dashboard tests.
 
 No network: temp DB seeded via init_events + upsert_events, exercised through
 Starlette's TestClient. The db-layer numbers (source_health / catalog_stats /

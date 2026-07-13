@@ -50,13 +50,13 @@ services:
       retries: 3
       start_period: 10s
 
-  # Read-only tailnet dashboard (DASHBOARD-PLAN.md). Same image, second
-  # process: a dashboard crash can't take the connector down and the
-  # single-worker MCP/OAuth process stays byte-identical. Deliberately NO
-  # env_file — this process must never see MCP_AUTH_TOKEN. The ./data mount
-  # stays rw (SQLite WAL readers need write access to the -shm sidecar);
-  # read-only-ness is enforced at the connection (mode=ro URI) and at the
-  # HTTP layer (GET-only routes).
+  # Read-only tailnet dashboard. Same image, second process: a dashboard
+  # crash can't take the connector down and the single-worker MCP/OAuth
+  # process stays byte-identical. Deliberately NO env_file — this process
+  # must never see MCP_AUTH_TOKEN. The ./data mount stays rw (SQLite WAL
+  # readers need write access to the -shm sidecar); read-only-ness is
+  # enforced at the connection (mode=ro URI) and at the HTTP layer
+  # (GET-only routes).
   #
   # Expose via `tailscale serve --bg --https=8766 http://127.0.0.1:8766`
   # (tailnet members only) — NEVER `tailscale funnel`; that's the entire
@@ -75,7 +75,7 @@ services:
       # Bound to all interfaces so the dashboard is reachable on the LAN
       # (http://<nas-lan-ip>:8766) in addition to `tailscale serve`, which
       # keeps working because 0.0.0.0 includes loopback. DELIBERATE relaxation
-      # of DASHBOARD-PLAN.md's tailnet-only stance: the dashboard is read-only,
+      # of the dashboard's original tailnet-only design: it's read-only,
       # never opens oauth.db, and carries no secrets, so LAN exposure leaks only
       # public event data + scraper health — and it has NO login, so only do
       # this on a trusted LAN. Revert to "127.0.0.1:8766:8766" for tailnet-only.

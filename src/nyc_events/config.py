@@ -26,7 +26,7 @@ PORT = int(os.environ.get("PORT", "8765"))
 
 # Port for the read-only tailnet dashboard (nyc_events.dashboard) — a
 # separate process from the MCP server; exposed via `tailscale serve`
-# (tailnet-only), never Funnel. See DASHBOARD-PLAN.md.
+# (tailnet-only), never Funnel.
 DASHBOARD_PORT = int(os.environ.get("DASHBOARD_PORT", "8766"))
 
 # Comma-separated list of source IPs (or CIDR ranges) whose X-Forwarded-*

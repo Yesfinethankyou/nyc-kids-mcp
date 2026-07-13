@@ -179,8 +179,7 @@ Watchtower auto-update for that container by removing the enable label.
 
 ### 5. Backups + uptime monitoring (multi-user Phase C)
 
-Once other people depend on the connector, two bits of NAS ops matter
-(see `MULTI-USER-PLAN.md` Phase C):
+Once other people depend on the connector, two bits of NAS ops matter:
 
 **Back up `oauth.db` nightly.** Losing it logs every user out at once (they'd
 each need a fresh consent-page approval; invited users' codes still work, but
@@ -329,7 +328,7 @@ sessions).
 
 Each trusted user gets their own generated invite code instead of the shared
 password, so one person can be revoked without rotating anything for everyone
-else (see `MULTI-USER-PLAN.md`):
+else:
 
 ```bash
 python -m nyc_events.users add "Aunt Kim"     # prints her invite code ONCE

@@ -1,5 +1,5 @@
-"""Read-only tailnet dashboard (DASHBOARD-PLAN.md): connector/ingest health
-plus an event browse/filter page.
+"""Read-only tailnet dashboard: connector/ingest health plus an event
+browse/filter page.
 
 A separate process from the MCP server, on its own port
 (`python -m nyc_events.dashboard`, default 8766 via config.DASHBOARD_PORT),

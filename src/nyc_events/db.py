@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS oauth_tokens (
     expires_at TEXT
 );
 
--- Per-person invite codes (MULTI-USER-PLAN.md Phase A). Only the salted hash
+-- Per-person invite codes (multi-user Phase A). Only the salted hash
 -- of a user's passcode is stored; the plaintext code is printed exactly once
 -- by `python -m nyc_events.users add`. revoked_at is a tombstone, not a
 -- delete, so attribution on old tokens survives revocation.
@@ -194,7 +194,7 @@ def _migrate_oauth(conn: sqlite3.Connection) -> None:
         conn.execute("ALTER TABLE oauth_tokens ADD COLUMN expires_at TEXT")
         conn.commit()
     if "user_id" not in existing:
-        # Attribution for multi-user (MULTI-USER-PLAN.md Phase A). Tokens
+        # Attribution for multi-user (Phase A). Tokens
         # issued before the users table existed get NULL — they're the
         # operator's own claude.ai sessions and stay valid.
         conn.execute("ALTER TABLE oauth_tokens ADD COLUMN user_id TEXT")
@@ -233,8 +233,9 @@ def connect_events_ro(path: str):
 
     Opens via a `mode=ro` URI so this connection physically cannot write —
     the read-only guarantee lives here, not in file permissions or mounts
-    (see DASHBOARD-PLAN.md: the ./data mount must stay rw for WAL sidecar
-    access; a `:ro` mount would break readers). Never runs DDL: if the DB
+    (the `./data` mount must stay rw for WAL sidecar access — SQLite needs
+    write access to the `-shm`/`-wal` files even for a read-only open; a
+    `:ro` mount would break readers). Never runs DDL: if the DB
     file or its tables don't exist yet, callers get sqlite3.OperationalError
     and should render a friendly "no database yet" state, not init_events().
     """
@@ -614,7 +615,7 @@ def put_geocode(
 
 
 def hash_access_token(token: str) -> str:
-    """At-rest form of an access token (MULTI-USER-PLAN.md Phase B): a leaked
+    """At-rest form of an access token (multi-user Phase B): a leaked
     oauth.db backup must not leak live bearer credentials. Plain SHA-256 (no
     salt/stretching) is right here — tokens are 384-bit random strings, not
     passwords. The prefix marks a value as already hashed so the one-time
@@ -666,7 +667,7 @@ def is_valid_oauth_token(conn: sqlite3.Connection, access_token: str) -> bool:
     return datetime.fromisoformat(expires_at) > datetime.now(UTC)
 
 
-# ---- users (per-person invite codes; MULTI-USER-PLAN.md Phase A) ------------
+# ---- users (per-person invite codes, multi-user Phase A) -------------------
 
 
 def create_user(
@@ -749,7 +750,7 @@ def source_health(
     now: datetime,
     registered: Iterable[str] = (),
 ) -> list[dict]:
-    """Per-source health rollup for the tailnet dashboard (DASHBOARD-PLAN.md).
+    """Per-source health rollup for the tailnet dashboard.
 
     One dict per source in the union of `registered` (the ENABLED_SOURCES
     ids — passed in so db.py stays ignorant of the sources package) and the

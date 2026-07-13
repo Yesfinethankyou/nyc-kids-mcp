@@ -2,6 +2,28 @@
 
 ## What was done (most recent first)
 
+### Session (cont'd): retired MULTI-USER-PLAN.md and DASHBOARD-PLAN.md
+
+Maintainer call: both plans are done (multi-user frozen 2026-07-07,
+dashboard shipped 2026-07-11) and each already said as much at the top of
+its own file ("the living rules are in CLAUDE.md"), so the doc itself was
+pure redundancy once the pointer was severed. Swept every reference (~20
+across `auth.py`/`config.py`/`dashboard.py`/`db.py`/`users.py`, both test
+files, `README.md`, `docker-compose.yml`) rather than just deleting the
+files and leaving dead links. Two were load-bearing content, not just
+citations, and got folded into their new home instead of dropped:
+- **CLAUDE.md "Out-of-scope"**: the multi-user freeze rationale (why no
+  further phases) and the dashboard's two design constraints (zero new
+  attack surface, read-only by construction) — previously "see the plan
+  doc" — are now inline.
+- **`db.connect_events_ro` docstring**: the WAL read-only gotcha (why the
+  `./data` mount must stay rw) is now explained in place instead of citing
+  DASHBOARD-PLAN.md for it.
+Left `session-handoff.md`'s own older entries untouched — they're a
+historical log of what was true when written, not living docs; rewriting
+past entries to match a doc that no longer exists would be pointless
+churn. Full suite 620 green, ruff clean.
+
 ### Session (cont'd): added `.github/pull_request_template.md`
 
 Maintainer noticed PR #79 had merged early (only 2 of 6 commits made it in
