@@ -18,18 +18,24 @@ tools — designed for use from the Claude mobile app while out with a kid.
   (`nycgovparks_events`, ~2,430 events/55d — the live nycgovparks.org
   "Best for Kids" calendar with lat/lng included), New York Family
   (`new_york_family`, ~500 events/35d — Schneps parenting-magazine calendar
-  with structured age bands, NYC-filtered by coordinates) — real
+  with structured age bands, NYC-filtered by coordinates), Staten Island
+  Children's Museum (`si_childrens_museum`, ~64 events/60d — the first real
+  Staten Island coverage), Brooklyn Botanic Garden (`bbg`, ~28 events/60d —
+  family-category calendar scrape), Brooklyn Bridge Park
+  (`brooklyn_bridge_park`, ~139 events/60d — free waterfront programming
+  with per-pier venues) — real
   descriptions, URLs, and (where
   upstream provides them) age ranges, coordinates, prices. Rejected: Time
-  Out NY Kids (no event feed without a headless browser) and Coney Island
-  USA (feed works, but the calendar is adult programming). More venues in
-  `SOURCES-BACKLOG.md`.
+  Out NY Kids (no event feed without a headless browser), Coney Island
+  USA (feed works, but the calendar is adult programming), and the five
+  WCS zoo/aquarium sites (3 items combined — no dated event calendar). More
+  venues in `SOURCES-BACKLOG.md`.
 - Phase 3 🚧 in progress — **shipped:** neighborhood coding + lat/lng
   geocoding as a nightly enrichment pass after ingest (US Census geocoder,
   results cached; surfaced as a `neighborhood` field + `search_events`
-  filter). **Remaining:** distance-from-home (`near_me`), weather on outdoor
-  events, an indoor/outdoor flag, and more venue sources. Design in
-  `PHASE-3-PLAN.md`.
+  filter), plus the first Workstream-B venue batch (see Phase 2 list).
+  **Remaining:** weather on outdoor events, an indoor/outdoor flag, and
+  more venue sources. Design in `PHASE-3-PLAN.md`.
 
 **Why "Permitted Events" and not "Parks":** the spec originally named the
 NYC Parks Events Listing (`fudw-fgrp`) SODA dataset, but it's been frozen
@@ -44,9 +50,11 @@ export) was re-probed and found very much alive, with real descriptions,
 an NYC-Parks-curated "kids" category, and lat/lng on detail pages. That
 website is now **shipped** as its own source (`nycgovparks_events`) — verified
 complementary to `tvpp-9vvx` (zero title overlap: the permit registry is
-third-party field reservations, the website is Parks' own programming), so
-both run side by side; see the "Major reassessment" entry at the top of
-`SOURCES-BACKLOG.md` for the full history. The eleven Phase 2
+third-party field reservations, the website is Parks' own programming).
+**`tvpp-9vvx` was disabled 2026-07-12** — its all-low-confidence permit rows
+went unused once the website source shipped; the module is kept for easy
+re-enable. See the "Major reassessment" entry at the top of
+`SOURCES-BACKLOG.md` for the full history. The Phase 2
 editorial sources (see Status above) add higher-curated signal alongside this
 baseline.
 
@@ -521,11 +529,34 @@ Adapters with real descriptions, URLs, age ranges:
   First source with **structured age bands** ("Kids (5–8)" → `age_min`/
   `age_max`), strong Manhattan coverage, real descriptions/URLs/prices and
   free lat/lng. 35-day window; ~500 events/run at ~280 requests/night.
+- ✅ **Staten Island Children's Museum** — *shipped* (`si_childrens_museum`).
+  Fifth WordPress/Tribe source (Snug Harbor campus) — the first real Staten
+  Island coverage. Curated kids feed, no filter beyond the shared defensive
+  adult-title net; per-occurrence Tribe ids verified live; the venue's
+  "Free" category (not the always-empty `cost` field) drives Price.FREE.
+  ~64 events/60 days.
+- ✅ **Brooklyn Botanic Garden** — *shipped* (`bbg`). Custom-CMS calendar
+  scraped from its month-view pages (plain `httpx` + selectolax, no
+  anti-bot): per-day sections whose `<h2>` date header is the occurrence
+  date, gated on the venue's own family category labels ("Families & Kids",
+  "Children's Garden Classes"). Real time ranges from the schedule prose;
+  no price on cards → unknown. ~28 events/60 days.
+- ✅ **Brooklyn Bridge Park** — *shipped* (`brooklyn_bridge_park`). WordPress
+  but NOT Tribe — the custom `events` post type on the standard WP REST API
+  with ACF date/time fields and a per-pier location join (`maplocations`).
+  Recurring parents and per-date posts overlap upstream, deduped on
+  (title, date). Inclusive + blocklist filter (no kids category exists):
+  adult fitness/socials/benefits/volunteer dropped, family-signal Fitness
+  kept. All free public programming → Price.FREE. ~139 events/60 days.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
 - ❌ **Coney Island USA** — *rejected.* Working Squarespace feed, but the
   calendar is adult programming (burlesque/sideshow) and the Mermaid
   Parade isn't published through it.
+- ❌ **WCS zoos/aquarium (Bronx, Central Park, Prospect Park, Queens, NY
+  Aquarium)** — *rejected 2026-07-13.* All five sites share a scrapeable
+  events page, but the combined yield was 3 undated season-run spotlights
+  (three sites had zero items) — no dated event calendar to ingest.
 
 See `SOURCES-BACKLOG.md` for additional candidate venues. Industry City,
 Governors Island, and Domino Park were all originally rejected by a probe that

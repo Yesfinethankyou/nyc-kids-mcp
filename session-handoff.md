@@ -30,6 +30,38 @@ headless Chromium screenshots). Suite 582 green (5 new tests), ruff clean.
   possible follow-up), sortable columns/pagination, match highlighting,
   dark mode, pill badges (maintainer wants craigslist-plain).
 
+Fifth commit, same session: **three new venue sources — the top backlog
+candidates reviewed and integrated** (maintainer request: "take the top 3
+source candidates, review them and integrate them"). All verified live
+before building; each dry-run against the real upstream after building.
+
+- **`si_childrens_museum` (BUILT, ~64 events/60d):** fifth Tribe subclass,
+  first real Staten Island coverage. Per-occurrence ids verified live.
+  Build-time find: `cost` is always empty — the venue's "Free" *category*
+  drives Price.FREE. Curated-kids posture, defensive adult-title net only.
+- **`bbg` (BUILT, ~28 events/60d):** Brooklyn Botanic Garden month-page
+  scrape (httpx+selectolax). The h2 date header is INSIDE each day's ul as
+  first child; family-category allowlist ("Families & Kids" / "Children's
+  Garden Classes"); `external_id = slug:date` because drop-in programs
+  repeat under every date they run.
+- **`brooklyn_bridge_park` (BUILT, ~139 events/60d):** WordPress but NOT
+  Tribe — custom `events` CPT on standard WP REST with ACF fields + a
+  `maplocations` join for per-pier venues. THE quirk: recurring parents
+  AND per-date posts cover the same occurrences → dedup on (base title,
+  date), dated post wins. Filter is inclusive+blocklist with TITLE-ONLY
+  scope — BBP body text says "parent/guardian who is 18+ must register"
+  on Pokémon Day Out, so body-scope adult matching drops exactly the
+  wrong rows. Fitness kept only with a family-signal title.
+- **WCS zoos REJECTED on yield** (the backlog's own decision gate): 3
+  undated season-runs combined across all 5 sites, three sites empty.
+  Backlog entry has revisit conditions (re-probe in November for holiday
+  lights). Replaced as the batch's third source by Brooklyn Bridge Park,
+  whose prior "unreachable" status was a sandbox-egress artifact.
+- Missing-detection census 10 → 13 (all three opt in). New fixtures + 25
+  parser tests. CLAUDE.md roadmap, SOURCES-BACKLOG as-builts, README
+  shipped list all updated (including the stale "tvpp runs side by side"
+  README claim left over from the disable).
+
 Fourth commit, same session: **Green-Wood CSS/JS bleed-through fixed in the
 shared Tribe `strip_html`** — maintainer reported a description reading
 ".stk-w5jb2gk {margin-right:0px !important…}". Green-Wood's Stackable theme

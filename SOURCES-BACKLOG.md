@@ -313,9 +313,24 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 **Note:** Brooklyn Children's Museum is already **BUILT** (source
 `bk_childrens_museum`, live in `ENABLED_SOURCES`) — not re-added here.
 
-### Staten Island Children's Museum — 🟢 CONFIRMED, ready to build
+### Staten Island Children's Museum — ✅ BUILT 2026-07-13
 
-- **Status:** CONFIRMED 2026-07-06 (live probe, plain `httpx`, no anti-bot).
+- **Status:** ✅ **BUILT 2026-07-13** — shipped as source `si_childrens_museum`
+  (fifth `TribeEventsSource` subclass). As-built notes:
+  - Live re-verification matched the 7-06 research exactly: standard Tribe
+    shape, 64 events / 2 pages, single venue. **Per-occurrence ids verified
+    live** (recurring "Walk-In! Workshop" rows carry distinct ids 9400/9413/…
+    per date) → `external_id = str(id)`, no suffix.
+  - **Price quirk found during build:** `cost` is empty on every row; the
+    venue's "Free" *category* is the real free-admission signal →
+    `_resolve_price` maps category Free → Price.FREE, else UNKNOWN.
+  - Curated-kids posture (all 64 live titles spot-checked kid programming);
+    only the shared adult/members-only title net kept as a defensive guard
+    (children's museums do run occasional 21+ fundraiser nights).
+  - Tags are category-driven (the Tribe taxonomy is venue-curated: "Event
+    for Kids", "STEM", "Art-Making", …). `SOURCE_NEIGHBORHOOD` = "Snug
+    Harbor". Opted into missing-detection (full-window Tribe re-fetch).
+- **Original research (2026-07-06):** CONFIRMED (live probe, plain `httpx`, no anti-bot).
   **Highest-value find of this batch** — Staten Island currently has close to
   zero coverage in the catalog.
 - **Source:** WordPress + The Events Calendar (Tribe) REST API — the same
@@ -485,9 +500,31 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
     changed once in the six days before the build and will change again.
     The drift alarm (ingest exit 4) is the expected first symptom.
 
-### Brooklyn Botanic Garden (BBG) — 🟢 CONFIRMED, HTML scrape
+### Brooklyn Botanic Garden (BBG) — ✅ BUILT 2026-07-13
 
-- **Status:** CONFIRMED 2026-07-06 (live probe). Real, clean, server-rendered
+- **Status:** ✅ **BUILT 2026-07-13** — shipped as source `bbg` (httpx +
+  selectolax month-page scrape). As-built notes — two structure facts the
+  7-06 research didn't have:
+  - **The `<h2>` date header is the ul's FIRST CHILD**, not a sibling:
+    `<ul id="event-calendar-regular"><h2>Sunday, July 12, 2026</h2><li>…`.
+    One ul per calendar day (the id repeats — invalid HTML, selectolax
+    doesn't care); the first block is header "Ongoing" (undated exhibit
+    runs — skipped). A recurring drop-in program gets a card under EACH
+    date it runs, so the h2 date is the occurrence date and
+    `external_id = f"{url-slug}:{date}"`.
+  - **Full category vocabulary enumerated** (14 labels, pipe-joined
+    variants): the family labels are "Families & Kids" and "Children's
+    Garden Classes" (curly-apostrophe variant exists) — category ALLOWLIST
+    on those two; everything else (continuing-ed, Member Events, Evenings,
+    Tours, Exhibits) is adult programming. ~12 family occurrences/month,
+    28 in a live 60-day dry run.
+  - Time comes from the card's `event-date` prose via a meridiem-required
+    regex ("9 a.m.–1 p.m."; date-range numbers can't false-positive); end
+    times populate `end_dt`. Month walk = every month page overlapping
+    [today, today+60d] (2–3 requests). No price on cards → UNKNOWN.
+    `SOURCE_NEIGHBORHOOD` = "Prospect Heights". Opted into
+    missing-detection.
+- **Original research (2026-07-06):** CONFIRMED (live probe). Real, clean, server-rendered
   calendar — no JSON API, but a stable HTML structure to scrape (BAT-style,
   not Tribe-style).
 - **Source:** `https://www.bbg.org/visit/calendar` — custom CMS (not
@@ -513,9 +550,20 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
   the category vocabulary, then `source-adder` (selectolax parse, same shape
   as Brooklyn Army Terminal).
 
-### Bronx Zoo (+ sibling WCS zoos/aquarium) — 🟡 CONFIRMED but low density; possible 5-for-1 build
+### Bronx Zoo (+ sibling WCS zoos/aquarium) — 🔴 REJECTED 2026-07-13 (yield)
 
-- **Status:** CONFIRMED 2026-07-06 (live probe). Real content, but sparse —
+- **Status:** ❌ **REJECTED 2026-07-13** — the 5-host yield check the 7-06
+  probe called for came back far under the bar: **3 items combined across
+  all 5 sites** (Bronx Zoo 2, NY Aquarium 1, Central Park/Prospect Park/
+  Queens Zoo **0 each**), and all three are season-run spotlights ("May 22 -
+  September 7"), not dated occurrences — they don't fit the event model
+  without inventing start times. Markup shape re-confirmed (li.postcard),
+  so the scraper would be trivial; it's the content that isn't there.
+  **Revisit if:** a WCS site ever grows a real dated-events calendar
+  (holiday-season lights events are the likeliest trigger — re-probe in
+  November), or if season-run "exhibit" rows become desirable catalog
+  content (they'd need a synthetic-date convention first).
+- **Original research (2026-07-06):** CONFIRMED (live probe). Real content, but sparse —
   and a genuine multi-site bonus if built.
 - **Source:** `https://bronxzoo.com/things-to-do/events` — WCS (Wildlife
   Conservation Society) site. Server-rendered `<li class="postcard">` cards:
@@ -686,13 +734,43 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
   venue) — confirm the full program list is actually all-ages before skipping
   a filter, same caution as the other curated feeds.
 
-### Brooklyn Bridge Park
+### Brooklyn Bridge Park — ✅ BUILT 2026-07-13
 
-- **Status:** CANDIDATE — proposed 2026-07-05, unprobed (sandbox egress to
-  `brooklynbridgepark.org` was reset/blocked this session — same `Recv
-  failure: Connection reset by peer` on `/`, `/events`, `/calendar` as the
-  Puppetworks probe above; retry from a different network before concluding
-  it's actually unreachable, per the "sandbox egress varies" note above).
+- **Status:** ✅ **BUILT 2026-07-13** — shipped as source
+  `brooklyn_bridge_park`. Probed same-session as the WCS rejection (this
+  environment's egress reached it fine) and built as the batch's third
+  source. As-built notes — the platform guess below was HALF right:
+  - **WordPress yes, Tribe NO.** The custom `events` post type is exposed
+    on the standard WP REST API (`/wp-json/wp/v2/events?per_page=100`,
+    671 posts / 7 pages) with ACF fields: `date` (YYYYMMDD local),
+    `start_time`/`end_time` ("H:MM am/pm" wall times), `recurring_event`
+    + `select_date_&_time` occurrence array, `event_location` (references
+    the `maplocations` post type → per-pier venue names, resolved once per
+    run), `description` (HTML). `event_category` taxonomy has NO kids
+    term — see filter below.
+  - **THE load-bearing quirk — recurring parents AND dated posts overlap:**
+    the same program is posted both as a recurring parent (occurrence
+    array) and as per-date posts titled "<Program> – July 14", covering
+    the SAME dates. `parse_posts` dedups on (dated-suffix-stripped title,
+    date), preferring the dated post (occurrence-specific URL). Without
+    this, rows double-count.
+  - **Filter (inclusive + blocklist, title-only scope):** category
+    hard-excludes Benefit Events / Socials & Dancing / Volunteer; Fitness
+    excluded unless the title has a family signal (family/kids/youth/
+    toddler/stroller/teen — keeps "Family Kayaking", drops "Sunset Yoga");
+    shared adult blocklists on the TITLE ONLY — body text carries
+    registration fine print ("parent/guardian who is 18+ must register"
+    appears on Pokémon Day Out), so body-scope matching drops exactly the
+    wrong events. Uncategorized rows pass (Storytime with BPL is
+    uncategorized).
+  - **Yield:** 139 events in a live 60-day dry run. Price hardcoded FREE
+    (the park's free public programming — BAT precedent).
+    `external_id = f"{post_id}:{date}"`. Opted into missing-detection
+    (full-collection re-fetch each run). `SOURCE_NEIGHBORHOOD` =
+    "Brooklyn Bridge Park" (park-name-as-neighborhood, the Prospect Park
+    precedent; per-pier NTA splitting deferred).
+- **Original research (2026-07-05):** CANDIDATE, unprobed (sandbox egress to
+  `brooklynbridgepark.org` was reset/blocked that session).
 - **Why:** a major waterfront park with a large recurring family-program
   calendar (free movies, kayaking, playgrounds programming, seasonal
   festivals) — a real Phase-2-shaped venue source, similar in spirit to

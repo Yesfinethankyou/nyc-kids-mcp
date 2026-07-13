@@ -1,9 +1,11 @@
 """Source registry. Add to ENABLED_SOURCES to wire a source into nightly ingest."""
 
 from .base import Source
+from .bbg import BBGSource
 from .bk_childrens_museum import BrooklynChildrensMuseumSource
 from .bpl import BPLSource
 from .brooklyn_army_terminal import BrooklynArmyTerminalSource
+from .brooklyn_bridge_park import BrooklynBridgeParkSource
 from .domino_park import DominoParkSource
 from .governors_island import GovernorsIslandSource
 from .greenwood_cemetery import GreenWoodCemeterySource
@@ -13,6 +15,7 @@ from .new_york_family import NewYorkFamilySource
 from .ny_transit_museum import NYTransitMuseumSource
 from .nycgovparks_events import NYCGovParksEventsSource
 from .prospect_park import ProspectParkSource
+from .si_childrens_museum import SIChildrensMuseumSource
 
 # Phase 2 sources. Time Out NY Kids (timeout_nykids.py) is a JS-rendered
 # editorial site with no event feed — not buildable without a headless
@@ -39,6 +42,11 @@ ENABLED_SOURCES: list[type[Source]] = [
     IndustryCitySource,
     GovernorsIslandSource,
     DominoParkSource,
+    SIChildrensMuseumSource,
+    # 2-3 month pages at a 1s delay — cheap.
+    BBGSource,
+    # ~8 REST pages at a 0.75s delay — cheap-ish.
+    BrooklynBridgeParkSource,
     BPLSource,
     # ~49 list pages at a 1s polite delay (~1 min) — expensive-ish, so it runs
     # with the other slow crawls at the end; mommy_poppins stays last (see the

@@ -1,0 +1,770 @@
+[
+ {
+  "id": 56193,
+  "date": "2026-07-10T13:54:41",
+  "date_gmt": "2026-07-10T17:54:41",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/?post_type=events&#038;p=56193"
+  },
+  "modified": "2026-07-10T13:57:19",
+  "modified_gmt": "2026-07-10T17:57:19",
+  "slug": "pokemon-day-out-brooklyn-bridge-park",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/pokemon-day-out-brooklyn-bridge-park/",
+  "title": {
+   "rendered": "Pok\u00e9mon Day Out: Brooklyn Bridge Park"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 56194,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [
+   343
+  ],
+  "class_list": [
+   "post-56193",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry",
+   "event_category-arts-culture"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "date": "20260724",
+   "start_time": "10:00 am",
+   "end_time": "7:00 pm",
+   "multi-day": false,
+   "time_notes": "Pok\u00e9mon Day Out: Brooklyn Bridge Park runs July 24\u2013July 26",
+   "recurring_event": true,
+   "editing_capabilities": true,
+   "happens": "Manual",
+   "select_date_&_time": [
+    {
+     "date": "20260725",
+     "start_time": "10:00 am",
+     "end_time": "7:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260726",
+     "start_time": "10:00 am",
+     "end_time": "7:00 pm",
+     "multi-day": false,
+     "end_date": null
+    }
+   ],
+   "recurring_events_list": "Pok\u00e9mon Day Out: Brooklyn Bridge Park \u2013 July 25 (July 25, 2026)<br />\nPok\u00e9mon Day Out: Brooklyn Bridge Park \u2013 July 26 (July 26, 2026)",
+   "description": "<p>Pok\u00e9mon Day Out is a live, family-friendly experience where families can take part in an unforgettable Pok\u00e9mon celebration. During your visit, you\u2019ll set off on a journey filled with playful moments, joyful discoveries, and opportunities to discover your favorite Pok\u00e9mon along the way. Games, activities and plenty of surprises are in store as fans of all ages gather to celebrate 30 years of Pok\u00e9mon together.</p>\n<div class=\"field-banner banner_x5a0bb0427c1c133db824 field-banner--fw\">\n<div class=\"banner__holds-content standard\">\n<div class=\"banner__content\">\n<div>\n<p class=\"std-text\"><em>Pok\u00e9mon Day Out is free to attend, but advance reservations are required. A parent/guardian who is 18+ must register on behalf of themselves and any minors aged 18 or below.</em></p>\n</div>\n</div>\n</div>\n</div>\n<p style=\"text-align: center;\">\n\n    <a href=\"https://event.pokemondayout.com/day-out?t=gn\" target=\"_blank\" class=\"mainCTA cta2 mainCTAcenter\">Learn More!<span class=\"fa-light fa-arrow-up-right-from-square\"></span></a>\n\n\n    </p>\n",
+   "optional_cta": {
+    "title": "Event Details",
+    "url": "https://event.pokemondayout.com/day-out?t=gn",
+    "target": "_blank"
+   },
+   "optional_cta_color": "transparent",
+   "select_series": "",
+   "event_location": [
+    18701
+   ],
+   "event_preparations": 56198,
+   "select_type": "Select Event Icons",
+   "select_icons": ""
+  }
+ },
+ {
+  "id": 55963,
+  "date": "2026-06-17T13:37:16",
+  "date_gmt": "2026-06-17T17:37:16",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/?post_type=events&#038;p=55963"
+  },
+  "modified": "2026-06-30T17:03:14",
+  "modified_gmt": "2026-06-30T21:03:14",
+  "slug": "expert-led-explorations-oysters",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/expert-led-explorations-oysters/",
+  "title": {
+   "rendered": "Expert-Led Explorations: Oysters"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 55964,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [],
+  "class_list": [
+   "post-55963",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry"
+  ],
+  "acf": {
+   "status": "Cancelled",
+   "date": "20260701",
+   "start_time": "4:00 pm",
+   "end_time": "6:00 pm",
+   "multi-day": false,
+   "time_notes": "",
+   "recurring_event": true,
+   "description": "<p><mark>Due to extreme temperatures this event has been cancelled &#8211; our <a href=\"https://brooklynbridgepark.org/education/open-hours/\" target=\"_blank\">Education Center</a> will be open with extended hours 10-6pm on Wednesday, July 1\u2013Friday, July 3. Drop-in, cool off, have some fun &#038; learn!</mark></p>\n<p>Join us to learn about the vital role oysters play in the New York estuary and get some hands on experience in oyster monitoring.</p>\n<p><center><a href=\"https://fareharbor.com/embeds/book/brooklynbridgepark/items/725854/?full-items=yes\" target=\"_blank\" onclick=\"FH.open({&#039;shortname&#039;:&#039;brooklynbridgepark&#039;,&#039;view&#039;:{&#039;item&#039;:&#039;725854&#039;},&#039;fallback&#039;:&#039;simple&#039;,&#039;fullItems&#039;:&#039;yes&#039;}); return false;\" class=\"fh-button-true-flat-blue\">Register Now!</a></center></p>\n<p>Accessibility: Please reach out to education@bbp.nyc for any accessibility needs or questions. The paths on the pier are paved, and the workshop will take place at the picnic tables where seating is available. Bathrooms are located nearby at Fornino&#8217;s on Pier 6.</p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": [
+    54572
+   ],
+   "event_location": [
+    18697
+   ],
+   "event_preparations": 54505,
+   "select_type": "Select Event Icons",
+   "select_icons": [
+    54507
+   ],
+   "recurring_events_list": "Expert-Led Explorations: Oysters \u2013 July 9 (July 9, 2026)<br />\nExpert-Led Explorations: Oysters \u2013 July 14 (July 14, 2026)<br />\nExpert-Led Explorations: Oysters \u2013 July 22 (July 22, 2026)<br />\nExpert-Led Explorations: Oysters \u2013 July 30 (July 30, 2026)<br />\nExpert-Led Explorations: Oysters \u2013 August 4 (August 4, 2026)<br />\nExpert-Led Explorations: Oysters \u2013 August 5 (August 5, 2026)<br />\nExpert-Led Explorations: Oysters \u2013 August 12 (August 12, 2026)<br />\nExpert-Led Explorations: Oysters \u2013 August 18 (August 18, 2026)<br />\nExpert-Led Explorations: Oysters \u2013 August 26 (August 26, 2026)",
+   "editing_capabilities": false,
+   "happens": "Manual",
+   "select_date_&_time": [
+    {
+     "date": "20260709",
+     "start_time": "10:30 am",
+     "end_time": "12:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260714",
+     "start_time": "10:30 am",
+     "end_time": "12:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260722",
+     "start_time": "4:00 pm",
+     "end_time": "6:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260730",
+     "start_time": "10:30 am",
+     "end_time": "12:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260804",
+     "start_time": "10:30 am",
+     "end_time": "12:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260805",
+     "start_time": "4:00 pm",
+     "end_time": "6:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260812",
+     "start_time": "4:00 pm",
+     "end_time": "6:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260818",
+     "start_time": "10:30 am",
+     "end_time": "12:00 pm",
+     "multi-day": false,
+     "end_date": null
+    },
+    {
+     "date": "20260826",
+     "start_time": "4:00 pm",
+     "end_time": "6:00 pm",
+     "multi-day": false,
+     "end_date": null
+    }
+   ]
+  }
+ },
+ {
+  "id": 55968,
+  "date": "2026-06-17T13:49:33",
+  "date_gmt": "2026-06-17T17:49:33",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/event/expert-led-explorations-oysters-july-14/"
+  },
+  "modified": "2026-06-17T13:49:33",
+  "modified_gmt": "2026-06-17T17:49:33",
+  "slug": "expert-led-explorations-oysters-july-14",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/expert-led-explorations-oysters-july-14/",
+  "title": {
+   "rendered": "Expert-Led Explorations: Oysters &#8211; July 14"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 55964,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [],
+  "class_list": [
+   "post-55968",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "time_notes": "",
+   "description": "<p>Join us to learn about the vital role oysters play in the New York estuary and get some hands on experience in oyster monitoring.</p>\n<p><center><a href=\"https://fareharbor.com/embeds/book/brooklynbridgepark/items/725854/?full-items=yes\" target=\"_blank\" onclick=\"FH.open({&#039;shortname&#039;:&#039;brooklynbridgepark&#039;,&#039;view&#039;:{&#039;item&#039;:&#039;725854&#039;},&#039;fallback&#039;:&#039;simple&#039;,&#039;fullItems&#039;:&#039;yes&#039;}); return false;\" class=\"fh-button-true-flat-blue\">Register Now!</a></center></p>\n<p>Accessibility: Please reach out to education@bbp.nyc for any accessibility needs or questions. The paths on the pier are paved, and the workshop will take place at the picnic tables where seating is available. Bathrooms are located nearby at Fornino&#8217;s on Pier 6.</p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": [
+    54572
+   ],
+   "event_location": [
+    18697
+   ],
+   "event_preparations": 54505,
+   "select_type": "Select Event Icons",
+   "select_icons": [
+    54507
+   ],
+   "recurring_events_list": "",
+   "happens": "Manual",
+   "date": "20260714",
+   "start_time": "10:30 am",
+   "end_time": "12:00 pm",
+   "multi-day": false,
+   "end_date": "",
+   "recurring_event": false
+  }
+ },
+ {
+  "id": 55802,
+  "date": "2026-05-27T11:16:36",
+  "date_gmt": "2026-05-27T15:16:36",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/event/storytime-with-brooklyn-public-library-july-31/"
+  },
+  "modified": "2026-05-27T17:18:39",
+  "modified_gmt": "2026-05-27T21:18:39",
+  "slug": "storytime-with-brooklyn-public-library-july-31",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/storytime-with-brooklyn-public-library-july-31/",
+  "title": {
+   "rendered": "Storytime with Brooklyn Public Library &#8211; July 31"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 55794,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [],
+  "class_list": [
+   "post-55802",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "time_notes": "Friday afternoons in June & July",
+   "happens": "Weekly",
+   "select_days_of_week": [
+    "Friday"
+   ],
+   "ends_on": "20260731",
+   "recurring_events_list": "Storytime with Brooklyn Public Library \u2013 June 19 (June 19, 2026)<br /><br />\r\nStorytime with Brooklyn Public Library \u2013 June 26 (June 26, 2026)<br /><br />\r\nStorytime with Brooklyn Public Library \u2013 July 3 (July 3, 2026)<br /><br />\r\nStorytime with Brooklyn Public Library \u2013 July 10 (July 10, 2026)<br /><br />\r\nStorytime with Brooklyn Public Library \u2013 July 17 (July 17, 2026)<br /><br />\r\nStorytime with Brooklyn Public Library \u2013 July 24 (July 24, 2026)<br /><br />\r\nStorytime with Brooklyn Public Library \u2013 July 31 (July 31, 2026)",
+   "description": "<p>Calling all caregivers and young children &#8211; join for Storytime with Brooklyn Public Library on Friday afternoons in June and July!</p>\n<p>Librarians from Brooklyn Public Library&#8217;s Adams St and Brooklyn Heights branches will join to lead storytime each week. Bring a blanket, some snacks, and enjoy a relaxing late afternoon in the shade of Pier 1&#8217;s The Vale Lawn.</p>\n<p><em>Please note there is no storytime on June 19 or July 3</em></p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": [
+    55808
+   ],
+   "event_location": [
+    18779
+   ],
+   "event_preparations": 54505,
+   "select_type": "Select Event Icons",
+   "select_icons": [
+    54507
+   ],
+   "date": "20260731",
+   "start_time": "4:30 pm",
+   "end_time": "5:30 pm",
+   "multi-day": false,
+   "end_date": "",
+   "recurring_event": false
+  }
+ },
+ {
+  "id": 55644,
+  "date": "2026-05-08T12:49:40",
+  "date_gmt": "2026-05-08T16:49:40",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/?post_type=events&#038;p=55644"
+  },
+  "modified": "2026-06-29T11:47:22",
+  "modified_gmt": "2026-06-29T15:47:22",
+  "slug": "papi-juice-dance-party-sept-2026",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/papi-juice-dance-party-sept-2026/",
+  "title": {
+   "rendered": "Papi Juice Dance Party"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 15322,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [
+   343,
+   345
+  ],
+  "class_list": [
+   "post-55644",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry",
+   "event_category-arts-culture",
+   "event_category-socials"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "date": "20260919",
+   "start_time": "4:00 pm",
+   "end_time": "9:00 pm",
+   "multi-day": false,
+   "time_notes": "",
+   "recurring_event": false,
+   "description": "<p>Don&#8217;t miss the dance party of the season, as DJ collective Papi Juice return to Pier 6 Plaza as guest curators.</p>\n<p>Set against the waterfront skyline at Pier 6 Plaza, come together for music, movement, and community. After lighting up the park the past few summers, Papi Juice is back with their signature energy, vibrant DJs, and joyful atmosphere \u2013 join to dance together under the open sky, watch a beautiful sunset, and create some magic!</p>\n<p>DJs for the evening are Papi Juice&#8217;s own <span class=\"TextRun SCXW37602188 BCX0\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><a href=\"https://www.instagram.com/oscarnn/?hl=en\"><span class=\"NormalTextRun SCXW37602188 BCX0\">Oscar\u00a0</span><span class=\"NormalTextRun SpellingErrorV2Themed SCXW37602188 BCX0\">N\u00f1</span></a><span class=\"NormalTextRun SCXW37602188 BCX0\"> &amp; <a href=\"https://www.instagram.com/seakeke/\">Adam R.</a>, <a class=\"Hyperlink SCXW257606844 BCX0\" href=\"https://www.instagram.com/preciousreneetucker/\" target=\"_blank\" rel=\"noreferrer noopener\"><span class=\"TextRun Underlined SCXW257606844 BCX0\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><span class=\"NormalTextRun SCXW257606844 BCX0\" data-ccp-charstyle=\"Hyperlink\">Precious Renee Tucker</span></span></a>, and <a class=\"Hyperlink SCXW265557421 BCX0\" href=\"https://www.instagram.com/soulsummitmusic/\" target=\"_blank\" rel=\"noreferrer noopener\"><span class=\"TextRun Underlined SCXW265557421 BCX0\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><span class=\"NormalTextRun SCXW265557421 BCX0\" data-ccp-charstyle=\"Hyperlink\">Soul Summit</span></span></a>.<span class=\"EOP Selected SCXW265557421 BCX0\" data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;335559738&quot;:0,&quot;335559739&quot;:0}\">\u00a0</span></span></span></p>\n<p>Guests are welcome to bring food and non-alcoholic beverages to picnic (no glass or outside alcohol allowed). Snacks, soft drinks, and alcoholic beverages will be available for purchase at our on-site bar by Fornino.</p>\n<p><center><a href=\"https://fareharbor.com/embeds/book/brooklynbridgepark/items/734088/availability/2115580437/book/?full-items=yes\" target=\"_blank\" onclick=\"FH.open({&#039;shortname&#039;:&#039;brooklynbridgepark&#039;,&#039;view&#039;:{&#039;item&#039;:&#039;734088&#039;,&#039;availability&#039;:&#039;2115580437&#039;},&#039;fallback&#039;:&#039;simple&#039;,&#039;fullItems&#039;:&#039;yes&#039;}); return false;\" class=\"fh-button-true-flat-blue\">Register Now!</a></center></p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": [
+    55641
+   ],
+   "event_location": [
+    18701
+   ],
+   "event_preparations": 54505,
+   "select_type": "Select Event Icons",
+   "select_icons": [
+    54507,
+    54508
+   ],
+   "recurring_events_list": ""
+  }
+ },
+ {
+  "id": 56166,
+  "date": "2026-07-08T11:14:06",
+  "date_gmt": "2026-07-08T15:14:06",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/event/movement-for-healthy-aging-with-mark-morris-dance-group-move-flow-september-27/"
+  },
+  "modified": "2026-07-08T11:23:03",
+  "modified_gmt": "2026-07-08T15:23:03",
+  "slug": "movement-for-healthy-aging-with-mark-morris-dance-group-restorative-movement",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/movement-for-healthy-aging-with-mark-morris-dance-group-restorative-movement/",
+  "title": {
+   "rendered": "Movement for Healthy Aging with Mark Morris Dance Group: Restorative Movement"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 56165,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [
+   343,
+   348
+  ],
+  "class_list": [
+   "post-56166",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry",
+   "event_category-arts-culture",
+   "event_category-fitness"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "time_notes": "",
+   "happens": "Manual",
+   "recurring_events_list": "",
+   "description": "<h4 style=\"text-align: center;\"><em>Co-presented by Brooklyn Bridge Park and Mark Morris Dance Group</em></h4>\n<p>Join Mark Morris Dance Group for an interactive dance workshop, exploring accessible movement and wellness. Designed for those with limited mobility, this workshop is focused on flexibility, balance, and range of motion. No prior dance experience required\u2014just bring your energy and favorite dance attire! All ages welcome.</p>\n<p>On Sunday, September 27, join for <strong>Restorative Movement</strong>, a somatic movement class with a focus on mobility, flexibility, balance, and range of motion at Pier 6, Liberty Lawn.</p>\n<p><strong>Space is limited; pre-registration is required.</strong></p>\n<p><center><a href=\"https://fareharbor.com/embeds/book/brooklynbridgepark/items/745392/?full-items=yes\" target=\"_blank\" onclick=\"FH.open({&#039;shortname&#039;:&#039;brooklynbridgepark&#039;,&#039;view&#039;:{&#039;item&#039;:&#039;745392&#039;},&#039;fallback&#039;:&#039;simple&#039;,&#039;fullItems&#039;:&#039;yes&#039;}); return false;\" class=\"fh-button-true-flat-blue\">Register Now!</a></center></p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": "",
+   "event_location": [
+    18855
+   ],
+   "event_preparations": 54505,
+   "select_type": "Select Event Icons",
+   "select_icons": [
+    55324,
+    54507
+   ],
+   "date": "20260927",
+   "start_time": "11:00 am",
+   "end_time": "12:00 pm",
+   "multi-day": false,
+   "end_date": "",
+   "recurring_event": false
+  }
+ },
+ {
+  "id": 55595,
+  "date": "2026-05-06T16:04:42",
+  "date_gmt": "2026-05-06T20:04:42",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/event/family-kayaking-august-30/"
+  },
+  "modified": "2026-05-26T11:10:04",
+  "modified_gmt": "2026-05-26T15:10:04",
+  "slug": "family-kayaking-august-30",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/family-kayaking-august-30/",
+  "title": {
+   "rendered": "Family Kayaking &#8211; August 30"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 38514,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [
+   348
+  ],
+  "class_list": [
+   "post-55595",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry",
+   "event_category-fitness"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "time_notes": "Weekly on Wed/Th 5\u20137pm, Sat 10am-3pm, Sun 12\u20132:30pm",
+   "happens": "Weekly",
+   "select_days_of_week": [
+    "Sunday"
+   ],
+   "ends_on": "20260830",
+   "recurring_events_list": "Family Kayaking \u2013 June 7 (June 7, 2026)<br /><br />\r\nFamily Kayaking \u2013 June 14 (June 14, 2026)<br /><br />\r\nFamily Kayaking \u2013 June 21 (June 21, 2026)<br /><br />\r\nFamily Kayaking \u2013 June 28 (June 28, 2026)<br /><br />\r\nFamily Kayaking \u2013 July 5 (July 5, 2026)<br /><br />\r\nFamily Kayaking \u2013 July 12 (July 12, 2026)<br /><br />\r\nFamily Kayaking \u2013 July 19 (July 19, 2026)<br /><br />\r\nFamily Kayaking \u2013 July 26 (July 26, 2026)<br /><br />\r\nFamily Kayaking \u2013 August 2 (August 2, 2026)<br /><br />\r\nFamily Kayaking \u2013 August 9 (August 9, 2026)<br /><br />\r\nFamily Kayaking \u2013 August 16 (August 16, 2026)<br /><br />\r\nFamily Kayaking \u2013 August 23 (August 23, 2026)<br /><br />\r\nFamily Kayaking \u2013 August 30 (August 30, 2026)",
+   "description": "<p>Glide along the water this summer and fall in our protected embayment with free public kayaking!</p>\n<p>Presented in partnership with Brooklyn Bridge Park Boathouse, free kayaking is offered throughout the summer on Wednesday and Thursday evenings, Saturdays, and Sunday afternoons. All levels are welcome including first-time kayakers \u2014 life vests and all equipment provided, as well as instruction. Children under 18 must have an adult guardian present. Meet at the north entrance of Pier 2, look for the floating dock.</p>\n<p><strong>Our Sunday program is specifically geared for kids and families, allowing younger paddlers to go solo in single kayaks!</strong> Kids aged 7 and older can paddle solo (as long as a guardian is present) thanks to additional on-water safety boaters from The Kayak Foundation who are specially trained to work with kids.</p>\n<p><strong>Advanced registration highly recommended, providing 20 minute timed slots. </strong>Registration opens 2 weeks ahead of each date through the Brooklyn Bridge Park Boathouse website. <a href=\"https://brooklynbridgepark.org/event-series/kayaking/\"><b><u>View all kayaking dates here.</u></b></a> <em>Occasionally, walk-up spots may be available, but not guaranteed. Please note that holiday weekends may be skipped; please check the schedule.</em></p>\n<p style=\"text-align: center;\">\n<p>    <a href=\"https://www.bbpboathouse.org/\" target=\"_blank\" class=\"mainCTA cta2 mainCTAcenter\">Register here!<span class=\"fa-light fa-arrow-up-right-from-square\"></span></a></p>\n<p style=\"text-align: center;\"><i>Don\u2019t see any available time slots? Check back! Registration opens on a rolling basis, exactly 2 weeks ahead of each date. Occasionally, slots may open due to cancellations or no-shows.</i></p>\n<p style=\"text-align: center;\"><em>Have your own boat? Launch your human-powered boats from the Pier 4 Beach. <a href=\"https://brooklynbridgepark.org/things-to-do/kayaking/\" target=\"_blank\" rel=\"noopener\">Learn more.</a></em></p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": [
+    54818
+   ],
+   "event_location": [
+    18687
+   ],
+   "event_preparations": 55531,
+   "select_type": "Select Event Icons",
+   "select_icons": [
+    54507,
+    54508
+   ],
+   "date": "20260830",
+   "start_time": "12:00 pm",
+   "end_time": "2:30 pm",
+   "multi-day": false,
+   "end_date": "",
+   "recurring_event": false
+  }
+ },
+ {
+  "id": 55545,
+  "date": "2026-05-06T15:41:52",
+  "date_gmt": "2026-05-06T19:41:52",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/event/kayaking-july-15/"
+  },
+  "modified": "2026-05-26T11:10:11",
+  "modified_gmt": "2026-05-26T15:10:11",
+  "slug": "kayaking-july-15",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/kayaking-july-15/",
+  "title": {
+   "rendered": "Kayaking &#8211; July 15"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 13130,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [
+   348
+  ],
+  "class_list": [
+   "post-55545",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry",
+   "event_category-fitness"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "time_notes": "Weekly on Wed/Th 5\u20137pm, Sat 10am-3pm, Sun 12\u20132:30pm",
+   "happens": "Weekly",
+   "select_days_of_week": [
+    "Wednesday",
+    "Thursday"
+   ],
+   "ends_on": "20260827",
+   "recurring_events_list": "Kayaking \u2013 May 28 (May 28, 2026)<br /><br />\r\nKayaking \u2013 June 3 (June 3, 2026)<br /><br />\r\nKayaking \u2013 June 4 (June 4, 2026)<br /><br />\r\nKayaking \u2013 June 10 (June 10, 2026)<br /><br />\r\nKayaking \u2013 June 11 (June 11, 2026)<br /><br />\r\nKayaking \u2013 June 17 (June 17, 2026)<br /><br />\r\nKayaking \u2013 June 18 (June 18, 2026)<br /><br />\r\nKayaking \u2013 June 24 (June 24, 2026)<br /><br />\r\nKayaking \u2013 June 25 (June 25, 2026)<br /><br />\r\nKayaking \u2013 July 1 (July 1, 2026)<br /><br />\r\nKayaking \u2013 July 2 (July 2, 2026)<br /><br />\r\nKayaking \u2013 July 8 (July 8, 2026)<br /><br />\r\nKayaking \u2013 July 9 (July 9, 2026)<br /><br />\r\nKayaking \u2013 July 15 (July 15, 2026)<br /><br />\r\nKayaking \u2013 July 16 (July 16, 2026)<br /><br />\r\nKayaking \u2013 July 22 (July 22, 2026)<br /><br />\r\nKayaking \u2013 July 23 (July 23, 2026)<br /><br />\r\nKayaking \u2013 July 29 (July 29, 2026)<br /><br />\r\nKayaking \u2013 July 30 (July 30, 2026)<br /><br />\r\nKayaking \u2013 August 5 (August 5, 2026)<br /><br />\r\nKayaking \u2013 August 6 (August 6, 2026)<br /><br />\r\nKayaking \u2013 August 12 (August 12, 2026)<br /><br />\r\nKayaking \u2013 August 13 (August 13, 2026)<br /><br />\r\nKayaking \u2013 August 19 (August 19, 2026)<br /><br />\r\nKayaking \u2013 August 20 (August 20, 2026)<br /><br />\r\nKayaking \u2013 August 26 (August 26, 2026)<br /><br />\r\nKayaking \u2013 August 27 (August 27, 2026)",
+   "description": "<p>Glide along the water this summer and fall in our protected embayment with free public kayaking!</p>\n<p>Presented in partnership with Brooklyn Bridge Park Boathouse, free kayaking is offered throughout the summer on Wednesday and Thursday evenings, Saturdays, and Sunday afternoons. All levels are welcome including first-time kayakers \u2014 life vests and all equipment provided, as well as instruction. Children under 18 must have an adult guardian present. Meet at the north entrance of Pier 2, look for the floating dock.</p>\n<p><strong>Advanced registration highly recommended, providing 20 minute timed slots. </strong>Registration opens 2 weeks ahead of each date through the Brooklyn Bridge Park Boathouse website. <a href=\"https://brooklynbridgepark.org/event-series/kayaking/\"><b><u>View all kayaking dates here.</u></b></a> <em>Occasionally, walk-up spots may be available, but not guaranteed. Please note that holiday weekends may be skipped; please check the schedule.</em></p>\n<p style=\"text-align: center;\">\n<p>    <a href=\"https://www.bbpboathouse.org/\" target=\"_blank\" class=\"mainCTA cta2 mainCTAcenter\">Register here!<span class=\"fa-light fa-arrow-up-right-from-square\"></span></a></p>\n<p style=\"text-align: center;\"><i>Don\u2019t see any available time slots? Check back! Registration opens on a rolling basis, exactly 2 weeks ahead of each date. Occasionally, slots may open due to cancellations or no-shows.</i></p>\n<p style=\"text-align: center;\"><em>Have your own boat? Launch your human-powered boats from the Pier 4 Beach. <a href=\"https://brooklynbridgepark.org/things-to-do/kayaking/\" target=\"_blank\" rel=\"noopener\">Learn more.</a></em></p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": [
+    54818
+   ],
+   "event_location": [
+    18687
+   ],
+   "event_preparations": 55531,
+   "select_type": "Select Event Icons",
+   "select_icons": "",
+   "date": "20260715",
+   "start_time": "5:00 pm",
+   "end_time": "7:00 pm",
+   "multi-day": false,
+   "end_date": "",
+   "recurring_event": false
+  }
+ },
+ {
+  "id": 55650,
+  "date": "2026-05-08T13:10:57",
+  "date_gmt": "2026-05-08T17:10:57",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/?post_type=events&#038;p=55650"
+  },
+  "modified": "2026-06-03T09:23:26",
+  "modified_gmt": "2026-06-03T13:23:26",
+  "slug": "movies-with-a-view-july-16",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/movies-with-a-view-july-16/",
+  "title": {
+   "rendered": "Movies With A View: Bend It Like Beckham"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 4868,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [
+   343,
+   353
+  ],
+  "class_list": [
+   "post-55650",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry",
+   "event_category-arts-culture",
+   "event_category-movies"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "date": "20260716",
+   "start_time": "6:00 pm",
+   "end_time": "11:00 pm",
+   "multi-day": false,
+   "time_notes": "Thursdays in July & August + September 18",
+   "recurring_event": false,
+   "description": "<p><a href=\"https://www.persol.com/?utm_source=website&amp;utm_medium=link&amp;utm_campaign=mwav&amp;utm_id=bbp\" target=\"_blank\" rel=\"noopener\"><img loading=\"lazy\" decoding=\"async\" class=\"alignright wp-image-55756\" src=\"https://brooklynbridgepark.org/wp-content/uploads/2026/05/Persol-x-BBP-MWAV-Logo-Film-Square.png\" alt=\"\" width=\"237\" height=\"236\" srcset=\"https://brooklynbridgepark.org/wp-content/uploads/2026/05/Persol-x-BBP-MWAV-Logo-Film-Square.png 750w, https://brooklynbridgepark.org/wp-content/uploads/2026/05/Persol-x-BBP-MWAV-Logo-Film-Square-300x300.png 300w, https://brooklynbridgepark.org/wp-content/uploads/2026/05/Persol-x-BBP-MWAV-Logo-Film-Square-150x150.png 150w\" sizes=\"auto, (max-width: 237px) 100vw, 237px\" /></a>One of Brooklyn Bridge Park\u2019s most popular series, <a href=\"https://brooklynbridgepark.org/event-series/movies-with-a-view/\">Movies With A View</a> presented by <a href=\"https://www.persol.com/?utm_source=website&amp;utm_medium=link&amp;utm_campaign=mwav&amp;utm_id=bbp\">Persol</a>, returns for its 26th season with outdoor films on Thursday evenings in July and August \u2013 expanding with an additional family film night on September 18.</p>\n<p>Leading up to the World Cup Final, revisit the popular film <em><strong>Bend It Like Beckham</strong></em> (PG-13, 2002, 112 minutes), about a young woman chasing her passion for soccer despite her family\u2019s wishes.</p>\n<p>Come early to enjoy a picnic on the lawn and refreshing waterfront breezes, with New York Harbor and Manhattan skyline views like no other as the sun sets. Entry is free and first-come, first serve starting at 6:00 PM. Movies begin at sunset.</p>\n<p><center><iframe loading=\"lazy\" title=\"YouTube video player\" src=\"https://www.youtube.com/embed/EyorDLWW1Nw?si=po0rZH_dBNvI3blz\" width=\"560\" height=\"315\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe></center></p>\n<p>Guests are welcome to bring their own food for picnicking and encouraged to support nearby Park concessions and neighborhood restaurants. Popcorn, water, soft drinks, and alcoholic beverages (for those 21+) will be available for sale on-site by\u202fFornino. Attendees are encouraged to bring picnic blankets or small soft cushions but reminded that lawn chairs and dogs are not permitted on the lawn, and glass bottles and outside alcohol are never allowed in the Park.</p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": [
+    54812
+   ],
+   "event_location": [
+    18763
+   ],
+   "event_preparations": 54907,
+   "select_type": "Select Event Icons",
+   "select_icons": [
+    54507,
+    54508
+   ],
+   "recurring_events_list": ""
+  }
+ },
+ {
+  "id": 55612,
+  "date": "2026-05-06T16:22:01",
+  "date_gmt": "2026-05-06T20:22:01",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/event/youth-basketball-clinics-august-29/"
+  },
+  "modified": "2026-05-19T10:50:15",
+  "modified_gmt": "2026-05-19T14:50:15",
+  "slug": "youth-basketball-clinics-august-29",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/youth-basketball-clinics-august-29/",
+  "title": {
+   "rendered": "Youth Basketball Clinics &#8211; August 29"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 15673,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [
+   348
+  ],
+  "class_list": [
+   "post-55612",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry",
+   "event_category-fitness"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "time_notes": "Weekly on Saturday mornings, June through August",
+   "happens": "Weekly",
+   "select_days_of_week": [
+    "Saturday"
+   ],
+   "ends_on": "20260829",
+   "recurring_events_list": "Youth Basketball Clinics \u2013 June 13 (June 13, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 June 20 (June 20, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 June 27 (June 27, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 July 4 (July 4, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 July 11 (July 11, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 July 18 (July 18, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 July 25 (July 25, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 August 1 (August 1, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 August 8 (August 8, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 August 15 (August 15, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 August 22 (August 22, 2026)<br /><br />\r\nYouth Basketball Clinics \u2013 August 29 (August 29, 2026)",
+   "description": "<p>Kids aged 6-17 can join Brooklyn Bridge Park for free basketball clinics led by <a href=\"https://sites.google.com/kinghoops.org/home/home?authuser=0\">KING Hoops</a>, NYC\u2019s premier youth basketball organization. Participants can learn basketball basics as head coaches lead participants through drills and games. Free clinics are held on Saturday mornings from June through August (excluding holiday weekends).</p>\n<p>The first hour, <strong>9-10am</strong>, will be for <strong>beginner players</strong> who are brand new to the sport. Here we will teach the very basic fundamentals of the game, the rules of the game, and getting acclimated to having a ball in each player\u2019s hands.</p>\n<p>The second hour, <strong>10-11am</strong>, will be for <strong>advanced beginners to intermediate players</strong> who have played a little bit more basketball experience. Emphasis will be on ball handling, passing, shooting form, defense, and learning to love the game.</p>\n<p>This event is rain or shine. It is recommended to bring your own ball; we will have a limited number available to borrow onsite.</p>\n<p>Advanced registration and fitness waivers are required, although walk-up registrations can be accommodated as space allows. Registration is by-the-week and dates open at start of the month. Capacity will be limited to 45 participants per age group.</p>\n<p><center><a href=\"https://fareharbor.com/embeds/book/brooklynbridgepark/items/308173/?full-items=yes\" target=\"_blank\" onclick=\"FH.open({&#039;shortname&#039;:&#039;brooklynbridgepark&#039;,&#039;view&#039;:{&#039;item&#039;:&#039;308173&#039;},&#039;fallback&#039;:&#039;simple&#039;,&#039;fullItems&#039;:&#039;yes&#039;}); return false;\" class=\"fh-button-true-flat-blue\">Register Now!</a></center></p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": "",
+   "event_location": [
+    18687
+   ],
+   "event_preparations": 55599,
+   "select_type": "Select Event Icons",
+   "select_icons": [
+    55324,
+    54507
+   ],
+   "date": "20260829",
+   "start_time": "9:00 am",
+   "end_time": "11:00 am",
+   "multi-day": false,
+   "end_date": "",
+   "recurring_event": false
+  }
+ },
+ {
+  "id": 56046,
+  "date": "2026-06-23T10:21:45",
+  "date_gmt": "2026-06-23T14:21:45",
+  "guid": {
+   "rendered": "https://brooklynbridgepark.org/event/volunteer-orientation-august-24/"
+  },
+  "modified": "2026-06-23T10:21:45",
+  "modified_gmt": "2026-06-23T14:21:45",
+  "slug": "volunteer-orientation-august-24",
+  "status": "publish",
+  "type": "events",
+  "link": "https://brooklynbridgepark.org/event/volunteer-orientation-august-24/",
+  "title": {
+   "rendered": "Volunteer Orientation &#8211; August 24"
+  },
+  "excerpt": {
+   "rendered": "",
+   "protected": false
+  },
+  "featured_media": 54481,
+  "menu_order": 0,
+  "template": "",
+  "event_category": [
+   350
+  ],
+  "class_list": [
+   "post-56046",
+   "events",
+   "type-events",
+   "status-publish",
+   "has-post-thumbnail",
+   "hentry",
+   "event_category-volunteer"
+  ],
+  "acf": {
+   "status": "Scheduled",
+   "time_notes": "",
+   "happens": "Manual",
+   "recurring_events_list": "Volunteer Orientation \u2013 March 31 (March 31, 2026)<br /><br />\r\nVolunteer Orientation \u2013 April 11 (April 11, 2026)<br /><br />\r\nVolunteer Orientation \u2013 April 30 (April 30, 2026)<br /><br />\r\nVolunteer Orientation \u2013 May 14 (May 14, 2026)<br /><br />\r\nVolunteer Orientation \u2013 May 27 (May 27, 2026)<br /><br />\r\nVolunteer Orientation \u2013 June 9 (June 9, 2026)",
+   "description": "<p><span data-contrast=\"auto\">Volunteer Orientations are\u00a0a great way\u00a0to learn about available opportunities at Brooklyn Bridge Park. During these in-person sessions, prospective volunteers will learn about the history of the\u00a0Park, meet Park staff, and explore the many ways to get involved.</span><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559738&quot;:240,&quot;335559739&quot;:240}\">\u00a0</span></p>\n<p><span data-contrast=\"auto\">Volunteer Orientations are\u00a0required\u00a0for all volunteer roles except for Green Teams and Coastal Cleanups.</span><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559738&quot;:240,&quot;335559739&quot;:240}\">\u00a0</span></p>\n<p><span data-contrast=\"auto\">While all ages are welcome, the session will focus primarily on opportunities for volunteers aged 18 and over.</span><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559738&quot;:240,&quot;335559739&quot;:240}\">\u00a0</span></p>\n<p><span data-contrast=\"none\">To register for an orientation:</span><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}\">\u00a0</span></p>\n<ul>\n<li aria-setsize=\"-1\" data-leveltext=\"\uf0b7\" data-font=\"Symbol\" data-listid=\"1\" data-list-defn-props=\"{&quot;335552541&quot;:1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769226&quot;:&quot;Symbol&quot;,&quot;469769242&quot;:[8226],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;\uf0b7&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}\" data-aria-posinset=\"1\" data-aria-level=\"1\"><span data-contrast=\"none\">If\u00a0you\u2019re\u00a0brand new to volunteering at Brooklyn Bridge Park, create a\u00a0</span><a href=\"https://www.volgistics.com/appform/612212814\"><span data-contrast=\"none\">volunteer profile</span></a><span data-contrast=\"none\">\u00a0to sign-up for an Orientation\u00a0</span><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}\">\u00a0</span></li>\n</ul>\n<ul>\n<li aria-setsize=\"-1\" data-leveltext=\"\uf0b7\" data-font=\"Symbol\" data-listid=\"1\" data-list-defn-props=\"{&quot;335552541&quot;:1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769226&quot;:&quot;Symbol&quot;,&quot;469769242&quot;:[8226],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;\uf0b7&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}\" data-aria-posinset=\"2\" data-aria-level=\"1\"><span data-contrast=\"none\">If\u00a0you\u2019ve\u00a0already got a Volunteer Profile,\u00a0</span><a href=\"https://www.volgistics.com/vicnet/124195\"><span data-contrast=\"none\">sign-in</span></a><span data-contrast=\"none\">\u00a0to and navigate to your Volunteer Calendar\u00a0register for an upcoming\u00a0Orientation\u00a0</span><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}\">\u00a0</span></li>\n</ul>\n<p><span data-contrast=\"auto\">The exact meeting location will be shared with registered participants a few days in advance.</span><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}\">\u00a0</span></p>\n<p><a href=\"https://brooklynbridgepark.org/support/volunteer/\">Learn more about volunteer opportunities here.</a></p>\n",
+   "optional_cta": "",
+   "optional_cta_color": "transparent",
+   "select_series": [
+    54965
+   ],
+   "event_location": "",
+   "event_preparations": 54966,
+   "select_type": "Select Event Icons",
+   "select_icons": "",
+   "date": "20260824",
+   "start_time": "6:00 pm",
+   "end_time": "7:00 pm",
+   "multi-day": false,
+   "end_date": "",
+   "recurring_event": false
+  }
+ }
+]

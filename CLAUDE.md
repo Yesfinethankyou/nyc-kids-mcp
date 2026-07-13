@@ -601,7 +601,13 @@ Known accepted residuals (see `git log` for the security-audit commit):
     at 16 rows/query with broken pagination, so it day-walks a 35-day window
     with adaptive time slices; NYC-filtered by coordinate boxes; the first
     source with structured age bands; ~500 events/run — read the module
-    docstring before touching it, the API is under active lockdown upstream).
+    docstring before touching it, the API is under active lockdown upstream),
+    Staten Island Children's Museum (`si_childrens_museum` — fifth Tribe
+    source, the first real Staten Island coverage; ~64 events/window),
+    Brooklyn Botanic Garden (`bbg` — custom-CMS month-page HTML scrape,
+    family-category allowlist; ~28 events/window), Brooklyn Bridge Park
+    (`brooklyn_bridge_park` — WP REST + ACF, NOT Tribe; recurring-parent vs
+    dated-post dedup is the load-bearing quirk; ~139 events/window).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
@@ -640,7 +646,9 @@ Known accepted residuals (see `git log` for the security-audit commit):
     distance-from-home was considered and **declined as out of scope** — not
     tracked as remaining A1 work.
   - **TODO:** indoor/outdoor flag (A2), weather (A3 — needs coords + A2),
-    more venue sources (Workstream B). Tech-debt #4/#5/#6 closed.
+    more venue sources (Workstream B — first batch shipped 2026-07-13:
+    `si_childrens_museum`, `bbg`, `brooklyn_bridge_park`; WCS zoos probed
+    and rejected on yield). Tech-debt #4/#5/#6 closed.
   **Brooklyn Cyclones**
   is parked here too: the MLB Stats API (`teamId=453`, public JSON, no auth)
   gives the game schedule cheaply, but the themed nights (Star Wars Night

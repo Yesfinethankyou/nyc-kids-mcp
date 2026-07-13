@@ -1,0 +1,3015 @@
+{
+ "events": [
+  {
+   "id": 9400,
+   "global_id": "sichildrensmuseum.org?id=9400",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9400"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-06-25 13:47:47",
+   "date_utc": "2026-06-25 17:47:47",
+   "modified": "2026-06-25 16:20:25",
+   "modified_utc": "2026-06-25 20:20:25",
+   "url": "https://sichildrensmuseum.org/event/walk-in-workshop-postage-stamps/2026-07-12/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9400",
+   "title": "Walk-In! Workshop: Postage Stamps",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]<span data-olk-copy-source=\"MessageBody\">Celebrate America&#8217;s 250th Birthday through art and creativity! Young artists will design their own commemorative postage stamps using paper, pencils, stencils, markers, and crayons. Children can create colorful designs inspired by American history, landmarks, symbols, and the spirit of our nation\u2019s semi quincentennial celebration.</span>[/vc_column_text][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "walk-in-workshop-postage-stamps-2026-07-12",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/06/postage-stamp-rhombus.png",
+    "id": 9392,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1023809,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 795065,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/06/postage-stamp-rhombus-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-12 12:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "12",
+    "hour": "12",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-12 16:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "12",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-12 16:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "12",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-12 20:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "12",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "art",
+     "slug": "art",
+     "term_group": 0,
+     "term_taxonomy_id": 291,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 474,
+     "filter": "raw",
+     "id": 291,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/291",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Art-Making",
+     "slug": "art-making",
+     "term_group": 0,
+     "term_taxonomy_id": 243,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 550,
+     "filter": "raw",
+     "id": 243,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/243",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "crafts",
+     "slug": "crafts",
+     "term_group": 0,
+     "term_taxonomy_id": 290,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 526,
+     "filter": "raw",
+     "id": 290,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/290",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "holiday",
+     "slug": "holiday",
+     "term_group": 0,
+     "term_taxonomy_id": 301,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 35,
+     "filter": "raw",
+     "id": 301,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/301",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "STEAM",
+     "slug": "steam",
+     "term_group": 0,
+     "term_taxonomy_id": 245,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 172,
+     "filter": "raw",
+     "id": 245,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/245",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "activities for kids",
+     "slug": "activities-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 271,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 380,
+     "filter": "raw",
+     "id": 271,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/271",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "art",
+     "slug": "art",
+     "term_group": 0,
+     "term_taxonomy_id": 258,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 274,
+     "filter": "raw",
+     "id": 258,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/258",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "creative kids",
+     "slug": "creative-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 214,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 340,
+     "filter": "raw",
+     "id": 214,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/214",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "postage stamps",
+     "slug": "postage-stamps",
+     "term_group": 0,
+     "term_taxonomy_id": 481,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 22,
+     "filter": "raw",
+     "id": 481,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/481",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "Walk In Workshop",
+     "slug": "walk-in-workshop",
+     "term_group": 0,
+     "term_taxonomy_id": 410,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 155,
+     "filter": "raw",
+     "id": 410,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/410",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9413,
+   "global_id": "sichildrensmuseum.org?id=9413",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9413"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-06-25 13:47:47",
+   "date_utc": "2026-06-25 17:47:47",
+   "modified": "2026-06-25 13:47:47",
+   "modified_utc": "2026-06-25 17:47:47",
+   "url": "https://sichildrensmuseum.org/event/walk-in-workshop-postage-stamps/2026-07-15/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9413",
+   "title": "Walk-In! Workshop: Postage Stamps",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]<span data-olk-copy-source=\"MessageBody\">Celebrate America&#8217;s 250th Birthday through art and creativity! Young artists will design their own commemorative postage stamps using paper, pencils, stencils, markers, and crayons. Children can create colorful designs inspired by American history, landmarks, symbols, and the spirit of our nation\u2019s semi quincentennial celebration.</span>[/vc_column_text][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "walk-in-workshop-postage-stamps-2026-07-15",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/06/postage-stamp-rhombus.png",
+    "id": 9392,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1023809,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 795065,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/06/postage-stamp-rhombus-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-15 12:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "15",
+    "hour": "12",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-15 16:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "15",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-15 16:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "15",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-15 20:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "15",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "art",
+     "slug": "art",
+     "term_group": 0,
+     "term_taxonomy_id": 291,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 474,
+     "filter": "raw",
+     "id": 291,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/291",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Art-Making",
+     "slug": "art-making",
+     "term_group": 0,
+     "term_taxonomy_id": 243,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 550,
+     "filter": "raw",
+     "id": 243,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/243",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "crafts",
+     "slug": "crafts",
+     "term_group": 0,
+     "term_taxonomy_id": 290,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 526,
+     "filter": "raw",
+     "id": 290,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/290",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "holiday",
+     "slug": "holiday",
+     "term_group": 0,
+     "term_taxonomy_id": 301,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 35,
+     "filter": "raw",
+     "id": 301,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/301",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "STEAM",
+     "slug": "steam",
+     "term_group": 0,
+     "term_taxonomy_id": 245,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 172,
+     "filter": "raw",
+     "id": 245,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/245",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "activities for kids",
+     "slug": "activities-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 271,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 380,
+     "filter": "raw",
+     "id": 271,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/271",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "art",
+     "slug": "art",
+     "term_group": 0,
+     "term_taxonomy_id": 258,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 274,
+     "filter": "raw",
+     "id": 258,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/258",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "creative kids",
+     "slug": "creative-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 214,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 340,
+     "filter": "raw",
+     "id": 214,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/214",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "postage stamps",
+     "slug": "postage-stamps",
+     "term_group": 0,
+     "term_taxonomy_id": 481,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 22,
+     "filter": "raw",
+     "id": 481,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/481",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "Walk In Workshop",
+     "slug": "walk-in-workshop",
+     "term_group": 0,
+     "term_taxonomy_id": 410,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 155,
+     "filter": "raw",
+     "id": 410,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/410",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9253,
+   "global_id": "sichildrensmuseum.org?id=9253",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9253"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-04-23 10:57:46",
+   "date_utc": "2026-04-23 14:57:46",
+   "modified": "2026-06-09 15:24:58",
+   "modified_utc": "2026-06-09 19:24:58",
+   "url": "https://sichildrensmuseum.org/event/boogie-woogie-wednesday-zumba-kids/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9253",
+   "title": "Boogie Woogie Wednesday: Zumba Kids",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]</p>\n<p class=\"x_elementToProof\">Zumba Kids classes bring high-energy fun with kid-friendly routines inspired by original Zumba choreography. An Instructor will break down the steps, add games, and create an engaging, active experience.</p>\n<p class=\"x_elementToProof\">Zumba Kids also supports healthy habits and key developmental skills like leadership, teamwork, confidence, coordination, and cultural awareness &#8211; making fitness a natural part of everyday life.</p>\n<p><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;335559738&quot;:0,&quot;335559739&quot;:0}\">Included with Admission</span>[/vc_column_text][vc_row_inner][vc_column_inner][vc_column_text css=&#8221;&#8221;]Sponsored by:[/vc_column_text][/vc_column_inner][/vc_row_inner][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row][vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;9295&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://generationbridge.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;7797&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;http://amazon.com&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;2706&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://esbna.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3905&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.nationalgridus.com/NY-Home/Default.aspx&#8221;][/vc_column][/vc_row][vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3226&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.enorthfield.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3225&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.ferry.nyc/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;9296&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://pmpediatriccare.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3559&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.td.com/us/en/about-us/communities/ready-commitment/funding-opportunities/td-charitable-foundation&#8221;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "boogie-woogie-wednesday-zumba-kids",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2025/10/zumba-kids-rhombus.png",
+    "id": 8760,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 909095,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 260410,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2025/10/zumba-kids-rhombus-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-15 15:15:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "15",
+    "hour": "15",
+    "minutes": "15",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-15 16:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "15",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-15 19:15:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "15",
+    "hour": "19",
+    "minutes": "15",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-15 20:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "15",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD\t\t\t\t\t\t\tclass=\t\t\t\t\t\t\tclass=\t\t\t\t\t\t\tclass=\t\t\t\t\t\t\tclass=",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "sichildrensmuseum.org ",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Dance",
+     "slug": "dance",
+     "term_group": 0,
+     "term_taxonomy_id": 242,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 113,
+     "filter": "raw",
+     "id": 242,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/242",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Event for Kids",
+     "slug": "event-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 206,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 861,
+     "filter": "raw",
+     "id": 206,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/206",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Family Friendly",
+     "slug": "family-friendly",
+     "term_group": 0,
+     "term_taxonomy_id": 205,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 735,
+     "filter": "raw",
+     "id": 205,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/205",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Music",
+     "slug": "music",
+     "term_group": 0,
+     "term_taxonomy_id": 241,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 129,
+     "filter": "raw",
+     "id": 241,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/241",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "dance",
+     "slug": "dance",
+     "term_group": 0,
+     "term_taxonomy_id": 248,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 33,
+     "filter": "raw",
+     "id": 248,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/248",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fitness",
+     "slug": "fitness",
+     "term_group": 0,
+     "term_taxonomy_id": 341,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 6,
+     "filter": "raw",
+     "id": 341,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/341",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "healthy",
+     "slug": "healthy",
+     "term_group": 0,
+     "term_taxonomy_id": 396,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 3,
+     "filter": "raw",
+     "id": 396,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/396",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "zumba kids",
+     "slug": "zumba-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 395,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 3,
+     "filter": "raw",
+     "id": 395,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/395",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9275,
+   "global_id": "sichildrensmuseum.org?id=9275",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9275"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-05-06 11:35:46",
+   "date_utc": "2026-05-06 15:35:46",
+   "modified": "2026-05-21 15:13:32",
+   "modified_utc": "2026-05-21 19:13:32",
+   "url": "https://sichildrensmuseum.org/event/crazy-science-experiments-battery-blast/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9275",
+   "title": "Crazy Science Experiments: Battery Blast",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]</p>\n<div class=\"x_elementToProof\" data-olk-copy-source=\"MessageBody\">\n<p>Join Crazy Science for a hands-on STEM workshop where kids will get to experiment with bubbles, balloons, electricity, and more! These workshops are 100% interactive and have limited spots available, so make sure to reserve your spot at the front desk. <span data-olk-copy-source=\"MessageBody\">This series runs through Sept. 3, 2026.</span></p>\n<p>This week&#8217;s Crazy Science Experiment is: Battery Blast &#8211; power up with fun battery experiments!</p>\n<p>Included with Admission.</p>\n<p>Sponsored by:</p>\n</div>\n<div class=\"x_elementToProof\"></div>\n<p>[/vc_column_text][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row][vc_row][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;9295&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.alphagen.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;7797&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;http://amazon.com&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;4156&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://esbna.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][/vc_column][/vc_row][vc_row][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3226&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.enorthfield.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3225&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.ferry.nyc/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3559&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.td.com/us/en/about-us/funding-opportunities&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "crazy-science-experiments-battery-blast",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2023/07/Crazy-Science-rhombus.png",
+    "id": 4362,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1301755,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 854323,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2023/07/Crazy-Science-rhombus-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-16 16:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "16",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-16 16:45:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "16",
+    "hour": "16",
+    "minutes": "45",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-16 20:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "16",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-16 20:45:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "16",
+    "hour": "20",
+    "minutes": "45",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Event for Kids",
+     "slug": "event-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 206,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 861,
+     "filter": "raw",
+     "id": 206,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/206",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Family Friendly",
+     "slug": "family-friendly",
+     "term_group": 0,
+     "term_taxonomy_id": 205,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 735,
+     "filter": "raw",
+     "id": 205,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/205",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "STEM",
+     "slug": "stem",
+     "term_group": 0,
+     "term_taxonomy_id": 459,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 10,
+     "filter": "raw",
+     "id": 459,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/459",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "activities for kids",
+     "slug": "activities-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 271,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 380,
+     "filter": "raw",
+     "id": 271,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/271",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "battery blast",
+     "slug": "battery-blast",
+     "term_group": 0,
+     "term_taxonomy_id": 462,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 1,
+     "filter": "raw",
+     "id": 462,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/462",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "creative kids",
+     "slug": "creative-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 214,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 340,
+     "filter": "raw",
+     "id": 214,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/214",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "science",
+     "slug": "science",
+     "term_group": 0,
+     "term_taxonomy_id": 324,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 14,
+     "filter": "raw",
+     "id": 324,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/324",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "STEM",
+     "slug": "stem",
+     "term_group": 0,
+     "term_taxonomy_id": 325,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 15,
+     "filter": "raw",
+     "id": 325,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/325",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9324,
+   "global_id": "sichildrensmuseum.org?id=9324",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9324"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-05-13 12:02:25",
+   "date_utc": "2026-05-13 16:02:25",
+   "modified": "2026-06-15 14:21:44",
+   "modified_utc": "2026-06-15 18:21:44",
+   "url": "https://sichildrensmuseum.org/event/pre-k-resource-fair-free-admission-day-2/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9324",
+   "title": "Pre-K Resource Fair Free Admission Day",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]</p>\n<p class=\"isSelectedEnd\">We are pleased to host a Free Admission Day with pre-registration from 10:00 am \u2013 5:00 pm!</p>\n<p class=\"isSelectedEnd\">From 10:00 am \u2013 2:00 pm, guests can also enjoy a special Early Childhood Resource Fair co-hosted by the <a href=\"https://statenislandalliance.com/\"><span data-olk-copy-source=\"MessageBody\">Staten Island Alliance for North Shore Children and Families</span></a>. Local community partners will be on-site providing giveaways and information about school, medical, dental, food, and emotional support services.</p>\n<p>Additional activities for children throughout the day include hands-on activity tables, a bounce house from 10:00 am &#8211; 2:00 pm, and an Introduction to Soccer event at 11:00 am.</p>\n<p>Pre-Register Below</p>\n<p><span data-olk-copy-source=\"MessageBody\">\u00a0</span>[/vc_column_text][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row][vc_row][vc_column][vc_btn title=&#8221;Register for Pre-K Resource Fair Free Admission Day&#8221; shape=&#8221;round&#8221; color=&#8221;violet&#8221; size=&#8221;lg&#8221; css=&#8221;&#8221; link=&#8221;url:https%3A%2F%2Fsichildrensmuseum.doubleknot.com%2Fopenrosters%2Favailableevents.aspx%3Forgkey%3D4834&#8243;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "pre-k-resource-fair-free-admission-day-2",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/05/prek-rhombus.png",
+    "id": 9323,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1081805,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 803317,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/05/prek-rhombus-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-18 10:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "18",
+    "hour": "10",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-18 17:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "18",
+    "hour": "17",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-18 14:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "18",
+    "hour": "14",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-18 21:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "18",
+    "hour": "21",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "art",
+     "slug": "art",
+     "term_group": 0,
+     "term_taxonomy_id": 291,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 474,
+     "filter": "raw",
+     "id": 291,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/291",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Art-Making",
+     "slug": "art-making",
+     "term_group": 0,
+     "term_taxonomy_id": 243,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 550,
+     "filter": "raw",
+     "id": 243,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/243",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Cooking",
+     "slug": "cooking",
+     "term_group": 0,
+     "term_taxonomy_id": 246,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 69,
+     "filter": "raw",
+     "id": 246,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/246",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "crafts",
+     "slug": "crafts",
+     "term_group": 0,
+     "term_taxonomy_id": 290,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 526,
+     "filter": "raw",
+     "id": 290,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/290",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Event for Kids",
+     "slug": "event-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 206,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 861,
+     "filter": "raw",
+     "id": 206,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/206",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Family Friendly",
+     "slug": "family-friendly",
+     "term_group": 0,
+     "term_taxonomy_id": 205,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 735,
+     "filter": "raw",
+     "id": 205,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/205",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Free",
+     "slug": "free",
+     "term_group": 0,
+     "term_taxonomy_id": 204,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 94,
+     "filter": "raw",
+     "id": 204,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/204",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "literacy",
+     "slug": "literacy",
+     "term_group": 0,
+     "term_taxonomy_id": 292,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 23,
+     "filter": "raw",
+     "id": 292,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/292",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "reading",
+     "slug": "reading",
+     "term_group": 0,
+     "term_taxonomy_id": 293,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 22,
+     "filter": "raw",
+     "id": 293,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/293",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "Pre-K for all",
+     "slug": "pre-k-for-all",
+     "term_group": 0,
+     "term_taxonomy_id": 424,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 3,
+     "filter": "raw",
+     "id": 424,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/424",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9279,
+   "global_id": "sichildrensmuseum.org?id=9279",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9279"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-05-06 13:13:54",
+   "date_utc": "2026-05-06 17:13:54",
+   "modified": "2026-05-06 13:13:54",
+   "modified_utc": "2026-05-06 17:13:54",
+   "url": "https://sichildrensmuseum.org/event/never-stop-moving-365-introduction-to-soccer/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9279",
+   "title": "Never Stop Moving 365: Introduction to Soccer",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]<span data-olk-copy-source=\"MessageBody\">Join us for a high-energy introductory experience designed to expose children to the fundamentals of soccer through engaging movement-based activities and skill challenges.The planned interactive stations encourage dribbling, passing, coordination, balance, and teamwork while exploring the game in an inclusive environment that encourages creativity.</span></p>\n<p>Included with Admission[/vc_column_text][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row][vc_row][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;7797&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;http://amazon.com&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;4156&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://esbna.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;4131&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.alphagen.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3905&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.nationalgridus.com/NY-Home/Default.aspx&#8221;][/vc_column][/vc_row][vc_row][vc_column width=&#8221;1/3&#8243;][vc_single_image image=&#8221;3226&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.enorthfield.com/&#8221;][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image image=&#8221;3225&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.ferry.nyc/&#8221;][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image image=&#8221;3559&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.td.com/us/en/about-us/funding-opportunities&#8221;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "never-stop-moving-365-introduction-to-soccer",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2025/10/Moving-365.png",
+    "id": 8750,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1617706,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 396422,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2025/10/Moving-365-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-18 11:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "18",
+    "hour": "11",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-18 11:45:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "18",
+    "hour": "11",
+    "minutes": "45",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-18 15:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "18",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-18 15:45:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "18",
+    "hour": "15",
+    "minutes": "45",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Event for Kids",
+     "slug": "event-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 206,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 861,
+     "filter": "raw",
+     "id": 206,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/206",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Family Friendly",
+     "slug": "family-friendly",
+     "term_group": 0,
+     "term_taxonomy_id": 205,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 735,
+     "filter": "raw",
+     "id": 205,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/205",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "activities for kids",
+     "slug": "activities-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 271,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 380,
+     "filter": "raw",
+     "id": 271,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/271",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "soccer",
+     "slug": "soccer",
+     "term_group": 0,
+     "term_taxonomy_id": 465,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 3,
+     "filter": "raw",
+     "id": 465,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/465",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9309,
+   "global_id": "sichildrensmuseum.org?id=9309",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9309"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-05-11 15:46:10",
+   "date_utc": "2026-05-11 19:46:10",
+   "modified": "2026-05-11 16:04:29",
+   "modified_utc": "2026-05-11 20:04:29",
+   "url": "https://sichildrensmuseum.org/event/soccer-stars-clinic/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9309",
+   "title": "Soccer Stars Clinic",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]<span data-contrast=\"none\"><span class=\"TextRun SCXW226838893 BCX0\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><span class=\"NormalTextRun SCXW226838893 BCX0\">Join us for engaging and age-appropriate soccer activities for children of all skill levels. We will begin with warm-up games and skill-building activities focused on movement, coordination, and teamwork. Players will then transition into tournament-style soccer games organized by age group, creating a fun and energetic environment for everyone involved. There will also be giveaway opportunities throughout the event to keep the excitement going!\u00a0</span></span></span></p>\n<p><span class=\"TextRun SCXW131818803 BCX0\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><span class=\"NormalTextRun SCXW131818803 BCX0\">Included with admission. </span></span><span class=\"EOP SCXW131818803 BCX0\" data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:0,&quot;335559740&quot;:259}\">\u00a0</span>[/vc_column_text][vc_row_inner][vc_column_inner][vc_column_text css=&#8221;&#8221;]Guest Artist Series Sponsored by:[/vc_column_text][/vc_column_inner][/vc_row_inner][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row][vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;9295&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://generationbridge.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;7797&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.amzn.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;2706&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://esbna.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3905&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.nationalgridus.com/NY-Home/Default.aspx&#8221;][/vc_column][/vc_row][vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;1/3&#8243;][vc_single_image image=&#8221;3226&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.enorthfield.com/&#8221;][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image image=&#8221;3225&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.ferry.nyc/&#8221;][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image image=&#8221;3559&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.td.com/us/en/about-us/communities/ready-commitment/funding-opportunities/td-charitable-foundation&#8221;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "soccer-stars-clinic",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/05/soccer-rhombus.png",
+    "id": 9310,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1636184,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 1298333,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/05/soccer-rhombus-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-19 11:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "19",
+    "hour": "11",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-19 11:45:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "19",
+    "hour": "11",
+    "minutes": "45",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-19 15:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "19",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-19 15:45:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "19",
+    "hour": "15",
+    "minutes": "45",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Dance",
+     "slug": "dance",
+     "term_group": 0,
+     "term_taxonomy_id": 242,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 113,
+     "filter": "raw",
+     "id": 242,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/242",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Event for Kids",
+     "slug": "event-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 206,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 861,
+     "filter": "raw",
+     "id": 206,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/206",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Family Friendly",
+     "slug": "family-friendly",
+     "term_group": 0,
+     "term_taxonomy_id": 205,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 735,
+     "filter": "raw",
+     "id": 205,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/205",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Music",
+     "slug": "music",
+     "term_group": 0,
+     "term_taxonomy_id": 241,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 129,
+     "filter": "raw",
+     "id": 241,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/241",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "soccer",
+     "slug": "soccer",
+     "term_group": 0,
+     "term_taxonomy_id": 465,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 3,
+     "filter": "raw",
+     "id": 465,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/465",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "sports",
+     "slug": "sports",
+     "term_group": 0,
+     "term_taxonomy_id": 475,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 1,
+     "filter": "raw",
+     "id": 475,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/475",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9255,
+   "global_id": "sichildrensmuseum.org?id=9255",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9255"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-04-27 14:05:21",
+   "date_utc": "2026-04-27 18:05:21",
+   "modified": "2026-05-11 12:28:22",
+   "modified_utc": "2026-05-11 16:28:22",
+   "url": "https://sichildrensmuseum.org/event/boogie-woogie-wednesday-ensemble-barynya/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9255",
+   "title": "Boogie Woogie Wednesday: Ensemble Barynya",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]<span class=\"TextRun SCXW129916794 BCX2\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"auto\"><span class=\"NormalTextRun SCXW129916794 BCX2\" data-ccp-parastyle=\"No Spacing\">Join us as The Ensemble <span class=\"NormalTextRun SpellingErrorV2Themed SCXW129916794 BCX2\" data-ccp-parastyle=\"No Spacing\">Barynya</span> performers take you on a musical journey! Each song tells a story and represents a different Russian dance, complete with colorful costumes and lively music. You\u2019ll hear unique instruments like the domra (a fun, round string instrument from Russia), the guitar, and the accordion. It\u2019s a celebration of music, dance, and culture &#8211; perfect for kids and families!</span></span></p>\n<p><span class=\"TextRun SCXW129916794 BCX2\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"auto\"><span class=\"NormalTextRun SCXW129916794 BCX2\" data-ccp-parastyle=\"No Spacing\">Included with Admission.</span></span>[/vc_column_text][vc_row_inner][vc_column_inner][vc_column_text css=&#8221;&#8221;]Sponsored by:[/vc_column_text][/vc_column_inner][/vc_row_inner][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row][vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;9295&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://generationbridge.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;7797&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.amazon.com&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;2706&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://esbna.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3905&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.nationalgridus.com/NY-Home/Default.aspx&#8221;][/vc_column][/vc_row][vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3226&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.enorthfield.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3225&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.ferry.nyc/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;9296&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://pmpediatriccare.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3559&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; link=&#8221;https://www.td.com/us/en/about-us/communities/ready-commitment/funding-opportunities/td-charitable-foundation&#8221;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "boogie-woogie-wednesday-ensemble-barynya",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/04/ensemble-barynya.png",
+    "id": 9256,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1079517,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 819750,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/04/ensemble-barynya-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-22 15:15:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "22",
+    "hour": "15",
+    "minutes": "15",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-22 16:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "22",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-22 19:15:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "22",
+    "hour": "19",
+    "minutes": "15",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-22 20:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "22",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD\t\t\t\t\t\t\tclass=\t\t\t\t\t\t\tclass=\t\t\t\t\t\t\tclass=\t\t\t\t\t\t\tclass=",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "sichildrensmuseum.org ",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Dance",
+     "slug": "dance",
+     "term_group": 0,
+     "term_taxonomy_id": 242,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 113,
+     "filter": "raw",
+     "id": 242,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/242",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Event for Kids",
+     "slug": "event-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 206,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 861,
+     "filter": "raw",
+     "id": 206,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/206",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Family Friendly",
+     "slug": "family-friendly",
+     "term_group": 0,
+     "term_taxonomy_id": 205,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 735,
+     "filter": "raw",
+     "id": 205,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/205",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Music",
+     "slug": "music",
+     "term_group": 0,
+     "term_taxonomy_id": 241,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 129,
+     "filter": "raw",
+     "id": 241,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/241",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "dance",
+     "slug": "dance",
+     "term_group": 0,
+     "term_taxonomy_id": 248,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 33,
+     "filter": "raw",
+     "id": 248,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/248",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "Russian dance",
+     "slug": "russian-dance",
+     "term_group": 0,
+     "term_taxonomy_id": 230,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 2,
+     "filter": "raw",
+     "id": 230,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/230",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9276,
+   "global_id": "sichildrensmuseum.org?id=9276",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9276"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-05-06 12:24:20",
+   "date_utc": "2026-05-06 16:24:20",
+   "modified": "2026-05-21 15:58:18",
+   "modified_utc": "2026-05-21 19:58:18",
+   "url": "https://sichildrensmuseum.org/event/crazy-science-experiments-sonic-boom/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9276",
+   "title": "Crazy Science Experiments: Sonic Boom",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]</p>\n<div class=\"x_elementToProof\" data-olk-copy-source=\"MessageBody\">\n<p>Join Crazy Science for hands-on STEM workshop, where kids will get to experiment with bubbles, balloons, electricity, and more! These workshops are 100% interactive and have limited spots available, so make sure to reserve your spot at the front desk. <span data-olk-copy-source=\"MessageBody\">This series runs through Sept. 3, 2026.</span></p>\n<p>This week&#8217;s Crazy Science Experiment is: Sonic Boom &#8211; vibrations, sound waves, and musical mayhem!</p>\n<p>Included with Admission.</p>\n<p>Sponsored by:</p>\n</div>\n<div class=\"x_elementToProof\"></div>\n<p>[/vc_column_text][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row][vc_row][vc_column][vc_row_inner][vc_column_inner width=&#8221;1/4&#8243;][vc_single_image image=&#8221;9295&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.alphagen.com/&#8221;][/vc_column_inner][vc_column_inner width=&#8221;1/4&#8243;][vc_single_image image=&#8221;7797&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;http://amazon.com&#8221;][/vc_column_inner][vc_column_inner width=&#8221;1/4&#8243;][vc_single_image image=&#8221;4156&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://esbna.com/&#8221;][/vc_column_inner][vc_column_inner width=&#8221;1/4&#8243;][/vc_column_inner][/vc_row_inner][/vc_column][/vc_row][vc_row][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3226&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.enorthfield.com/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3225&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.ferry.nyc/&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][vc_single_image image=&#8221;3559&#8243; img_size=&#8221;medium&#8221; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://www.td.com/us/en/about-us/funding-opportunities&#8221;][/vc_column][vc_column width=&#8221;1/4&#8243;][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "crazy-science-experiments-sonic-boom",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2023/07/Crazy-Science-rhombus.png",
+    "id": 4362,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1301755,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 854323,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2023/07/Crazy-Science-rhombus-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-23 16:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "23",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-23 16:45:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "23",
+    "hour": "16",
+    "minutes": "45",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-23 20:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "23",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-23 20:45:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "23",
+    "hour": "20",
+    "minutes": "45",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Event for Kids",
+     "slug": "event-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 206,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 861,
+     "filter": "raw",
+     "id": 206,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/206",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Family Friendly",
+     "slug": "family-friendly",
+     "term_group": 0,
+     "term_taxonomy_id": 205,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 735,
+     "filter": "raw",
+     "id": 205,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/205",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "STEM",
+     "slug": "stem",
+     "term_group": 0,
+     "term_taxonomy_id": 459,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 10,
+     "filter": "raw",
+     "id": 459,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/459",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "activities for kids",
+     "slug": "activities-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 271,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 380,
+     "filter": "raw",
+     "id": 271,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/271",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "creative kids",
+     "slug": "creative-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 214,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 340,
+     "filter": "raw",
+     "id": 214,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/214",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "family activity",
+     "slug": "family-activity",
+     "term_group": 0,
+     "term_taxonomy_id": 213,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 355,
+     "filter": "raw",
+     "id": 213,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/213",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "science",
+     "slug": "science",
+     "term_group": 0,
+     "term_taxonomy_id": 324,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 14,
+     "filter": "raw",
+     "id": 324,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/324",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "sonic boom",
+     "slug": "sonic-boom",
+     "term_group": 0,
+     "term_taxonomy_id": 463,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 1,
+     "filter": "raw",
+     "id": 463,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/463",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "STEM",
+     "slug": "stem",
+     "term_group": 0,
+     "term_taxonomy_id": 325,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 15,
+     "filter": "raw",
+     "id": 325,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/325",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  },
+  {
+   "id": 9425,
+   "global_id": "sichildrensmuseum.org?id=9425",
+   "global_id_lineage": [
+    "sichildrensmuseum.org?id=9425"
+   ],
+   "author": "18",
+   "status": "publish",
+   "date": "2026-07-02 12:28:11",
+   "date_utc": "2026-07-02 16:28:11",
+   "modified": "2026-07-02 12:31:56",
+   "modified_utc": "2026-07-02 16:31:56",
+   "url": "https://sichildrensmuseum.org/event/shoprite-kidz-cook-color-changing-lemonade/",
+   "rest_url": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/events/9425",
+   "title": "ShopRite Kidz Cook: Color-Changing Lemonade",
+   "description": "<div class=\"wpb-content-wrapper\"><p>[vc_row content_placement=&#8221;middle&#8221;][vc_column width=&#8221;2/3&#8243;][vc_column_text css=&#8221;&#8221;]Join our ShopRite Kidz Cook team at the museum! <span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335559738&quot;:231,&quot;335559739&quot;:231,&quot;335559740&quot;:240}\">In today&#8217;s class kids will learn to make a summertime favorite drink, color-changing lemonade.</span></p>\n<p><span data-contrast=\"none\">ShopRite Kidz Cook at Staten Island Children&#8217;s Museum is a caregiver-and-me program that introduces children to a diversity of foods, explains cooking concepts and helps build dexterity with cooking utensils.\u00a0</span></p>\n<p aria-level=\"1\">Included with Admission.<br />\n<span data-contrast=\"auto\">Every hour starting at: 12:00 pm, 1:00 pm, 2:00 pm, 3:00 pm<br />\nSpace is limited \u2013 get your ticket at the door</span><span data-contrast=\"auto\">\u00a0</span><br />\n<span data-contrast=\"auto\">Age Range: 4 and up</span><span data-ccp-props=\"{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;134245418&quot;:true,&quot;134245529&quot;:true,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559738&quot;:231,&quot;335559739&quot;:231,&quot;335559740&quot;:240}\">\u00a0</span></p>\n<p>[/vc_column_text][/vc_column][vc_column width=&#8221;1/3&#8243;][vc_single_image source=&#8221;featured_image&#8221; img_size=&#8221;full&#8221;][/vc_column][/vc_row][vc_row content_placement=&#8221;bottom&#8221;][vc_column][vc_column_text]<strong>Sponsored by</strong>[/vc_column_text][/vc_column][/vc_row][vc_row][vc_column][vc_single_image image=&#8221;2288&#8243; onclick=&#8221;custom_link&#8221; css=&#8221;&#8221; link=&#8221;https://shop.shoprite.com/&#8221;][/vc_column][/vc_row][vc_row][vc_column][vc_column_text]</p>\n<p>[/vc_column_text][/vc_column][/vc_row]</p>\n</div>",
+   "excerpt": "",
+   "slug": "shoprite-kidz-cook-color-changing-lemonade",
+   "image": {
+    "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/07/lemonade-rhombus.png",
+    "id": 9426,
+    "extension": "png",
+    "width": 800,
+    "height": 803,
+    "filesize": 1112593,
+    "sizes": {
+     "medium_large": {
+      "width": 768,
+      "height": 771,
+      "mime-type": "image/png",
+      "filesize": 887376,
+      "url": "https://sichildrensmuseum.org/wp-content/uploads/2026/07/lemonade-rhombus-768x771.png"
+     }
+    }
+   },
+   "all_day": false,
+   "start_date": "2026-07-25 12:00:00",
+   "start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "25",
+    "hour": "12",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "end_date": "2026-07-25 16:00:00",
+   "end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "25",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_start_date": "2026-07-25 16:00:00",
+   "utc_start_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "25",
+    "hour": "16",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "utc_end_date": "2026-07-25 20:00:00",
+   "utc_end_date_details": {
+    "year": "2026",
+    "month": "07",
+    "day": "25",
+    "hour": "20",
+    "minutes": "00",
+    "seconds": "00"
+   },
+   "timezone": "America/New_York",
+   "timezone_abbr": "EDT",
+   "cost": "",
+   "cost_details": {
+    "currency_symbol": "$",
+    "currency_code": "USD\t\t\t\t\t\t\tclass=",
+    "currency_position": "prefix",
+    "values": []
+   },
+   "website": "",
+   "show_map": true,
+   "show_map_link": true,
+   "hide_from_listings": false,
+   "sticky": false,
+   "featured": false,
+   "categories": [
+    {
+     "name": "Cooking",
+     "slug": "cooking",
+     "term_group": 0,
+     "term_taxonomy_id": 246,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 69,
+     "filter": "raw",
+     "id": 246,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/246",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Event for Kids",
+     "slug": "event-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 206,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 861,
+     "filter": "raw",
+     "id": 206,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/206",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    },
+    {
+     "name": "Family Friendly",
+     "slug": "family-friendly",
+     "term_group": 0,
+     "term_taxonomy_id": 205,
+     "taxonomy": "tribe_events_cat",
+     "description": "",
+     "parent": 0,
+     "count": 735,
+     "filter": "raw",
+     "id": 205,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories/205",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/categories"
+     }
+    }
+   ],
+   "tags": [
+    {
+     "name": "activities for kids",
+     "slug": "activities-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 271,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 380,
+     "filter": "raw",
+     "id": 271,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/271",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "cooking class",
+     "slug": "cooking-class",
+     "term_group": 0,
+     "term_taxonomy_id": 407,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 11,
+     "filter": "raw",
+     "id": 407,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/407",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "creative kids",
+     "slug": "creative-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 214,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 340,
+     "filter": "raw",
+     "id": 214,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/214",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "fun for kids",
+     "slug": "fun-for-kids",
+     "term_group": 0,
+     "term_taxonomy_id": 217,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 548,
+     "filter": "raw",
+     "id": 217,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/217",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "kids event",
+     "slug": "kids-event",
+     "term_group": 0,
+     "term_taxonomy_id": 208,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 508,
+     "filter": "raw",
+     "id": 208,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/208",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "lemonade",
+     "slug": "lemonade",
+     "term_group": 0,
+     "term_taxonomy_id": 364,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 2,
+     "filter": "raw",
+     "id": 364,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/364",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "shoprite",
+     "slug": "shoprite",
+     "term_group": 0,
+     "term_taxonomy_id": 362,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 16,
+     "filter": "raw",
+     "id": 362,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/362",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    },
+    {
+     "name": "young chefs",
+     "slug": "young-chefs",
+     "term_group": 0,
+     "term_taxonomy_id": 406,
+     "taxonomy": "post_tag",
+     "description": "",
+     "parent": 0,
+     "count": 8,
+     "filter": "raw",
+     "id": 406,
+     "urls": {
+      "self": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags/406",
+      "collection": "https://sichildrensmuseum.org/wp-json/tribe/events/v1/tags"
+     }
+    }
+   ],
+   "venue": {
+    "id": 82,
+    "author": "5",
+    "status": "publish",
+    "date": "2020-10-31 14:22:19",
+    "date_utc": "2020-10-31 18:22:19",
+    "modified": "2021-03-18 17:28:06",
+    "modified_utc": "2021-03-18 21:28:06",
+    "url": "https://sichildrensmuseum.org/venue/staten-island-childrens-museum/",
+    "venue": "Staten Island Children&#8217;s Museum",
+    "description": "<p>The Staten Island Children&#8217;s Museum is a children&#8217;s museum on the grounds of Sailors&#8217; Snug Harbor on Staten Island, New York. The museum opened in 1976 following community and government support for the project. The museum stresses a hands-on interactive approach to its exhibits.</p>",
+    "slug": "staten-island-childrens-museum",
+    "address": "1000 Richmond Terrace, Building M",
+    "city": "Staten Island",
+    "country": "United States",
+    "state": "NY",
+    "zip": "10301",
+    "phone": "(718) 273-2060",
+    "website": "https://sichildrensmuseum.org/",
+    "stateprovince": "NY",
+    "geo_lat": 40.644743798098,
+    "geo_lng": -74.102321811388,
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "sichildrensmuseum.org?id=82",
+    "global_id_lineage": [
+     "sichildrensmuseum.org?id=82"
+    ]
+   },
+   "organizer": [
+    {
+     "id": 81,
+     "author": "5",
+     "status": "publish",
+     "date": "2020-10-31 14:20:49",
+     "date_utc": "2020-10-31 18:20:49",
+     "modified": "2020-10-31 14:20:49",
+     "modified_utc": "2020-10-31 18:20:49",
+     "url": "https://sichildrensmuseum.org/organizer/staten-island-childrens-museum/",
+     "organizer": "Staten Island Children&#8217;s Museum",
+     "description": "<p>The mission of the Staten Island Children\u2019s Museum is to nurture the creativity and curiosity natural to all children, to recognize and celebrate different learning styles, and to demonstrate vividly that learning can be exciting and fun. The Museum is committed to achieving these goals through programming that emphasizes direct and authentic hands-on experiences conducted in a welcoming and pleasing environment. The Museum encourages participation by visitors of all abilities and endeavors to reach beyond its walls to serve as an educational resource for the members of our diverse community, especially families and schools. Founded in 1974 and located in a historical setting on the grounds of Snug Harbor Cultural Center &amp; Botanical Gardens, the Staten Island Children\u2019s Museum offers 40,000 square feet of interactive exhibits as well as a 4-acre East Meadow, and a picnic and performance pavilion.</p>",
+     "slug": "staten-island-childrens-museum",
+     "phone": "(718) 273-2060",
+     "website": "https://sichildrensmuseum.org/",
+     "email": "info@sichildrensmuseum.org",
+     "global_id": "sichildrensmuseum.org?id=81",
+     "global_id_lineage": [
+      "sichildrensmuseum.org?id=81"
+     ]
+    }
+   ],
+   "custom_fields": [],
+   "is_virtual": false,
+   "virtual_url": null,
+   "virtual_video_source": ""
+  }
+ ],
+ "total": 64,
+ "total_pages": 2
+}
