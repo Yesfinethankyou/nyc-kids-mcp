@@ -738,11 +738,37 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 - **Next step:** low priority given the other finds in this batch; if
   revisited, check with a real browser render before concluding either way.
 
-### Macaroni Kid (Brooklyn NW + Lower Manhattan) — CANDIDATE, platform identified but access blocked
+### Macaroni Kid (Brooklyn NW + Lower Manhattan) — CANDIDATE, DEFERRED (build cost > payoff for now)
 
-- **Status:** CANDIDATE — probed 2026-07-06. **Platform identified** (a real
-  find), but the actual data endpoint is bot-protected and this session
-  couldn't get past it — needs a retry, not a rejection.
+- **Status:** CANDIDATE — **DEFERRED 2026-07-13** after an off-proxy re-probe
+  + dedup analysis. Not rejected, but not built with the other four confirmed
+  candidates this session. Two blockers make the cost/benefit poor right now:
+  1. **The accessible JSON-LD is only ~2 days deep** (24 events spanning
+     Jul 13–14 on the brooklynnw widget). The full forward calendar loads via
+     JS from a `my.yodel.today/api/v3/...` endpoint whose events path is in
+     the widget's JS bundle, NOT the page HTML (the page only references
+     `/api/v3/media/image`). Building a useful source means reverse-
+     engineering that third-party API — real effort, and it can change under
+     us (Yodel is a B2B widget vendor).
+  2. **Cross-source dedup.** Organizer tally on the 24 brooklynnw events:
+     ~15 are Macaroni Kid's own curated "Brooklyn - Northwest" events
+     (net-new), but ~6 are re-posts of venues we ALREADY ingest — BPL
+     branches (`bpl`), Domino Park (`domino_park`), Brooklyn Bridge Park
+     (`brooklyn_bridge_park`). Different `source` → different `compute_id` →
+     those would appear TWICE in the catalog. A cross-source organizer/venue
+     exclusion filter would be needed. (The **lowermanhattan** widget is the
+     opposite — almost all net-new small venues we have no source for: DR2
+     Theatre, TADA! Youth Theater, New Victory, Museum of Chinese in America,
+     Sloomoo, Poster House, Scandinavia House — so if built, Lower Manhattan
+     is the higher-value edition.)
+  - **When revisited:** crack the `my.yodel.today/api/v3` events endpoint from
+    the widget JS bundle first (confirm it returns a deep forward window), then
+    build with a cross-source dedup filter (drop organizers matching `bpl` /
+    `domino_park` / `brooklyn_bridge_park` / other live sources). Prioritize the
+    Lower Manhattan edition. Original platform notes below.
+- **Status (historical):** CANDIDATE — probed 2026-07-06. **Platform
+  identified** (a real find); the widget URL was bot-blocked that session but
+  is reachable off-proxy with `curl_cffi impersonate="chrome"`.
 - **What it is:** Macaroni Kid is a nationwide network of hyperlocal
   parenting-newsletter franchises; NYC has multiple neighborhood editions
   (this request named `brooklynnw` and `lowermanhattan` — others likely

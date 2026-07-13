@@ -43,10 +43,21 @@ candidates one at a time on branch `claude/backlog-sources-cpf-nypl-qpl`.
   Hours/tasting/gala). `external_id = url:start_iso`, single fixed venue →
   `SOURCE_NEIGHBORHOOD["intrepid"]="Hell's Kitchen"`, price FREE-if-titled.
   ~13 events/60d verified live. Fixture + 13 parser tests.
+- **DEFERRED: Yodel/Macaroni Kid** (dedup decision made). The accessible
+  JSON-LD is only ~2 days deep (24 events); the full calendar needs reverse-
+  engineering the `my.yodel.today/api/v3` endpoint from the widget JS bundle.
+  Dedup tally: ~15/24 brooklynnw events are Macaroni Kid's own curated events
+  (net-new), ~6 are re-posts of `bpl`/`domino_park`/`brooklyn_bridge_park`
+  (cross-source dupes → different compute_id → would double-list). Lower
+  Manhattan edition is nearly all net-new small venues (higher value if
+  built). Recorded in the backlog with the revisit plan; NOT built — cost >
+  payoff vs the four clean sources shipped.
 - Full suite **715 green**, ruff clean. `test_missing_detection` census bumped
   14→18 (all four new sources opt into missing-detection).
-- **Still TODO this session:** a dedup decision on the Yodel/Macaroni Kid
-  widget before building it (the one remaining candidate).
+- **Session outcome:** 4 of the 5 confirmed candidates built + shipped
+  (`city_parks_foundation`, `nypl`, `qpl`, `intrepid`); Yodel deferred with a
+  clear revisit plan. Two maintainer flags remain (NYPL volume, QPL
+  next-occurrence granularity — both deliberate, tunable defaults).
 - **⚠️ Two things flagged for the maintainer:** (1) NYPL volume — thousands of
   events over 60d, easily capped via `window_days`; (2) QPL granularity — next-
   occurrence-only per the reasoning above. Both are deliberate defaults, open
