@@ -30,6 +30,17 @@ headless Chromium screenshots). Suite 582 green (5 new tests), ruff clean.
   possible follow-up), sortable columns/pagination, match highlighting,
   dark mode, pill badges (maintainer wants craigslist-plain).
 
+Third commit, same session: **time ranges surfaced in listings** — maintainer
+reported a noon–4pm Prospect Park event presenting as bare "12". Diagnosis:
+the DB had start AND end correct all along (Tribe sources capture `end_dt`);
+the listing projection deliberately dropped `end_local` for token efficiency,
+so Claude never saw the range. Fix is presentation-only, no ingest changes:
+`_event_summary` now includes `end_local` (None when the source has no end),
+and the dashboard's When column renders `12:00–16:00` for same-day ranges /
+a full second stamp for multi-day. CLAUDE.md "Tool output shape" updated
+(the "drops end_local" claim is gone). Reaches claude.ai after the next
+image deploy on the NAS.
+
 Second commit, same session: **`nyc_permitted_events` (tvpp-9vvx) DISABLED**
 — maintainer said the permit rows go unused now that `nycgovparks_events`
 covers the Parks calendar (offered disable / hide-by-default / leave-alone;

@@ -467,7 +467,16 @@ async def events_page(request: Request) -> HTMLResponse:
         # through to the detail page. Scraped text, so escaped like the rest.
         desc = (ev.description or "").strip()
         tip = f" title='{html.escape(desc[:200], quote=True)}'" if desc else ""
-        when = ev.start_dt.astimezone(NYC_TZ).strftime("%Y-%m-%d %H:%M")
+        start = ev.start_dt.astimezone(NYC_TZ)
+        when = start.strftime("%Y-%m-%d %H:%M")
+        if ev.end_dt:
+            end = ev.end_dt.astimezone(NYC_TZ)
+            # Same-day range compresses to "12:00–16:00"; a multi-day event
+            # keeps the full end stamp so the rollover is visible.
+            if end.date() == start.date():
+                when += f"–{end.strftime('%H:%M')}"
+            else:
+                when += f" – {end.strftime('%Y-%m-%d %H:%M')}"
         trs.append(
             "<tr>"
             f"<td class='when'>{_esc(when)}</td>"

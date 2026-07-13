@@ -373,9 +373,11 @@ a curated kids feed (`mommy_poppins`, `bk_childrens_museum` have none by design)
 
 Listing tools (`search_events`, `events_this_weekend`, `events_on_date`)
 return the **summary** dict via `_event_summary(ev)`:
-- Token-efficient — drops `external_id`, `end_local`, `lat`, `lng`,
-  `age_min`, `age_max`, `source`. (`neighborhood` IS included — it's cheap and
-  high-signal for "what's near X" questions; `search_events` also filters on it.)
+- Token-efficient — drops `external_id`, `lat`, `lng`, `age_min`, `age_max`,
+  `source`. (`neighborhood` IS included — cheap and high-signal for "what's
+  near X" questions; `search_events` also filters on it. `end_local` IS
+  included as of 2026-07-12 — without it a noon–4pm event presents as a bare
+  "12:00", which users read as ambiguous/midnight.)
 - Truncates `description` to 200 chars.
 - Default `limit=10` (`search_events` defaults to `limit=15`; all cap at 50).
 

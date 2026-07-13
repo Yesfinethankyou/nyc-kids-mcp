@@ -21,6 +21,10 @@ from nyc_events.sources import ENABLED_SOURCES
 
 XSS = "<script>alert(1)</script>"
 
+RANGED_START = (datetime.now(UTC) + timedelta(days=2)).replace(
+    hour=16, minute=0, second=0, microsecond=0
+)
+
 
 def _ev(**overrides):
     base = dict(
@@ -74,6 +78,15 @@ def client(tmp_path, monkeypatch):
                     title="Permit Row",
                     description=None,
                     url=None,
+                ),
+                # has an end time → browse renders a same-day range.
+                # 16:00 UTC is 11:00/12:00 NYC, so +4h never crosses the
+                # local-midnight boundary regardless of when the suite runs.
+                _ev(
+                    external_id="ranged",
+                    title="Ranged Event",
+                    start_dt=RANGED_START,
+                    end_dt=RANGED_START + timedelta(hours=4),
                 ),
                 # scheme-smuggling canary: html.escape alone wouldn't stop
                 # this executing on click if it were rendered as an anchor
@@ -201,6 +214,16 @@ def test_title_tooltip_carries_truncated_description(client):
 def test_reset_link_present(client):
     resp = client.get("/events")
     assert "<a href='/events'>reset</a>" in resp.text
+
+
+def test_when_column_shows_same_day_time_range(client):
+    start = RANGED_START.astimezone(dashboard.NYC_TZ)
+    end = (RANGED_START + timedelta(hours=4)).astimezone(dashboard.NYC_TZ)
+    expected = f"{start.strftime('%Y-%m-%d %H:%M')}–{end.strftime('%H:%M')}"
+    resp = client.get("/events")
+    assert expected in resp.text
+    # An event without an end time still renders as a bare start stamp.
+    assert "Toddler Music in Prospect Park" in resp.text
 
 
 def test_limit_is_clamped_to_max():

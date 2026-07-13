@@ -85,6 +85,12 @@ def _event_summary(ev: Event) -> dict[str, Any]:
         "event_id": ev.id,
         "title": ev.title,
         "when_local": ev.start_dt.astimezone(NYC_TZ).isoformat(),
+        # end_local rides along so a noon–4pm event presents as a range
+        # instead of a bare "12:00" (which reads as ambiguous or midnight).
+        # None when the source provides no end time.
+        "end_local": (
+            ev.end_dt.astimezone(NYC_TZ).isoformat() if ev.end_dt else None
+        ),
         "borough": ev.borough.value if ev.borough else None,
         "neighborhood": ev.neighborhood,
         "venue": ev.venue_name,
@@ -102,7 +108,7 @@ def _event_summary(ev: Event) -> dict[str, Any]:
 
 def _event_detail(ev: Event) -> dict[str, Any]:
     """Full normalized projection for the get_event_detail tool. Includes
-    everything in the summary plus end_local, neighborhood, age range,
+    everything in the summary plus the untruncated description, age range,
     lat/lng, source, and the upstream external_id — but NOT the raw_payload
     (use get_event_raw for that)."""
     low_confidence = ev.description is None and ev.url is None
@@ -354,8 +360,8 @@ def get_event_detail(event_id: str) -> dict[str, Any] | None:
     Listing tools (search_events, events_this_weekend, events_on_date) trim
     fields and truncate descriptions for token efficiency. Call this tool
     with the `event_id` from a listing result when the user drills into a
-    specific event and you need everything: full description, end_local,
-    neighborhood, lat/lng, age range, and the upstream external_id.
+    specific event and you need everything: full description, lat/lng,
+    age range, and the upstream external_id.
 
     Returns None if the event_id isn't found. For the original upstream
     payload, see get_event_raw instead.
