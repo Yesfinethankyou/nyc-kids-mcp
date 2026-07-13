@@ -6,15 +6,19 @@ from .bk_childrens_museum import BrooklynChildrensMuseumSource
 from .bpl import BPLSource
 from .brooklyn_army_terminal import BrooklynArmyTerminalSource
 from .brooklyn_bridge_park import BrooklynBridgeParkSource
+from .city_parks_foundation import CityParksFoundationSource
 from .domino_park import DominoParkSource
 from .governors_island import GovernorsIslandSource
 from .greenwood_cemetery import GreenWoodCemeterySource
 from .industry_city import IndustryCitySource
+from .intrepid import IntrepidSource
 from .mommy_poppins import MommyPoppinsSource
 from .new_york_family import NewYorkFamilySource
 from .ny_transit_museum import NYTransitMuseumSource
 from .nycgovparks_events import NYCGovParksEventsSource
+from .nypl import NYPLSource
 from .prospect_park import ProspectParkSource
+from .qpl import QPLSource
 from .si_childrens_museum import SIChildrensMuseumSource
 from .snug_harbor import SnugHarborSource
 
@@ -43,6 +47,10 @@ ENABLED_SOURCES: list[type[Source]] = [
     IndustryCitySource,
     GovernorsIslandSource,
     DominoParkSource,
+    # ~2 REST pages at a 1s delay — cheap.
+    CityParksFoundationSource,
+    # ~15-20 calendar pages at a 1s delay — cheap-ish.
+    IntrepidSource,
     SIChildrensMuseumSource,
     # 2-3 month pages at a 1s delay — cheap.
     BBGSource,
@@ -57,6 +65,11 @@ ENABLED_SOURCES: list[type[Source]] = [
     # (~150 detail fetches at a 0.5s delay, ~1.5 min) — slow, so it runs with
     # the crawls; mommy_poppins stays last (see the ordering note above).
     SnugHarborSource,
+    # Three boroughs paginated (~160 listing pages at a 1s delay, ~3 min) —
+    # slow, so it runs with the crawls; mommy_poppins stays last.
+    NYPLSource,
+    # ~98 listing pages at a 1s delay (~1.6 min) — slow-ish, runs with the crawls.
+    QPLSource,
     # Day-walk over a capped API: ~35 base requests plus extra slices on busy
     # days (~50-120 total at a 0.75s delay) — slow-ish, so it runs with the
     # crawls; mommy_poppins stays last (see the ordering note above).

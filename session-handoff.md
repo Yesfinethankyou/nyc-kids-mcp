@@ -2,6 +2,103 @@
 
 ## What was done (most recent first)
 
+### Session (cont'd): building the confirmed backlog candidates — CPF + NYPL shipped
+
+Continuation of the off-proxy re-probe below. Building the confirmed
+candidates one at a time on branch `claude/backlog-sources-cpf-nypl-qpl`.
+
+- **BUILT: `city_parks_foundation`** — sixth `TribeEventsSource` subclass.
+  Category allowlist `{PuppetMobile, SummerStage}`, **ALL SummerStage kept
+  (maintainer call this session — no shared adult blocklist applied)**.
+  Borough is per-event from `venue.venue` (which holds the borough string,
+  not a park name), so `venue_name` is None and neighborhood coding won't
+  resolve (acceptable — borough + URL carry location). `is_virtual`/non-borough
+  venues dropped. ~49 events/60d verified live. Fixture + 22 parser tests.
+- **BUILT: `nypl`** — NYPL Manhattan/Bronx/Staten Island branch calendar; the
+  first HTML-listing scrape behind Incapsula (`curl_cffi` impersonate).
+  Scrapes per borough via the site's `city[]` filter (borough free, no detail
+  crawl), kid gate is the audience cell (server audience filter is loose),
+  occurrence datetime from the time cell (URL date is the canonical date, wrong
+  for recurring), `external_id = url:start_iso` (URL repeats across occurrences
+  + audience-union dupes; deduped in-fetch). Age from "ages 6-12", price FREE,
+  Online rows dropped, venue = branch → library neighborhood table.
+  **Capped to a 30-day window (maintainer call 2026-07-13 — a 60-day window
+  ran to thousands of rows and dominated the catalog).** Still the largest
+  source. Unlocks Bronx + SI library coverage. Fixture (one Manhattan kids
+  page) + 24 parser tests. Live-verified all three boroughs populate and ids
+  dedup.
+- **BUILT: `qpl`** — Queens Public Library, ~65 branches. Drupal/Solr calendar
+  behind an F5 wall (`curl_cffi`). Parses each card's embedded
+  `arrJsonData_cal` JSON (visible card text is truncated). Kid gate `prgm_age`,
+  age from "Kids(0-5)" bands, `date_show_timestamp` (epoch) authoritative.
+  **One Event per program's NEXT occurrence, NOT per `all_times`** (QPL lists
+  a recurring program once; its 40-deep `all_times` would ~26x the catalog —
+  deliberately not expanded, preserved conceptually for future). venue =
+  "<branch> Library" (suffix required for the enrich library lookup to fire —
+  verified codes South Hollis→Hollis etc.), price FREE, online dropped. ~659
+  events/60d verified live. Fixture + 15 parser tests.
+- **BUILT: `intrepid`** — Intrepid Sea/Air/Space Museum (Pier 86, Manhattan).
+  Drupal card grid at `/events/calendar`, paginated by **GET `?page=N`** (the
+  `/views/ajax` POST pager is broken — returns page 0 every time; documented).
+  Inclusive + adult-blocklist kid gate (no Family theme; drops After
+  Hours/tasting/gala). `external_id = url:start_iso`, single fixed venue →
+  `SOURCE_NEIGHBORHOOD["intrepid"]="Hell's Kitchen"`, price FREE-if-titled.
+  ~13 events/60d verified live. Fixture + 13 parser tests.
+- **DEFERRED: Yodel/Macaroni Kid** (dedup decision made). The accessible
+  JSON-LD is only ~2 days deep (24 events); the full calendar needs reverse-
+  engineering the `my.yodel.today/api/v3` endpoint from the widget JS bundle.
+  Dedup tally: ~15/24 brooklynnw events are Macaroni Kid's own curated events
+  (net-new), ~6 are re-posts of `bpl`/`domino_park`/`brooklyn_bridge_park`
+  (cross-source dupes → different compute_id → would double-list). Lower
+  Manhattan edition is nearly all net-new small venues (higher value if
+  built). Recorded in the backlog with the revisit plan; NOT built — cost >
+  payoff vs the four clean sources shipped.
+- Full suite **715 green**, ruff clean. `test_missing_detection` census bumped
+  14→18 (all four new sources opt into missing-detection).
+- **Session outcome:** 4 of the 5 confirmed candidates built + shipped
+  (`city_parks_foundation`, `nypl`, `qpl`, `intrepid`); Yodel deferred with a
+  clear revisit plan.
+- **Maintainer calls made this session:** (1) NYPL volume — **capped to a
+  30-day window** (was 60; it ran to thousands of rows). (2) QPL granularity —
+  next-occurrence-only (kept as-is; expanding `all_times` would ~26x the
+  catalog). Both remain tunable via `window_days` / the parser if revisited.
+
+### Session: off-proxy re-probe of the anti-bot backlog candidates — 4 CONFIRMED, 2 deprioritized, 1 scoped
+
+Ran from the laptop (no MITM proxy) so `curl_cffi impersonate="chrome"` works
+again. Re-probed every candidate the previous session recorded as
+sandbox-blocked; **all the walls fell**. No code written — this was probe +
+plan; findings recorded in each SOURCES-BACKLOG.md entry:
+
+- **City Parks Foundation → CONFIRMED**, standard WordPress/Tribe with the
+  REST API open; 82 events/55-day window. Cheapest build (fifth
+  `TribeEventsSource` subclass). Filter decided by maintainer this session:
+  **`PuppetMobile` + ALL of `SummerStage`** (not just family-billed shows),
+  admin categories out, shared adult blocklist as safety net.
+- **NYPL → CONFIRMED**, Incapsula falls; `/events/calendar` is a
+  server-rendered Drupal table (~45 rows/page, `?page=N`) with an Audience
+  cell per row (Children/Toddlers/Families/…); detail pages carry full
+  JSON-LD `Event` incl. branch + borough. Date filter params not yet cracked.
+- **QPL → CONFIRMED**, F5 wall falls; Drupal+Solr; listing needs the full nav
+  query (`/calendar?searchField=%2A&category=calendar&fromlink=calendar&
+  searchFilter=`), pagination via `/search/call?…&pageParam=N` (12
+  cards/page); cards carry an audience line; detail pages embed
+  `drupalSettings.eventCalendar` JSON.
+- **Intrepid → CONFIRMED (endpoint verified)**: real path `/events/calendar`,
+  Drupal `views/ajax` POST returns rendered rows with ISO datetimes; pager +
+  date-filter params still to map.
+- **Macaroni Kid / Yodel → platform cracked**: the widget server-renders a
+  JSON-LD `ItemList` (24 events, full addresses+ZIP). Window depth unknown;
+  confirmed dedup risk (BPL re-posts seen).
+- **AMNH + the Met → deprioritized**: reachable now, but AMNH server-renders
+  only ~8 featured cards (Ibexa; full grid is JS, no API found) and the Met
+  is a Next.js RSC SPA (data only in the flight payload). Headless-tier.
+
+Probe artifacts (captured pages) are in the job tmp dir, not the repo;
+fixture capture for any build must run off-proxy. Implementation plan
+presented to the maintainer: build order CPF → NYPL → QPL → Intrepid →
+Yodel, with AMNH/Met parked.
+
 ### Session (cont'd): backlog source expansion — built Snug Harbor; anti-bot candidates blocked by the web-sandbox proxy
 
 Asked to "add the next top 3 candidates" from SOURCES-BACKLOG.md. Probed the

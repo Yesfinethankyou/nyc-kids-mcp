@@ -613,7 +613,33 @@ Known accepted residuals (see `git log` for the security-audit commit):
     the plain WP REST API but the date lives ONLY in each detail page's JSON-LD
     `Event` node, so it lists cheaply then crawls each event like
     `mommy_poppins`; kid filter is the `audience` taxonomy resolved by name;
-    ~150 detail fetches/run).
+    ~150 detail fetches/run), City Parks Foundation (`city_parks_foundation`
+    — sixth Tribe source; category allowlist `{PuppetMobile, SummerStage}`
+    with ALL SummerStage kept (maintainer call, so NO shared adult blocklist
+    here); `venue.venue` holds the BOROUGH string not a park, so borough is
+    per-event and `venue_name` is None; ~49 events/60d), New York Public
+    Library (`nypl` — Manhattan/Bronx/Staten Island branch calendar; the
+    Incapsula-walled server-rendered Drupal listing scraped per borough via
+    the site's `city[]` filter (borough comes free, no detail crawl), kid
+    gate is the audience cell (the server audience filter is loose), and
+    `external_id = url:start_iso` because the URL repeats across recurring
+    occurrences AND the audience-union duplicates rows; **high volume even at
+    the capped 30-day window (maintainer call — 60 days dominated the catalog),
+    the largest source; unlocks Bronx + Staten Island library coverage**;
+    ~110 listing pages/run), Queens
+    Public Library (`qpl` — the Drupal/Solr calendar behind an F5 wall; parses
+    each card's embedded `arrJsonData_cal` JSON (the visible card text is
+    truncated); kid gate is `prgm_age`, age from its "Kids(0-5)" bands; **one
+    Event per program's NEXT occurrence, NOT per `all_times` entry** (QPL lists
+    a recurring program once; expanding its 40-deep `all_times` would ~26x the
+    catalog), `external_id = jobID`; venue = `"<branch> Library"` (the suffix
+    is REQUIRED so the enrich library lookup fires); ~659 events/60d, 98
+    pages/run), Intrepid Museum (`intrepid` — Pier 86 sea/air/space museum;
+    Drupal card grid paginated by **GET `?page=N`** (the `/views/ajax` POST
+    pager is broken — returns page 0 every time); inclusive + adult-blocklist
+    kid gate (drops the "After Hours"/tasting/gala strand — there's no Family
+    theme); single fixed venue → `SOURCE_NEIGHBORHOOD["intrepid"]="Hell's
+    Kitchen"`; ~13 events/60d).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.

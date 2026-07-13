@@ -245,9 +245,15 @@ def test_full_window_sources_opt_in():
     # month", ~55-61 days depending on the calendar) with the conservative
     # lower bound; new_york_family walks a deliberately short 35-day window
     # (one-plus requests per day against a 16-row-capped API — see the module
-    # docstring); every other full-window source uses the 60-day convention.
-    expected_days = {"NYCGovParksEventsSource": 55, "NewYorkFamilySource": 35}
+    # docstring); nypl uses a 30-day window (maintainer call — it runs daily
+    # programming across ~88 branches, so 60 days dominated the catalog);
+    # every other full-window source uses the 60-day convention.
+    expected_days = {
+        "NYCGovParksEventsSource": 55,
+        "NewYorkFamilySource": 35,
+        "NYPLSource": 30,
+    }
     assert all(
         days == expected_days.get(name, 60) for name, days in opted_in.items()
     ), opted_in
-    assert len(opted_in) == 14
+    assert len(opted_in) == 18
