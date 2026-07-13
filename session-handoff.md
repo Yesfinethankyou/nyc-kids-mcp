@@ -2,6 +2,46 @@
 
 ## What was done (most recent first)
 
+### Session: fixed the top 3 open issues (#78, #77, #76) — all code-review findings from 2026-07-12
+
+Picked the three most-recently-filed `status:ready` issues, each with a
+verified repro and suggested fix already spelled out in the issue body.
+
+- **#78** `brooklyn_army_terminal._parse_start_time`: a time range with an
+  omitted start meridiem borrowed pm/am unconditionally from the end of the
+  range, so a cross-noon range like `"11:00-2:00pm"` (11 AM-2 PM) parsed the
+  start as 23:00 instead of 11:00. Fixed by comparing the borrowed-meridiem
+  candidate against the parsed end time and flipping am/pm when the borrow
+  would put the start after the end (new `_to_hour24` helper factors out the
+  am/pm arithmetic so the flip-check and the final conversion share it).
+  Added `"11:00-2:00pm" -> (11, 0)` to the parametrized `_parse_start_time`
+  test.
+- **#77** `auth._rate_state` unbounded growth: cleanup was purely lazy and
+  key-local, so a bucket for a key that's never hit again (e.g. a scanner IP
+  that probes `/register` once) lived forever. Added an opportunistic global
+  sweep (`_sweep_rate_state`, called every `_SWEEP_INTERVAL` (1000) calls to
+  `_bucket_limited` via a module-level counter) that drops any bucket whose
+  newest timestamp is older than `_SWEEP_MAX_AGE` (3600s, the largest
+  configured window). Hot path stays O(1) amortized; no background task.
+  2 new tests (direct sweep eviction; sweep fires opportunistically after
+  `_SWEEP_INTERVAL` calls and evicts a stale seeded bucket).
+- **#76** `domino_park._occurrence_dates` monthly drift: a monthly series
+  anchored on days 29-31 permanently drifted to an earlier day-of-month once
+  it crossed a shorter month, because each occurrence was computed from the
+  *previous* (already-clamped) occurrence rather than the series anchor —
+  Jan 31 -> Feb 28 -> Mar 28 -> Apr 28... instead of Mar 31/Apr 30/May 31.
+  Fixed by computing every occurrence as `_add_months(start, i * step)` from
+  the anchor via a step index `i`, in both the fast-forward-to-window loop
+  and the emission loop, so a clamp in one month never compounds into later
+  months. New regression test asserts the Jan 31 anchor case resolves to
+  `[Jan 31, Feb 28, Mar 31, Apr 30, May 31, Jun 30]`.
+
+All three repros from the issue bodies re-verified by direct execution
+post-fix. Full suite 630 green (was 627), ruff clean. No `db.py`/`server.py`/
+`models.py` changes; `auth.py` diff is additive only (new sweep function +
+4 lines wired into `_bucket_limited`), so the existing security-baseline
+tests are the regression guard for it.
+
 ### Session (cont'd): swapped the no-JS neighborhood search for a live JS filter
 
 Maintainer asked what risk the JS alternative (flagged but not built below)

@@ -122,11 +122,22 @@ def _clean_text(node) -> str:
     return _WS_RX.sub(" ", text).strip()
 
 
+def _to_hour24(hour: int, meridiem: str) -> int:
+    if meridiem == "pm" and hour != 12:
+        hour += 12
+    elif meridiem == "am" and hour == 12:
+        hour = 0
+    return hour
+
+
 def _parse_start_time(time_str: str) -> tuple[int, int]:
     """Parse the START of a time range like '1:00-7:00pm' into (hour24, minute).
 
     am/pm may be omitted on the start; borrow it from the end of the range
-    when needed. Returns (0, 0) if nothing parseable (treated as all-day).
+    when needed — but a borrow that would put the start after the end (e.g.
+    "11:00-2:00pm", 11 AM-2 PM) is flipped, since start-meridiem == end-meridiem
+    only holds for same-meridiem ranges. Returns (0, 0) if nothing parseable
+    (treated as all-day).
     """
     if not time_str:
         return 0, 0
@@ -144,12 +155,17 @@ def _parse_start_time(time_str: str) -> tuple[int, int]:
 
     if not meridiem and len(matches) > 1:
         # Borrow am/pm from the end of the range, if it has one.
-        meridiem = (matches[-1].group(3) or "").lower().replace(".", "")
+        end = matches[-1]
+        end_meridiem = (end.group(3) or "").lower().replace(".", "")
+        meridiem = end_meridiem
+        if meridiem:
+            end_hour24 = _to_hour24(int(end.group(1)), end_meridiem)
+            end_minute = int(end.group(2) or 0)
+            candidate = _to_hour24(hour, meridiem)
+            if (candidate, minute) > (end_hour24, end_minute):
+                meridiem = "am" if meridiem == "pm" else "pm"
 
-    if meridiem == "pm" and hour != 12:
-        hour += 12
-    elif meridiem == "am" and hour == 12:
-        hour = 0
+    hour = _to_hour24(hour, meridiem)
     if hour > 23:
         hour = 0
     return hour, minute

@@ -65,6 +65,27 @@ _RATE_LIMITS: dict[str, tuple[int, int]] = {
 # Claude conversation makes a handful of tool calls per minute.
 _MCP_TOKEN_LIMIT: tuple[int, int] = (60, 60)  # (max_requests, window_seconds)
 
+# Opportunistic global sweep (issue #77): per-key cleanup in _bucket_limited
+# only runs when that same key is hit again, so a key that's never revisited
+# (e.g. a scanner IP that probes /register once) keeps its bucket forever —
+# unbounded growth of _rate_state over the process lifetime. Every
+# _SWEEP_INTERVAL calls, drop any bucket whose newest timestamp is older than
+# the largest configured window (3600s, matching "register"), so a stale
+# bucket is reclaimed even without a repeat hit. Keeps the hot path O(1)
+# amortized; no background task needed.
+_SWEEP_INTERVAL = 1000
+_SWEEP_MAX_AGE = 3600  # seconds; largest window across _RATE_LIMITS / _MCP_TOKEN_LIMIT
+_calls_since_sweep = 0
+
+
+def _sweep_rate_state(now: float) -> None:
+    stale = [
+        key for key, bucket in _rate_state.items()
+        if not bucket or bucket[-1] < now - _SWEEP_MAX_AGE
+    ]
+    for key in stale:
+        del _rate_state[key]
+
 
 def _client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
@@ -108,7 +129,12 @@ def _bucket_limited(key: tuple[str, str], limit: int, window: int) -> Response |
     """Sliding-window check on one bucket: 429 if exhausted, else record the
     hit and return None. Shared by the per-IP limiter on the OAuth endpoints
     and the per-token limiter on the MCP path."""
+    global _calls_since_sweep
     now = _time.time()
+    _calls_since_sweep += 1
+    if _calls_since_sweep >= _SWEEP_INTERVAL:
+        _calls_since_sweep = 0
+        _sweep_rate_state(now)
     bucket = _rate_state.get(key)
     if bucket is not None:
         while bucket and bucket[0] < now - window:

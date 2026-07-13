@@ -142,6 +142,8 @@ def test_events_survive_db_upsert(events, tmp_path):
         ("3:00-10:00pm", (15, 0)),
         ("4:00-8:00pm", (16, 0)),
         ("12:00-3:00pm", (12, 0)),
+        # Cross-noon range with omitted start meridiem: 11 AM-2 PM, not 11 PM.
+        ("11:00-2:00pm", (11, 0)),
         ("", (0, 0)),
         ("all day", (0, 0)),
     ],
