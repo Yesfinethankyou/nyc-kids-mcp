@@ -250,4 +250,4 @@ def test_full_window_sources_opt_in():
     assert all(
         days == expected_days.get(name, 60) for name, days in opted_in.items()
     ), opted_in
-    assert len(opted_in) == 16
+    assert len(opted_in) == 17

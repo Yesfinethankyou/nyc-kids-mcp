@@ -26,11 +26,24 @@ candidates one at a time on branch `claude/backlog-sources-cpf-nypl-qpl`.
   `window_days` caps it if the maintainer wants fewer.** Unlocks Bronx + SI
   library coverage. Fixture (one Manhattan kids page) + 24 parser tests.
   Live-verified all three boroughs populate and ids dedup.
-- Full suite **687 green**, ruff clean. `test_missing_detection` census bumped
-  14→16 (both new sources opt into missing-detection).
-- **Still TODO this session:** QPL (Drupal+Solr, confirmed), Intrepid (Drupal
-  views/ajax, confirmed), and a dedup decision on the Yodel/Macaroni Kid
-  widget before building it.
+- **BUILT: `qpl`** — Queens Public Library, ~65 branches. Drupal/Solr calendar
+  behind an F5 wall (`curl_cffi`). Parses each card's embedded
+  `arrJsonData_cal` JSON (visible card text is truncated). Kid gate `prgm_age`,
+  age from "Kids(0-5)" bands, `date_show_timestamp` (epoch) authoritative.
+  **One Event per program's NEXT occurrence, NOT per `all_times`** (QPL lists
+  a recurring program once; its 40-deep `all_times` would ~26x the catalog —
+  deliberately not expanded, preserved conceptually for future). venue =
+  "<branch> Library" (suffix required for the enrich library lookup to fire —
+  verified codes South Hollis→Hollis etc.), price FREE, online dropped. ~659
+  events/60d verified live. Fixture + 15 parser tests.
+- Full suite **702 green**, ruff clean. `test_missing_detection` census bumped
+  14→17 (all three new sources opt into missing-detection).
+- **Still TODO this session:** Intrepid (Drupal views/ajax, confirmed — small),
+  and a dedup decision on the Yodel/Macaroni Kid widget before building it.
+- **⚠️ Two things flagged for the maintainer:** (1) NYPL volume — thousands of
+  events over 60d, easily capped via `window_days`; (2) QPL granularity — next-
+  occurrence-only per the reasoning above. Both are deliberate defaults, open
+  to change.
 
 ### Session: off-proxy re-probe of the anti-bot backlog candidates — 4 CONFIRMED, 2 deprioritized, 1 scoped
 

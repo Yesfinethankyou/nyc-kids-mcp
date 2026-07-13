@@ -17,6 +17,7 @@ from .ny_transit_museum import NYTransitMuseumSource
 from .nycgovparks_events import NYCGovParksEventsSource
 from .nypl import NYPLSource
 from .prospect_park import ProspectParkSource
+from .qpl import QPLSource
 from .si_childrens_museum import SIChildrensMuseumSource
 from .snug_harbor import SnugHarborSource
 
@@ -64,6 +65,8 @@ ENABLED_SOURCES: list[type[Source]] = [
     # Three boroughs paginated (~160 listing pages at a 1s delay, ~3 min) —
     # slow, so it runs with the crawls; mommy_poppins stays last.
     NYPLSource,
+    # ~98 listing pages at a 1s delay (~1.6 min) — slow-ish, runs with the crawls.
+    QPLSource,
     # Day-walk over a capped API: ~35 base requests plus extra slices on busy
     # days (~50-120 total at a 0.75s delay) — slow-ish, so it runs with the
     # crawls; mommy_poppins stays last (see the ordering note above).

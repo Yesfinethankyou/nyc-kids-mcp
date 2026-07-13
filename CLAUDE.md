@@ -625,7 +625,15 @@ Known accepted residuals (see `git log` for the security-audit commit):
     `external_id = url:start_iso` because the URL repeats across recurring
     occurrences AND the audience-union duplicates rows; **high volume —
     thousands of events over a 60-day window, the largest source; unlocks
-    Bronx + Staten Island library coverage**; ~160 listing pages/run).
+    Bronx + Staten Island library coverage**; ~160 listing pages/run), Queens
+    Public Library (`qpl` — the Drupal/Solr calendar behind an F5 wall; parses
+    each card's embedded `arrJsonData_cal` JSON (the visible card text is
+    truncated); kid gate is `prgm_age`, age from its "Kids(0-5)" bands; **one
+    Event per program's NEXT occurrence, NOT per `all_times` entry** (QPL lists
+    a recurring program once; expanding its 40-deep `all_times` would ~26x the
+    catalog), `external_id = jobID`; venue = `"<branch> Library"` (the suffix
+    is REQUIRED so the enrich library lookup fires); ~659 events/60d, 98
+    pages/run).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.

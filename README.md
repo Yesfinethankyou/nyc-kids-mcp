@@ -33,7 +33,10 @@ tools — designed for use from the Claude mobile app while out with a kid.
   branch calendar — thousands of free youth/family library programs
   (storytimes, craft afternoons, teen labs) scraped from the server-rendered
   Drupal listing, borough from the site's own `city[]` filter; this is what
-  unlocks Bronx + Staten Island library coverage) — real
+  unlocks Bronx + Staten Island library coverage), and QPL
+  (`qpl`, ~659 events/60d — Queens Public Library's ~65 branches, parsed from
+  the Drupal/Solr calendar's embedded per-card JSON, one event per program's
+  next occurrence, with age bands) — real
   descriptions, URLs, and (where upstream provides them) age ranges,
   coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser), Coney Island

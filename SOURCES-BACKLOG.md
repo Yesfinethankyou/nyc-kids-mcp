@@ -947,9 +947,23 @@ The one requirement: the source must set each event's **correct branch borough**
 (NYPL spans three, so it can't hardcode one), since the library lookup is
 keyed `"<borough>|<library-core>"`.
 
-### Queens Public Library (QPL)
+### Queens Public Library (QPL) — ✅ BUILT
 
-- **Status:** 🟢 **CONFIRMED — re-probed 2026-07-13 off-proxy;
+- **Status:** ✅ **BUILT 2026-07-13** as source `qpl`. As-built: parses each
+  card's embedded `arrJsonData_cal['<id>']` JSON blob (cleaner than the
+  truncated card `<p>` text) from the Solr listing pages; kid gate is
+  `prgm_age` (Kids/Teens/Babies/Family), age range parsed from the
+  "Kids(0-5), Kids(6-11)" bands, `date_show_timestamp` (UNIX epoch) is the
+  authoritative datetime. **One Event per card at its NEXT occurrence** (not
+  one per `all_times` entry — QPL lists a recurring program once, and a summer
+  daily program has 40 occurrences, so expanding would ~26x the catalog);
+  `external_id = jobID` so the shown date advances in place. Borough Queens,
+  venue = `"<branch> Library"` (the " Library" suffix is required so the
+  enrich library lookup fires and reads correctly), price FREE, online rows
+  dropped. ~659 kid events/60d (98 pages). Module `sources/qpl.py` + fixture
+  `tests/fixtures/qpl_calendar_page.html` + 15 parser tests. Original
+  confirmation notes below.
+- **Confirmed — re-probed 2026-07-13 off-proxy;
   `curl_cffi impersonate="chrome"` gets past the F5/BIG-IP wall and the
   calendar is server-rendered.** Platform: Drupal 10 + a custom Solr search
   front (`qbpl_solr` / `qbpl_events` modules) — NOT LibCal/Communico.
