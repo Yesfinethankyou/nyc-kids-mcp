@@ -633,7 +633,12 @@ Known accepted residuals (see `git log` for the security-audit commit):
     a recurring program once; expanding its 40-deep `all_times` would ~26x the
     catalog), `external_id = jobID`; venue = `"<branch> Library"` (the suffix
     is REQUIRED so the enrich library lookup fires); ~659 events/60d, 98
-    pages/run).
+    pages/run), Intrepid Museum (`intrepid` — Pier 86 sea/air/space museum;
+    Drupal card grid paginated by **GET `?page=N`** (the `/views/ajax` POST
+    pager is broken — returns page 0 every time); inclusive + adult-blocklist
+    kid gate (drops the "After Hours"/tasting/gala strand — there's no Family
+    theme); single fixed venue → `SOURCE_NEIGHBORHOOD["intrepid"]="Hell's
+    Kitchen"`; ~13 events/60d).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.

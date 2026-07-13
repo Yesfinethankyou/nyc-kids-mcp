@@ -44,6 +44,10 @@ SOURCE_NEIGHBORHOOD: dict[str, str] = {
     # The park is its own destination spanning DUMBO→Cobble Hill piers; the
     # park name as label follows the Prospect Park / Governors Island precedent.
     "brooklyn_bridge_park": "Brooklyn Bridge Park",
+    # Intrepid Museum, Pier 86 at W 46th St — the NTA is "Hell's Kitchen"
+    # (aka Clinton); the feed carries no lat/lng, so this tier-1 label is the
+    # only coding.
+    "intrepid": "Hell's Kitchen",
 }
 
 # Tier 2: multi-site sources small enough to enumerate. NY Transit Museum runs

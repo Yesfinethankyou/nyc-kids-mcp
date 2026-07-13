@@ -36,10 +36,17 @@ candidates one at a time on branch `claude/backlog-sources-cpf-nypl-qpl`.
   "<branch> Library" (suffix required for the enrich library lookup to fire —
   verified codes South Hollis→Hollis etc.), price FREE, online dropped. ~659
   events/60d verified live. Fixture + 15 parser tests.
-- Full suite **702 green**, ruff clean. `test_missing_detection` census bumped
-  14→17 (all three new sources opt into missing-detection).
-- **Still TODO this session:** Intrepid (Drupal views/ajax, confirmed — small),
-  and a dedup decision on the Yodel/Macaroni Kid widget before building it.
+- **BUILT: `intrepid`** — Intrepid Sea/Air/Space Museum (Pier 86, Manhattan).
+  Drupal card grid at `/events/calendar`, paginated by **GET `?page=N`** (the
+  `/views/ajax` POST pager is broken — returns page 0 every time; documented).
+  Inclusive + adult-blocklist kid gate (no Family theme; drops After
+  Hours/tasting/gala). `external_id = url:start_iso`, single fixed venue →
+  `SOURCE_NEIGHBORHOOD["intrepid"]="Hell's Kitchen"`, price FREE-if-titled.
+  ~13 events/60d verified live. Fixture + 13 parser tests.
+- Full suite **715 green**, ruff clean. `test_missing_detection` census bumped
+  14→18 (all four new sources opt into missing-detection).
+- **Still TODO this session:** a dedup decision on the Yodel/Macaroni Kid
+  widget before building it (the one remaining candidate).
 - **⚠️ Two things flagged for the maintainer:** (1) NYPL volume — thousands of
   events over 60d, easily capped via `window_days`; (2) QPL granularity — next-
   occurrence-only per the reasoning above. Both are deliberate defaults, open

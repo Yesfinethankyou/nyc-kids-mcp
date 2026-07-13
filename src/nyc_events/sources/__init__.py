@@ -11,6 +11,7 @@ from .domino_park import DominoParkSource
 from .governors_island import GovernorsIslandSource
 from .greenwood_cemetery import GreenWoodCemeterySource
 from .industry_city import IndustryCitySource
+from .intrepid import IntrepidSource
 from .mommy_poppins import MommyPoppinsSource
 from .new_york_family import NewYorkFamilySource
 from .ny_transit_museum import NYTransitMuseumSource
@@ -48,6 +49,8 @@ ENABLED_SOURCES: list[type[Source]] = [
     DominoParkSource,
     # ~2 REST pages at a 1s delay — cheap.
     CityParksFoundationSource,
+    # ~15-20 calendar pages at a 1s delay — cheap-ish.
+    IntrepidSource,
     SIChildrensMuseumSource,
     # 2-3 month pages at a 1s delay — cheap.
     BBGSource,

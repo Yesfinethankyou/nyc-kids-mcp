@@ -1254,19 +1254,26 @@ unprobed (expect similar stacks; probe before writing any code).
 
 ### Intrepid Sea, Air & Space Museum (USS Intrepid)
 
-- **Status:** 🟢 **CONFIRMED (endpoint verified, params still to map) —
+- **Status:** ✅ **BUILT 2026-07-13** as source `intrepid`. As-built: the
+  `/events/calendar` Drupal card grid, paginated by **GET `?page=N`** (6
+  cards/page, ascending by date) — the `/views/ajax` POST pager is broken
+  (returns page 0 every time), so the GET pager is used. Each
+  `div.card.product-card` gives title (`.card--header.h6`), start+end
+  `<time datetime>` (ISO w/ offset), description (`.card--body`), detail URL.
+  **Inclusive + adult-blocklist** kid gate (no Family theme exists — themes
+  are Arts/Aviation/History/Innovation/Leadership/Sea/Space/STEM): keep all,
+  drop the shared adult sets + local `after hours`/`tasting`/`gala`/`cocktail`.
+  `external_id = url:start_iso` (recurring programs reuse one URL). Single
+  fixed venue → `SOURCE_NEIGHBORHOOD["intrepid"] = "Hell's Kitchen"`, borough
+  Manhattan, price FREE when title says so else UNKNOWN. ~13 events/60d live.
+  Module `sources/intrepid.py` + fixture
+  `tests/fixtures/intrepid_calendar_page.html` + 13 parser tests. Original
+  confirmation notes below.
+- **Confirmed (endpoint verified) —
   re-probed 2026-07-13 off-proxy with `curl_cffi impersonate="chrome"`.**
   Real path is **`/events/calendar`** (`/visit/calendar` 404s). It's a
-  **Drupal calendar view** (`drupalSettings.views.ajaxViews`: view_name
-  `calendar`, display `calendar`, path `/node/68`, better_exposed_filters).
-  A plain `POST /views/ajax` with the view identifiers (+ the page's
-  `view_dom_id`) returns the rendered rows: `datetime="2026-07-14T09:30:00-04:00"`
-  attributes + event detail links (`/free-world-cup-watch-parties-pier-86-0`,
-  `/inspiration-academy-…`) and a "Load More" pager. Remaining build
-  questions: the exposed-filter param names for a date range, the pager param
-  (`page=N` in the POST body), and whether detail pages carry JSON-LD
-  (the site emits JSON-LD elsewhere, so likely yes). Yield looked modest
-  (a few events/day). Fixture capture must be off-proxy.
+  **Drupal calendar view**; GET `?page=N` paginates. Yield is modest
+  (single venue, ~13 events/60d). Fixture capture must be off-proxy.
 - **Why:** family-oriented museum (aircraft carrier, space shuttle pavilion)
   with school-break camps, family days, and STEM workshops — real kid-relevant
   programming distinct from its adult evening-rental/gala business.
