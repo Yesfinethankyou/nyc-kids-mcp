@@ -238,11 +238,19 @@ def _occurrence_dates(
         # Fast-forward to the first occurrence in the window instead of
         # counting every step from `start`. A series authored long ago must
         # not exhaust the occurrence cap walking pre-window dates (issue #59).
+        # Each occurrence is computed from the anchor `start` (via the step
+        # index `i`), never from the previous occurrence — otherwise a
+        # mid-series clamp (Jan 31 -> Feb 28) becomes the new anchor and the
+        # day-of-month permanently drifts earlier (issue #76).
+        i = 0
+        d = _add_months(start, i * step_interval)
         while d < win_start and d <= hi:
-            d = _add_months(d, step_interval)
+            i += 1
+            d = _add_months(start, i * step_interval)
         while d <= hi and len(out) < MAX_OCCURRENCES:
             out.append(d)
-            d = _add_months(d, step_interval)
+            i += 1
+            d = _add_months(start, i * step_interval)
     else:
         # weekly (default) or daily
         step = (

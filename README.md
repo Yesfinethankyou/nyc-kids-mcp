@@ -23,9 +23,11 @@ tools — designed for use from the Claude mobile app while out with a kid.
   Staten Island coverage), Brooklyn Botanic Garden (`bbg`, ~28 events/60d —
   family-category calendar scrape), Brooklyn Bridge Park
   (`brooklyn_bridge_park`, ~139 events/60d — free waterfront programming
-  with per-pier venues) — real
-  descriptions, URLs, and (where
-  upstream provides them) age ranges, coordinates, prices. Rejected: Time
+  with per-pier venues), Snug Harbor Cultural Center
+  (`snug_harbor`, ~10 events/60d — Staten Island cultural park, WP REST
+  list + per-detail JSON-LD dates, audience-taxonomy kid filter) — real
+  descriptions, URLs, and (where upstream provides them) age ranges,
+  coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser), Coney Island
   USA (feed works, but the calendar is adult programming), and the five
   WCS zoo/aquarium sites (3 items combined — no dated event calendar). More
@@ -547,6 +549,14 @@ Adapters with real descriptions, URLs, age ranges:
   (title, date). Inclusive + blocklist filter (no kids category exists):
   adult fitness/socials/benefits/volunteer dropped, family-signal Fitness
   kept. All free public programming → Price.FREE. ~139 events/60 days.
+- ✅ **Snug Harbor Cultural Center & Botanical Garden** — *shipped*
+  (`snug_harbor`). Second Staten Island source (same Livingston campus as
+  the children's museum). WordPress custom `event` post type on the standard
+  WP REST API — but the event date lives only in each detail page's JSON-LD
+  `Event` node, so (like Mommy Poppins) it lists the youth/family events
+  cheaply then crawls each for its date. Kid filter is the `audience`
+  taxonomy (Kids/Families/All Ages/Teens, resolved by name); `cost-tier`
+  drives price. ~10 events/60 days at ~150 detail fetches/run.
 - ❌ **Time Out NY Kids** — *rejected.* JS-rendered editorial site, no
   structured feed; would need a headless browser (out of scope).
 - ❌ **Coney Island USA** — *rejected.* Working Squarespace feed, but the

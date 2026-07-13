@@ -26,6 +26,42 @@ coneyisland.com were all probed and fixture-captured directly from a web
 session. Try the probe from the sandbox first; only fall back to capturing
 on your laptop/NAS if a specific domain is actually blocked.
 
+**⚠️ `curl_cffi` impersonation is BROKEN in the Claude-Code-on-web sandbox
+(2026-07-13).** This environment routes outbound HTTPS through a
+TLS-re-terminating MITM proxy, and `curl_cffi`'s browser-TLS impersonation
+(`impersonate="chrome"`) connection-resets through it — verified failing even
+against `example.com`, while plain `httpx` and non-impersonated `curl_cffi`
+work fine. **Consequence:** any anti-bot candidate that needs the impersonated
+fingerprint to get past a WAF/Cloudflare/Incapsula wall **cannot be probed or
+fixture-captured from a web session** — the source recipe (real captured
+fixture + parser test) can't be completed here. Those must be built from a
+non-proxied session (laptop/NAS). Confirmed blocked here on 2026-07-13:
+- **Queens Public Library** (`queenslibrary.org/calendar`) — F5/BIG-IP "Request
+  Rejected" WAF wall to plain httpx.
+- **NYPL** (`nypl.org/events/calendar`) — Imperva **Incapsula** JS-challenge.
+- **AMNH** / **The Met** / **Intrepid** — 403 / 429 (Cloudflare-class).
+- **City Parks Foundation** — 403 Cloudflare.
+These are still the highest-value unbuilt candidates (the two library systems
+have neighborhood coding already done); they're just not buildable *in a web
+session* until `curl_cffi`-through-proxy is fixed or the build is done
+elsewhere.
+
+**Re-probe results (2026-07-13, plain httpx, this session):**
+- **Snug Harbor** → ✅ BUILT (see its entry below — clean WP REST + JSON-LD).
+- **Brooklyn Bridge Parents** → **weak, deprioritized.** WP Event Manager
+  (`/wp-json/wp/v2/event_listing`) works, but only **9 events**, and the
+  sampled rows are **re-posts of our existing `brooklyn_army_terminal`
+  source** ("Summer at the Terminal: …") — it's an aggregator with heavy
+  dedup risk against sources we already run, not net-new coverage.
+- **Puppetworks** → **rejected here (JS-rendered).** Runs on the `edit.site`
+  website builder (`/bundle/publish/…/bundle.js`, `fonts-cdn.edit.site`); the
+  schedule is client-rendered, so plain httpx gets only CSS/font boilerplate.
+  Headless-browser tier — out of scope.
+- **NYSCI** → no `/events` or Tribe route; homepage embeds Eventbrite. Would
+  need an Eventbrite-organizer probe (unattempted). Deprioritized.
+- **BAM** → homepage `#Calendar` is a JS SPA anchor; no wp-json / JSON-LD
+  `Event` on a plain fetch. Likely headless-tier — deprioritized.
+
 ## ✅ Major reassessment: nycgovparks.org/events is alive and far richer than tvpp-9vvx — BUILT
 
 - **Status:** ✅ **BUILT 2026-07-06** — shipped as source `nycgovparks_events`
@@ -620,19 +656,59 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 - **Next step:** a fresh probe specifically hunting for the ticketing
   subdomain, not another pass at the marketing site.
 
-### Snug Harbor Cultural Center & Botanical Garden — CANDIDATE, inconclusive
+### Snug Harbor Cultural Center & Botanical Garden — ✅ BUILT 2026-07-13
 
-- **Status:** CANDIDATE — probed 2026-07-06, **inconclusive**. No platform
-  signature found; needs a different probe angle.
-- **What the probe found:** WordPress site (`wp-content`/`wp-json` present),
-  but no Tribe/MEC/other calendar-plugin tells, no `Event`-typed JSON-LD, and
-  no obvious dated-event HTML pattern on `/events-calendar/` (redirect target
-  of `/events/`) in the time probed. An "algolia" string hit turned out to be
-  on-site search UI CSS, not an event data API — a false lead, don't chase it.
-- **Next step:** a slower, more thorough probe (`source-verifier`) — look at
-  the actual rendered event listing structure by hand rather than grepping
-  for known tells, since this site didn't match any of the usual platform
-  signatures.
+- **Status:** ✅ **BUILT 2026-07-13** — shipped as source `snug_harbor`
+  (httpx WP REST list + per-detail-page JSON-LD date crawl). Real Staten
+  Island coverage — the catalog's thinnest borough (only `si_childrens_museum`
+  shared this campus before). As-built notes — the 7-06 "inconclusive, no
+  platform signature" verdict was wrong on both counts (the site IS standard
+  WordPress with a clean REST API; the earlier probe just didn't find the
+  custom `event` post type):
+  - **Platform: WordPress custom `event` post type on the standard WP REST
+    API** (`/wp-json/wp/v2/event`), NOT Tribe/MEC. Rich taxonomies
+    (`audience`, `cost-tier`, `genre`, `program`, `venue`), 160 total events.
+  - **THE load-bearing quirk — no event date in the REST payload.** `acf` is
+    empty and the post `date` is the creation date; the real event date lives
+    ONLY on the detail page in a Yoast JSON-LD `Event` node
+    (`startDate`/`endDate`, correct -04:00/-05:00 offset). So, like
+    `mommy_poppins`, we fetch the list cheaply then crawl each event's detail
+    page for its date. The list is newest-created-first and accumulates past
+    events (no server-side date filter possible), so every youth/family event
+    is fetched and window-filtered by its JSON-LD date. **~147 detail fetches
+    / run** at a 0.5s delay (~1.5 min) — the source's whole cost.
+  - **Kid filter = the `audience` taxonomy, resolved by NAME.** Resolve the
+    audience terms once/run, query the `event` endpoint for the union of
+    {Kids, Families, All Ages, Teens} ids (name-resolution survives a term-id
+    renumber). Shared `ADULT_BLOCKLIST`/`ADULT_TITLE_BLOCKLIST`/`MEMBERS_ONLY`
+    kept as a title-scope safety net (Snug Harbor is a mixed cultural center,
+    not a pure kids feed — occasional 21+ galas carry a family audience tag).
+    Teens-only events are kept but don't earn the "best for kids" tag
+    (mirrors `new_york_family`).
+  - **Every taxonomy resolved id->name once/run** (the `brooklyn_bridge_park`
+    location-resolution shape). `cost-tier` -> price (Free -> FREE; the
+    $10/$25/$50/Above-$50 tiers -> PAID; "Pay What You Wish"/"#N/A"/none ->
+    UNKNOWN). `genre`/`program` -> tags. Term names carry HTML entities
+    (`$10 &amp; Under`), unescaped before use.
+  - Venue/borough hardcoded (single campus) → `SOURCE_NEIGHBORHOOD
+    ["snug_harbor"] = "Snug Harbor"` (same Livingston/New Brighton campus as
+    `si_childrens_museum`). The per-event `venue` taxonomy (Chinese Scholar's
+    Garden, Great Hall, Heritage Farm, …) is a spot within the campus — kept
+    in `raw_payload`, not used as the venue name. `external_id` = WP post id
+    (recurring programs are separate posts; no per-day expansion).
+    `window_days = 60` → opted into missing-detection.
+  - **Fixture:** `tests/fixtures/snug_harbor_sample.json` — a `terms` block
+    (the resolved taxonomy id->name maps) + 12 real `{item, jsonld}` rows
+    (mix of Free/PWYW/$10 cost tiers, Families/Teens-only audiences, in- and
+    out-of-window dates). 22 tests in `tests/test_snug_harbor_parse.py`; the
+    parser (`parse_event`) is pure and takes the REST item dict + the JSON-LD
+    dict, so no httpx mock. Verified live end-to-end (147 events listed, real
+    Staten Island rows yielded).
+- **Original research (2026-07-06):** CANDIDATE — probed, **inconclusive**.
+  No platform signature found on `/events-calendar/`; that probe grepped for
+  known plugin tells and missed the custom `event` post type on the plain WP
+  REST API. Lesson: when a WordPress site shows no Tribe/MEC tell, enumerate
+  `/wp-json` for custom event post types before concluding "no feed."
 
 ### Bronx River Alliance — CANDIDATE, thin/low-priority
 
@@ -685,7 +761,14 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 
 ### Brooklyn Academy of Music (BAM)
 
-- **Status:** CANDIDATE — proposed 2026-06-27, unprobed.
+- **Status:** CANDIDATE — proposed 2026-06-27. **Re-probed 2026-07-13 (web
+  sandbox): reachable but JS-rendered.** `bam.org/` returns 200 (360 KB) and
+  `/calendar` just anchors to `#Calendar` on the homepage — a client-side SPA
+  with no `wp-json`/Tribe route and no JSON-LD `Event` in the static HTML
+  (`/api/search` 404s). Likely a **headless-browser candidate** unless a
+  Tessitura/EPS JSON endpoint turns up. Next session: probe for an embedded
+  JSON blob or a `*.bam.org`/Tessitura events API before reaching for
+  Playwright.
 - **Why:** BAM runs a dedicated family strand — **BAMkids** (BAMkids Film
   Festival, family matinees, workshops) — so there's a real kid-relevant
   subset, unlike an all-adult performing-arts calendar.
@@ -852,7 +935,21 @@ keyed `"<borough>|<library-core>"`.
 
 ### Queens Public Library (QPL)
 
-- **Status:** CANDIDATE — proposed 2026-06-27, unprobed.
+- **Status:** CANDIDATE — proposed 2026-06-27. **Re-probed 2026-07-13 from the
+  web sandbox: BLOCKED by a WAF, not yet classifiable.** `GET
+  www.queenslibrary.org/calendar` with plain `httpx` returns HTTP 200 but a
+  244-byte F5/BIG-IP-style **"The requested URL was rejected. Please consult
+  with your administrator" wall** (with a numeric support ID) — a bot/WAF
+  block, not the calendar. `curl_cffi impersonate="chrome"` (which would
+  normally get past this) **can't be used from this environment** — its TLS
+  impersonation connection-resets through the sandbox's MITM proxy (see the
+  cross-cutting note up top). So the platform (LibCal/Communico/BiblioCommons?)
+  is still unclassified. **Next session (non-proxied): re-probe with
+  `curl_cffi impersonate="chrome"`; if the calendar HTML is JS-only, look for
+  the backing JSON/iCal feed on the LibCal/Communico subdomain rather than
+  scraping the WAF-walled page.** Neighborhood coding is already done (67
+  Queens branch keys in `library_neighborhoods.json`), so this is
+  parser-only work once the feed is found.
 - **System:** Queens only (~65 branches). Canonical domain **queenslibrary.org**
   (NOT `queenspubliclibrary.org` — that domain currently redirects to a junk
   site; don't probe it).
@@ -870,7 +967,23 @@ keyed `"<borough>|<library-core>"`.
 
 ### New York Public Library (NYPL)
 
-- **Status:** CANDIDATE — proposed 2026-06-27, unprobed.
+- **Status:** CANDIDATE — proposed 2026-06-27. **Re-probed 2026-07-13 from the
+  web sandbox: BLOCKED by Imperva Incapsula, not yet classifiable.** `GET
+  www.nypl.org/events/calendar` with plain `httpx` returns a 212-byte
+  **Incapsula JS-challenge stub** (`<script
+  src="/_Incapsula_Resource?...">`, `robots noindex,nofollow`) — a bot wall,
+  not the calendar. Getting past Incapsula needs a real browser fingerprint
+  (`curl_cffi impersonate`), which **can't run from this sandbox** (TLS
+  impersonation resets through the MITM proxy — see the cross-cutting note).
+  **Next session (non-proxied): re-probe with `curl_cffi impersonate="chrome"`.
+  NYPL's main site is a custom React/Drupal stack and the events system is
+  likely separate — hunt for an events JSON endpoint under `*.nypl.org` or a
+  LibCal/Communico backend before assuming a headless browser is required.**
+  Neighborhood coding is already done (35 Bronx + 42 Manhattan + 14 Staten
+  Island branch keys in `library_neighborhoods.json`); **this one source
+  unlocks the Bronx + Staten Island library items below.** Remember the borough
+  MUST be set per-branch (NYPL spans three) or the borough-keyed library lookup
+  misses.
 - **System:** **Manhattan + Bronx + Staten Island** (~90 branch libraries plus
   the research libraries). Building this one source is what actually unlocks the
   Bronx and Staten Island items below.
@@ -917,6 +1030,16 @@ different neighborhoods → handle like NY Transit's two sites via
 if a probe finds the calendar is JS-only with no JSON-LD / embedded JSON / JSON
 endpoint, it's a **headless-browser candidate** (Phase-3 Playwright fallback).
 Probe one first to learn the platform shape; copy-adapt if the others match.
+
+**Re-probe 2026-07-13 (web sandbox): the anti-bot 403s are confirmed and
+blocking here.** Plain `httpx` got **`metmuseum.org/events` → HTTP 429**
+(rate-limited) and (below) `amnh.org/calendar` → **403 Cloudflare**. The one
+tool that gets past these — `curl_cffi impersonate="chrome"` — **can't run
+from this sandbox** (TLS impersonation resets through the MITM proxy; see the
+cross-cutting note). So none of the three could be classified here. **Next
+session (non-proxied): probe with `curl_cffi impersonate="chrome"`, one museum
+first**, and check the listing/detail pages for JSON-LD `Event` or a
+`__NEXT_DATA__`/embedded-JSON blob before concluding headless is required.
 
 ### The Metropolitan Museum of Art (The Met)
 
@@ -1011,7 +1134,19 @@ Probe one first to learn the platform shape; copy-adapt if the others match.
 
 ### New York Hall of Science (NYSCI)
 
-- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Status:** CANDIDATE — proposed 2026-07-06. **Re-probed 2026-07-13 (web
+  sandbox): reachable with plain `httpx` (NOT anti-bot-walled), but the events
+  path is unconfirmed and it likely delegates to Eventbrite.** `nysci.org/`
+  returns 200 (90 KB) and **embeds an Eventbrite reference**; `nysci.org/events/`
+  and `/calendar/` both 404, and there's no `wp-json`/Tribe route. So the
+  calendar isn't at the guessed paths — the programming is probably ticketed
+  through an **Eventbrite organizer** (or a JS widget on another page).
+  **Next step (any session — this host isn't blocked): find NYSCI's Eventbrite
+  organizer id (search the homepage/booking links for `eventbrite.com/o/…` or
+  an `eventbrite.com/e/…` embed), then hit the public Eventbrite organizer
+  events endpoint** — a different build shape than the WordPress/JSON-LD
+  sources here, worth scoping before committing. Not blocked by the
+  `curl_cffi` sandbox issue.
 - **Why:** a hands-on science museum built for kids/families — likely closer
   to the "curated kids feed" bucket (like `mommy_poppins`/`bk_childrens_museum`)
   than a filtered adult calendar, since nearly everything NYSCI runs is
@@ -1031,7 +1166,12 @@ Probe one first to learn the platform shape; copy-adapt if the others match.
 
 ### American Museum of Natural History (AMNH)
 
-- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Status:** CANDIDATE — proposed 2026-07-06. **Re-probed 2026-07-13 (web
+  sandbox): plain `httpx` `amnh.org/calendar` → HTTP 403 (Cloudflare).**
+  Needs `curl_cffi impersonate="chrome"`, which can't run from this sandbox
+  (see the cross-cutting note / the art-museums block above). Not classifiable
+  here — retry from a non-proxied session with impersonation and check for
+  JSON-LD `Event` / `__NEXT_DATA__` before assuming headless.
 - **Why:** major family destination — Discovery Room, family workshops,
   Space Show family programming, overnight "Night at the Museum" sleepovers —
   a well-defined kid-relevant strand under an otherwise mixed adult/family
@@ -1052,7 +1192,12 @@ Probe one first to learn the platform shape; copy-adapt if the others match.
 
 ### Intrepid Sea, Air & Space Museum (USS Intrepid)
 
-- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Status:** CANDIDATE — proposed 2026-07-06. **Re-probed 2026-07-13 (web
+  sandbox): plain `httpx` `intrepidmuseum.org/calendar` → HTTP 403** (560-byte
+  block page). Same story as the other consumer sites — needs `curl_cffi
+  impersonate="chrome"`, unavailable in this sandbox. Retry from a non-proxied
+  session; confirm the real events path (`/visit/calendar` vs `/events`) at the
+  same time.
 - **Why:** family-oriented museum (aircraft carrier, space shuttle pavilion)
   with school-break camps, family days, and STEM workshops — real kid-relevant
   programming distinct from its adult evening-rental/gala business.
@@ -1071,7 +1216,13 @@ Probe one first to learn the platform shape; copy-adapt if the others match.
 
 ### City Parks Foundation (cityparksfoundation.org)
 
-- **Status:** CANDIDATE — proposed 2026-07-06, unprobed.
+- **Status:** CANDIDATE — proposed 2026-07-06. **Re-probed 2026-07-13 (web
+  sandbox): plain `httpx` `cityparksfoundation.org/events/` → HTTP 403
+  (Cloudflare).** Needs `curl_cffi impersonate="chrome"`, unavailable in this
+  sandbox (cross-cutting note). Still the highest *potential* yield of the
+  unprobed batch (SummerStage + Puppet Mobile, citywide multi-park) — retry
+  from a non-proxied session; the Puppet Mobile schedule page is the cleanest
+  kid-relevant subset to classify first.
 - **Why:** high potential yield — this is the nonprofit behind **SummerStage**
   (free concerts across many NYC parks), the **Puppet Mobile** (free puppet
   shows touring parks, explicitly kids' programming), and the **Charlie

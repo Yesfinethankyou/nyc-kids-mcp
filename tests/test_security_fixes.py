@@ -194,6 +194,37 @@ def test_rate_limiter_is_per_ip():
     assert _rate_limit(b, "authorize_post") is None
 
 
+def test_sweep_evicts_stale_buckets_never_revisited():
+    # Regression for issue #77: a key that's never hit again used to keep its
+    # bucket forever — only a repeat hit on that same key triggered cleanup.
+    from nyc_events import auth
+
+    _reset_rate_state()
+    auth._calls_since_sweep = 0
+    old_now = 1_000_000.0
+    _rate_state[("198.51.100.1", "register")] = __import__("collections").deque(
+        [old_now]
+    )
+    assert len(_rate_state) == 1
+    # A far-future "now" makes the stale bucket older than _SWEEP_MAX_AGE.
+    auth._sweep_rate_state(old_now + auth._SWEEP_MAX_AGE + 1)
+    assert len(_rate_state) == 0
+
+
+def test_sweep_runs_opportunistically_every_n_calls():
+    from nyc_events import auth
+
+    _reset_rate_state()
+    auth._calls_since_sweep = 0
+    # Seed a stale bucket far in the past relative to real time.time().
+    stale_key = ("198.51.100.2", "register")
+    _rate_state[stale_key] = __import__("collections").deque([1.0])
+    for i in range(auth._SWEEP_INTERVAL):
+        req = _FakeRequest(f"10.1.{i // 256}.{i % 256}")
+        _rate_limit(req, "token")
+    assert stale_key not in _rate_state
+
+
 def test_rate_limiter_is_per_endpoint():
     _reset_rate_state()
     req = _FakeRequest("10.0.0.20")

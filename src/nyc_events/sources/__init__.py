@@ -16,6 +16,7 @@ from .ny_transit_museum import NYTransitMuseumSource
 from .nycgovparks_events import NYCGovParksEventsSource
 from .prospect_park import ProspectParkSource
 from .si_childrens_museum import SIChildrensMuseumSource
+from .snug_harbor import SnugHarborSource
 
 # Phase 2 sources. Time Out NY Kids (timeout_nykids.py) is a JS-rendered
 # editorial site with no event feed — not buildable without a headless
@@ -52,6 +53,10 @@ ENABLED_SOURCES: list[type[Source]] = [
     # with the other slow crawls at the end; mommy_poppins stays last (see the
     # ordering note above).
     NYCGovParksEventsSource,
+    # Crawls every youth/family event's detail page for its JSON-LD date
+    # (~150 detail fetches at a 0.5s delay, ~1.5 min) — slow, so it runs with
+    # the crawls; mommy_poppins stays last (see the ordering note above).
+    SnugHarborSource,
     # Day-walk over a capped API: ~35 base requests plus extra slices on busy
     # days (~50-120 total at a 0.75s delay) — slow-ish, so it runs with the
     # crawls; mommy_poppins stays last (see the ordering note above).

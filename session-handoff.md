@@ -2,6 +2,101 @@
 
 ## What was done (most recent first)
 
+### Session (cont'd): backlog source expansion — built Snug Harbor; anti-bot candidates blocked by the web-sandbox proxy
+
+Asked to "add the next top 3 candidates" from SOURCES-BACKLOG.md. Probed the
+backlog against what this environment can actually reach and found a hard
+constraint: **`curl_cffi` browser-TLS impersonation is broken in the
+Claude-Code-on-web sandbox** — the MITM egress proxy connection-resets the
+impersonated ClientHello (verified failing even on `example.com`; plain
+`httpx` and non-impersonated `curl_cffi` work). So every anti-bot candidate
+(the two library systems QPL/NYPL behind WAF/Incapsula — the highest-value
+unbuilt leads; AMNH/Met/Intrepid 403; City Parks Foundation Cloudflare)
+**can't be fixture-captured here** and must be built from a non-proxied
+session. Recorded this in SOURCES-BACKLOG.md's cross-cutting notes.
+
+Of the plain-httpx-reachable candidates, only **one** was a clean, high-value
+build, so I built it well rather than forcing three shaky sources:
+
+- **BUILT: `snug_harbor`** (Snug Harbor Cultural Center, Staten Island — the
+  catalog's thinnest borough). WordPress custom `event` post type on the plain
+  WP REST API, but **the event date lives only in each detail page's JSON-LD
+  `Event` node** (`acf` empty, post `date` = creation date), so it lists the
+  youth/family events cheaply then crawls each detail page for its date — the
+  `mommy_poppins` shape. Kid filter = the `audience` taxonomy (Kids/Families/
+  All Ages/Teens) resolved by NAME (survives term-id renumber) and queried as
+  an OR filter; shared adult blocklists as a title-scope safety net. All
+  taxonomies resolved id→name once/run (`cost-tier`→price, `genre`/`program`→
+  tags). Venue/borough hardcoded (single campus) → `SOURCE_NEIGHBORHOOD
+  ["snug_harbor"]="Snug Harbor"`. `window_days=60`, opted into
+  missing-detection. New module `sources/snug_harbor.py` + registry wiring +
+  `_neighborhoods.py` entry; fixture `tests/fixtures/snug_harbor_sample.json`
+  (a `terms` block + 12 real `{item, jsonld}` rows) + 22 tests in
+  `tests/test_snug_harbor_parse.py` (pure `parse_event`, no httpx mock).
+  Verified live end-to-end (147 youth/family events listed, real Staten Island
+  rows yielded with correct dates/price/tags). Docs updated: SOURCES-BACKLOG
+  (CANDIDATE→BUILT + the "enumerate wp-json for custom post types" lesson),
+  README, CLAUDE.md live-sources list. `test_missing_detection` census bumped
+  13→14.
+- **Deprioritized / rejected (recorded in the backlog):** Brooklyn Bridge
+  Parents (WP Event Manager works but only 9 events, and they're re-posts of
+  our existing `brooklyn_army_terminal` source — aggregator dedup risk, not
+  net-new); Puppetworks (JS-rendered `edit.site` builder — headless-tier);
+  NYSCI (Eventbrite-embed, no plain feed); BAM (JS SPA).
+- **Anti-bot candidates left for a non-proxied session, with probe findings
+  recorded in each source's own backlog entry** (per maintainer request): QPL
+  (F5/BIG-IP WAF wall), NYPL (Imperva Incapsula JS-challenge), AMNH/Intrepid/
+  City Parks Foundation (403 Cloudflare), the Met (429), BAM (JS SPA). Each
+  entry now says exactly what blocked it here and what to try next with
+  `curl_cffi impersonate` from a non-proxied session. NYSCI is NOT anti-bot
+  (reachable) but delegates to Eventbrite — noted as a different build shape.
+  No new neighborhood-coding work was needed for the libraries (the shipped
+  `library_neighborhoods.json` already covers all QPL/NYPL branches), so the
+  only reusable artifact from this session beyond `snug_harbor` is the probe
+  intelligence itself.
+
+Full suite 652 green (was 630), ruff clean.
+
+### Session: fixed the top 3 open issues (#78, #77, #76) — all code-review findings from 2026-07-12
+
+Picked the three most-recently-filed `status:ready` issues, each with a
+verified repro and suggested fix already spelled out in the issue body.
+
+- **#78** `brooklyn_army_terminal._parse_start_time`: a time range with an
+  omitted start meridiem borrowed pm/am unconditionally from the end of the
+  range, so a cross-noon range like `"11:00-2:00pm"` (11 AM-2 PM) parsed the
+  start as 23:00 instead of 11:00. Fixed by comparing the borrowed-meridiem
+  candidate against the parsed end time and flipping am/pm when the borrow
+  would put the start after the end (new `_to_hour24` helper factors out the
+  am/pm arithmetic so the flip-check and the final conversion share it).
+  Added `"11:00-2:00pm" -> (11, 0)` to the parametrized `_parse_start_time`
+  test.
+- **#77** `auth._rate_state` unbounded growth: cleanup was purely lazy and
+  key-local, so a bucket for a key that's never hit again (e.g. a scanner IP
+  that probes `/register` once) lived forever. Added an opportunistic global
+  sweep (`_sweep_rate_state`, called every `_SWEEP_INTERVAL` (1000) calls to
+  `_bucket_limited` via a module-level counter) that drops any bucket whose
+  newest timestamp is older than `_SWEEP_MAX_AGE` (3600s, the largest
+  configured window). Hot path stays O(1) amortized; no background task.
+  2 new tests (direct sweep eviction; sweep fires opportunistically after
+  `_SWEEP_INTERVAL` calls and evicts a stale seeded bucket).
+- **#76** `domino_park._occurrence_dates` monthly drift: a monthly series
+  anchored on days 29-31 permanently drifted to an earlier day-of-month once
+  it crossed a shorter month, because each occurrence was computed from the
+  *previous* (already-clamped) occurrence rather than the series anchor —
+  Jan 31 -> Feb 28 -> Mar 28 -> Apr 28... instead of Mar 31/Apr 30/May 31.
+  Fixed by computing every occurrence as `_add_months(start, i * step)` from
+  the anchor via a step index `i`, in both the fast-forward-to-window loop
+  and the emission loop, so a clamp in one month never compounds into later
+  months. New regression test asserts the Jan 31 anchor case resolves to
+  `[Jan 31, Feb 28, Mar 31, Apr 30, May 31, Jun 30]`.
+
+All three repros from the issue bodies re-verified by direct execution
+post-fix. Full suite 630 green (was 627), ruff clean. No `db.py`/`server.py`/
+`models.py` changes; `auth.py` diff is additive only (new sweep function +
+4 lines wired into `_bucket_limited`), so the existing security-baseline
+tests are the regression guard for it.
+
 ### Session (cont'd): swapped the no-JS neighborhood search for a live JS filter
 
 Maintainer asked what risk the JS alternative (flagged but not built below)

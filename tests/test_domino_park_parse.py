@@ -113,6 +113,20 @@ def test_monthly_clamps_to_window_and_enddate():
     assert dates == [date(2026, 8, 2), date(2026, 9, 2)]
 
 
+def test_monthly_month_end_anchor_does_not_drift():
+    # Regression for issue #76: a monthly series anchored on Jan 31 must clamp
+    # per-occurrence against the anchor (Mar 31, Apr 30, May 31), not
+    # compound off the previous (clamped) occurrence (which drifts to 28).
+    dates = _occurrence_dates(
+        date(2026, 1, 31), date(2026, 12, 31), "monthly", 1,
+        date(2026, 1, 1), date(2026, 6, 30),
+    )
+    assert dates == [
+        date(2026, 1, 31), date(2026, 2, 28), date(2026, 3, 31),
+        date(2026, 4, 30), date(2026, 5, 31), date(2026, 6, 30),
+    ]
+
+
 def test_daily_expansion():
     dates = _occurrence_dates(
         date(2026, 6, 20), date(2026, 6, 23), "daily", 1,
