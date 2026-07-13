@@ -9,6 +9,7 @@ fields, the GET-only contract, and the missing-DB friendly page.
 
 from __future__ import annotations
 
+import html
 import re
 import sqlite3
 from datetime import UTC, datetime, timedelta
@@ -110,7 +111,9 @@ def test_health_page_renders_every_enabled_source(client):
     resp = client.get("/")
     assert resp.status_code == 200
     for cls in ENABLED_SOURCES:
-        assert cls.name in resp.text
+        # html.escape entity-encodes apostrophes (e.g. "Children's"), so
+        # compare against the escaped label, not the raw display string.
+        assert html.escape(dashboard._source_label(cls.name)) in resp.text
 
 
 def test_health_page_shows_catalog_strip_and_db_source(client):
@@ -212,6 +215,37 @@ def test_multi_value_neighborhood_filter_is_exact_match(client):
     resp = client.get("/events", params={"neighborhood": ["Astoria"]})
     assert "Queens Science Fair" in resp.text
     assert "Toddler Music in Prospect Park" not in resp.text
+
+
+def test_source_label_maps_known_sources_and_falls_back():
+    assert dashboard._source_label("bpl") == "Brooklyn Public Library"
+    assert dashboard._source_label("nycgovparks_events") == "NYC Parks"
+    assert dashboard._source_label("some_future_source") == "some_future_source"
+    assert dashboard._source_label(None) == ""
+
+
+def test_neighborhood_search_narrows_dropdown_options(client):
+    # No JS on this dashboard (CSP has no script-src) — the search box is a
+    # plain form field that re-renders the option list server-side.
+    resp = client.get("/events", params={"nbhd_q": "ast"})
+    assert "<option value='Astoria'>Astoria</option>" in resp.text
+    assert "<option value='Prospect Heights'>Prospect Heights</option>" not in resp.text
+
+
+def test_neighborhood_search_keeps_existing_selection_in_the_list(client):
+    # Selecting "Prospect Heights" then searching for text that doesn't match
+    # it must not silently drop the selection out of the option list.
+    resp = client.get(
+        "/events", params={"neighborhood": "Prospect Heights", "nbhd_q": "ast"}
+    )
+    assert "<option value='Prospect Heights' selected>Prospect Heights</option>" in resp.text
+    assert "<option value='Astoria'>Astoria</option>" in resp.text
+
+
+def test_neighborhood_search_text_carried_into_preset_links(client):
+    resp = client.get("/events", params={"nbhd_q": "ast"})
+    presets = re.search(r"<p class='presets'>(.*?)</p>", resp.text).group(1)
+    assert presets.count("nbhd_q=ast") == 3
 
 
 def test_preset_links_preserve_active_filters(client):

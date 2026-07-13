@@ -29,6 +29,7 @@ import html
 import json
 import os
 import sqlite3
+from collections.abc import Callable
 from datetime import UTC, date, datetime, time, timedelta
 from urllib.parse import quote_plus, urlencode
 from zoneinfo import ZoneInfo
@@ -43,6 +44,37 @@ from . import config, db
 from .sources import ENABLED_SOURCES
 
 NYC_TZ = ZoneInfo("America/New_York")
+
+# `events.source` stores Source.name — a stable internal id (used in
+# compute_id, not meant for display; see sources/base.py). This maps it to
+# the human venue name for rendering. Falls back to the raw internal name for
+# anything unmapped, so a new source (or one that's since been disabled, like
+# nyc_permitted_events) never breaks rendering just because this dict lags.
+_SOURCE_LABELS: dict[str, str] = {
+    "ny_transit_museum": "New York Transit Museum",
+    "brooklyn_army_terminal": "Brooklyn Army Terminal",
+    "bk_childrens_museum": "Brooklyn Children's Museum",
+    "greenwood_cemetery": "Green-Wood Cemetery",
+    "prospect_park": "Prospect Park Alliance",
+    "industry_city": "Industry City",
+    "governors_island": "Governors Island",
+    "domino_park": "Domino Park",
+    "si_childrens_museum": "Staten Island Children's Museum",
+    "bbg": "Brooklyn Botanic Garden",
+    "brooklyn_bridge_park": "Brooklyn Bridge Park",
+    "bpl": "Brooklyn Public Library",
+    "nycgovparks_events": "NYC Parks",
+    "new_york_family": "New York Family",
+    "mommy_poppins": "Mommy Poppins",
+    "nyc_permitted_events": "NYC Parks Permits (retired)",
+    "timeout_nykids": "Time Out New York Kids",
+}
+
+
+def _source_label(name: str | None) -> str:
+    if name is None:
+        return ""
+    return _SOURCE_LABELS.get(name, name)
 
 # Staleness thresholds for MAX(last_seen) highlighting on the health page.
 # WARN = one missed nightly run (same 30h grace the MCP tools use for
@@ -269,7 +301,7 @@ async def health_page(_: Request) -> HTMLResponse:
             f"<span class='muted'>{_esc(_local(r['last_run_finished_at']))}"
             f" · fetched {_esc(r['last_run_fetched'])}</span></td>"
         )
-        name = _esc(r["source"])
+        name = _esc(_source_label(r["source"]))
         if not r["registered"]:
             name += " <span class='muted'>(not registered)</span>"
         trs.append(
@@ -350,13 +382,23 @@ def _parse_browse_params(params) -> dict:
     return kwargs
 
 
-def _multi_select(name: str, values: list[str], selected: list[str], *, size: int) -> str:
+def _multi_select(
+    name: str,
+    values: list[str],
+    selected: list[str],
+    *,
+    size: int,
+    label_fn: Callable[[str], str] | None = None,
+) -> str:
     """A native <select multiple> — no "any" placeholder needed, since no
     selection already means "any" (ctrl/cmd-click, or shift-click a range,
-    to pick more than one; no JS required)."""
+    to pick more than one; no JS required). `label_fn`, when given, renders a
+    human-readable option text while the submitted `value` stays the raw
+    internal identifier the filter actually matches on."""
+    label_fn = label_fn or (lambda v: v)
     opts = "".join(
         f"<option value='{html.escape(v, quote=True)}'"
-        f"{' selected' if v in selected else ''}>{html.escape(v)}</option>"
+        f"{' selected' if v in selected else ''}>{html.escape(label_fn(v))}</option>"
         for v in values
     )
     # size floor of 2: at size=1 a <select multiple> renders like a tiny
@@ -365,11 +407,25 @@ def _multi_select(name: str, values: list[str], selected: list[str], *, size: in
     return f"<select name='{name}' multiple size='{rows}'>{opts}</select>"
 
 
+def _filtered_neighborhoods(values: list[str], selected: list[str], query: str) -> list[str]:
+    """Narrow the neighborhood option list to a case-insensitive substring
+    match on `query` — a search box for the dropdown without JS (the
+    dashboard's CSP has no script-src at all; see the module docstring).
+    Already-selected values are always kept, even when they don't match the
+    current search text, so typing a new search never silently drops an
+    existing selection out of the option list."""
+    q = query.strip().lower()
+    if not q:
+        return values
+    keep = set(selected)
+    return [v for v in values if q in v.lower() or v in keep]
+
+
 # Non-date filter params carried into the preset links, so "this weekend"
 # narrows the current filter set instead of resetting it. The multi-select
 # fields need getlist(), not get() — a plain get() would silently drop every
 # selection past the first.
-_CARRY_PARAMS = ("q", "age", "free_only", "exclude_low_confidence", "limit")
+_CARRY_PARAMS = ("q", "nbhd_q", "age", "free_only", "exclude_low_confidence", "limit")
 _CARRY_MULTI_PARAMS = ("borough", "neighborhood", "source")
 
 
@@ -412,12 +468,15 @@ def _browse_form(params, facets: dict[str, list[str]]) -> str:
     borough_select = _multi_select(
         "borough", facets["boroughs"], params.getlist("borough"), size=5
     )
+    source_values = sorted(facets["sources"], key=lambda s: _source_label(s).lower())
     source_select = _multi_select(
-        "source", facets["sources"], params.getlist("source"), size=6
+        "source", source_values, params.getlist("source"), size=6, label_fn=_source_label
     )
-    nbhd_select = _multi_select(
-        "neighborhood", facets["neighborhoods"], params.getlist("neighborhood"), size=6
+    nbhd_selected = params.getlist("neighborhood")
+    nbhd_options = _filtered_neighborhoods(
+        facets["neighborhoods"], nbhd_selected, params.get("nbhd_q") or ""
     )
+    nbhd_select = _multi_select("neighborhood", nbhd_options, nbhd_selected, size=6)
     xlc = checked("exclude_low_confidence")
     return (
         "<form class='filters' method='get' action='/events'>"
@@ -434,7 +493,10 @@ def _browse_form(params, facets: dict[str, list[str]]) -> str:
         "<br>"
         "<label>Borough <span class='muted'>(ctrl/cmd-click for multiple)"
         f"</span><br>{borough_select}</label>"
-        f"<label>Neighborhood<br>{nbhd_select}</label>"
+        "<label>Neighborhood <span class='muted'>(search narrows the list;"
+        " Filter to apply)</span><br>"
+        f"<input name='nbhd_q' placeholder='search…' value='{val('nbhd_q')}'><br>"
+        f"{nbhd_select}</label>"
         f"<label>Source<br>{source_select}</label>"
         "<br>"
         "<button type='submit'>Filter</button> "
@@ -504,7 +566,7 @@ async def events_page(request: Request) -> HTMLResponse:
             f"<td>{_esc(ev.borough.value if ev.borough else None)}</td>"
             f"<td>{_esc(ev.price.value)}</td>"
             f"<td>{_esc(', '.join(ev.tags))}</td>"
-            f"<td>{_esc(ev.source)}</td>"
+            f"<td>{_esc(_source_label(ev.source))}</td>"
             f"<td>{_esc(', '.join(flags) or None)}</td>"
             f"<td>{' '.join(links)}</td>"
             "</tr>"
@@ -554,7 +616,7 @@ async def event_detail_page(request: Request) -> HTMLResponse:
         except json.JSONDecodeError:
             raw = ev.raw_payload
     fields: list[tuple[str, str]] = [
-        ("Source", _esc(ev.source)),
+        ("Source", _esc(_source_label(ev.source))),
         ("External id", _esc(ev.external_id)),
         ("Starts (NYC)", _esc(ev.start_dt.astimezone(NYC_TZ).strftime("%Y-%m-%d %H:%M"))),
         (

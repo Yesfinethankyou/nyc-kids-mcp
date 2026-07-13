@@ -2,6 +2,42 @@
 
 ## What was done (most recent first)
 
+### Session: human-readable source names + no-JS neighborhood search on the browse page
+
+Maintainer asked for two `/events` browse-page UX fixes: source names
+readable instead of internal ids, and a way to search the long neighborhood
+list instead of scrolling. Both contained in `dashboard.py` +
+`test_dashboard.py`; no db/tools/auth changes.
+
+- **`_SOURCE_LABELS`** (new dict in `dashboard.py`, keyed by `Source.name`)
+  + `_source_label()` helper, falling back to the raw internal name for
+  anything unmapped (a future source, or a disabled one like
+  `nyc_permitted_events`) so a stale/missing entry never breaks rendering.
+  Applied everywhere a raw `source` value was shown: the health-page table,
+  the browse-page results table, the event-detail page, and the source
+  `<select multiple>` (via `_multi_select`'s new `label_fn` param — the
+  submitted `value` stays the raw id the filter matches on, only the display
+  text changes; option order is now sorted by label, not internal id).
+- **Neighborhood search box**, deliberately **not JS** — the dashboard's CSP
+  is `default-src 'none'` with no `script-src` at all (module docstring:
+  "No JS frameworks... tailnet pages shouldn't leak to third-party hosts"),
+  so a live-filter-as-you-type script would mean loosening a header
+  CLAUDE.md calls out as intentional. Instead: a `nbhd_q` text field in the
+  existing filter form; on submit, `_filtered_neighborhoods()` narrows the
+  `<select multiple>` options to a case-insensitive substring match, always
+  keeping any already-selected neighborhood in the list even if it no longer
+  matches the search text (so refining the search can't silently drop a
+  selection out of the form). `nbhd_q` rides into the preset links via
+  `_CARRY_PARAMS` like the other single-value filters.
+- 4 new tests + 1 updated (source-label mapping/fallback, search narrowing,
+  selection preserved across a non-matching search, preset-link carry; the
+  existing "every enabled source renders on the health page" test now
+  compares against the escaped label instead of the raw id). Full suite 624
+  green, ruff clean. Verified live against a seeded DB via curl (label text
+  + `nbhd_q=park` narrowing the option list correctly) — no `playwright`
+  installed in this sandbox to screenshot, so no headless-Chromium pass this
+  time.
+
 ### Session (cont'd): retired MULTI-USER-PLAN.md and DASHBOARD-PLAN.md
 
 Maintainer call: both plans are done (multi-user frozen 2026-07-07,
