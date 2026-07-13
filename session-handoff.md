@@ -2,6 +2,17 @@
 
 ## What was done (most recent first)
 
+### Session (cont'd): added `.github/pull_request_template.md`
+
+Maintainer noticed PR #79 had merged early (only 2 of 6 commits made it in
+before it closed) and asked for a PR template while sorting that out. The
+follow-up commits were rebased onto `main` and reopened as PR #80 (see
+below); this commit adds the template itself. Sections: Summary, Changes,
+Test plan (suite + ruff + live-verification), Docs (the three-doc convention
+— CLAUDE.md / SOURCES-BACKLOG.md / README.md — plus a pointer at the
+handoff hook), and a Security surface checkbox calling out the
+auth.py/tools.py separation. No code change, no test surface.
+
 ### Session: dashboard browse-page UI improvements (branch `claude/ui-search-improvements-ej30h6`)
 
 Maintainer asked for aesthetic + functional improvements to the `/events`
