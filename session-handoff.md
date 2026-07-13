@@ -22,10 +22,11 @@ candidates one at a time on branch `claude/backlog-sources-cpf-nypl-qpl`.
   for recurring), `external_id = url:start_iso` (URL repeats across occurrences
   + audience-union dupes; deduped in-fetch). Age from "ages 6-12", price FREE,
   Online rows dropped, venue = branch → library neighborhood table.
-  **⚠️ HIGH VOLUME — thousands of events over 60 days (largest source by far);
-  `window_days` caps it if the maintainer wants fewer.** Unlocks Bronx + SI
-  library coverage. Fixture (one Manhattan kids page) + 24 parser tests.
-  Live-verified all three boroughs populate and ids dedup.
+  **Capped to a 30-day window (maintainer call 2026-07-13 — a 60-day window
+  ran to thousands of rows and dominated the catalog).** Still the largest
+  source. Unlocks Bronx + SI library coverage. Fixture (one Manhattan kids
+  page) + 24 parser tests. Live-verified all three boroughs populate and ids
+  dedup.
 - **BUILT: `qpl`** — Queens Public Library, ~65 branches. Drupal/Solr calendar
   behind an F5 wall (`curl_cffi`). Parses each card's embedded
   `arrJsonData_cal` JSON (visible card text is truncated). Kid gate `prgm_age`,
@@ -56,12 +57,11 @@ candidates one at a time on branch `claude/backlog-sources-cpf-nypl-qpl`.
   14→18 (all four new sources opt into missing-detection).
 - **Session outcome:** 4 of the 5 confirmed candidates built + shipped
   (`city_parks_foundation`, `nypl`, `qpl`, `intrepid`); Yodel deferred with a
-  clear revisit plan. Two maintainer flags remain (NYPL volume, QPL
-  next-occurrence granularity — both deliberate, tunable defaults).
-- **⚠️ Two things flagged for the maintainer:** (1) NYPL volume — thousands of
-  events over 60d, easily capped via `window_days`; (2) QPL granularity — next-
-  occurrence-only per the reasoning above. Both are deliberate defaults, open
-  to change.
+  clear revisit plan.
+- **Maintainer calls made this session:** (1) NYPL volume — **capped to a
+  30-day window** (was 60; it ran to thousands of rows). (2) QPL granularity —
+  next-occurrence-only (kept as-is; expanding `all_times` would ~26x the
+  catalog). Both remain tunable via `window_days` / the parser if revisited.
 
 ### Session: off-proxy re-probe of the anti-bot backlog candidates — 4 CONFIRMED, 2 deprioritized, 1 scoped
 

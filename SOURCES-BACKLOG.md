@@ -1040,9 +1040,10 @@ keyed `"<borough>|<library-core>"`.
   the audience-union duplicates rows (deduped within the fetch too). Age range
   parsed from "ages 6-12" phrasing; price FREE; virtual ("Online") rows
   dropped; venue = branch name → neighborhood via `library_neighborhoods.json`.
-  **⚠️ HIGH VOLUME: thousands of events over the 60-day window (NYPL runs
-  daily programming across ~88 branches) — by far the largest source. The
-  `window_days` knob caps it if the maintainer wants fewer.** Module
+  **⚠️ HIGH VOLUME: capped to a 30-day window (maintainer call 2026-07-13 —
+  a 60-day window ran to thousands of rows and dominated the catalog; NYPL
+  runs daily programming across ~88 branches). Still the largest source. The
+  `window_days` knob tunes it further.** Module
   `sources/nypl.py` + fixture `tests/fixtures/nypl_calendar_kids_page.html` +
   24 parser tests. This source unlocks the Bronx + Staten Island library
   items below. Original confirmation notes below.

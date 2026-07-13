@@ -31,9 +31,9 @@ tools — designed for use from the Claude mobile app while out with a kid.
   the Tribe REST API, borough per-event), and NYPL
   (`nypl`, the New York Public Library's Manhattan / Bronx / Staten Island
   branch calendar — thousands of free youth/family library programs
-  (storytimes, craft afternoons, teen labs) scraped from the server-rendered
-  Drupal listing, borough from the site's own `city[]` filter; this is what
-  unlocks Bronx + Staten Island library coverage), and QPL
+  (storytimes, craft afternoons, teen labs) over a 30-day window scraped from
+  the server-rendered Drupal listing, borough from the site's own `city[]`
+  filter; this is what unlocks Bronx + Staten Island library coverage), and QPL
   (`qpl`, ~659 events/60d — Queens Public Library's ~65 branches, parsed from
   the Drupal/Solr calendar's embedded per-card JSON, one event per program's
   next occurrence, with age bands), and the Intrepid Museum

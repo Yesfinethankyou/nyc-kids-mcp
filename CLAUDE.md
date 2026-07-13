@@ -623,9 +623,10 @@ Known accepted residuals (see `git log` for the security-audit commit):
     the site's `city[]` filter (borough comes free, no detail crawl), kid
     gate is the audience cell (the server audience filter is loose), and
     `external_id = url:start_iso` because the URL repeats across recurring
-    occurrences AND the audience-union duplicates rows; **high volume —
-    thousands of events over a 60-day window, the largest source; unlocks
-    Bronx + Staten Island library coverage**; ~160 listing pages/run), Queens
+    occurrences AND the audience-union duplicates rows; **high volume even at
+    the capped 30-day window (maintainer call — 60 days dominated the catalog),
+    the largest source; unlocks Bronx + Staten Island library coverage**;
+    ~110 listing pages/run), Queens
     Public Library (`qpl` — the Drupal/Solr calendar behind an F5 wall; parses
     each card's embedded `arrJsonData_cal` JSON (the visible card text is
     truncated); kid gate is `prgm_age`, age from its "Kids(0-5)" bands; **one

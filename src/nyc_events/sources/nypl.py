@@ -74,9 +74,13 @@ NYC_TZ = ZoneInfo("America/New_York")
 
 BASE_URL = "https://www.nypl.org"
 CALENDAR_URL = f"{BASE_URL}/events/calendar"
-DEFAULT_WINDOW_DAYS = 60
+# 30-day window (maintainer call 2026-07-13): NYPL runs daily programming
+# across ~88 branches, so a 60-day window produced thousands of rows that
+# dominated the catalog. 30 days halves that while still covering the useful
+# planning horizon. This also bounds both the fetch width and missing-detection.
+DEFAULT_WINDOW_DAYS = 30
 REQUEST_DELAY_SECONDS = 1.0
-MAX_PAGES_PER_CITY = 200  # safety cap; ~70-85 pages/borough for a 60-day window
+MAX_PAGES_PER_CITY = 200  # safety cap; ~35-45 pages/borough for a 30-day window
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/124.0 Safari/537.36 nyc-kids-mcp/1.0"
