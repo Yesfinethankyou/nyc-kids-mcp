@@ -2,6 +2,37 @@
 
 ## What was done (most recent first)
 
+### Session (cont'd): swapped the no-JS neighborhood search for a live JS filter
+
+Maintainer asked what risk the JS alternative (flagged but not built below)
+would actually introduce, then asked for it anyway once the tradeoff was
+laid out. Added `_NBHD_FILTER_JS` — one static inline `<script>` in
+`dashboard.py`, live-filtering `#neighborhood-select` on `input` events
+against `#nbhd_q`. The CSP's `script-src` now pins exactly that script's
+SHA-256 hash (`_NBHD_FILTER_JS_HASH = "sha256-" + base64(sha256(...))`,
+computed from the literal constant at import time — never hand-maintained,
+so header and script content cannot drift apart) instead of `'unsafe-inline'`.
+Two things keep this narrow rather than opening the door generally:
+attacker-influenced content elsewhere on the page (scraped titles/
+descriptions/venues) can never execute even under an escaping bug, because
+its hash won't match the one pinned entry; and the script's own DOM target
+(`neighborhood-select`'s option text) comes from `list_facets()` — curated
+static-table labels / Census NTA names, never raw scraped fields — so
+there's no path from "attacker controls page content" to "attacker controls
+script logic" even in principle. The server-side `_filtered_neighborhoods()`
+half from the prior entry is untouched and still does the heavy lifting
+(the JS narrows further within whatever the server already rendered;
+submitting the form is still how you widen back out to the full list).
+Module docstring carries the full reasoning + a note not to add a second
+inline script without re-deriving it. 2 new tests (hash matches both the
+CSP header and the literal emitted `<script>` text, and targets ids that
+actually exist on the page; script absent from non-browse pages) + 1 fixed
+(a stale substring assertion after the `<select>` gained an `id` attr).
+Verified live: seeded DB, ran the dashboard, headless-Chromium check that
+typing "park" narrows the neighborhood `<select>` to "Park Slope" with zero
+console errors (confirms the CSP hash isn't blocking the pinned script).
+Full suite 626 green, ruff clean.
+
 ### Session: human-readable source names + no-JS neighborhood search on the browse page
 
 Maintainer asked for two `/events` browse-page UX fixes: source names

@@ -189,7 +189,7 @@ def test_multi_select_controls_render_with_facet_options(client):
     # more guessing NTA spellings blind, and no cap of one filter value.
     resp = client.get("/events")
     assert "<select name='borough' multiple" in resp.text
-    assert "<select name='neighborhood' multiple" in resp.text
+    assert "<select name='neighborhood' id='neighborhood-select' multiple" in resp.text
     assert "<select name='source' multiple" in resp.text
     assert "<option value='Astoria'>Astoria</option>" in resp.text
     assert "<option value='Queens'>Queens</option>" in resp.text
@@ -225,8 +225,8 @@ def test_source_label_maps_known_sources_and_falls_back():
 
 
 def test_neighborhood_search_narrows_dropdown_options(client):
-    # No JS on this dashboard (CSP has no script-src) — the search box is a
-    # plain form field that re-renders the option list server-side.
+    # Server-side half of the search box (the form still works with JS off);
+    # _NBHD_FILTER_JS live-filters further on top of this on the client.
     resp = client.get("/events", params={"nbhd_q": "ast"})
     assert "<option value='Astoria'>Astoria</option>" in resp.text
     assert "<option value='Prospect Heights'>Prospect Heights</option>" not in resp.text
@@ -246,6 +246,30 @@ def test_neighborhood_search_text_carried_into_preset_links(client):
     resp = client.get("/events", params={"nbhd_q": "ast"})
     presets = re.search(r"<p class='presets'>(.*?)</p>", resp.text).group(1)
     assert presets.count("nbhd_q=ast") == 3
+
+
+def test_neighborhood_filter_script_hash_matches_csp_and_dom(client):
+    # The CSP hash is derived from _NBHD_FILTER_JS itself (see the module
+    # docstring on why this can't drift), so this pins the whole chain: the
+    # hash in the header must match the literal script text, and the script
+    # must target ids that actually exist on the rendered page.
+    resp = client.get("/events")
+    assert dashboard._NBHD_FILTER_JS_HASH in resp.headers["Content-Security-Policy"]
+    assert f"<script>{dashboard._NBHD_FILTER_JS}</script>" in resp.text
+    assert "id='nbhd_q'" in resp.text
+    assert "id='neighborhood-select'" in resp.text
+    # No blanket allowance — only the one pinned hash, never 'unsafe-inline'.
+    assert "'unsafe-inline'" not in resp.headers["Content-Security-Policy"].split(
+        "script-src", 1
+    )[1].split(";", 1)[0]
+
+
+def test_neighborhood_filter_script_not_present_on_non_browse_pages(client):
+    # The script is scoped to the form that needs it; other routes still
+    # advertise the same CSP (one static header set for the whole app) but
+    # shouldn't ship script content they have no use for.
+    resp = client.get("/")
+    assert "<script>" not in resp.text
 
 
 def test_preset_links_preserve_active_filters(client):
