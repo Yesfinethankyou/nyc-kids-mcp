@@ -1,4 +1,4 @@
-"""Per-person invite codes + the admin CLI (MULTI-USER-PLAN.md Phase A).
+"""Per-person invite codes + the admin CLI.
 
 Each trusted user gets a generated high-entropy invite code they paste on the
 OAuth consent page instead of the shared consent password. Only a salted hash

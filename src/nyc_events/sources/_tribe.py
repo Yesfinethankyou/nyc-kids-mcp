@@ -53,17 +53,33 @@ DEFAULT_PER_PAGE = 50
 PAGE_DELAY_SECONDS = 1.0
 DEFAULT_HTTP_TIMEOUT = 30.0
 
+# Elements whose *text content* is not prose and must be dropped wholesale,
+# not just de-tagged: inline CSS (<style>), inline JS (<script>), and UI
+# chrome labels (<button>). Green-Wood's WordPress theme (Stackable blocks)
+# embeds all three in the Tribe `description` field; naive tag-stripping
+# leaves the CSS/JS text in the event description.
+_DROP_CONTENT_RX = re.compile(
+    r"<(style|script|button)\b[^>]*>.*?</\1\s*>", re.IGNORECASE | re.DOTALL
+)
+_HTML_COMMENT_RX = re.compile(r"<!--.*?-->", re.DOTALL)
 _HTML_TAG_RX = re.compile(r"<[^>]+>")
 _WS_RX = re.compile(r"\s+")
 
 
 def strip_html(raw: str | None) -> str:
-    """Strip HTML tags, decode entities, collapse whitespace."""
+    """Strip HTML to prose: drop style/script/button elements with their
+    contents and HTML comments, then strip remaining tags, decode entities,
+    collapse whitespace."""
     if not raw:
         return ""
-    text = _HTML_TAG_RX.sub(" ", raw)
+    text = _DROP_CONTENT_RX.sub(" ", raw)
+    text = _HTML_COMMENT_RX.sub(" ", text)
+    text = _HTML_TAG_RX.sub(" ", text)
     text = html.unescape(text).replace("\xa0", " ")
-    return _WS_RX.sub(" ", text).strip()
+    text = _WS_RX.sub(" ", text).strip()
+    # Tribe's schedule header renders as a bare "," once its empty spans are
+    # stripped — don't let a description open with stray punctuation.
+    return text.lstrip(", ")
 
 
 def parse_utc_dt(raw: str | None) -> datetime | None:

@@ -34,6 +34,13 @@ SOURCE_NEIGHBORHOOD: dict[str, str] = {
     "industry_city": "Sunset Park",
     "prospect_park": "Prospect Park",
     "governors_island": "Governors Island",
+    # Snug Harbor Cultural Center campus, Livingston/New Brighton shoreline —
+    # "Snug Harbor" is the destination name people actually search.
+    "si_childrens_museum": "Snug Harbor",
+    "bbg": "Prospect Heights",
+    # The park is its own destination spanning DUMBO→Cobble Hill piers; the
+    # park name as label follows the Prospect Park / Governors Island precedent.
+    "brooklyn_bridge_park": "Brooklyn Bridge Park",
 }
 
 # Tier 2: multi-site sources small enough to enumerate. NY Transit Museum runs

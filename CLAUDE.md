@@ -115,9 +115,9 @@ claim is worse than none — agents trust it completely):
 - `src/nyc_events/auth.py` — the "do not regress" security surface: bearer
   middleware (+ OAuth token cache), rate limiter, redirect-URI allowlist,
   OAuth discovery/`/register`/`/authorize`/`/token` handlers, consent page.
-- `src/nyc_events/dashboard.py` — the read-only tailnet dashboard
-  (DASHBOARD-PLAN.md, shipped): its own Starlette app + `python -m
-  nyc_events.dashboard` entry point on `config.DASHBOARD_PORT` (8766).
+- `src/nyc_events/dashboard.py` — the read-only tailnet dashboard: its own
+  Starlette app + `python -m nyc_events.dashboard` entry point on
+  `config.DASHBOARD_PORT` (8766).
   GET routes only; DB access only via `db.connect_events_ro` (`mode=ro` —
   it never calls `init_events`); never opens `oauth.db`. **Import rule:
   `db` + `config` + the sources registry only** — importing `auth` or
@@ -131,8 +131,8 @@ claim is worse than none — agents trust it completely):
   (`MCP_AUTH_TOKEN`/`MCP_CONSENT_PASSWORD`) deliberately stay call-time
   env reads in auth.py/server.py.
 - `src/nyc_events/oauth.py` — auth-code issue/consume + PKCE verification
-- `src/nyc_events/users.py` — per-person invite codes (MULTI-USER-PLAN.md
-  Phase A): PBKDF2 passcode hashing, `match_user()` for the consent flow,
+- `src/nyc_events/users.py` — per-person invite codes: PBKDF2 passcode
+  hashing, `match_user()` for the consent flow,
   and the `add`/`revoke`/`list` admin CLI. Only hashes are stored; the
   plaintext code is printed once by `add`.
 - `src/nyc_events/ingest.py` — CLI loop over `ENABLED_SOURCES`; runs `enrich` at the end
@@ -254,7 +254,7 @@ These have all cost us real time. Don't relearn:
   When set, the browser form accepts this instead of `MCP_AUTH_TOKEN`, so the master
   bearer is never typed into a browser. Falls back to `MCP_AUTH_TOKEN` when unset
   (original single-var behaviour). The two credentials can be rotated independently.
-- **Per-person invite codes (multi-user, Phase A of MULTI-USER-PLAN.md):**
+- **Per-person invite codes (multi-user Phase A):**
   the `users` table in `oauth.db` holds trusted friends/family. The consent
   page accepts EITHER the operator password OR a non-revoked user's invite
   code (`users.match_user`); the matched `user_id` rides the auth code and is
@@ -326,7 +326,7 @@ isn't per-occurrence.
   runs (`db.fetch_drift_baseline`, needs ≥3 prior `ok` runs); a fetch below
   `DRIFT_RATIO` (60%) of that median prints a warning and makes the run exit
   **4**. Self-bootstrapping: an empty table never false-alarms. This is the
-  data model the planned dashboard's `source_health()` reads.
+  data model the tailnet dashboard's `source_health()` reads.
 - **Never run `VACUUM` on `data/events.db` without immediately rebuilding the
   FTS index.** `events` has a TEXT primary key (no `INTEGER PRIMARY KEY` alias),
   so SQLite may renumber its implicit rowids on VACUUM. `events_fts` is an
@@ -373,9 +373,11 @@ a curated kids feed (`mommy_poppins`, `bk_childrens_museum` have none by design)
 
 Listing tools (`search_events`, `events_this_weekend`, `events_on_date`)
 return the **summary** dict via `_event_summary(ev)`:
-- Token-efficient — drops `external_id`, `end_local`, `lat`, `lng`,
-  `age_min`, `age_max`, `source`. (`neighborhood` IS included — it's cheap and
-  high-signal for "what's near X" questions; `search_events` also filters on it.)
+- Token-efficient — drops `external_id`, `lat`, `lng`, `age_min`, `age_max`,
+  `source`. (`neighborhood` IS included — cheap and high-signal for "what's
+  near X" questions; `search_events` also filters on it. `end_local` IS
+  included as of 2026-07-12 — without it a noon–4pm event presents as a bare
+  "12:00", which users read as ambiguous/midnight.)
 - Truncates `description` to 200 chars.
 - Default `limit=10` (`search_events` defaults to `limit=15`; all cap at 50).
 
@@ -599,7 +601,13 @@ Known accepted residuals (see `git log` for the security-audit commit):
     at 16 rows/query with broken pagination, so it day-walks a 35-day window
     with adaptive time slices; NYC-filtered by coordinate boxes; the first
     source with structured age bands; ~500 events/run — read the module
-    docstring before touching it, the API is under active lockdown upstream).
+    docstring before touching it, the API is under active lockdown upstream),
+    Staten Island Children's Museum (`si_childrens_museum` — fifth Tribe
+    source, the first real Staten Island coverage; ~64 events/window),
+    Brooklyn Botanic Garden (`bbg` — custom-CMS month-page HTML scrape,
+    family-category allowlist; ~28 events/window), Brooklyn Bridge Park
+    (`brooklyn_bridge_park` — WP REST + ACF, NOT Tribe; recurring-parent vs
+    dated-post dedup is the load-bearing quirk; ~139 events/window).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
@@ -638,7 +646,9 @@ Known accepted residuals (see `git log` for the security-audit commit):
     distance-from-home was considered and **declined as out of scope** — not
     tracked as remaining A1 work.
   - **TODO:** indoor/outdoor flag (A2), weather (A3 — needs coords + A2),
-    more venue sources (Workstream B). Tech-debt #4/#5/#6 closed.
+    more venue sources (Workstream B — first batch shipped 2026-07-13:
+    `si_childrens_museum`, `bbg`, `brooklyn_bridge_park`; WCS zoos probed
+    and rejected on yield). Tech-debt #4/#5/#6 closed.
   **Brooklyn Cyclones**
   is parked here too: the MLB Stats API (`teamId=453`, public JSON, no auth)
   gives the game schedule cheaply, but the themed nights (Star Wars Night
@@ -649,16 +659,27 @@ Known accepted residuals (see `git log` for the security-audit commit):
 ## Out-of-scope (deliberate)
 
 - Multi-*tenancy*. Friends-and-family multi-user is supported at the auth
-  layer (per-person invite codes — see "OAuth model" and MULTI-USER-PLAN.md),
-  but everyone sees the same shared catalog: no per-user data, preferences,
-  or isolation. The OAuth shim still trusts any client_id. **Multi-user is
-  COMPLETE AND FROZEN as of 2026-07-07** (Phases A–C shipped; maintainer call:
-  no further phases — see the freeze note atop MULTI-USER-PLAN.md).
+  layer (per-person invite codes — see "OAuth model"), but everyone sees the
+  same shared catalog: no per-user data, preferences, or isolation. The
+  OAuth shim still trusts any client_id. **Multi-user is COMPLETE AND
+  FROZEN as of 2026-07-07** (per-person invite codes, hashed-at-rest
+  tokens, per-user revocation, and the availability guardrails in the HTTP
+  security baseline above all shipped 2026-07-05; maintainer call at that
+  review: this is already a lot of machinery on the security-critical
+  surface for a shared catalog with no per-user data — keep it, maintain
+  it, don't extend it. Any future "next phase" idea should be argued
+  against this freeze first).
 - Federated identity / SSO.
 - Admin UI / browser config. The Claude client IS the UI. **Shipped narrow
   exception:** the read-only, tailnet-only health/browse dashboard
-  (`dashboard.py` — see Layout and `DASHBOARD-PLAN.md`). Anything beyond
-  that (writes, auth forms, public exposure) stays out of scope.
+  (`dashboard.py` — see Layout). It exists because the only ways to answer
+  "did last night's ingest work?" were an MCP call through Claude or a
+  dev-session skill — no glanceable view from a phone. Two hard constraints
+  shaped it: zero new public attack surface (separate process, separate
+  port, tailnet-only — tailnet membership IS the auth, so `auth.py` stays
+  untouched) and read-only by construction (`mode=ro` SQLite connection +
+  GET-only routes, enforced twice). Anything beyond that (writes, auth
+  forms, public exposure) stays out of scope.
 - HTTP retries / queue workers. SQLite + sync httpx is fine at this scale.
 
 ## Local container dev

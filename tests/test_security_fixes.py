@@ -338,7 +338,7 @@ def test_token_undersized_body_still_reaches_grant_validation():
 
 
 # ---- Phase A multi-user: invite codes, attribution, revocation ---------------
-# (MULTI-USER-PLAN.md — per-person credentials on the consent flow.)
+# (Per-person credentials on the consent flow.)
 
 from urllib.parse import urlencode  # noqa: E402
 
@@ -577,8 +577,8 @@ def test_users_cli_add_list_revoke(tmp_path, monkeypatch, capsys):
 
 
 # ---- Phase B multi-user hardening ---------------------------------------------
-# (MULTI-USER-PLAN.md — tokens hashed at rest, per-token MCP rate limit,
-#  /authorize query strings out of the access log.)
+# (Tokens hashed at rest, per-token MCP rate limit, /authorize query strings
+#  out of the access log.)
 
 import logging  # noqa: E402
 

@@ -1,4 +1,4 @@
-"""Tailnet dashboard tests (DASHBOARD-PLAN.md).
+"""Tailnet dashboard tests.
 
 No network: temp DB seeded via init_events + upsert_events, exercised through
 Starlette's TestClient. The db-layer numbers (source_health / catalog_stats /
@@ -9,10 +9,12 @@ fields, the GET-only contract, and the missing-DB friendly page.
 
 from __future__ import annotations
 
+import re
 import sqlite3
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from starlette.datastructures import QueryParams
 from starlette.testclient import TestClient
 
 from nyc_events import config, dashboard, db
@@ -20,6 +22,10 @@ from nyc_events.models import Borough, Event, Price, compute_id
 from nyc_events.sources import ENABLED_SOURCES
 
 XSS = "<script>alert(1)</script>"
+
+RANGED_START = (datetime.now(UTC) + timedelta(days=2)).replace(
+    hour=16, minute=0, second=0, microsecond=0
+)
 
 
 def _ev(**overrides):
@@ -74,6 +80,15 @@ def client(tmp_path, monkeypatch):
                     title="Permit Row",
                     description=None,
                     url=None,
+                ),
+                # has an end time → browse renders a same-day range.
+                # 16:00 UTC is 11:00/12:00 NYC, so +4h never crosses the
+                # local-midnight boundary regardless of when the suite runs.
+                _ev(
+                    external_id="ranged",
+                    title="Ranged Event",
+                    start_dt=RANGED_START,
+                    end_dt=RANGED_START + timedelta(hours=4),
                 ),
                 # scheme-smuggling canary: html.escape alone wouldn't stop
                 # this executing on click if it were rendered as an anchor
@@ -166,13 +181,37 @@ def test_events_bad_age_and_limit_render_400(client):
     assert client.get("/events", params={"limit": "lots"}).status_code == 400
 
 
-def test_neighborhood_datalist_offers_ingested_values(client):
-    # The neighborhood input autocompletes from the live facets — no more
-    # guessing NTA spellings blind.
+def test_multi_select_controls_render_with_facet_options(client):
+    # Borough/neighborhood/source are native <select multiple> — no JS, no
+    # more guessing NTA spellings blind, and no cap of one filter value.
     resp = client.get("/events")
-    assert "list='nbhd-list'" in resp.text
-    assert "<datalist id='nbhd-list'>" in resp.text
-    assert "<option value='Astoria'>" in resp.text
+    assert "<select name='borough' multiple" in resp.text
+    assert "<select name='neighborhood' multiple" in resp.text
+    assert "<select name='source' multiple" in resp.text
+    assert "<option value='Astoria'>Astoria</option>" in resp.text
+    assert "<option value='Queens'>Queens</option>" in resp.text
+    assert "<option value='testsrc'>testsrc</option>" in resp.text
+
+
+def test_multi_select_preselects_every_chosen_option(client):
+    # Fixture boroughs are Brooklyn + Queens only; select just Queens so
+    # Brooklyn's un-selected rendering is also pinned.
+    resp = client.get("/events", params={"borough": ["Queens"], "source": "testsrc"})
+    assert "<option value='Queens' selected>Queens</option>" in resp.text
+    assert "<option value='Brooklyn'>Brooklyn</option>" in resp.text  # not selected
+    assert "<option value='testsrc' selected>testsrc</option>" in resp.text
+
+
+def test_multi_value_borough_filter_returns_union_not_intersection(client):
+    resp = client.get("/events", params={"borough": ["Queens", "Brooklyn"]})
+    assert "Queens Science Fair" in resp.text
+    assert "Toddler Music in Prospect Park" in resp.text  # Brooklyn
+
+
+def test_multi_value_neighborhood_filter_is_exact_match(client):
+    resp = client.get("/events", params={"neighborhood": ["Astoria"]})
+    assert "Queens Science Fair" in resp.text
+    assert "Toddler Music in Prospect Park" not in resp.text
 
 
 def test_preset_links_preserve_active_filters(client):
@@ -184,6 +223,15 @@ def test_preset_links_preserve_active_filters(client):
     assert "borough=Queens" in resp.text
     assert "free_only=1" in resp.text
     assert resp.text.count("start_date=") == 3
+
+
+def test_preset_links_carry_every_multi_select_value(client):
+    # A plain params.get() would silently drop every selection past the
+    # first — pin that both ride along into the preset hrefs, not just one.
+    resp = client.get("/events", params={"borough": ["Queens", "Brooklyn"]})
+    presets = re.search(r"<p class='presets'>(.*?)</p>", resp.text).group(1)
+    assert presets.count("borough=Queens") == 3  # today / weekend / next-7-days
+    assert presets.count("borough=Brooklyn") == 3
 
 
 def test_result_count_flags_reaching_the_limit(client):
@@ -203,10 +251,29 @@ def test_reset_link_present(client):
     assert "<a href='/events'>reset</a>" in resp.text
 
 
+def test_source_column_rendered(client):
+    resp = client.get("/events")
+    assert "<th>Source</th>" in resp.text
+    assert "<td>testsrc</td>" in resp.text
+
+
+def test_when_column_shows_same_day_time_range(client):
+    start = RANGED_START.astimezone(dashboard.NYC_TZ)
+    end = (RANGED_START + timedelta(hours=4)).astimezone(dashboard.NYC_TZ)
+    expected = f"{start.strftime('%Y-%m-%d %H:%M')}–{end.strftime('%H:%M')}"
+    resp = client.get("/events")
+    assert expected in resp.text
+    # An event without an end time still renders as a bare start stamp.
+    assert "Toddler Music in Prospect Park" in resp.text
+
+
 def test_limit_is_clamped_to_max():
-    kwargs = dashboard._parse_browse_params({"limit": "9999"})
+    # _parse_browse_params is always called with request.query_params (a
+    # Starlette QueryParams, which getlist() needs) — build one directly
+    # rather than a plain dict.
+    kwargs = dashboard._parse_browse_params(QueryParams({"limit": "9999"}))
     assert kwargs["limit"] == dashboard._MAX_LIMIT
-    kwargs = dashboard._parse_browse_params({"limit": "-5"})
+    kwargs = dashboard._parse_browse_params(QueryParams({"limit": "-5"}))
     assert kwargs["limit"] == 1
 
 

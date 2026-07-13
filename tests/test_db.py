@@ -153,6 +153,46 @@ def test_search_filters_by_borough(conn):
     assert len(results) == 1 and results[0].borough == Borough.BROOKLYN
 
 
+def test_search_filters_by_borough_list(conn):
+    db.upsert_events(conn, [
+        _ev(external_id="b1", borough=Borough.BROOKLYN, title="Brooklyn event"),
+        _ev(external_id="m1", borough=Borough.MANHATTAN, title="Manhattan event"),
+        _ev(external_id="q1", borough=Borough.QUEENS, title="Queens event"),
+    ])
+    titles = {e.title for e in db.search(conn, borough=["Brooklyn", "Queens"])}
+    assert titles == {"Brooklyn event", "Queens event"}
+    # A single-element list still works (not just the str fast path).
+    assert {e.title for e in db.search(conn, borough=["Manhattan"])} == {"Manhattan event"}
+    # An empty list is "no filter", same as None — not "match nothing".
+    assert len(db.search(conn, borough=[])) == 3
+
+
+def test_search_filters_by_source_list(conn):
+    db.upsert_events(conn, [
+        _ev(external_id="a", source="src_a", title="From A"),
+        _ev(external_id="b", source="src_b", title="From B"),
+        _ev(external_id="c", source="src_c", title="From C"),
+    ])
+    titles = {e.title for e in db.search(conn, source=["src_a", "src_c"])}
+    assert titles == {"From A", "From C"}
+
+
+def test_search_filters_by_neighborhood_list_is_exact_not_substring(conn):
+    db.upsert_events(conn, [
+        _ev(external_id="n1", neighborhood="Crown Heights (North)", title="North CH"),
+        _ev(external_id="n2", neighborhood="Crown Heights (South)", title="South CH"),
+        _ev(external_id="n3", neighborhood="Williamsburg", title="Wburg"),
+    ])
+    # Unlike the str form, a list matches literal values only — no substring
+    # expansion (the dashboard's multi-select options are exact facet values).
+    titles = {
+        e.title
+        for e in db.search(conn, neighborhood=["Crown Heights (North)", "Williamsburg"])
+    }
+    assert titles == {"North CH", "Wburg"}
+    assert db.search(conn, neighborhood=["Crown Heights"]) == []  # no exact match
+
+
 def test_search_filters_by_neighborhood_substring(conn):
     db.upsert_events(conn, [
         _ev(external_id="n1", neighborhood="Crown Heights (North)", title="North CH"),

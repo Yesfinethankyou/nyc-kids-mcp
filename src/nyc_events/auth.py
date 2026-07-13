@@ -59,7 +59,7 @@ _RATE_LIMITS: dict[str, tuple[int, int]] = {
     "token":          (5, 10),
     "register":       (20, 3600),
 }
-# Per-token limit on the authenticated MCP path (MULTI-USER-PLAN.md Phase B).
+# Per-token limit on the authenticated MCP path (multi-user Phase B).
 # Availability protection, not abuse defense: one person's runaway client
 # must not starve the NAS for everyone else. Generous — a human-driven
 # Claude conversation makes a handful of tool calls per minute.
@@ -149,7 +149,7 @@ def _token_rate_limit(presented: str) -> Response | None:
 
 class RedactAuthorizeQueryFilter(logging.Filter):
     """Scrub the /authorize query string from uvicorn access-log lines
-    (MULTI-USER-PLAN.md Phase B). Single-user this was an accepted residual;
+    (multi-user Phase B). Single-user this was an accepted residual;
     with multiple users' consent redirects flowing through, the PKCE
     challenge / state / redirect params stay out of anything that might one
     day ship off-host. Wired onto the "uvicorn.access" logger in server.main.
@@ -469,7 +469,7 @@ async def authorize_post(request: Request) -> Response:
         )
     # Two ways in: the operator's consent password (user_id stays None), or a
     # per-person invite code from the users table (user_id stamped through the
-    # auth code onto the access token — see users.py / MULTI-USER-PLAN.md).
+    # auth code onto the access token — see users.py).
     user_id: str | None = None
     authorized = bool(consent_pw and secrets.compare_digest(presented, consent_pw))
     if not authorized:

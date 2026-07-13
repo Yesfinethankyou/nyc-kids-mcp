@@ -2,6 +2,39 @@
 
 ## What was done (most recent first)
 
+### Session (cont'd): retired MULTI-USER-PLAN.md and DASHBOARD-PLAN.md
+
+Maintainer call: both plans are done (multi-user frozen 2026-07-07,
+dashboard shipped 2026-07-11) and each already said as much at the top of
+its own file ("the living rules are in CLAUDE.md"), so the doc itself was
+pure redundancy once the pointer was severed. Swept every reference (~20
+across `auth.py`/`config.py`/`dashboard.py`/`db.py`/`users.py`, both test
+files, `README.md`, `docker-compose.yml`) rather than just deleting the
+files and leaving dead links. Two were load-bearing content, not just
+citations, and got folded into their new home instead of dropped:
+- **CLAUDE.md "Out-of-scope"**: the multi-user freeze rationale (why no
+  further phases) and the dashboard's two design constraints (zero new
+  attack surface, read-only by construction) — previously "see the plan
+  doc" — are now inline.
+- **`db.connect_events_ro` docstring**: the WAL read-only gotcha (why the
+  `./data` mount must stay rw) is now explained in place instead of citing
+  DASHBOARD-PLAN.md for it.
+Left `session-handoff.md`'s own older entries untouched — they're a
+historical log of what was true when written, not living docs; rewriting
+past entries to match a doc that no longer exists would be pointless
+churn. Full suite 620 green, ruff clean.
+
+### Session (cont'd): added `.github/pull_request_template.md`
+
+Maintainer noticed PR #79 had merged early (only 2 of 6 commits made it in
+before it closed) and asked for a PR template while sorting that out. The
+follow-up commits were rebased onto `main` and reopened as PR #80 (see
+below); this commit adds the template itself. Sections: Summary, Changes,
+Test plan (suite + ruff + live-verification), Docs (the three-doc convention
+— CLAUDE.md / SOURCES-BACKLOG.md / README.md — plus a pointer at the
+handoff hook), and a Security surface checkbox calling out the
+auth.py/tools.py separation. No code change, no test surface.
+
 ### Session: dashboard browse-page UI improvements (branch `claude/ui-search-improvements-ej30h6`)
 
 Maintainer asked for aesthetic + functional improvements to the `/events`
@@ -29,6 +62,82 @@ headless Chromium screenshots). Suite 582 green (5 new tests), ruff clean.
 - Declined by design: tag filter (needs a `db.search` kwarg — noted as a
   possible follow-up), sortable columns/pagination, match highlighting,
   dark mode, pill badges (maintainer wants craigslist-plain).
+
+Sixth commit, same session: **multi-select borough/neighborhood/source
+filters + a Source column** on the dashboard browse page (maintainer
+request). `db.search`'s `borough`/`source`/`neighborhood` kwargs now accept
+`str | Iterable[str] | None` — a string keeps the exact original behavior
+(neighborhood stays substring match, used by `tools.search_events` — this
+was NOT touched), a list means "any of these": borough/source go through an
+`IN (...)` clause, neighborhood switches to EXACT match per selected value
+(the multi-select's options are literal `list_facets()` values, not
+free text, so substring expansion isn't needed there). Dashboard renders
+all three as native `<select multiple>` — no JS, ctrl/cmd-click to pick
+more than one, a size floor of 2 rows so a single-option box doesn't look
+like a stray number-spinner. `_preset_links` now carries every selected
+value via `getlist()` (a plain `.get()` would silently drop all but the
+first). New `<td>` for `ev.source` in the results table, header "Source".
+13 new tests (7 db.py multi-value, 6 dashboard) verified live against a
+seeded DB + headless-Chromium screenshots (union filtering across two
+boroughs, selected-state rendering). Full suite 620 green, ruff clean.
+
+Fifth commit, same session: **three new venue sources — the top backlog
+candidates reviewed and integrated** (maintainer request: "take the top 3
+source candidates, review them and integrate them"). All verified live
+before building; each dry-run against the real upstream after building.
+
+- **`si_childrens_museum` (BUILT, ~64 events/60d):** fifth Tribe subclass,
+  first real Staten Island coverage. Per-occurrence ids verified live.
+  Build-time find: `cost` is always empty — the venue's "Free" *category*
+  drives Price.FREE. Curated-kids posture, defensive adult-title net only.
+- **`bbg` (BUILT, ~28 events/60d):** Brooklyn Botanic Garden month-page
+  scrape (httpx+selectolax). The h2 date header is INSIDE each day's ul as
+  first child; family-category allowlist ("Families & Kids" / "Children's
+  Garden Classes"); `external_id = slug:date` because drop-in programs
+  repeat under every date they run.
+- **`brooklyn_bridge_park` (BUILT, ~139 events/60d):** WordPress but NOT
+  Tribe — custom `events` CPT on standard WP REST with ACF fields + a
+  `maplocations` join for per-pier venues. THE quirk: recurring parents
+  AND per-date posts cover the same occurrences → dedup on (base title,
+  date), dated post wins. Filter is inclusive+blocklist with TITLE-ONLY
+  scope — BBP body text says "parent/guardian who is 18+ must register"
+  on Pokémon Day Out, so body-scope adult matching drops exactly the
+  wrong rows. Fitness kept only with a family-signal title.
+- **WCS zoos REJECTED on yield** (the backlog's own decision gate): 3
+  undated season-runs combined across all 5 sites, three sites empty.
+  Backlog entry has revisit conditions (re-probe in November for holiday
+  lights). Replaced as the batch's third source by Brooklyn Bridge Park,
+  whose prior "unreachable" status was a sandbox-egress artifact.
+- Missing-detection census 10 → 13 (all three opt in). New fixtures + 25
+  parser tests. CLAUDE.md roadmap, SOURCES-BACKLOG as-builts, README
+  shipped list all updated (including the stale "tvpp runs side by side"
+  README claim left over from the disable).
+
+Fourth commit, same session: **Green-Wood CSS/JS bleed-through fixed in the
+shared Tribe `strip_html`** — maintainer reported a description reading
+".stk-w5jb2gk {margin-right:0px !important…}". Green-Wood's Stackable theme
+embeds `<style>`/`<script>`/`<button>` inside the Tribe `description` HTML;
+de-tagging alone left their text content in the prose (the module docstring
+had even noted the bleed-through and wrongly claimed the 2000-char trim
+handled it — the CSS comes *first*, so it ate the whole preview).
+`strip_html` now drops those elements' contents + HTML comments before
+tag-stripping, and lstrips the stray leading ", " the empty Tribe schedule
+header leaves behind. Fix is shared → all four Tribe sources benefit.
+Verified against the live API row the maintainer reported (id 10037316).
+**Existing DB rows self-heal**: the nightly upsert rewrites `description`
+in place for every row still in the upstream window — no DB surgery needed,
+just deploy + one nightly ingest.
+
+Third commit, same session: **time ranges surfaced in listings** — maintainer
+reported a noon–4pm Prospect Park event presenting as bare "12". Diagnosis:
+the DB had start AND end correct all along (Tribe sources capture `end_dt`);
+the listing projection deliberately dropped `end_local` for token efficiency,
+so Claude never saw the range. Fix is presentation-only, no ingest changes:
+`_event_summary` now includes `end_local` (None when the source has no end),
+and the dashboard's When column renders `12:00–16:00` for same-day ranges /
+a full second stamp for multi-day. CLAUDE.md "Tool output shape" updated
+(the "drops end_local" claim is gone). Reaches claude.ai after the next
+image deploy on the NAS.
 
 Second commit, same session: **`nyc_permitted_events` (tvpp-9vvx) DISABLED**
 — maintainer said the permit rows go unused now that `nycgovparks_events`

@@ -29,6 +29,18 @@ def test_summary_includes_neighborhood():
     assert summary["borough"] == "Brooklyn"
 
 
+def test_summary_includes_end_local_when_present():
+    # A noon–4pm event must present as a range, not a bare "12:00" that
+    # reads as midnight. NYC local: 14:00 UTC == 10:00 EDT.
+    summary = _event_summary(_ev(end_dt=datetime(2026, 7, 1, 18, tzinfo=UTC)))
+    assert summary["when_local"] == "2026-07-01T10:00:00-04:00"
+    assert summary["end_local"] == "2026-07-01T14:00:00-04:00"
+
+
+def test_summary_end_local_is_none_when_source_has_no_end():
+    assert _event_summary(_ev())["end_local"] is None
+
+
 def test_summary_neighborhood_is_none_when_unset():
     assert _event_summary(_ev(neighborhood=None))["neighborhood"] is None
 

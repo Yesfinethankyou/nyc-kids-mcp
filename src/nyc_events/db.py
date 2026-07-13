@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS oauth_tokens (
     expires_at TEXT
 );
 
--- Per-person invite codes (MULTI-USER-PLAN.md Phase A). Only the salted hash
+-- Per-person invite codes (multi-user Phase A). Only the salted hash
 -- of a user's passcode is stored; the plaintext code is printed exactly once
 -- by `python -m nyc_events.users add`. revoked_at is a tombstone, not a
 -- delete, so attribution on old tokens survives revocation.
@@ -194,7 +194,7 @@ def _migrate_oauth(conn: sqlite3.Connection) -> None:
         conn.execute("ALTER TABLE oauth_tokens ADD COLUMN expires_at TEXT")
         conn.commit()
     if "user_id" not in existing:
-        # Attribution for multi-user (MULTI-USER-PLAN.md Phase A). Tokens
+        # Attribution for multi-user (Phase A). Tokens
         # issued before the users table existed get NULL — they're the
         # operator's own claude.ai sessions and stay valid.
         conn.execute("ALTER TABLE oauth_tokens ADD COLUMN user_id TEXT")
@@ -233,8 +233,9 @@ def connect_events_ro(path: str):
 
     Opens via a `mode=ro` URI so this connection physically cannot write —
     the read-only guarantee lives here, not in file permissions or mounts
-    (see DASHBOARD-PLAN.md: the ./data mount must stay rw for WAL sidecar
-    access; a `:ro` mount would break readers). Never runs DDL: if the DB
+    (the `./data` mount must stay rw for WAL sidecar access — SQLite needs
+    write access to the `-shm`/`-wal` files even for a read-only open; a
+    `:ro` mount would break readers). Never runs DDL: if the DB
     file or its tables don't exist yet, callers get sqlite3.OperationalError
     and should render a friendly "no database yet" state, not init_events().
     """
@@ -464,20 +465,43 @@ def _fts_query(q: str) -> str:
     return " ".join(f'"{t}"*' for t in terms)
 
 
+def _escape_like(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def _in_clause(col: str, values: Iterable[str]) -> tuple[str, list[str]] | None:
+    """Build a "col IN (?, ?, ...)" clause, or None if values is empty."""
+    vals = [v for v in values if v]
+    if not vals:
+        return None
+    return f"{col} IN ({', '.join(['?'] * len(vals))})", vals
+
+
 def search(
     conn: sqlite3.Connection,
     *,
     query: str | None = None,
-    borough: str | None = None,
-    neighborhood: str | None = None,
+    borough: str | Iterable[str] | None = None,
+    neighborhood: str | Iterable[str] | None = None,
     age: int | None = None,
     free_only: bool = False,
-    source: str | None = None,
+    source: str | Iterable[str] | None = None,
     exclude_low_confidence: bool = False,
     start_after: datetime | None = None,
     start_before: datetime | None = None,
     limit: int = 25,
 ) -> list[Event]:
+    """
+    ``borough``, ``source``, and ``neighborhood`` each accept either a single
+    string (the original, still-used-by-the-MCP-tools contract) or a list/
+    set/tuple of strings for a multi-select "any of these" filter (the
+    dashboard's browse-page multi-selects). ``borough``/``source`` match
+    exactly either way; a string ``neighborhood`` keeps its case-insensitive
+    substring match (so "Crown Heights" matches the fuller NTA name "Crown
+    Heights (North)"), while a list of neighborhoods matches any of them
+    exactly — dashboard multi-selects are populated from ``list_facets``, so
+    every option is already a literal value present in the column.
+    """
     sql = "SELECT e.* FROM events e"
     params: list = []
     where: list[str] = []
@@ -493,12 +517,24 @@ def search(
             params.append(fts)
 
     if borough:
-        where.append("e.borough = ?")
-        params.append(borough)
+        if isinstance(borough, str):
+            where.append("e.borough = ?")
+            params.append(borough)
+        else:
+            clause = _in_clause("e.borough", borough)
+            if clause:
+                where.append(clause[0])
+                params.extend(clause[1])
 
     if source:
-        where.append("e.source = ?")
-        params.append(source)
+        if isinstance(source, str):
+            where.append("e.source = ?")
+            params.append(source)
+        else:
+            clause = _in_clause("e.source", source)
+            if clause:
+                where.append(clause[0])
+                params.extend(clause[1])
 
     if exclude_low_confidence:
         # low_confidence (in the tool projection) is description IS NULL AND
@@ -507,11 +543,17 @@ def search(
         where.append("(e.description IS NOT NULL OR e.url IS NOT NULL)")
 
     if neighborhood:
-        # Case-insensitive substring so a colloquial label ("Crown Heights")
-        # matches the official NTA names it prefixes ("Crown Heights (North)").
-        where.append("e.neighborhood LIKE ? ESCAPE '\\'")
-        esc = neighborhood.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-        params.append(f"%{esc}%")
+        if isinstance(neighborhood, str):
+            # Case-insensitive substring so a colloquial label ("Crown
+            # Heights") matches the official NTA names it prefixes ("Crown
+            # Heights (North)").
+            where.append("e.neighborhood LIKE ? ESCAPE '\\'")
+            params.append(f"%{_escape_like(neighborhood)}%")
+        else:
+            clause = _in_clause("e.neighborhood", neighborhood)
+            if clause:
+                where.append(clause[0])
+                params.extend(clause[1])
 
     if age is not None:
         where.append("(e.age_min IS NULL OR e.age_min <= ?)")
@@ -573,7 +615,7 @@ def put_geocode(
 
 
 def hash_access_token(token: str) -> str:
-    """At-rest form of an access token (MULTI-USER-PLAN.md Phase B): a leaked
+    """At-rest form of an access token (multi-user Phase B): a leaked
     oauth.db backup must not leak live bearer credentials. Plain SHA-256 (no
     salt/stretching) is right here — tokens are 384-bit random strings, not
     passwords. The prefix marks a value as already hashed so the one-time
@@ -625,7 +667,7 @@ def is_valid_oauth_token(conn: sqlite3.Connection, access_token: str) -> bool:
     return datetime.fromisoformat(expires_at) > datetime.now(UTC)
 
 
-# ---- users (per-person invite codes; MULTI-USER-PLAN.md Phase A) ------------
+# ---- users (per-person invite codes, multi-user Phase A) -------------------
 
 
 def create_user(
@@ -708,7 +750,7 @@ def source_health(
     now: datetime,
     registered: Iterable[str] = (),
 ) -> list[dict]:
-    """Per-source health rollup for the tailnet dashboard (DASHBOARD-PLAN.md).
+    """Per-source health rollup for the tailnet dashboard.
 
     One dict per source in the union of `registered` (the ENABLED_SOURCES
     ids — passed in so db.py stays ignorant of the sources package) and the

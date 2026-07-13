@@ -14,8 +14,11 @@ This module keeps only what is venue-specific:
   - Venue/borough hardcoded (everything is at Green-Wood, Brooklyn).
 
 Quirks:
-  - The `description` field is HTML including inline <style> blocks — the
-    shared strip + 2000-char trim handles the bleed-through.
+  - The `description` field is HTML including inline <style>/<script>/
+    <button> elements (Stackable/Eventbrite embeds). The shared strip_html
+    drops those elements' contents outright — tag-stripping alone leaks the
+    CSS/JS text into the description (this bit us: rows ingested before the
+    fix showed ".stk-… {margin…}" as their description preview).
   - The `cost` field is a free-text string ("Free", "$30 / $24 members", "").
   - The API returns `utc_start_date` and `utc_end_date` — used directly.
   - Not all events are kid-appropriate (adult after-hours tours, galas). The
