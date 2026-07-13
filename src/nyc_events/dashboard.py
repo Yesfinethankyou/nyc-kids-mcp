@@ -21,14 +21,33 @@ value (same approach as the consent page in auth.py). Event fields are
 scraped from the public web — treat every one as attacker-influenced. No
 JS frameworks, no CDN assets: tailnet pages shouldn't leak to third-party
 hosts.
+
+**One narrow, deliberate exception:** the neighborhood-search live filter
+(`_NBHD_FILTER_JS`) is a single static inline `<script>`, allowlisted in the
+CSP via a SHA-256 hash (`script-src 'sha256-...'`, computed from the literal
+constant at import time — never hand-maintained, so it cannot drift out of
+sync with the script it pins) rather than `'unsafe-inline'`. That matters:
+attacker-influenced content injected anywhere on the page (a scraped title,
+description, venue name) cannot execute even if some future escaping bug let
+it through, because its hash will never match the one pinned entry. The
+script's own DOM reads are also scoped to the neighborhood `<select>`, whose
+option text comes from `list_facets()` — i.e. curated static-table labels or
+official Census NTA names, never raw scraped fields — so there's no path
+from "attacker controls page content" to "attacker controls script logic"
+here. Don't add a second inline script without re-deriving this reasoning;
+each new script is another hash to pin and another piece of the "no JS"
+posture given up.
 """
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import html
 import json
 import os
 import sqlite3
+from collections.abc import Callable
 from datetime import UTC, date, datetime, time, timedelta
 from urllib.parse import quote_plus, urlencode
 from zoneinfo import ZoneInfo
@@ -43,6 +62,37 @@ from . import config, db
 from .sources import ENABLED_SOURCES
 
 NYC_TZ = ZoneInfo("America/New_York")
+
+# `events.source` stores Source.name — a stable internal id (used in
+# compute_id, not meant for display; see sources/base.py). This maps it to
+# the human venue name for rendering. Falls back to the raw internal name for
+# anything unmapped, so a new source (or one that's since been disabled, like
+# nyc_permitted_events) never breaks rendering just because this dict lags.
+_SOURCE_LABELS: dict[str, str] = {
+    "ny_transit_museum": "New York Transit Museum",
+    "brooklyn_army_terminal": "Brooklyn Army Terminal",
+    "bk_childrens_museum": "Brooklyn Children's Museum",
+    "greenwood_cemetery": "Green-Wood Cemetery",
+    "prospect_park": "Prospect Park Alliance",
+    "industry_city": "Industry City",
+    "governors_island": "Governors Island",
+    "domino_park": "Domino Park",
+    "si_childrens_museum": "Staten Island Children's Museum",
+    "bbg": "Brooklyn Botanic Garden",
+    "brooklyn_bridge_park": "Brooklyn Bridge Park",
+    "bpl": "Brooklyn Public Library",
+    "nycgovparks_events": "NYC Parks",
+    "new_york_family": "New York Family",
+    "mommy_poppins": "Mommy Poppins",
+    "nyc_permitted_events": "NYC Parks Permits (retired)",
+    "timeout_nykids": "Time Out New York Kids",
+}
+
+
+def _source_label(name: str | None) -> str:
+    if name is None:
+        return ""
+    return _SOURCE_LABELS.get(name, name)
 
 # Staleness thresholds for MAX(last_seen) highlighting on the health page.
 # WARN = one missed nightly run (same 30h grace the MCP tools use for
@@ -89,11 +139,36 @@ dd { margin-left: 0; }
 """
 
 
+# Live-filters the neighborhood <select> as you type in #nbhd_q — narrows
+# within whatever the server already rendered (see _filtered_neighborhoods);
+# submitting the form still round-trips through the server-side filter to
+# widen back out. Kept as one literal constant so the CSP hash below can
+# never drift from what's actually emitted (see the module docstring for the
+# full reasoning on why this is the one script allowed on this dashboard).
+_NBHD_FILTER_JS = (
+    "(function () {"
+    "var q = document.getElementById('nbhd_q');"
+    "var sel = document.getElementById('neighborhood-select');"
+    "if (!q || !sel) return;"
+    "q.addEventListener('input', function () {"
+    "var v = q.value.toLowerCase();"
+    "for (var i = 0; i < sel.options.length; i++) {"
+    "var o = sel.options[i];"
+    "o.hidden = !(o.selected || o.text.toLowerCase().indexOf(v) !== -1);"
+    "}"
+    "});"
+    "})();"
+)
+_NBHD_FILTER_JS_HASH = "sha256-" + base64.b64encode(
+    hashlib.sha256(_NBHD_FILTER_JS.encode()).digest()
+).decode()
+
 # Same header set as the consent page in auth.py: event fields are scraped
 # from the public web, so the CSP is defense-in-depth against any escaping
-# slip (script-src 'none' via default-src also blocks javascript: navigation),
-# and Referrer-Policy stops the private *.ts.net dashboard hostname leaking
-# to venue sites when someone clicks an event link.
+# slip, and Referrer-Policy stops the private *.ts.net dashboard hostname
+# leaking to venue sites when someone clicks an event link. script-src pins
+# exactly one hash (no 'unsafe-inline') — an injected/escaped-wrong payload
+# anywhere on the page still can't execute; see the module docstring.
 _SECURITY_HEADERS = {
     "X-Frame-Options": "DENY",
     "X-Content-Type-Options": "nosniff",
@@ -101,6 +176,7 @@ _SECURITY_HEADERS = {
     "Content-Security-Policy": (
         "default-src 'none'; "
         "style-src 'unsafe-inline'; "  # inline <style> in the template
+        f"script-src '{_NBHD_FILTER_JS_HASH}'; "
         "form-action 'self'; "
         "base-uri 'none'; "
         "frame-ancestors 'none'"
@@ -269,7 +345,7 @@ async def health_page(_: Request) -> HTMLResponse:
             f"<span class='muted'>{_esc(_local(r['last_run_finished_at']))}"
             f" · fetched {_esc(r['last_run_fetched'])}</span></td>"
         )
-        name = _esc(r["source"])
+        name = _esc(_source_label(r["source"]))
         if not r["registered"]:
             name += " <span class='muted'>(not registered)</span>"
         trs.append(
@@ -350,26 +426,54 @@ def _parse_browse_params(params) -> dict:
     return kwargs
 
 
-def _multi_select(name: str, values: list[str], selected: list[str], *, size: int) -> str:
+def _multi_select(
+    name: str,
+    values: list[str],
+    selected: list[str],
+    *,
+    size: int,
+    label_fn: Callable[[str], str] | None = None,
+    dom_id: str | None = None,
+) -> str:
     """A native <select multiple> — no "any" placeholder needed, since no
     selection already means "any" (ctrl/cmd-click, or shift-click a range,
-    to pick more than one; no JS required)."""
+    to pick more than one; works with no JS at all). `label_fn`, when given,
+    renders a human-readable option text while the submitted `value` stays
+    the raw internal identifier the filter actually matches on. `dom_id`,
+    when given, is only for _NBHD_FILTER_JS to find this element by id — the
+    other two selects don't need one."""
+    label_fn = label_fn or (lambda v: v)
     opts = "".join(
         f"<option value='{html.escape(v, quote=True)}'"
-        f"{' selected' if v in selected else ''}>{html.escape(v)}</option>"
+        f"{' selected' if v in selected else ''}>{html.escape(label_fn(v))}</option>"
         for v in values
     )
     # size floor of 2: at size=1 a <select multiple> renders like a tiny
     # number-spinner rather than a listbox, which reads as broken.
     rows = min(max(len(values), 2), size)
-    return f"<select name='{name}' multiple size='{rows}'>{opts}</select>"
+    id_attr = f" id='{html.escape(dom_id, quote=True)}'" if dom_id else ""
+    return f"<select name='{name}'{id_attr} multiple size='{rows}'>{opts}</select>"
+
+
+def _filtered_neighborhoods(values: list[str], selected: list[str], query: str) -> list[str]:
+    """Narrow the neighborhood option list to a case-insensitive substring
+    match on `query` — the server-side half of the neighborhood search box;
+    _NBHD_FILTER_JS live-filters further within whatever this returns.
+    Already-selected values are always kept, even when they don't match the
+    current search text, so typing a new search never silently drops an
+    existing selection out of the option list."""
+    q = query.strip().lower()
+    if not q:
+        return values
+    keep = set(selected)
+    return [v for v in values if q in v.lower() or v in keep]
 
 
 # Non-date filter params carried into the preset links, so "this weekend"
 # narrows the current filter set instead of resetting it. The multi-select
 # fields need getlist(), not get() — a plain get() would silently drop every
 # selection past the first.
-_CARRY_PARAMS = ("q", "age", "free_only", "exclude_low_confidence", "limit")
+_CARRY_PARAMS = ("q", "nbhd_q", "age", "free_only", "exclude_low_confidence", "limit")
 _CARRY_MULTI_PARAMS = ("borough", "neighborhood", "source")
 
 
@@ -412,11 +516,16 @@ def _browse_form(params, facets: dict[str, list[str]]) -> str:
     borough_select = _multi_select(
         "borough", facets["boroughs"], params.getlist("borough"), size=5
     )
+    source_values = sorted(facets["sources"], key=lambda s: _source_label(s).lower())
     source_select = _multi_select(
-        "source", facets["sources"], params.getlist("source"), size=6
+        "source", source_values, params.getlist("source"), size=6, label_fn=_source_label
+    )
+    nbhd_selected = params.getlist("neighborhood")
+    nbhd_options = _filtered_neighborhoods(
+        facets["neighborhoods"], nbhd_selected, params.get("nbhd_q") or ""
     )
     nbhd_select = _multi_select(
-        "neighborhood", facets["neighborhoods"], params.getlist("neighborhood"), size=6
+        "neighborhood", nbhd_options, nbhd_selected, size=6, dom_id="neighborhood-select"
     )
     xlc = checked("exclude_low_confidence")
     return (
@@ -434,12 +543,17 @@ def _browse_form(params, facets: dict[str, list[str]]) -> str:
         "<br>"
         "<label>Borough <span class='muted'>(ctrl/cmd-click for multiple)"
         f"</span><br>{borough_select}</label>"
-        f"<label>Neighborhood<br>{nbhd_select}</label>"
+        "<label>Neighborhood <span class='muted'>(type to filter live; Filter"
+        " button re-widens from the full list)</span><br>"
+        f"<input id='nbhd_q' name='nbhd_q' placeholder='search…'"
+        f" value='{val('nbhd_q')}'><br>"
+        f"{nbhd_select}</label>"
         f"<label>Source<br>{source_select}</label>"
         "<br>"
         "<button type='submit'>Filter</button> "
         "<a href='/events'>reset</a>"
         "</form>"
+        f"<script>{_NBHD_FILTER_JS}</script>"
     )
 
 
@@ -504,7 +618,7 @@ async def events_page(request: Request) -> HTMLResponse:
             f"<td>{_esc(ev.borough.value if ev.borough else None)}</td>"
             f"<td>{_esc(ev.price.value)}</td>"
             f"<td>{_esc(', '.join(ev.tags))}</td>"
-            f"<td>{_esc(ev.source)}</td>"
+            f"<td>{_esc(_source_label(ev.source))}</td>"
             f"<td>{_esc(', '.join(flags) or None)}</td>"
             f"<td>{' '.join(links)}</td>"
             "</tr>"
@@ -554,7 +668,7 @@ async def event_detail_page(request: Request) -> HTMLResponse:
         except json.JSONDecodeError:
             raw = ev.raw_payload
     fields: list[tuple[str, str]] = [
-        ("Source", _esc(ev.source)),
+        ("Source", _esc(_source_label(ev.source))),
         ("External id", _esc(ev.external_id)),
         ("Starts (NYC)", _esc(ev.start_dt.astimezone(NYC_TZ).strftime("%Y-%m-%d %H:%M"))),
         (
