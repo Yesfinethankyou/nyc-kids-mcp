@@ -30,6 +30,24 @@ headless Chromium screenshots). Suite 582 green (5 new tests), ruff clean.
   possible follow-up), sortable columns/pagination, match highlighting,
   dark mode, pill badges (maintainer wants craigslist-plain).
 
+Sixth commit, same session: **multi-select borough/neighborhood/source
+filters + a Source column** on the dashboard browse page (maintainer
+request). `db.search`'s `borough`/`source`/`neighborhood` kwargs now accept
+`str | Iterable[str] | None` — a string keeps the exact original behavior
+(neighborhood stays substring match, used by `tools.search_events` — this
+was NOT touched), a list means "any of these": borough/source go through an
+`IN (...)` clause, neighborhood switches to EXACT match per selected value
+(the multi-select's options are literal `list_facets()` values, not
+free text, so substring expansion isn't needed there). Dashboard renders
+all three as native `<select multiple>` — no JS, ctrl/cmd-click to pick
+more than one, a size floor of 2 rows so a single-option box doesn't look
+like a stray number-spinner. `_preset_links` now carries every selected
+value via `getlist()` (a plain `.get()` would silently drop all but the
+first). New `<td>` for `ev.source` in the results table, header "Source".
+13 new tests (7 db.py multi-value, 6 dashboard) verified live against a
+seeded DB + headless-Chromium screenshots (union filtering across two
+boroughs, selected-state rendering). Full suite 620 green, ruff clean.
+
 Fifth commit, same session: **three new venue sources — the top backlog
 candidates reviewed and integrated** (maintainer request: "take the top 3
 source candidates, review them and integrate them"). All verified live

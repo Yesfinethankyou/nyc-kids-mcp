@@ -296,15 +296,20 @@ async def health_page(_: Request) -> HTMLResponse:
 
 def _parse_browse_params(params) -> dict:
     """Map query params onto db.search kwargs. Raises ValueError with a
-    user-renderable message on bad input — mirrors tools.py validation."""
+    user-renderable message on bad input — mirrors tools.py validation.
+
+    borough/neighborhood/source are multi-selects: the browser submits one
+    query-param instance per selected `<option>` (`borough=Brooklyn&
+    borough=Queens`), read via getlist(). db.search accepts the resulting
+    list directly (see its docstring for the multi-value semantics)."""
     kwargs: dict = {}
     q = (params.get("q") or "").strip()
     if q:
         kwargs["query"] = q
     for key in ("borough", "neighborhood", "source"):
-        v = (params.get(key) or "").strip()
-        if v:
-            kwargs[key] = v
+        values = [v.strip() for v in params.getlist(key) if v.strip()]
+        if values:
+            kwargs[key] = values
     age_raw = (params.get("age") or "").strip()
     if age_raw:
         try:
@@ -345,20 +350,27 @@ def _parse_browse_params(params) -> dict:
     return kwargs
 
 
-def _options(values: list[str], selected: str) -> str:
-    opts = ["<option value=''>any</option>"]
-    for v in values:
-        sel = " selected" if v == selected else ""
-        opts.append(f"<option value='{html.escape(v, quote=True)}'{sel}>{html.escape(v)}</option>")
-    return "".join(opts)
+def _multi_select(name: str, values: list[str], selected: list[str], *, size: int) -> str:
+    """A native <select multiple> — no "any" placeholder needed, since no
+    selection already means "any" (ctrl/cmd-click, or shift-click a range,
+    to pick more than one; no JS required)."""
+    opts = "".join(
+        f"<option value='{html.escape(v, quote=True)}'"
+        f"{' selected' if v in selected else ''}>{html.escape(v)}</option>"
+        for v in values
+    )
+    # size floor of 2: at size=1 a <select multiple> renders like a tiny
+    # number-spinner rather than a listbox, which reads as broken.
+    rows = min(max(len(values), 2), size)
+    return f"<select name='{name}' multiple size='{rows}'>{opts}</select>"
 
 
 # Non-date filter params carried into the preset links, so "this weekend"
-# narrows the current filter set instead of resetting it.
-_CARRY_PARAMS = (
-    "q", "borough", "neighborhood", "source", "age",
-    "free_only", "exclude_low_confidence", "limit",
-)
+# narrows the current filter set instead of resetting it. The multi-select
+# fields need getlist(), not get() — a plain get() would silently drop every
+# selection past the first.
+_CARRY_PARAMS = ("q", "age", "free_only", "exclude_low_confidence", "limit")
+_CARRY_MULTI_PARAMS = ("borough", "neighborhood", "source")
 
 
 def _preset_links(params) -> str:
@@ -366,6 +378,8 @@ def _preset_links(params) -> str:
     (not imported — see the module-docstring import rule): the current or
     upcoming Sat–Sun, starting today if today already is the weekend."""
     keep = [(k, v) for k in _CARRY_PARAMS if (v := (params.get(k) or "").strip())]
+    for k in _CARRY_MULTI_PARAMS:
+        keep.extend((k, v) for v in params.getlist(k) if v.strip())
     today = datetime.now(NYC_TZ).date()
     sunday = today + timedelta(days=(6 - today.weekday()) % 7)
     saturday = max(today, sunday - timedelta(days=1))
@@ -395,21 +409,19 @@ def _browse_form(params, facets: dict[str, list[str]]) -> str:
         f"<option value='{n}'{' selected' if str(n) == limit_sel else ''}>{n}</option>"
         for n in (25, 50, 100, 200)
     )
-    borough_opts = _options(facets["boroughs"], params.get("borough") or "")
-    source_opts = _options(facets["sources"], params.get("source") or "")
-    nbhd_opts = "".join(
-        f"<option value='{html.escape(v, quote=True)}'>"
-        for v in facets["neighborhoods"]
+    borough_select = _multi_select(
+        "borough", facets["boroughs"], params.getlist("borough"), size=5
+    )
+    source_select = _multi_select(
+        "source", facets["sources"], params.getlist("source"), size=6
+    )
+    nbhd_select = _multi_select(
+        "neighborhood", facets["neighborhoods"], params.getlist("neighborhood"), size=6
     )
     xlc = checked("exclude_low_confidence")
     return (
         "<form class='filters' method='get' action='/events'>"
         f"<label>Text <input name='q' value='{val('q')}'></label>"
-        f"<label>Borough <select name='borough'>{borough_opts}</select></label>"
-        "<label>Neighborhood <input name='neighborhood' size='14'"
-        f" list='nbhd-list' value='{val('neighborhood')}'></label>"
-        f"<datalist id='nbhd-list'>{nbhd_opts}</datalist>"
-        f"<label>Source <select name='source'>{source_opts}</select></label>"
         f"<label>Age <input name='age' size='3' value='{val('age')}'></label>"
         "<label>From <input name='start_date' type='date'"
         f" value='{val('start_date')}'></label>"
@@ -419,6 +431,12 @@ def _browse_form(params, facets: dict[str, list[str]]) -> str:
         "<label><input type='checkbox' name='exclude_low_confidence' value='1'"
         f"{xlc}> hide low-confidence</label>"
         f"<label>Limit <select name='limit'>{limit_opts}</select></label>"
+        "<br>"
+        "<label>Borough <span class='muted'>(ctrl/cmd-click for multiple)"
+        f"</span><br>{borough_select}</label>"
+        f"<label>Neighborhood<br>{nbhd_select}</label>"
+        f"<label>Source<br>{source_select}</label>"
+        "<br>"
         "<button type='submit'>Filter</button> "
         "<a href='/events'>reset</a>"
         "</form>"
@@ -486,6 +504,7 @@ async def events_page(request: Request) -> HTMLResponse:
             f"<td>{_esc(ev.borough.value if ev.borough else None)}</td>"
             f"<td>{_esc(ev.price.value)}</td>"
             f"<td>{_esc(', '.join(ev.tags))}</td>"
+            f"<td>{_esc(ev.source)}</td>"
             f"<td>{_esc(', '.join(flags) or None)}</td>"
             f"<td>{' '.join(links)}</td>"
             "</tr>"
@@ -493,7 +512,7 @@ async def events_page(request: Request) -> HTMLResponse:
     table = (
         "<table><tr><th>When (NYC)</th><th>Title</th><th>Venue</th>"
         "<th>Neighborhood</th><th>Borough</th><th>Price</th><th>Tags</th>"
-        "<th>Flags</th><th>Links</th></tr>" + "".join(trs) + "</table>"
+        "<th>Source</th><th>Flags</th><th>Links</th></tr>" + "".join(trs) + "</table>"
         if events
         else "<p class='muted'>No events match.</p>"
     )

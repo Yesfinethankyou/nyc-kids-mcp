@@ -464,20 +464,43 @@ def _fts_query(q: str) -> str:
     return " ".join(f'"{t}"*' for t in terms)
 
 
+def _escape_like(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def _in_clause(col: str, values: Iterable[str]) -> tuple[str, list[str]] | None:
+    """Build a "col IN (?, ?, ...)" clause, or None if values is empty."""
+    vals = [v for v in values if v]
+    if not vals:
+        return None
+    return f"{col} IN ({', '.join(['?'] * len(vals))})", vals
+
+
 def search(
     conn: sqlite3.Connection,
     *,
     query: str | None = None,
-    borough: str | None = None,
-    neighborhood: str | None = None,
+    borough: str | Iterable[str] | None = None,
+    neighborhood: str | Iterable[str] | None = None,
     age: int | None = None,
     free_only: bool = False,
-    source: str | None = None,
+    source: str | Iterable[str] | None = None,
     exclude_low_confidence: bool = False,
     start_after: datetime | None = None,
     start_before: datetime | None = None,
     limit: int = 25,
 ) -> list[Event]:
+    """
+    ``borough``, ``source``, and ``neighborhood`` each accept either a single
+    string (the original, still-used-by-the-MCP-tools contract) or a list/
+    set/tuple of strings for a multi-select "any of these" filter (the
+    dashboard's browse-page multi-selects). ``borough``/``source`` match
+    exactly either way; a string ``neighborhood`` keeps its case-insensitive
+    substring match (so "Crown Heights" matches the fuller NTA name "Crown
+    Heights (North)"), while a list of neighborhoods matches any of them
+    exactly — dashboard multi-selects are populated from ``list_facets``, so
+    every option is already a literal value present in the column.
+    """
     sql = "SELECT e.* FROM events e"
     params: list = []
     where: list[str] = []
@@ -493,12 +516,24 @@ def search(
             params.append(fts)
 
     if borough:
-        where.append("e.borough = ?")
-        params.append(borough)
+        if isinstance(borough, str):
+            where.append("e.borough = ?")
+            params.append(borough)
+        else:
+            clause = _in_clause("e.borough", borough)
+            if clause:
+                where.append(clause[0])
+                params.extend(clause[1])
 
     if source:
-        where.append("e.source = ?")
-        params.append(source)
+        if isinstance(source, str):
+            where.append("e.source = ?")
+            params.append(source)
+        else:
+            clause = _in_clause("e.source", source)
+            if clause:
+                where.append(clause[0])
+                params.extend(clause[1])
 
     if exclude_low_confidence:
         # low_confidence (in the tool projection) is description IS NULL AND
@@ -507,11 +542,17 @@ def search(
         where.append("(e.description IS NOT NULL OR e.url IS NOT NULL)")
 
     if neighborhood:
-        # Case-insensitive substring so a colloquial label ("Crown Heights")
-        # matches the official NTA names it prefixes ("Crown Heights (North)").
-        where.append("e.neighborhood LIKE ? ESCAPE '\\'")
-        esc = neighborhood.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-        params.append(f"%{esc}%")
+        if isinstance(neighborhood, str):
+            # Case-insensitive substring so a colloquial label ("Crown
+            # Heights") matches the official NTA names it prefixes ("Crown
+            # Heights (North)").
+            where.append("e.neighborhood LIKE ? ESCAPE '\\'")
+            params.append(f"%{_escape_like(neighborhood)}%")
+        else:
+            clause = _in_clause("e.neighborhood", neighborhood)
+            if clause:
+                where.append(clause[0])
+                params.extend(clause[1])
 
     if age is not None:
         where.append("(e.age_min IS NULL OR e.age_min <= ?)")
