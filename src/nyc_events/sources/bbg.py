@@ -259,6 +259,7 @@ class BBGSource(Source):
     """Brooklyn Botanic Garden family events (month-page HTML scrape)."""
 
     name = "bbg"
+    display_name = "Brooklyn Botanic Garden"
 
     def __init__(
         self,

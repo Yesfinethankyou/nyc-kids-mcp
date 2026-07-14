@@ -195,6 +195,7 @@ class GreenWoodCemeterySource(TribeEventsSource):
     """Green-Wood Cemetery public events via the Tribe Events Calendar REST API."""
 
     name = "greenwood_cemetery"
+    display_name = "Green-Wood Cemetery"
     events_url = EVENTS_URL
     max_pages = 60  # safety cap; ~200 events / 50 per page = 4 pages in practice
     _parse_row = staticmethod(_parse_row)

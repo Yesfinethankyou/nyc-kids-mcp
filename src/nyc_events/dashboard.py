@@ -59,40 +59,21 @@ from starlette.responses import HTMLResponse, PlainTextResponse
 from starlette.routing import Route
 
 from . import config, db
-from .sources import ENABLED_SOURCES
+from .sources import ENABLED_SOURCES, SOURCE_DISPLAY_NAMES
 
 NYC_TZ = ZoneInfo("America/New_York")
 
 # `events.source` stores Source.name — a stable internal id (used in
-# compute_id, not meant for display; see sources/base.py). This maps it to
-# the human venue name for rendering. Falls back to the raw internal name for
-# anything unmapped, so a new source (or one that's since been disabled, like
-# nyc_permitted_events) never breaks rendering just because this dict lags.
-_SOURCE_LABELS: dict[str, str] = {
-    "ny_transit_museum": "New York Transit Museum",
-    "brooklyn_army_terminal": "Brooklyn Army Terminal",
-    "bk_childrens_museum": "Brooklyn Children's Museum",
-    "greenwood_cemetery": "Green-Wood Cemetery",
-    "prospect_park": "Prospect Park Alliance",
-    "industry_city": "Industry City",
-    "governors_island": "Governors Island",
-    "domino_park": "Domino Park",
-    "si_childrens_museum": "Staten Island Children's Museum",
-    "bbg": "Brooklyn Botanic Garden",
-    "brooklyn_bridge_park": "Brooklyn Bridge Park",
-    "bpl": "Brooklyn Public Library",
-    "nycgovparks_events": "NYC Parks",
-    "new_york_family": "New York Family",
-    "mommy_poppins": "Mommy Poppins",
-    "nyc_permitted_events": "NYC Parks Permits (retired)",
-    "timeout_nykids": "Time Out New York Kids",
-}
-
-
+# compute_id, not meant for display; see sources/base.py). The friendly labels
+# live on each Source as `display_name` and are collected into
+# SOURCE_DISPLAY_NAMES by the registry; we read that here rather than keep a
+# second hand-maintained dict (which drifted). Falls back to the raw internal
+# name for anything unmapped, so a source not in the registry never breaks
+# rendering.
 def _source_label(name: str | None) -> str:
     if name is None:
         return ""
-    return _SOURCE_LABELS.get(name, name)
+    return SOURCE_DISPLAY_NAMES.get(name, name)
 
 # Staleness thresholds for MAX(last_seen) highlighting on the health page.
 # WARN = one missed nightly run (same 30h grace the MCP tools use for

@@ -396,6 +396,7 @@ class DominoParkSource(Source):
     """Domino Park events via the public Sanity GROQ API."""
 
     name = "domino_park"
+    display_name = "Domino Park"
 
     def __init__(
         self,

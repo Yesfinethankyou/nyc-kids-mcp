@@ -8,6 +8,7 @@ from .base import Source
 
 class TimeOutNYKidsSource(Source):
     name = "timeout_nykids"
+    display_name = "Time Out New York Kids"
 
     def fetch(self) -> Iterable[Event]:  # Phase 2
         raise NotImplementedError("Phase 2 source")

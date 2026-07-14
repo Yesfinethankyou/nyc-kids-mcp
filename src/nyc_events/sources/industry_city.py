@@ -190,6 +190,7 @@ class IndustryCitySource(TribeEventsSource):
     """Industry City events via the Tribe Events Calendar REST API."""
 
     name = "industry_city"
+    display_name = "Industry City"
     events_url = EVENTS_URL
     max_pages = 30  # safety cap; ~195 events / 50 per page = 4 pages in practice
     _parse_row = staticmethod(_parse_row)

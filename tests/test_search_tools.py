@@ -135,3 +135,19 @@ def test_list_facets_tool(tmp_path, monkeypatch):
     assert facets["sources"] == ["src_a"]
     assert facets["neighborhoods"] == ["Astoria"]
     assert facets["tags"] == ["music"]
+
+
+def test_list_sources_tool_includes_friendly_display_name(tmp_path, monkeypatch):
+    path = str(tmp_path / "events.db")
+    monkeypatch.setattr(config, "DB_PATH", path)
+    db.init_events(path)
+    with db.connect_events(path) as conn:
+        db.upsert_events(conn, [
+            _ev(external_id="a", source="bpl"),
+            _ev(external_id="b", source="some_future_source"),
+        ])
+    by_source = {r["source"]: r for r in tools.list_sources()}
+    # Known slug → friendly label; the stable id is still present too.
+    assert by_source["bpl"]["display_name"] == "Brooklyn Public Library"
+    # Unmapped slug falls back to itself (never breaks the listing).
+    assert by_source["some_future_source"]["display_name"] == "some_future_source"

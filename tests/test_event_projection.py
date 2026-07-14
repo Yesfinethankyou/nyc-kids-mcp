@@ -47,3 +47,16 @@ def test_summary_neighborhood_is_none_when_unset():
 
 def test_detail_still_includes_neighborhood():
     assert _event_detail(_ev())["neighborhood"] == "Williamsburg"
+
+
+def test_detail_includes_friendly_source_name():
+    detail = _event_detail(_ev())
+    assert detail["source"] == "domino_park"  # stable id unchanged
+    assert detail["source_name"] == "Domino Park"  # friendly label alongside
+
+
+def test_detail_source_name_falls_back_to_slug_when_unmapped():
+    # An unknown/retired slug never breaks the projection — it echoes the slug.
+    assert _event_detail(_ev(source="some_future_source"))["source_name"] == (
+        "some_future_source"
+    )

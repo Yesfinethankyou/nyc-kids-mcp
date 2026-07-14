@@ -254,6 +254,7 @@ class BPLSource(Source):
     """Brooklyn Public Library kid/family events via the discover search index."""
 
     name = "bpl"
+    display_name = "Brooklyn Public Library"
 
     def __init__(
         self,

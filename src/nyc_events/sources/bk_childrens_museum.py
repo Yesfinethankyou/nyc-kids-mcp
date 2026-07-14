@@ -269,6 +269,7 @@ class BrooklynChildrensMuseumSource(Source):
     """Brooklyn Children's Museum events via HTML listing scrape."""
 
     name = "bk_childrens_museum"
+    display_name = "Brooklyn Children's Museum"
 
     def __init__(
         self,

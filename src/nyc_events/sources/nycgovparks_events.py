@@ -397,6 +397,7 @@ class NYCGovParksEventsSource(Source):
     """NYC Parks 'Best for Kids' calendar (microdata scrape + in-page map blob)."""
 
     name = "nycgovparks_events"
+    display_name = "NYC Parks"
 
     def __init__(
         self,

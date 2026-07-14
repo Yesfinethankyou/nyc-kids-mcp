@@ -348,6 +348,7 @@ class BrooklynBridgeParkSource(Source):
     """Brooklyn Bridge Park free family programming (WP REST + ACF)."""
 
     name = "brooklyn_bridge_park"
+    display_name = "Brooklyn Bridge Park"
     max_pages = 12  # 671 posts / 100 per page = 7 in practice
 
     def __init__(

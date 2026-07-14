@@ -518,6 +518,7 @@ class MommyPoppinsSource(Source):
     """Mommy Poppins NYC family events via sitemap discovery + page scraping."""
 
     name = "mommy_poppins"
+    display_name = "Mommy Poppins"
 
     def __init__(
         self,

@@ -283,6 +283,7 @@ class BrooklynArmyTerminalSource(Source):
     """Brooklyn Army Terminal community/family events (single-page HTML scrape)."""
 
     name = "brooklyn_army_terminal"
+    display_name = "Brooklyn Army Terminal"
 
     def __init__(
         self,

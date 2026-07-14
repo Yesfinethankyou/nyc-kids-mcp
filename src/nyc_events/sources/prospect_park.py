@@ -179,6 +179,7 @@ class ProspectParkSource(TribeEventsSource):
     """Prospect Park Alliance events via the Tribe Events Calendar REST API."""
 
     name = "prospect_park"
+    display_name = "Prospect Park Alliance"
     events_url = EVENTS_URL
     max_pages = 30  # safety cap; ~456 events / 50 per page = 10 pages in practice
     _parse_row = staticmethod(_parse_row)
