@@ -28,6 +28,12 @@ Data flow:
      those inside [today, today+window_days].
 
 Quirks (verified live 2026-07-13):
+  - **Transport is `curl_cffi` with `impersonate="chrome"`, NOT plain httpx.**
+    The site sits behind Cloudflare bot management, which intermittently 403s
+    a plain-httpx client's TLS fingerprint (a `403 Forbidden` on the taxonomy
+    resolve was the first symptom — see the 2026-07-14 fix). Impersonating
+    Chrome's TLS/HTTP2 fingerprint clears it, the same treatment the Tribe
+    sources use. Do NOT revert to httpx.
   - **Kid filter is the `audience` taxonomy, resolved by NAME not id.** We
     resolve the audience terms once per run and query the `event` endpoint
     for the union of {Kids, Families, All Ages, Teens} term ids (an OR
@@ -70,7 +76,7 @@ from datetime import date, datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
 
-import httpx
+from curl_cffi import requests as cffi_requests
 from selectolax.parser import HTMLParser
 
 from ..models import Borough, Event, Price, compute_id
@@ -332,9 +338,9 @@ class SnugHarborSource(Source):
 
     def fetch(self) -> Iterable[Event]:
         """Resolve taxonomies, list youth/family events, crawl each for its date."""
-        with httpx.Client(
+        with cffi_requests.Session(
             timeout=self._timeout,
-            follow_redirects=True,
+            impersonate="chrome",
             headers={"User-Agent": USER_AGENT},
         ) as client:
             terms = self._resolve_terms(client)
@@ -381,7 +387,7 @@ class SnugHarborSource(Source):
 
         logger.info("snug_harbor: yielded %d events", total)
 
-    def _resolve_terms(self, client: httpx.Client) -> dict[str, dict[str, str]] | None:
+    def _resolve_terms(self, client: cffi_requests.Session) -> dict[str, dict[str, str]] | None:
         """Fetch each taxonomy's terms once → {taxonomy: {id: name}} maps."""
         terms: dict[str, dict[str, str]] = {}
         for tax in ("audience", "cost-tier", "genre", "program", "venue"):
@@ -396,7 +402,7 @@ class SnugHarborSource(Source):
         return terms
 
     def _list_events(
-        self, client: httpx.Client, kid_audience_ids: list[str]
+        self, client: cffi_requests.Session, kid_audience_ids: list[str]
     ) -> list[dict[str, Any]]:
         """Page through the youth/family `event` list (metadata only)."""
         fields = "id,link,title,audience,cost-tier,genre,program,venue"

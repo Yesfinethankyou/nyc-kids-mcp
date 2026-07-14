@@ -2,6 +2,28 @@
 
 ## What was done (most recent first)
 
+### Session 2026-07-14: snug_harbor 403 — Cloudflare-block fix
+
+Nightly ingest hard-failed `snug_harbor` with `httpx.HTTPStatusError: 403
+Forbidden` on the first taxonomy resolve
+(`/wp-json/wp/v2/audience?...`). Root cause: snug-harbor.org sits behind
+Cloudflare bot management, which intermittently blocks a plain-`httpx`
+client's TLS fingerprint. Fix: switched the source's transport from
+`httpx.Client` to `curl_cffi` `Session(impersonate="chrome")` — the same
+Cloudflare/Incapsula treatment the Tribe + NYPL/QPL sources already use. No
+parser/schema change; the 22 parser tests are untouched and green. Verified
+the full `fetch()` pipeline end-to-end against the live site (resolve →
+list → detail JSON-LD crawl → Event yield). Added a docstring quirk noting
+the transport must stay curl_cffi (do not revert to httpx). Branch
+`claude/snug-harbor-403-audience-uzwkq2`.
+
+Note: the ingest report mentioned "2 sources" but only the snug_harbor
+traceback was supplied — the second source was not identified, so only
+snug_harbor was changed this session. 7 sources still use plain httpx
+(`bbg`, `bk_childrens_museum`, `bpl`, `brooklyn_bridge_park`,
+`new_york_family`, `nyc_permitted_events`, `nycgovparks_events`); any of the
+WP-REST ones could hit the same Cloudflare 403 if it's the second source.
+
 ### Session (cont'd): building the confirmed backlog candidates — CPF + NYPL shipped
 
 Continuation of the off-proxy re-probe below. Building the confirmed
