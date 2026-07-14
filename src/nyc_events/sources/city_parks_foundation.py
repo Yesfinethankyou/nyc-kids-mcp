@@ -148,6 +148,7 @@ class CityParksFoundationSource(TribeEventsSource):
     """City Parks Foundation events via the Tribe Events Calendar REST API."""
 
     name = "city_parks_foundation"
+    display_name = "City Parks Foundation"
     events_url = EVENTS_URL
     max_pages = 30  # safety cap; ~82 events / 50 per page = 2 pages in practice
     _parse_row = staticmethod(_parse_row)

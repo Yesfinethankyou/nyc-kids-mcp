@@ -20,6 +20,7 @@ from mcp.server.transport_security import TransportSecuritySettings
 
 from . import config, db
 from .models import Event
+from .sources import SOURCE_DISPLAY_NAMES
 
 NYC_TZ = ZoneInfo("America/New_York")
 
@@ -116,6 +117,7 @@ def _event_detail(ev: Event) -> dict[str, Any]:
         "event_id": ev.id,
         "external_id": ev.external_id,
         "source": ev.source,
+        "source_name": SOURCE_DISPLAY_NAMES.get(ev.source, ev.source),
         "title": ev.title,
         "description": ev.description,  # untruncated
         "when_local": ev.start_dt.astimezone(NYC_TZ).isoformat(),
@@ -401,14 +403,18 @@ def get_event_raw(event_id: str) -> dict[str, Any] | None:
 def list_sources() -> list[dict[str, Any]]:
     """List ingested event sources with counts and freshness.
 
-    Returns one row per source with event_count, earliest_event, latest_event,
-    and last_seen. Use this for data-health questions ("is the catalog
-    current?", "which source is stale/empty?") — not for finding events. To
-    discover valid search_events filter values (including source ids), prefer
-    list_facets.
+    Returns one row per source with source (the stable id), display_name (the
+    human-friendly label — use this when talking to the user), event_count,
+    earliest_event, latest_event, and last_seen. Use this for data-health
+    questions ("is the catalog current?", "which source is stale/empty?") — not
+    for finding events. To discover valid search_events filter values (the
+    source ids), prefer list_facets.
     """
     with db.connect_events(config.DB_PATH) as conn:
-        return db.list_sources(conn)
+        rows = db.list_sources(conn)
+    for row in rows:
+        row["display_name"] = SOURCE_DISPLAY_NAMES.get(row["source"], row["source"])
+    return rows
 
 
 @mcp.tool()

@@ -320,6 +320,7 @@ class SnugHarborSource(Source):
     """Snug Harbor events: WP REST `event` list + per-detail JSON-LD dates."""
 
     name = "snug_harbor"
+    display_name = "Snug Harbor Cultural Center & Botanical Garden"
 
     def __init__(
         self,

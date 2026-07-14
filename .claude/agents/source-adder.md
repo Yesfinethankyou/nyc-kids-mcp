@@ -21,6 +21,9 @@ For each new source, you must produce:
    - Subclasses `Source` from `.base`
    - Sets a stable `name: str` (used as `Event.source` and feeds into
      `compute_id`). Once shipped, **never rename** — IDs depend on it.
+   - Sets a human-friendly `display_name: str` (the label shown in the MCP
+     tools and the dashboard — "Queens Public Library", not "qpl"). Required:
+     `test_source_registry.py` fails a source without one.
    - Implements `fetch() -> Iterable[Event]`
    - Takes injectable constructor parameters for the primary URL(s) and
      configurable knobs (window days, delays, etc.) so tests can pass

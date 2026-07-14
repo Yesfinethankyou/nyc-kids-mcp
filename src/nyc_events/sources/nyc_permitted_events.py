@@ -233,6 +233,7 @@ class NYCPermittedEventsSource(Source):
     """NYC Open Data 'NYC Permitted Event Information' (tvpp-9vvx)."""
 
     name = "nyc_permitted_events"
+    display_name = "NYC Parks Permits"
 
     def __init__(
         self,

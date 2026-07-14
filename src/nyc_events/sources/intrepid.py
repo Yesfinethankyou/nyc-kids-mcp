@@ -172,6 +172,7 @@ class IntrepidSource(Source):
     """Intrepid Museum events via the server-rendered Drupal calendar."""
 
     name = "intrepid"
+    display_name = "Intrepid Museum"
 
     def __init__(
         self,

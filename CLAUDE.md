@@ -142,7 +142,12 @@ claim is worse than none — agents trust it completely):
   (census tract → NTA neighborhood), `park_neighborhoods.json` (park name → NTA),
   `library_neighborhoods.json` (borough+library-core → NTA). Built by
   `scripts/build_*.py`; loaded as package data.
-- `src/nyc_events/sources/base.py` — `Source` ABC; each source is one file in the same dir
+- `src/nyc_events/sources/base.py` — `Source` ABC; each source is one file in
+  the same dir. Two identity fields: `name` (the stable machine slug — the
+  `events.source` column + a `compute_id` input; **never rename an existing
+  one**) and `display_name` (the human-friendly label). Every source MUST set
+  both — `test_source_registry.py` fails a source that ships without a
+  `display_name`.
 - `src/nyc_events/sources/_tribe.py` — shared machinery for the four
   WordPress / The Events Calendar sources (Green-Wood, Prospect Park,
   NY Transit Museum, Industry City): `TribeEventsSource` (fetch/pagination
@@ -161,7 +166,13 @@ claim is worse than none — agents trust it completely):
 - `src/nyc_events/sources/_neighborhoods.py` — neighborhood coding tables:
   `SOURCE_NEIGHBORHOOD` (fixed-venue sources), `VENUE_NEIGHBORHOOD` (enumerable
   multi-site), the park-table + tract-crosswalk loaders, and `static_neighborhood()`.
-- `src/nyc_events/sources/__init__.py` — `ENABLED_SOURCES` registry
+- `src/nyc_events/sources/__init__.py` — `ENABLED_SOURCES` registry, plus
+  `ALL_SOURCES` (enabled + retired/stub) and `SOURCE_DISPLAY_NAMES`
+  (slug → `display_name`, derived from the classes). `SOURCE_DISPLAY_NAMES` is
+  the single home for friendly source labels: the dashboard (`_source_label`)
+  and the MCP projections (`list_sources` `display_name`, `get_event_detail`
+  `source_name`) read it instead of their own dicts. Callers fall back to the
+  raw slug for anything unmapped, so a lagging map never breaks rendering.
 - `scripts/build_tract_nta.py` / `build_park_neighborhoods.py` /
   `build_library_neighborhoods.py` — one-shot data-prep that regenerates the
   `data/*.json` tables from NYC open data + Census (`scripts/_census.py` holds

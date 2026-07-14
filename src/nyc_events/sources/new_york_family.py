@@ -368,6 +368,7 @@ class NewYorkFamilySource(Source):
     """New York Family events via the day-walk over the capped Tribe API."""
 
     name = "new_york_family"
+    display_name = "New York Family"
 
     def __init__(
         self,

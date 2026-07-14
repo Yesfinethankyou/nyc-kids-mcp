@@ -164,6 +164,7 @@ class SIChildrensMuseumSource(TribeEventsSource):
     """Staten Island Children's Museum events via the Tribe REST API."""
 
     name = "si_childrens_museum"
+    display_name = "Staten Island Children's Museum"
     events_url = EVENTS_URL
     max_pages = 10  # safety cap; ~64 events / 50 per page = 2 pages in practice
     _parse_row = staticmethod(_parse_row)

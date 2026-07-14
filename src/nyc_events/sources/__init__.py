@@ -15,12 +15,14 @@ from .intrepid import IntrepidSource
 from .mommy_poppins import MommyPoppinsSource
 from .new_york_family import NewYorkFamilySource
 from .ny_transit_museum import NYTransitMuseumSource
+from .nyc_permitted_events import NYCPermittedEventsSource
 from .nycgovparks_events import NYCGovParksEventsSource
 from .nypl import NYPLSource
 from .prospect_park import ProspectParkSource
 from .qpl import QPLSource
 from .si_childrens_museum import SIChildrensMuseumSource
 from .snug_harbor import SnugHarborSource
+from .timeout_nykids import TimeOutNYKidsSource
 
 # Phase 2 sources. Time Out NY Kids (timeout_nykids.py) is a JS-rendered
 # editorial site with no event feed — not buildable without a headless
@@ -76,3 +78,23 @@ ENABLED_SOURCES: list[type[Source]] = [
     NewYorkFamilySource,
     MommyPoppinsSource,
 ]
+
+# Every known source class, enabled or not. ENABLED_SOURCES is the subset the
+# nightly ingest runs; the disabled/stub ones (retired permit registry, the
+# Time Out stub) are included here so their lingering DB rows still resolve to
+# a friendly label in the dashboard and MCP tools.
+ALL_SOURCES: list[type[Source]] = [
+    *ENABLED_SOURCES,
+    NYCPermittedEventsSource,
+    TimeOutNYKidsSource,
+]
+
+# Canonical slug -> human-friendly name, derived from each Source's
+# `display_name`. The single home for source labels: the dashboard and the
+# list_sources / get_event_detail MCP projections both read this instead of
+# keeping their own hand-maintained dicts (which drifted — new sources kept
+# shipping without a friendly name). Callers fall back to the raw slug for any
+# unmapped value, so a stale map never breaks rendering.
+SOURCE_DISPLAY_NAMES: dict[str, str] = {
+    cls.name: cls.display_name for cls in ALL_SOURCES
+}

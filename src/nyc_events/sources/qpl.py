@@ -250,6 +250,7 @@ class QPLSource(Source):
     """Queens Public Library events via the Drupal/Solr calendar search."""
 
     name = "qpl"
+    display_name = "Queens Public Library"
 
     def __init__(
         self,

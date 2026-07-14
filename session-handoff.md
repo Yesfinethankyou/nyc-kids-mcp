@@ -2,6 +2,31 @@
 
 ## What was done (most recent first)
 
+### Session 2026-07-14 (cont'd): friendly source names
+
+Sources now carry a human-friendly `display_name` alongside the stable `name`
+slug. Previously the friendly label lived only in a hand-maintained
+`_SOURCE_LABELS` dict in `dashboard.py`, which drifted — the newer sources
+(`snug_harbor`, `nypl`, `qpl`, `city_parks_foundation`, `intrepid`) had no
+entry and rendered as raw slugs.
+
+- Added `display_name: str` to the `Source` ABC (doc'd next to `name`) and set
+  it on all 22 source classes (20 enabled + the retired `nyc_permitted_events`
+  and the `timeout_nykids` stub).
+- `sources/__init__.py` now exposes `ALL_SOURCES` and `SOURCE_DISPLAY_NAMES`
+  (slug → label, derived from the classes) — the single home for source labels.
+- Dashboard `_source_label` reads `SOURCE_DISPLAY_NAMES` instead of its own
+  dict (deleted). MCP `list_sources` gained a `display_name` field;
+  `get_event_detail` gained a `source_name` field. All fall back to the raw
+  slug when unmapped, so a lagging map never breaks rendering.
+- The slug `name` is unchanged everywhere — it's the `compute_id`/`events.source`
+  id, so renaming it was never on the table; this is a pure display layer.
+- Enforcement: `tests/test_source_registry.py` fails any source that ships
+  without a `display_name`. Docstrings/CLAUDE.md/source-adder recipe updated so
+  future sources set one. Full suite green (721), ruff clean; dashboard render
+  verified to show friendly names (no slug leak) for the previously-bare
+  sources.
+
 ### Session 2026-07-14: snug_harbor 403 — Cloudflare-block fix
 
 Nightly ingest hard-failed `snug_harbor` with `httpx.HTTPStatusError: 403

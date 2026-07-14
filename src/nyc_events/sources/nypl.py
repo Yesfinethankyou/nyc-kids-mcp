@@ -320,6 +320,7 @@ class NYPLSource(Source):
     """NYPL branch events via the server-rendered Drupal calendar (per borough)."""
 
     name = "nypl"
+    display_name = "New York Public Library"
 
     def __init__(
         self,

@@ -270,6 +270,7 @@ class GovernorsIslandSource(Source):
     """Governors Island things-to-do via the site's Craft CMS JSON feed."""
 
     name = "governors_island"
+    display_name = "Governors Island"
 
     # window_days intentionally left as inherited None: the feed hard-caps at
     # 100 rows ordered id-asc with no pagination, so a fetch is not a

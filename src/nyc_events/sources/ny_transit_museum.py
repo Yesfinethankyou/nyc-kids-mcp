@@ -238,6 +238,7 @@ class NYTransitMuseumSource(TribeEventsSource):
     """New York Transit Museum events via the Tribe Events Calendar REST API."""
 
     name = "ny_transit_museum"
+    display_name = "New York Transit Museum"
     events_url = EVENTS_URL
     max_pages = 10  # safety cap; ~26 events / 60 days = 1 page in practice
     _parse_row = staticmethod(_parse_row)
