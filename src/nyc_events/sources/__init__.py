@@ -12,6 +12,7 @@ from .governors_island import GovernorsIslandSource
 from .greenwood_cemetery import GreenWoodCemeterySource
 from .industry_city import IndustryCitySource
 from .intrepid import IntrepidSource
+from .kccny import KCCNYSource
 from .mommy_poppins import MommyPoppinsSource
 from .new_york_family import NewYorkFamilySource
 from .ny_transit_museum import NYTransitMuseumSource
@@ -56,6 +57,9 @@ ENABLED_SOURCES: list[type[Source]] = [
     SIChildrensMuseumSource,
     # 2-3 month pages at a 1s delay — cheap.
     BBGSource,
+    # ~12 list pages at a 1s delay (full /education-literature page-walk
+    # every run) — cheap-ish.
+    KCCNYSource,
     # ~8 REST pages at a 0.75s delay — cheap-ish.
     BrooklynBridgeParkSource,
     BPLSource,

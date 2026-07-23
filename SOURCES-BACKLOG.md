@@ -1487,14 +1487,45 @@ unprobed (expect similar stacks; probe before writing any code).
   citywide breadth (vs. single-venue depth) is the priority. Not yet built —
   maintainer call on whether the yield justifies the parser complexity.
 
-### Korean Cultural Center New York (KCCNY) — koreanculture.org — 🟢 CONFIRMED 2026-07-23
+### Korean Cultural Center New York (KCCNY) — koreanculture.org — ✅ BUILT 2026-07-23
 
-- **Status:** 🟢 **CONFIRMED 2026-07-23** (source-verifier pass, plain `httpx`,
-  no anti-bot encountered — unusual good news, this consumer-facing site does
-  NOT need `curl_cffi impersonate="chrome"`). Buildable, but with a real
-  parsing cost (no structured date field anywhere) and a robots.txt wrinkle
-  that rules out the obvious fast path. Fixture captured; next step is
-  `source-adder`.
+- **Status:** ✅ **BUILT 2026-07-23** — shipped as source `kccny`. As-built
+  notes (what matched/differed from the probe below):
+  - Confirmed live against the fixture: plain `httpx` (no `curl_cffi`) is
+    correct — matches the probe's "unusual good news" finding.
+  - **`external_id` strategy verified against the fixture, not just
+    research**: the multi-session "A K-Birthday Party" card's two prose
+    dates (Aug 7 + Aug 8, 2026) parse into two distinct occurrences sharing
+    one `data-item-id`; `external_id = f"{item_id}:{occurrence_date}"` is
+    applied to EVERY occurrence (not just multi-session posts, for
+    consistency with `bbg`/`nyc_permitted_events`) so this never collapses.
+  - **Scope decision made explicit during the build (not left to the
+    source itself to decide): no detail-page crawl for v1.** The probe
+    flagged empty-excerpt rows ("Seollal Family Day") as needing a
+    `mommy_poppins`/`snug_harbor`-style detail fetch to recover their date.
+    Built without it instead — an empty-excerpt row is parsed to zero
+    events and skipped (logged), not recovered. Small recall loss, keeps
+    this a cheap list-only scrape. Revisit if this class of row turns out
+    to be a meaningful chunk of the kid-relevant catalog.
+  - **Time-range prose parsing**: KCCNY typically writes ranges with a
+    single trailing meridiem covering both ends ("4:00–5:30 PM", not
+    "4:00 PM–5:30 PM") — different from `bbg`'s per-number-meridiem style,
+    so `kccny.py` has its own `_RANGE_RX` (optional first meridiem,
+    borrowed from the second) rather than reusing `bbg`'s `_TIME_RX`.
+  - `category-past`/`category-Past` was NOT used as the upcoming/past
+    filter (the probe's caution about publish-date ordering was right to
+    flag) — instead every card's real parsed occurrence date is filtered
+    against `[today, today+window_days]` in `fetch()`, same shape as `bbg`.
+  - Kid-relevance filter matched the fixture 1:1: 5 of 8 fixture cards
+    passed the title/excerpt keyword allowlist ("A K-Birthday Party", 3x
+    "Korean Storytime: …", "Seollal Family Day" — dropped afterward for no
+    parseable date); the 3 adult cards (Korean language course, Serang
+    Chung author talk, "The Other Korea" off-site talk) were correctly
+    excluded by the allowlist with no keyword match.
+  - `SOURCE_NEIGHBORHOOD["kccny"] = "Murray Hill"` (substring of the
+    official NTA "Murray Hill-Kips Bay", per the tier-1 label convention).
+  - Opted INTO missing-detection (`window_days=60`, full page-walk every run).
+- **Original probe (2026-07-23, kept below for reference):**
 - **What it is:** the NYC branch of Korea's Ministry of Culture, Sports and
   Tourism (122 E. 32nd Street, Manhattan — Murray Hill/Kips Bay). Runs
   Squarespace. Programming is **mostly adult** (concerts, dance, author
