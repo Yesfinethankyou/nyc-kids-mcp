@@ -1487,6 +1487,159 @@ unprobed (expect similar stacks; probe before writing any code).
   citywide breadth (vs. single-venue depth) is the priority. Not yet built —
   maintainer call on whether the yield justifies the parser complexity.
 
+### Korean Cultural Center New York (KCCNY) — koreanculture.org — 🟢 CONFIRMED 2026-07-23
+
+- **Status:** 🟢 **CONFIRMED 2026-07-23** (source-verifier pass, plain `httpx`,
+  no anti-bot encountered — unusual good news, this consumer-facing site does
+  NOT need `curl_cffi impersonate="chrome"`). Buildable, but with a real
+  parsing cost (no structured date field anywhere) and a robots.txt wrinkle
+  that rules out the obvious fast path. Fixture captured; next step is
+  `source-adder`.
+- **What it is:** the NYC branch of Korea's Ministry of Culture, Sports and
+  Tourism (122 E. 32nd Street, Manhattan — Murray Hill/Kips Bay). Runs
+  Squarespace. Programming is **mostly adult** (concerts, dance, author
+  talks, film screenings, language classes) but has a genuine, recurring
+  **kids/family strand**: a monthly "Korean Storytime" series at the KCCNY
+  library, occasional family days (Seollal/Lunar New Year, a "Pinkfong &
+  Baby Shark" pop-up), and kid-targeted workshops ("A K-Birthday Party" —
+  drop-off class, "Recommended Ages: 6–9"). This is real, current
+  programming (a "Korean Storytime" and "A K-Birthday Party" were both
+  upcoming/2026-dated at probe time), not a defunct feed.
+- **Platform: Squarespace, but NOT the confirmed `?format=json` "upcoming
+  array + epoch-ms startDate" fast path** (that shape — see Coney Island USA
+  — is a true Squarespace **Events** collection). KCCNY's event-bearing pages
+  are Squarespace **Blog collections styled with the "Events" list template**
+  (`collection.type: 1`, `eventView: 1` — a blog, not an Events collection
+  type). Confirmed via `?format=json` on multiple collection paths
+  (`/performing-arts`, `/education-literature`, `/films`, `/gallery-korea`,
+  `/cuisine-tourism`, `/special-events`, `/sports`, `/a-new-family`) — every
+  one returns paginated JSON `items` with `title`/`urlId`/`fullUrl`/`excerpt`/
+  `categories`, but **no `startDate`/`endDate` field exists on any item**.
+  Confirmed the gap is real, not a fetch mistake: detail-page JSON-LD is
+  `Article`/`Organization`/`WebSite`/`LocalBusiness` only — **never `Event`**
+  — so there's no clean per-event date anywhere on the site, list or detail.
+- **⚠️ robots.txt DISALLOWS the JSON fast path — do not use `?format=json`
+  here.** `https://www.koreanculture.org/robots.txt` has (for the `*`
+  user-agent group, which also covers the named AI-crawler block above it):
+  `Disallow:/*?format=json`, `&format=json`, `format=ical`,
+  `format=page-context`, `format=main-content`, `format=json-pretty` — this
+  is Squarespace's own default boilerplate, not a bespoke wall, but it's
+  explicit and unconditional. **Build via a plain HTML scrape instead**,
+  which robots.txt does NOT disallow: the regular collection page (e.g.
+  `GET /education-literature`, no query string) server-renders the identical
+  data inside `<article class="BlogList-item hentry category-<slug>
+  ...">` cards (`.BlogList-item-title` + `href`, `.BlogList-item-excerpt`
+  HTML, category classes), and pagination is a plain `<a
+  class="BlogList-pagination-link" href="/education-literature?offset=<ms>">`
+  link with the "Older" label — `?offset=` alone is NOT in the disallow list.
+  Verified live: the `?offset=`-only URL returns a normal 200 page with the
+  next 20 cards. Use `curl_cffi`/`selectolax` (`article.BlogList-item` cards),
+  not the JSON endpoint.
+- **The real parsing cost: dates are free-text prose inside `.BlogList-item-excerpt`,
+  in several different formats** — confirmed across a live sample:
+  - Single date+time: `"Wednesday, October 22, 2025, 4:00–5:00 PM"`
+  - Two-line multi-session (each line is its own occurrence — treat like
+    `new_york_family`'s per-day expansion, not one event spanning both):
+    `"Friday, August 7, 2026, 4:00–5:30 PM"` / `"Saturday, August 8, 2026,
+    3:00–4:30 PM"` (both under one post, "A K-Birthday Party")
+  - `"Date: October 30th, 2023 @ 4pm"` prefix style (older posts)
+  - Date-range style: `"Dates: January 28 – February 1, 2025"` (found in
+    `body`, not `excerpt` — see next bullet)
+  - **Some rows have an EMPTY `excerpt`** (e.g. "Seollal Family Day") — the
+    date/description exists ONLY in the full `body` HTML in that case, which
+    means a fallback body-fetch (detail-page HTML, same URL the excerpt
+    already links to) is sometimes unavoidable, `mommy_poppins`/`snug_harbor`-
+    style, rather than a pure list-only scrape. Recommend: try `excerpt`
+    first, fall back to a detail-page fetch only when `excerpt` is blank
+    (should be a minority of rows) rather than crawling every detail page.
+  - Age info, when present, is also prose ("Recommended Ages: 6–9",
+    "Designed for ages 4–6") — same regex-extraction opportunity as
+    `new_york_family`'s age bands, but not upstream-structured.
+  - This is squarely in BBG-scrape-difficulty territory (lenient prose date
+    parsing against a real but semi-structured field), possibly a bit worse
+    given the format variety observed — not a quick JSON-fast-path build.
+- **`categories` class gives an imperfect "already happened" signal:**
+  KCCNY staff manually add a `category-past`/`category-Past` class (case
+  varies by collection — `past` lowercase on `education-literature`,
+  `Past` capitalized on `performing-arts`) once an event's date has elapsed.
+  Rows without it are the upcoming candidates, but list pages are ordered by
+  **publish/add date, not event date**, so a `category-past` item can appear
+  ABOVE a still-upcoming one in the feed — this is a helpful filter, not a
+  stopping condition for pagination. A full page-walk of the target
+  collection(s) is still required each run to avoid missing upcoming rows
+  buried past a `category-past` one.
+- **Kid density varies enormously by collection** (all probed with
+  `?format=json` for counting purposes only — **the actual build must use
+  the HTML path above**, this was just the fastest way to sample volume):
+  - `/education-literature` (235 items total) — **the dense one**: ~21%
+    kid/family-relevant by keyword (`storytime`/`kids`/`family`/`children`/
+    `toddler`/`birthday party`) — recurring monthly "Korean Storytime",
+    family days, kid workshops. **Recommended primary/only collection for
+    v1** — best signal-to-noise, and Manhattan coverage is the catalog's
+    thinnest borough.
+  - `/performing-arts` (1198 items, the largest collection) — almost
+    entirely adult concerts/dance/theater; a kid-keyword scan of the whole
+    collection found only ~12 hits (~1%), mostly false-positive-ish
+    ("Youth Choir Concert", "Youth Orchestra Festival" — youth performers,
+    not audience-appropriate-for-kids events). Not worth the ~60-page
+    fetch cost for this yield.
+  - `/films` (388 items) — mostly adult Korean cinema; did surface at least
+    one real hit ("Pinkfong Sing Along Movie Screening") but density
+    unmeasured — low priority.
+  - `/gallery-korea`, `/cuisine-tourism`, `/from-korea-cuisine`,
+    `/special-events`, `/sports`, `/a-new-family` — smaller collections
+    (17–261 items), not individually scanned for kid density; `special-events`
+    and `a-new-family` are cheap enough (32 and 17 items) to keyword-scan
+    opportunistically if `education-literature` alone proves too thin.
+- **Venue:** effectively fixed — "Korean Cultural Center New York" building,
+  122 E. 32nd Street, New York, NY 10016 (Murray Hill/Kips Bay, Manhattan) —
+  a `SOURCE_NEIGHBORHOOD` constant is sufficient. **Do NOT use the JSON-LD
+  `Organization`/`LocalBusiness` address** (460 Park Avenue, 6th Floor) —
+  that's the org's separate mailing/consulate-adjacent address, not the
+  event venue; every sampled event excerpt names 122 E. 32nd Street
+  explicitly. A few rows are off-site (e.g. "The Other Korea" at The Town
+  Hall, "IVY in CHICAGO" at the Ambassador Theatre) — those are adult
+  performing-arts rows likely filtered out anyway if `education-literature`
+  is the only collection built.
+- **`external_id`:** the Squarespace item `id` (hex string) is per-post and
+  stable; a multi-session post like "A K-Birthday Party" needs
+  `external_id = f"{id}:{date}"` once its two prose dates are parsed into
+  separate occurrences (same pattern as `nyc_permitted_events`/
+  `new_york_family`), otherwise the two sessions collapse into one row.
+- **Price:** mostly free (public-diplomacy cultural center) — several
+  excerpts explicitly say "Free and open to children and families"; no
+  structured cost field, so `Price.FREE` on an explicit "free" mention in
+  the prose, else `Price.UNKNOWN`.
+- **Missing-detection:** opt IN (`window_days=`) if the build re-walks the
+  full `education-literature` collection every run (a real full-window
+  re-fetch, not incremental) — the collection is small enough (235 items,
+  ~12 pages) that a full walk every run is cheap.
+- **Fixture:** `tests/fixtures/kccny_sample.html` — 8 real `<article
+  class="BlogList-item ...">` cards from a live `GET /education-literature`
+  fetch (2026-07-23), covering: kid-relevant multi-date rows ("A K-Birthday
+  Party"), kid-relevant single-date rows (two "Korean Storytime" posts, one
+  already `category-past`), an empty-excerpt row ("Seollal Family Day" —
+  exercises the body-fallback case), and adult-only rows (a $150 language
+  course, a ticketed author talk, a $50 off-site talk) to exercise a
+  kid-relevance filter — plus the real `<nav class="BlogList-pagination">`
+  "Older" link. Fixture header comment records the robots.txt finding and
+  the format-variety notes above so `source-adder` doesn't have to
+  re-derive them.
+- **Kid-relevance filtering plan:** inclusive title/excerpt keyword ALLOWLIST
+  (`storytime`, `kids`, `family`, `children`, `toddler`, age-range phrases
+  like "ages 4-6") — same posture as the "kid-keyword tag required" strategy
+  in `nyc_permitted_events`, since KCCNY's collections are NOT kid-curated
+  (unlike `bk_childrens_museum`/`si_childrens_museum`) — plus the shared
+  `ADULT_BLOCKLIST`/`ADULT_TITLE_BLOCKLIST`/`MEMBERS_ONLY` from `_filters.py`
+  as a safety net (a cultural center runs 21+ galas/receptions too).
+- **Expected volume:** modest — the Storytime series is roughly monthly, plus
+  occasional family days/workshops. Ballpark low tens of events per 60-day
+  window, similar order of magnitude to `bbg` (28/window) or smaller — this
+  is a small but genuinely net-new Manhattan source, not a high-volume one.
+- **Next step:** `source-adder` for `kccny`, scoped to `/education-literature`
+  only for v1 (skip `/performing-arts` and the other adult-dominated
+  collections given the yield numbers above).
+
 ---
 
 ## Deferred to Phase 3+ (headless browser required)

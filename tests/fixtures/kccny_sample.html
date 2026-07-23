@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<!--
+Trimmed real response from https://www.koreanculture.org/education-literature
+(2026-07-23, plain httpx + browser User-Agent, no anti-bot encountered).
+
+IMPORTANT -- robots.txt disallows the Squarespace JSON fast path on this
+site: `Disallow:/*?format=json` (and format=ical/page-context/etc.) applies
+to ALL user agents, including `*`. The Squarespace ?format=json shortcut
+documented for Coney Island USA is therefore NOT usable here without
+violating robots.txt. This is a server-rendered HTML scrape instead --
+confirmed the SAME data (title, prose excerpt with date/venue/age, category)
+is present in the plain HTML page, which robots.txt does NOT disallow.
+Pagination is via the "Older" link's plain `?offset=<ms>` query param (NOT
+`&format=json` -- also not disallowed) -- see the <nav class="BlogList-pagination">
+block at the end of this fixture.
+
+Collection: education-literature (235 items total upstream, ~21% kid/family
+relevant by keyword). Only a representative slice of <article> cards kept
+here: a mix of kid-relevant rows (Korean Storytime series -- a recurring
+monthly program, "A K-Birthday Party" with "Recommended Ages: 6-9", "Seollal
+Family Day") and adult-only rows (Serang Chung author talk, Korean language
+course, "The Other Korea" $50 ticketed talk) to exercise a title/excerpt
+keyword filter. No structured startDate/age field exists anywhere on this
+platform -- confirmed absent from this HTML AND from event detail pages'
+JSON-LD (which is Article/Organization/WebSite/LocalBusiness only, never
+Event) -- date/venue/age all live in free-text prose inside
+`.BlogList-item-excerpt` in a variety of formats (see the picked rows
+below for the range: single date, two-date multi-session, "Date: ... @
+Npm" style, and -- NOT present in this fixture, see backlog note --
+"Seollal Family Day" has an EMPTY excerpt on the list page; its date only
+exists in the full detail-page body, not the list at all.
+
+Real category classes on <article> (`category-education`, `category-past`,
+or no category class at all) double as a decent "already happened" signal
+-- `category-past` is added by KCCNY staff once an event's date has
+elapsed -- but note it is only reliably present on ~20% of rows here;
+absence of the class is NOT a guarantee an event is upcoming, just that it
+hasn't been manually marked past yet.
+-->
+<html lang="en-US">
+<head><title>Korean Cultural Center New York - Education + Literature</title></head>
+<body>
+<section class="BlogList BlogList--posts-excerpt sqs-blog-list clear">
+<article id="post-6a3d4b67b4725c5af9cbfe54" class="BlogList-item hentry category-education author-yeonji-hwang post-type-text article-index-1 has-categories" data-item-id="6a3d4b67b4725c5af9cbfe54">
+
+      
+        <div class="BlogList-item-image">
+          <a href="/education-literature/a-k-birthday-party" class="BlogList-item-image-link">
+            <img data-src="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1782410830973-AZ9WXI2Q3UIZ7HCN5P1Z/A+K-Birthday+Party_KV.jpg" data-image="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1782410830973-AZ9WXI2Q3UIZ7HCN5P1Z/A+K-Birthday+Party_KV.jpg" data-image-dimensions="1920x1080" data-image-focal-point="0.5,0.5" alt="A K-Birthday Party"  data-load="false" />
+          </a>
+        </div>
+      
+
+
+      <a href="/education-literature/a-k-birthday-party" class="BlogList-item-title" data-content-field="title">A K-Birthday Party</a>
+
+      
+        
+          <div class="BlogList-item-excerpt">
+            <p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Friday, August 7, 2026, 4:00–5:30 PM</strong></p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Saturday, August 8, 2026, 3:00–4:30 PM</strong></p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Korean Cultural Center New York&nbsp;</strong></p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">(122 E. 32nd Street, New York, NY 10016)</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Recommended Ages: 6–9 (Drop-off Class)</strong></p>
+            <a href="/education-literature/a-k-birthday-party" class="BlogList-item-readmore">
+              <span>Read More</span>
+            </a>
+          </div>
+        
+      
+
+      <div class="Blog-meta BlogList-item-meta">
+        <!--
+
+        Categories
+
+        --><span class="Blog-meta-item Blog-meta-item--categories"><a href="/education-literature/category/Education" class="Blog-meta-item-category">Education</a></span><!--
+
+        Author
+
+        --><a href="/education-literature?author=68f7a5c9806a1f62d249c9b1" class="Blog-meta-item Blog-meta-item--author">Yeonji Hwang</a><!--
+
+        Date
+
+        --><time class="Blog-meta-item Blog-meta-item--date" datetime="2026-06-25">June 25, 2026</time>
+      </div>
+
+      
+
+    </article>
+
+<article id="post-69dfd423f692d21595b10077" class="BlogList-item hentry category-past author-inji-jung post-type-text article-index-2 has-categories" data-item-id="69dfd423f692d21595b10077">
+
+      
+        <div class="BlogList-item-image">
+          <a href="/education-literature/2026/4/15/the-strange-mom" class="BlogList-item-image-link">
+            <img data-src="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1776276928383-HXP0ZNPDNWFS5KW0SPQS/%EC%9D%B4%EC%83%81%ED%95%9C+%EC%97%84%EB%A7%88+%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8.jpg" data-image="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1776276928383-HXP0ZNPDNWFS5KW0SPQS/%EC%9D%B4%EC%83%81%ED%95%9C+%EC%97%84%EB%A7%88+%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8.jpg" data-image-dimensions="1920x1080" data-image-focal-point="0.5,0.5" alt="Korean Storytime: 이상한 엄마 The Strange Mom + Norigae Craft "  data-load="false" />
+          </a>
+        </div>
+      
+
+
+      <a href="/education-literature/2026/4/15/the-strange-mom" class="BlogList-item-title" data-content-field="title">Korean Storytime: 이상한 엄마 The Strange Mom + Norigae Craft </a>
+
+      
+        
+          <div class="BlogList-item-excerpt">
+            <p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Wednesday, May 6, 2026, 4:00–5:00 PM</strong><br><strong>Korean Cultural Center New York Library</strong><br>(122 E. 32nd Street, New York, NY 10016)</p>
+            <a href="/education-literature/2026/4/15/the-strange-mom" class="BlogList-item-readmore">
+              <span>Read More</span>
+            </a>
+          </div>
+        
+      
+
+      <div class="Blog-meta BlogList-item-meta">
+        <!--
+
+        Categories
+
+        --><span class="Blog-meta-item Blog-meta-item--categories"><a href="/education-literature/category/past" class="Blog-meta-item-category">past</a></span><!--
+
+        Author
+
+        --><a href="/education-literature?author=66c38ad1e799c4023a40dc6e" class="Blog-meta-item Blog-meta-item--author">Inji Jung</a><!--
+
+        Date
+
+        --><time class="Blog-meta-item Blog-meta-item--date" datetime="2026-04-15">April 15, 2026</time>
+      </div>
+
+      
+
+    </article>
+
+<article id="post-69aedfe4cb9cc61257d332f1" class="BlogList-item hentry category-past author-yeonji-hwang post-type-text article-index-3 has-categories" data-item-id="69aedfe4cb9cc61257d332f1">
+
+      
+        <div class="BlogList-item-image">
+          <a href="/education-literature/2026/3/9/serang-chung-in-conversation" class="BlogList-item-image-link">
+            <img data-src="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1773409496870-RVYXQYYS0AXJKO521DB6/Rooftop_instagram_1080x1350_final_1.png" data-image="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1773409496870-RVYXQYYS0AXJKO521DB6/Rooftop_instagram_1080x1350_final_1.png" data-image-dimensions="1080x1350" data-image-focal-point="0.5,0.5" alt="Serang Chung in Conversation: First New York Book Talk"  data-load="false" />
+          </a>
+        </div>
+      
+
+
+      <a href="/education-literature/2026/3/9/serang-chung-in-conversation" class="BlogList-item-title" data-content-field="title">Serang Chung in Conversation: First New York Book Talk</a>
+
+      
+        
+          <div class="BlogList-item-excerpt">
+            <p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Saturday, April 11, 2026, 3:00 PM<br>Korean Cultural Center New York<br>122 E. 32nd Street, New York, NY 10016<br><br>Admission: Free <br>* RSVP is required.</strong></p>
+            <a href="/education-literature/2026/3/9/serang-chung-in-conversation" class="BlogList-item-readmore">
+              <span>Read More</span>
+            </a>
+          </div>
+        
+      
+
+      <div class="Blog-meta BlogList-item-meta">
+        <!--
+
+        Categories
+
+        --><span class="Blog-meta-item Blog-meta-item--categories"><a href="/education-literature/category/past" class="Blog-meta-item-category">past</a></span><!--
+
+        Author
+
+        --><a href="/education-literature?author=68f7a5c9806a1f62d249c9b1" class="Blog-meta-item Blog-meta-item--author">Yeonji Hwang</a><!--
+
+        Date
+
+        --><time class="Blog-meta-item Blog-meta-item--date" datetime="2026-03-13">March 13, 2026</time>
+      </div>
+
+      
+
+    </article>
+
+<article id="post-6997601779d3fa2efbc631ed" class="BlogList-item hentry author-taehyun-hwang post-type-text article-index-4" data-item-id="6997601779d3fa2efbc631ed">
+
+      
+        <div class="BlogList-item-image">
+          <a href="/education-literature/2026/2/22/korean-language-course" class="BlogList-item-image-link">
+            <img data-src="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1771528606844-6CKULNQ364TSIR6D1LNR/KECNY+2026+Spring+Korean+Language+Course+Flyer_Horizontal_Newsletter.jpg" data-image="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1771528606844-6CKULNQ364TSIR6D1LNR/KECNY+2026+Spring+Korean+Language+Course+Flyer_Horizontal_Newsletter.jpg" data-image-dimensions="960x720" data-image-focal-point="0.5,0.5" alt="‘26 Spring Korean language course"  data-load="false" />
+          </a>
+        </div>
+      
+
+
+      <a href="/education-literature/2026/2/22/korean-language-course" class="BlogList-item-title" data-content-field="title">‘26 Spring Korean language course</a>
+
+      
+        
+          <div class="BlogList-item-excerpt">
+            <p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Registration Deadline: February 22nd, 2026<br>Tuition: $150&nbsp;for 15-week course<br>Schedule: March 2nd – June 11th (1.5 or 2 hours, once a week)</p>
+            <a href="/education-literature/2026/2/22/korean-language-course" class="BlogList-item-readmore">
+              <span>Read More</span>
+            </a>
+          </div>
+        
+      
+
+      <div class="Blog-meta BlogList-item-meta">
+        <!--
+
+        Author
+
+        --><a href="/education-literature?author=5dfd3912609d6b0c033922cb" class="Blog-meta-item Blog-meta-item--author">Taehyun Hwang</a><!--
+
+        Date
+
+        --><time class="Blog-meta-item Blog-meta-item--date" datetime="2026-02-19">February 19, 2026</time>
+      </div>
+
+      
+
+    </article>
+
+<article id="post-6973c9d24e390b1990976ef4" class="BlogList-item hentry category-past author-inji-jung post-type-text article-index-5 has-categories" data-item-id="6973c9d24e390b1990976ef4">
+
+      
+        <div class="BlogList-item-image">
+          <a href="/education-literature/2025/2/14/korean-storytime-the-lucky-pouch-fairy-baram-tteok-activity" class="BlogList-item-image-link">
+            <img data-src="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/af953939-c88d-4ba3-8090-cddd596efdc0/%EB%9D%BC%EC%9D%B4%EC%8A%A4%EB%B8%94%EB%9D%BC%EC%8D%B8.png" data-image="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/af953939-c88d-4ba3-8090-cddd596efdc0/%EB%9D%BC%EC%9D%B4%EC%8A%A4%EB%B8%94%EB%9D%BC%EC%8D%B8.png" data-image-dimensions="2000x1125" data-image-focal-point="0.5,0.5" alt="Korean Storytime: The Lucky Pouch Fairy + Baram Tteok Activity"  data-load="false" />
+          </a>
+        </div>
+      
+
+
+      <a href="/education-literature/2025/2/14/korean-storytime-the-lucky-pouch-fairy-baram-tteok-activity" class="BlogList-item-title" data-content-field="title">Korean Storytime: The Lucky Pouch Fairy + Baram Tteok Activity</a>
+
+      
+        
+          <div class="BlogList-item-excerpt">
+            <p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Saturday, February 14, 2026, 2:00–3:00 PM</strong></p><p class="" style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Korean Cultural Center New York Library</strong></p><p class="" style="white-space:pre-wrap;" data-rte-preserve-empty="true">(122 E. 32nd Street, New York, NY 10016)</p><p class="" style="white-space:pre-wrap;" data-rte-preserve-empty="true"><strong>Designed for ages 4–6</strong></p>
+            <a href="/education-literature/2025/2/14/korean-storytime-the-lucky-pouch-fairy-baram-tteok-activity" class="BlogList-item-readmore">
+              <span>Read More</span>
+            </a>
+          </div>
+        
+      
+
+      <div class="Blog-meta BlogList-item-meta">
+        <!--
+
+        Categories
+
+        --><span class="Blog-meta-item Blog-meta-item--categories"><a href="/education-literature/category/past" class="Blog-meta-item-category">past</a></span><!--
+
+        Author
+
+        --><a href="/education-literature?author=66c38ad1e799c4023a40dc6e" class="Blog-meta-item Blog-meta-item--author">Inji Jung</a><!--
+
+        Date
+
+        --><time class="Blog-meta-item Blog-meta-item--date" datetime="2026-02-14">February 14, 2026</time>
+      </div>
+
+      
+
+    </article>
+
+<article id="post-68dc46347b325056ed1d5115" class="BlogList-item hentry category-past author-inji-jung post-type-text article-index-7 has-categories" data-item-id="68dc46347b325056ed1d5115">
+
+      
+        <div class="BlogList-item-image">
+          <a href="/education-literature/korean-storytime-gimbap-story" class="BlogList-item-image-link">
+            <img data-src="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/9709447c-9b7a-4e00-a25d-30c92e03ad8f/KV_EN+version.jpg" data-image="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/9709447c-9b7a-4e00-a25d-30c92e03ad8f/KV_EN+version.jpg" data-image-dimensions="1920x1080" data-image-focal-point="0.5,0.5" alt="Korean Storytime: Gimbap Story"  data-load="false" />
+          </a>
+        </div>
+      
+
+
+      <a href="/education-literature/korean-storytime-gimbap-story" class="BlogList-item-title" data-content-field="title">Korean Storytime: Gimbap Story</a>
+
+      
+        
+          <div class="BlogList-item-excerpt">
+            <p style="white-space:pre-wrap;" data-rte-preserve-empty="true"> <strong>Wednesday, October 22, 2025, 4:00–5:00 PM<br></strong> <strong>Korean Cultural Center New York Library<br></strong> (122 E. 32nd Street, New York, NY 10016)<br> <strong>Recommended for ages 4–6<br></strong> <strong>Free and open to children and families.<br></strong> <strong>No Korean language background required.</strong></p>
+            <a href="/education-literature/korean-storytime-gimbap-story" class="BlogList-item-readmore">
+              <span>Read More</span>
+            </a>
+          </div>
+        
+      
+
+      <div class="Blog-meta BlogList-item-meta">
+        <!--
+
+        Categories
+
+        --><span class="Blog-meta-item Blog-meta-item--categories"><a href="/education-literature/category/past" class="Blog-meta-item-category">past</a></span><!--
+
+        Author
+
+        --><a href="/education-literature?author=66c38ad1e799c4023a40dc6e" class="Blog-meta-item Blog-meta-item--author">Inji Jung</a><!--
+
+        Date
+
+        --><time class="Blog-meta-item Blog-meta-item--date" datetime="2025-09-30">September 30, 2025</time>
+      </div>
+
+      
+
+    </article>
+
+<article id="post-677d91949e57300838fc73d4" class="BlogList-item hentry category-past category-education author-inji-jung post-type-text article-index-12 has-categories" data-item-id="677d91949e57300838fc73d4">
+
+      
+        <div class="BlogList-item-image">
+          <a href="/education-literature/1/25/seollal-family-day" class="BlogList-item-image-link">
+            <img data-src="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1736284426765-SP9OEU4LD4G1X22Q5EX8/%EC%A3%BC%EC%B5%9C+%28%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98%29.png" data-image="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1736284426765-SP9OEU4LD4G1X22Q5EX8/%EC%A3%BC%EC%B5%9C+%28%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98%29.png" data-image-dimensions="1920x1080" data-image-focal-point="0.5,0.5" alt="Seollal Family Day"  data-load="false" />
+          </a>
+        </div>
+      
+
+
+      <a href="/education-literature/1/25/seollal-family-day" class="BlogList-item-title" data-content-field="title">Seollal Family Day</a>
+
+      
+        
+      
+
+      <div class="Blog-meta BlogList-item-meta">
+        <!--
+
+        Categories
+
+        --><span class="Blog-meta-item Blog-meta-item--categories"><a href="/education-literature/category/past" class="Blog-meta-item-category">past</a>, <a href="/education-literature/category/Education" class="Blog-meta-item-category">Education</a></span><!--
+
+        Author
+
+        --><a href="/education-literature?author=66c38ad1e799c4023a40dc6e" class="Blog-meta-item Blog-meta-item--author">Inji Jung</a><!--
+
+        Date
+
+        --><time class="Blog-meta-item Blog-meta-item--date" datetime="2025-01-07">January 7, 2025</time>
+      </div>
+
+      
+
+    </article>
+
+<article id="post-66b518ccc6436f4f3ec6a717" class="BlogList-item hentry category-education category-past author-guest-user post-type-text article-index-15 has-categories" data-item-id="66b518ccc6436f4f3ec6a717">
+
+      
+        <div class="BlogList-item-image">
+          <a href="/education-literature/2024/08/23/theotherkorea" class="BlogList-item-image-link">
+            <img data-src="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1723144651068-Q8H9SAV3NHVK0VVB9MPV/OK3_1920x1080+%281%29+%281%29.jpg" data-image="https://images.squarespace-cdn.com/content/v1/581ff5eef5e231b25f9c12db/1723144651068-Q8H9SAV3NHVK0VVB9MPV/OK3_1920x1080+%281%29+%281%29.jpg" data-image-dimensions="1920x1080" data-image-focal-point="0.5,0.5" alt="The Other Korea: Stories from the Diaspora"  data-load="false" />
+          </a>
+        </div>
+      
+
+
+      <a href="/education-literature/2024/08/23/theotherkorea" class="BlogList-item-title" data-content-field="title">The Other Korea: Stories from the Diaspora</a>
+
+      
+        
+          <div class="BlogList-item-excerpt">
+            <p class=""><strong>Friday, August 23, 2024, 7 PM (Doors open at 6 PM)<br>The Town Hall Lounge<br></strong>(123 West 43rd St, New York, NY 10036)&nbsp;</p><p class=""><strong>Tickets</strong>: $50</p>
+            <a href="/education-literature/2024/08/23/theotherkorea" class="BlogList-item-readmore">
+              <span>Read More</span>
+            </a>
+          </div>
+        
+      
+
+      <div class="Blog-meta BlogList-item-meta">
+        <!--
+
+        Categories
+
+        --><span class="Blog-meta-item Blog-meta-item--categories"><a href="/education-literature/category/Education" class="Blog-meta-item-category">Education</a>, <a href="/education-literature/category/past" class="Blog-meta-item-category">past</a></span><!--
+
+        Author
+
+        --><a href="/education-literature?author=6751c2135762584af8f1c5da" class="Blog-meta-item Blog-meta-item--author">Guest User</a><!--
+
+        Date
+
+        --><time class="Blog-meta-item Blog-meta-item--date" datetime="2024-10-12">October 12, 2024</time>
+      </div>
+
+      
+
+    </article>
+</section>
+<nav class="BlogList-pagination">
+    <a href="/education-literature?offset=1690472152115" class="BlogList-pagination-link">
+        <span class="BlogList-pagination-link-label">Older</span>
+      </a>
+  </nav>
+</body>
+</html>
