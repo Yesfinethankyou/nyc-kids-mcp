@@ -61,11 +61,10 @@ fine.
 
 **Re-probe results (2026-07-13, plain httpx, this session):**
 - **Snug Harbor** → ✅ BUILT (see its entry below — clean WP REST + JSON-LD).
-- **Brooklyn Bridge Parents** → **weak, deprioritized.** WP Event Manager
-  (`/wp-json/wp/v2/event_listing`) works, but only **9 events**, and the
-  sampled rows are **re-posts of our existing `brooklyn_army_terminal`
-  source** ("Summer at the Terminal: …") — it's an aggregator with heavy
-  dedup risk against sources we already run, not net-new coverage.
+- **Brooklyn Bridge Parents** → **weak, deprioritized** (see its full entry
+  below — re-probed 2026-07-24, DEFERRED with the complete technical
+  finding: WP Event Manager, list + detail-crawl feasible, but only 9
+  events total and 2/9 are `brooklyn_army_terminal` reposts).
 - **Puppetworks** → **rejected here (JS-rendered).** Runs on the `edit.site`
   website builder (`/bundle/publish/…/bundle.js`, `fonts-cdn.edit.site`); the
   schedule is client-rendered, so plain httpx gets only CSS/font boilerplate.
@@ -920,35 +919,82 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 
 ### Brooklyn Bridge Parents — brooklynbridgeparents.com
 
-- **Status:** CANDIDATE — proposed 2026-07-07, unprobed (single homepage
-  fetch only; no endpoint/platform probe run yet).
+- **Status:** CANDIDATE — **DEFERRED 2026-07-24** after a full platform +
+  volume probe (plain `httpx`, no anti-bot wall encountered — see below).
+  Not rejected (a real, parseable structured surface exists), but build
+  cost is high relative to payoff for the volume on offer right now.
 - **Not to be confused with** the "Brooklyn Bridge Park" entry above
   (`brooklynbridgepark.org`) — that's the physical waterfront park's own
   event calendar; this is a separate Brooklyn-focused parenting magazine/
-  directory site, closer in kind to the New York Family entry below than
-  to a single-venue source.
-- **Why:** Brooklyn-focused family content site with a dedicated events
-  section, school guides, and camps/after-school listings. Brooklyn-only
-  scope would sidestep New York Family's regional (Long Island-bleeding)
-  geo-filter problem, if the feed holds up.
-- **Site type:** WordPress (`/wp-content/` paths visible on fetch); a
-  hybrid blog + events calendar + local-business directory ("CONNECT").
-  Not a single-purpose event calendar — most of the site is unrelated
-  content (restaurants, real estate, school guides), so whatever feed
-  probing finds will need real filtering, not a bare pass-through.
-- **URLs to probe:** `https://brooklynbridgeparents.com/events/` (the
-  events listing). Check for a Tribe Events Calendar REST endpoint first
-  (`/wp-json/tribe/events/v1/events`) — five sources already built on that
-  plugin, worth ruling in/out before assuming a custom scrape is needed.
+  directory site.
+- **Platform confirmed: WordPress + "WP Event Manager" (`wp-event-manager`
+  plugin family), NOT The Events Calendar/Tribe.** Custom post type
+  `event_listing` is open on the plain WP REST API:
+  `GET /wp-json/wp/v2/event_listing?per_page=100` → 200, `X-WP-Total: 9`,
+  `X-WP-TotalPages: 1`. Also confirmed present: `event_listing_category`
+  and `event_listing_type` taxonomies (both queryable the same way).
+- **The REST API alone is NOT enough — no structured date field.** Each
+  row's `acf` is an empty array and `meta` carries only SEO/Jetpack keys;
+  there is no `start_date`/`end_date` anywhere in the JSON, and the
+  per-event JSON-LD block in `aioseo_head` is `WebPage`/`Organization`/
+  `BreadcrumbList` only — **no `Event` schema, no `startDate`.** (This is a
+  gap the 2026-07-13 "works" note didn't check — that pass only confirmed
+  the endpoint responds, not that it carries a usable date.)
+- **The rendered detail page DOES carry clean, plugin-templated fields** —
+  same "list cheap, crawl detail" shape as `mommy_poppins`/`snug_harbor`.
+  On each `/event/<slug>/` page (plain `httpx`, no impersonation needed):
+  - `.wpem-event-location.loc-txt` → venue + neighborhood, e.g.
+    `"Fort Greene Park (Myrtle & St Edwards) | Fort Greene"`.
+  - `.eventcost .inner` → cost text, e.g. `"Free"`.
+  - `.wpem-event-date-time` → human date/time range needing a regex parse,
+    e.g. `"Saturday, Aug. 8, 2026 @ 10 AM - 1 PM"` or, for multi-day,
+    `"Saturday, Jul. 25, 2026 @ 10 AM - Saturday, Dec. 19, 2026 @ 2 PM"`.
+  - A cleaner, near-ISO copy of the same date also exists, but it's
+    embedded inside an HTML-entity-escaped JS blob
+    (`var event_manager_google_maps = {"address": "...<div
+    class=\"wpem-google-tooltip-event-date-time\">2026-08-08 @ 10:00
+    AM to 2026-08-08 @ 01:00 PM..."}`) — parseable, but a second layer of
+    unescaping on top of the plain HTML fields above, so the `.wpem-*`
+    classes are the simpler path if this is ever built.
+  - The listing page (`/events/`) also renders `.wpem-event-date-time-text`
+    per card (same human format), so a summary-only build without a detail
+    crawl is technically possible too, at the cost of losing venue/cost.
+- **Volume is the real blocker: only 9 events exist on the entire site at
+  probe time** (`X-WP-Total: 9`, matching the 2026-07-13 note's count
+  exactly — this isn't a fluke, the site just runs very few listings).
+  For comparison, every other live venue source in this catalog clears
+  that per *window*, several by 10x or more.
+- **Kid-relevance is high but content is a mix, and dedup risk is
+  confirmed real:** sampled all 9 titles + full descriptions this session.
+  - **2 of 9** (`Summer at the Terminal: Wellness on the Waterfront`,
+    `Summer at the Terminal: Salsa Night`) are **NYCEDC reposts of
+    Brooklyn Army Terminal's own calendar** — same naming pattern as the
+    live `brooklyn_army_terminal` source. Different `source` slug means a
+    different `compute_id`, so these would double-list in the catalog
+    without an explicit organizer/venue exclusion filter (same shape as
+    the Macaroni Kid dedup problem below).
+  - **7 of 9** look genuinely net-new: several are Brooklyn Bridge Parents'
+    own organized promotions (Summer Saturdays for Families at Atlantic
+    Terminal Mall, Brooklyn Heights Back to School Party on Montague St),
+    plus small venues this catalog doesn't currently source (Transmitter
+    Park mermaid storytime, Dumbo Ceramics pottery workshop, City Cinema
+    film/acting programs). All read as kid/family-appropriate; no adult
+    content spotted in this sample.
+  - Net: selectivity is fine (~78% non-duplicate in-sample), but the
+    absolute net-new yield from 9 total listings is tiny either way.
+- **When revisited:** build as list (`/wp-json/wp/v2/event_listing`) +
+  per-event detail crawl (9 fetches/run — cheap) parsing the three
+  `.wpem-*` classes above, with a cross-source dedup filter dropping
+  organizer/title patterns matching `brooklyn_army_terminal` (and
+  re-checking against any other live venue source before shipping, the
+  same caution as Macaroni Kid). Given the volume, this is a low-priority
+  "nice to have Brooklyn Bridge Parents' own promo events" build, not a
+  meaningful net-new-coverage source on its own — reassess if the site's
+  listing volume grows materially past ~9.
 - **Caution — user-submitted events:** the site has a public
-  `/post-an-event/` submission form and an `/event-dashboard/` — events
-  look user/business-submitted, not editorially curated like Mommy
-  Poppins/BPL. Expect more promotional noise and inconsistent quality than
-  the curated sources; may need a stricter filter than the "inclusive +
-  blocklist" sources use.
-- **Next step:** `source-verifier` — confirm the Tribe endpoint (or
-  identify the real platform if it's not Tribe), sample real event rows,
-  and assess submission-noise levels before committing to `source-adder`.
+  `/post-an-event/` submission form and an `/event-dashboard/`; expect
+  more promotional noise and inconsistent quality than curated sources
+  like Mommy Poppins/BPL if built.
 
 ### NYC public libraries — system map (read before building any of the four below)
 
