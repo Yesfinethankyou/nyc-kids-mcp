@@ -48,6 +48,10 @@ SOURCE_NEIGHBORHOOD: dict[str, str] = {
     # (aka Clinton); the feed carries no lat/lng, so this tier-1 label is the
     # only coding.
     "intrepid": "Hell's Kitchen",
+    # Korean Cultural Center New York, 122 E. 32nd St — the NTA is
+    # "Murray Hill-Kips Bay"; "Murray Hill" is a substring so the search
+    # filter unifies this label with geocode-derived rows.
+    "kccny": "Murray Hill",
 }
 
 # Tier 2: multi-site sources small enough to enumerate. NY Transit Museum runs

@@ -61,11 +61,10 @@ fine.
 
 **Re-probe results (2026-07-13, plain httpx, this session):**
 - **Snug Harbor** → ✅ BUILT (see its entry below — clean WP REST + JSON-LD).
-- **Brooklyn Bridge Parents** → **weak, deprioritized.** WP Event Manager
-  (`/wp-json/wp/v2/event_listing`) works, but only **9 events**, and the
-  sampled rows are **re-posts of our existing `brooklyn_army_terminal`
-  source** ("Summer at the Terminal: …") — it's an aggregator with heavy
-  dedup risk against sources we already run, not net-new coverage.
+- **Brooklyn Bridge Parents** → **weak, deprioritized** (see its full entry
+  below — re-probed 2026-07-24, DEFERRED with the complete technical
+  finding: WP Event Manager, list + detail-crawl feasible, but only 9
+  events total and 2/9 are `brooklyn_army_terminal` reposts).
 - **Puppetworks** → **rejected here (JS-rendered).** Runs on the `edit.site`
   website builder (`/bundle/publish/…/bundle.js`, `fonts-cdn.edit.site`); the
   schedule is client-rendered, so plain httpx gets only CSS/font boilerplate.
@@ -835,27 +834,65 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 
 ### Puppetworks
 
-- **Status:** CANDIDATE — proposed 2026-07-05, unprobed (sandbox egress to
-  `puppetworks.org` was reset/blocked this session — `curl_cffi
-  impersonate="chrome"` got `Recv failure: Connection reset by peer` on `/`,
-  `/calendar`, `/schedule`, `/tickets`, `/events`; retry from a different
-  network before concluding it's actually unreachable, per the "sandbox
-  egress varies" note above).
-- **Why:** dedicated marionette/puppet theater — all-ages by construction,
-  no kid-relevance filter likely needed (same "curated kids feed" bucket as
-  `mommy_poppins`/`bk_childrens_museum`).
-- **URLs to probe:** `https://puppetworks.org` plus a calendar/schedule/
-  tickets page (exact path unconfirmed — probe blocked before a page loaded).
-  Check for a ticketing-platform embed (many small theaters run Eventbrite,
-  Ticketleap, or a custom WordPress calendar) — grep for the usual tells
-  (`wp-json`, `tribe-events`, `eventbrite`, JSON-LD `Event`).
-- **Borough/venue:** proposed as Brooklyn Bridge Park — **verify during the
-  probe**, since Puppetworks has historically been sited in Park Slope
-  (338 6th Ave), not Brooklyn Bridge Park; confirm the current address before
-  hardcoding a `SOURCE_NEIGHBORHOOD` entry.
-- **Filtering plan if built:** likely no filter needed (single-purpose kids'
-  venue) — confirm the full program list is actually all-ages before skipping
-  a filter, same caution as the other curated feeds.
+- **Status:** ❌ **REJECTED 2026-07-24** — no structured event surface exists,
+  AND the underlying content isn't shaped like discrete dated events even if
+  scraped. Confirmed with a fresh live probe (plain `httpx`, Chrome UA — the
+  `curl_cffi impersonate="chrome"` connection-reset seen this session is the
+  known 2026-07-13 sandbox-proxy MITM issue documented in "Cross-cutting
+  notes" above, not a site-side block; plain `httpx` with a browser UA
+  reached the site fine, no anti-bot wall). This matches and supersedes the
+  brief 2026-07-13 off-proxy note near the top of this file ("rejected here
+  (JS-rendered)") with the full technical finding:
+  - **Platform:** the `edit.site` website builder (`/bundle/publish/0.86.1/
+    bundle.js`, `/__static/...` image blobs, `itemType="https://schema.org/
+    WebPage"` etc.). Zero platform tells from the standard probe list — no
+    `wp-json`, no `tribe-events`, no Squarespace, no Eventbrite, no
+    `.ics`/iCal (the one `ical` hit was a false-positive substring match
+    inside `rel="canonical"`), and **zero JSON-LD `Event` blocks** — the only
+    microdata present is generic `WebPage`/`Organization`/`SiteNavigationElement`/
+    `ImageObject` boilerplate from the page-builder template, confirmed by
+    inspecting every `schema.org` occurrence in the rendered HTML.
+  - **Crucially, the page IS server-rendered plain HTML** (readable with a
+    plain `httpx` GET + browser `User-Agent`, no JS execution needed) — the
+    2026-07-13 "JS-rendered, only CSS/font boilerplate" characterization was
+    itself a UA/proxy artifact, not a real client-render wall. But
+    server-rendered here just means there's clean prose to scrape, not that
+    there's an events feed to parse.
+  - **The content itself is a repertoire/season page, not an events
+    calendar** — same shape problem as the Bronx Zoo/WCS rejection above.
+    The homepage (`/`) has ONE current production ("Pinocchio," July 18 –
+    August 9, 2026) with a **fixed recurring weekly showtime grid**
+    ("Public Performances: Saturdays & Sundays @ 12:30 & 2:30 p.m.") plus one
+    one-off special performance (Fri July 31 @ 7:00pm). `/coming-soon/` lists
+    the rest of the season as **date-RANGE show runs**, not discrete
+    occurrences: "OPENS September 12 thru October 25, 2026," "October 31 &
+    November 1, 2026," "November 2 thru December 30, 2026," "January 16 -
+    April 18, 2027." There is no page anywhere that lists individual
+    Saturday/Sunday dates as separate rows — building an `Event` per
+    occurrence would mean **inventing** every Sat/Sun date within each
+    printed range client-side, which is speculative synthesis, not scraping.
+    `/private-parties/` and `/directions/` are logistics pages, not calendars.
+  - **No ticketing-platform embed found** (no Eventbrite/Ticketleap/etc.) —
+    reservations are by email/phone (`puppetworksinfo@gmail.com`,
+    718-965-3391), not an online booking system that might have exposed a
+    JSON API.
+  - **Address confirmed:** still Park Slope, 338 6th Avenue (at 4th Street),
+    Brooklyn, NY 11215 — the venue's own "Coming Soon" page notes an upcoming
+    partial relocation to **51 35th Street at Industry City** starting
+    September 2026 ("Hansel & Gretel" opens there, and private parties move
+    there too) — confirming the original backlog note that "Brooklyn Bridge
+    Park" was never correct, and adding a wrinkle (the venue itself is about
+    to become two addresses) that would complicate a future `SOURCE_NEIGHBORHOOD`
+    entry if this is ever revisited.
+- **Revisit conditions:** only if Puppetworks adopts a real booking platform
+  (Eventbrite/Ticketleap/WordPress+Tribe/etc.) that publishes per-date
+  sessions, or if a future maintainer decides a synthetic "expand the
+  recurring Sat/Sun grid across the printed date range" convention is
+  acceptable catalog content (no precedent for that in this codebase; the
+  closest analog, WCS zoo season-run spotlights, was rejected for the same
+  reason). Until then, no `source-adder` handoff.
+- **No fixture captured** — nothing structured to capture; this is a REJECTED
+  verdict, not CONFIRMED.
 
 ### Brooklyn Bridge Park — ✅ BUILT 2026-07-13
 
@@ -920,35 +957,82 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 
 ### Brooklyn Bridge Parents — brooklynbridgeparents.com
 
-- **Status:** CANDIDATE — proposed 2026-07-07, unprobed (single homepage
-  fetch only; no endpoint/platform probe run yet).
+- **Status:** CANDIDATE — **DEFERRED 2026-07-24** after a full platform +
+  volume probe (plain `httpx`, no anti-bot wall encountered — see below).
+  Not rejected (a real, parseable structured surface exists), but build
+  cost is high relative to payoff for the volume on offer right now.
 - **Not to be confused with** the "Brooklyn Bridge Park" entry above
   (`brooklynbridgepark.org`) — that's the physical waterfront park's own
   event calendar; this is a separate Brooklyn-focused parenting magazine/
-  directory site, closer in kind to the New York Family entry below than
-  to a single-venue source.
-- **Why:** Brooklyn-focused family content site with a dedicated events
-  section, school guides, and camps/after-school listings. Brooklyn-only
-  scope would sidestep New York Family's regional (Long Island-bleeding)
-  geo-filter problem, if the feed holds up.
-- **Site type:** WordPress (`/wp-content/` paths visible on fetch); a
-  hybrid blog + events calendar + local-business directory ("CONNECT").
-  Not a single-purpose event calendar — most of the site is unrelated
-  content (restaurants, real estate, school guides), so whatever feed
-  probing finds will need real filtering, not a bare pass-through.
-- **URLs to probe:** `https://brooklynbridgeparents.com/events/` (the
-  events listing). Check for a Tribe Events Calendar REST endpoint first
-  (`/wp-json/tribe/events/v1/events`) — five sources already built on that
-  plugin, worth ruling in/out before assuming a custom scrape is needed.
+  directory site.
+- **Platform confirmed: WordPress + "WP Event Manager" (`wp-event-manager`
+  plugin family), NOT The Events Calendar/Tribe.** Custom post type
+  `event_listing` is open on the plain WP REST API:
+  `GET /wp-json/wp/v2/event_listing?per_page=100` → 200, `X-WP-Total: 9`,
+  `X-WP-TotalPages: 1`. Also confirmed present: `event_listing_category`
+  and `event_listing_type` taxonomies (both queryable the same way).
+- **The REST API alone is NOT enough — no structured date field.** Each
+  row's `acf` is an empty array and `meta` carries only SEO/Jetpack keys;
+  there is no `start_date`/`end_date` anywhere in the JSON, and the
+  per-event JSON-LD block in `aioseo_head` is `WebPage`/`Organization`/
+  `BreadcrumbList` only — **no `Event` schema, no `startDate`.** (This is a
+  gap the 2026-07-13 "works" note didn't check — that pass only confirmed
+  the endpoint responds, not that it carries a usable date.)
+- **The rendered detail page DOES carry clean, plugin-templated fields** —
+  same "list cheap, crawl detail" shape as `mommy_poppins`/`snug_harbor`.
+  On each `/event/<slug>/` page (plain `httpx`, no impersonation needed):
+  - `.wpem-event-location.loc-txt` → venue + neighborhood, e.g.
+    `"Fort Greene Park (Myrtle & St Edwards) | Fort Greene"`.
+  - `.eventcost .inner` → cost text, e.g. `"Free"`.
+  - `.wpem-event-date-time` → human date/time range needing a regex parse,
+    e.g. `"Saturday, Aug. 8, 2026 @ 10 AM - 1 PM"` or, for multi-day,
+    `"Saturday, Jul. 25, 2026 @ 10 AM - Saturday, Dec. 19, 2026 @ 2 PM"`.
+  - A cleaner, near-ISO copy of the same date also exists, but it's
+    embedded inside an HTML-entity-escaped JS blob
+    (`var event_manager_google_maps = {"address": "...<div
+    class=\"wpem-google-tooltip-event-date-time\">2026-08-08 @ 10:00
+    AM to 2026-08-08 @ 01:00 PM..."}`) — parseable, but a second layer of
+    unescaping on top of the plain HTML fields above, so the `.wpem-*`
+    classes are the simpler path if this is ever built.
+  - The listing page (`/events/`) also renders `.wpem-event-date-time-text`
+    per card (same human format), so a summary-only build without a detail
+    crawl is technically possible too, at the cost of losing venue/cost.
+- **Volume is the real blocker: only 9 events exist on the entire site at
+  probe time** (`X-WP-Total: 9`, matching the 2026-07-13 note's count
+  exactly — this isn't a fluke, the site just runs very few listings).
+  For comparison, every other live venue source in this catalog clears
+  that per *window*, several by 10x or more.
+- **Kid-relevance is high but content is a mix, and dedup risk is
+  confirmed real:** sampled all 9 titles + full descriptions this session.
+  - **2 of 9** (`Summer at the Terminal: Wellness on the Waterfront`,
+    `Summer at the Terminal: Salsa Night`) are **NYCEDC reposts of
+    Brooklyn Army Terminal's own calendar** — same naming pattern as the
+    live `brooklyn_army_terminal` source. Different `source` slug means a
+    different `compute_id`, so these would double-list in the catalog
+    without an explicit organizer/venue exclusion filter (same shape as
+    the Macaroni Kid dedup problem below).
+  - **7 of 9** look genuinely net-new: several are Brooklyn Bridge Parents'
+    own organized promotions (Summer Saturdays for Families at Atlantic
+    Terminal Mall, Brooklyn Heights Back to School Party on Montague St),
+    plus small venues this catalog doesn't currently source (Transmitter
+    Park mermaid storytime, Dumbo Ceramics pottery workshop, City Cinema
+    film/acting programs). All read as kid/family-appropriate; no adult
+    content spotted in this sample.
+  - Net: selectivity is fine (~78% non-duplicate in-sample), but the
+    absolute net-new yield from 9 total listings is tiny either way.
+- **When revisited:** build as list (`/wp-json/wp/v2/event_listing`) +
+  per-event detail crawl (9 fetches/run — cheap) parsing the three
+  `.wpem-*` classes above, with a cross-source dedup filter dropping
+  organizer/title patterns matching `brooklyn_army_terminal` (and
+  re-checking against any other live venue source before shipping, the
+  same caution as Macaroni Kid). Given the volume, this is a low-priority
+  "nice to have Brooklyn Bridge Parents' own promo events" build, not a
+  meaningful net-new-coverage source on its own — reassess if the site's
+  listing volume grows materially past ~9.
 - **Caution — user-submitted events:** the site has a public
-  `/post-an-event/` submission form and an `/event-dashboard/` — events
-  look user/business-submitted, not editorially curated like Mommy
-  Poppins/BPL. Expect more promotional noise and inconsistent quality than
-  the curated sources; may need a stricter filter than the "inclusive +
-  blocklist" sources use.
-- **Next step:** `source-verifier` — confirm the Tribe endpoint (or
-  identify the real platform if it's not Tribe), sample real event rows,
-  and assess submission-noise levels before committing to `source-adder`.
+  `/post-an-event/` submission form and an `/event-dashboard/`; expect
+  more promotional noise and inconsistent quality than curated sources
+  like Mommy Poppins/BPL if built.
 
 ### NYC public libraries — system map (read before building any of the four below)
 
@@ -1376,43 +1460,125 @@ unprobed (expect similar stacks; probe before writing any code).
 
 ### Gothamist
 
-- **Status:** CANDIDATE — proposed 2026-07-06, unprobed. **Likely not a kids
-  event source** — flagged for evaluation, not assumed buildable.
-- **What it is:** NYC news/culture site (WNYC-owned). Not a dedicated events
-  calendar — occasional "things to do with kids this weekend" roundup posts,
-  similar in spirit to The Skint but even less event-structured (it's a news
-  site, not an events blog).
-- **URLs to probe:** `https://gothamist.com/feed` or `/arts-entertainment/feed`
-  (WordPress-style RSS, unconfirmed), and check for a dedicated kids/family
-  tag/category feed.
-- **Same two blocking questions as The Skint (settle first):**
-  1. **Per-event or digest/roundup articles?** Gothamist's kids content is
-     almost certainly roundup articles ("32 things to do with kids in NYC
-     this weekend") listing many events in prose, not one item per event.
-     Extracting structured events from that prose is free-text NLP —
-     **explicitly out of scope** (PHASE-3-PLAN.md). If every kids-relevant
-     post is this shape, this candidate is **not buildable** without an
-     out-of-scope NLP step and should be rejected outright.
-  2. **Kid yield.** Even if some items are per-event, Gothamist is a general
-     news site — expect most content to be unrelated to kids/family events
-     entirely (politics, food, transit). A strict allowlist would be
-     mandatory.
-  - **Recommendation:** probe briefly to confirm/reject the digest-format
-    problem before investing more time — this is the weakest candidate of
-    the group and may be a fast REJECTED.
-- **Filtering plan if built (only if per-event structure exists):** mandatory
-  kid-relevance allowlist + the shared `ADULT_BLOCKLIST`/
-  `ADULT_TITLE_BLOCKLIST` from `_filters.py`, same posture as The Skint.
-- **Missing-detection:** opt out (`window_days=None`) if built — editorial
-  rotation, not a full-window feed.
+- **Status:** REJECTED — probed 2026-07-24 (plain `httpx`, no anti-bot wall
+  encountered; no `curl_cffi` needed). Both blocking questions from the
+  original entry are answered and both point the same way: **no usable
+  structured surface, and no per-event content even in prose form.**
+- **What it is:** NYC news/culture site (WNYC-owned), running a **Wagtail**
+  CMS (Python/Django, NOT WordPress — `/wp-json` 404s, no `tribe-events`,
+  no Squarespace/Drupal tells). Confirmed via `https://gothamist.com/feed`
+  (generic RSS, `<atom:link href="http://cms.prod.nypr.digital/feed/">`) and
+  the public search API at `https://api-prod.gothamist.com/api/v2/search`.
+- **Probe findings:**
+  1. **Per-event or digest/roundup?** Confirmed roundup/digest, and confirmed
+     out of scope. Every content item in the CMS — news, arts, and the
+     "things to do" pieces alike — is a single content type,
+     `news.ArticlePage`, with a `body` field that is a list of free-text
+     rich-text HTML blocks. There is no dedicated event/calendar content
+     type (checked: no `events.*` type appears anywhere in `meta.type` across
+     dozens of search results). Pulled a representative recent roundup,
+     ["Want to do 'Hamilton' karaoke or make a World Cup piñata? Visit an NYC
+     library this July"](https://gothamist.com/arts-entertainment/want-to-do-hamilton-karaoke-or-make-a-world-cup-pi%C3%B1ata-visit-an-nyc-library-this-july)
+     (`/api/v2/pages/168486/`) — its entire body is one `paragraph` block of
+     prose: `<h4>The big stuff</h4><p>...Kids can learn to code
+     <a href="...queenslibrary.org/calendar/...">soccer-playing robots</a> in
+     Woodhaven...you can <a href="...queenslibrary.org/calendar/...">make
+     your own World Cup pinata</a> in Flushing...</p>`. Dates, venues, and
+     per-event detail live only in prose sentences and in outbound links to
+     *other sites'* calendar pages (NYPL/QPL/BPL — all three already
+     CONFIRMED/live sources here in their own right). There is nothing here
+     to parse without free-text NLP extraction, which is explicitly
+     out of scope per `PHASE-3-PLAN.md`.
+  2. **Kid yield.** Confirmed low/noisy as predicted. The RSS firehose's most
+     recent 40 items were 100% general news (politics, transit, crime,
+     housing) — zero kids/family content. The search API's `q=kids` query
+     returns 4,477 results, but a scan of the top hits shows they're almost
+     all incidental word matches ("Man pleads not guilty to shooting 8
+     people, including 4 kids...", "NJ Republicans say noncitizen voter
+     problem..."), not family programming. No dedicated kids/family tag or
+     category feed exists (`/arts-entertainment/feed`, `/tag/kids/feed` both
+     404).
+- **Verdict rationale:** unlike Industry City / Governors Island / Domino
+  Park (each initially misjudged by a non-impersonating probe and later
+  confirmed), this is not a probe-strength problem — the Wagtail API is
+  fully open and easy to query, and it unambiguously shows one content
+  type (free-text articles) with no event schema underneath. REJECTED,
+  not DEFERRED: there's no future condition (better probe, different
+  endpoint) that would change this — the underlying content is prose by
+  design.
+- **No fixture captured** — nothing structured to capture.
 
 ### The Skint (theskint.com) — citywide editorial RSS
 
-- **Status:** CANDIDATE — probed 2026-07-06 (plain `httpx`, no anti-bot; `curl_cffi`
-  actually got connection-reset from this sandbox — the reverse of the usual
-  pattern, so try plain `httpx` first for this host). Both blocking questions
-  from the original entry are now answered. **Verdict: technically buildable
-  without AI/NLP, but yield is low — a real judgment call, not an easy win.**
+- **Status:** CANDIDATE — re-probed live 2026-07-24 (17 days after the
+  original 2026-07-06 probe), plain `httpx`, no anti-bot wall encountered.
+  **Every finding below still holds; no material change.** Verdict
+  unchanged: **technically buildable without AI/NLP, but yield is low — a
+  real judgment call, not an easy win.** A fixture is now captured (it
+  wasn't before), so a future build doesn't have to re-probe from scratch.
+- **Fixture:** `tests/fixtures/theskint_sample.json` — 2 entries in
+  trimmed `wp-json/wp/v2/posts` shape: one digest post (`id=89252`,
+  "TUES-THURS, 7/21-23…", content trimmed to the Tuesday section + the
+  "our next event!" sponsored insert + the Wednesday section, Thursday
+  omitted for size) and one standalone sponsored post ("CRUEL SUMMER…",
+  full content, ~2.4KB) to represent the digest/standalone mix. No
+  auth/cookies to strip — public endpoint.
+- **2026-07-24 re-probe findings (fresh numbers, same shape as original):**
+  - Both endpoints still live, unchanged: `https://theskint.com/feed/`
+    (RSS 200, tells: `wp-content`×70, `eventbrite`×61, `ical`×21) and
+    `https://theskint.com/wp-json/wp/v2/posts?per_page=20` (200, still
+    hard-capped at **19 posts**, not 20 — confirms the original "caps at
+    19 total posts" finding). Plain `httpx` (no impersonation, no
+    `curl_cffi`) still works cleanly — no anti-bot wall added since 2026-07-06.
+  - **Digest/standalone mix is *exactly* the same ratio**: of the 19 live
+    posts (spanning 6/26–7/23, i.e. the last ~4 weeks), **8 are digest
+    posts** (`TUES-THURS, M/D-M/D:` / `FRI-MON, M/D-M/D: SKINT WEEKEND` /
+    `SKINT HOLIDAY WEEKEND` title patterns) and **11 are standalone**, still
+    almost entirely "(SPONSORED)" ad placements (comedy shows, dance
+    parties, a theater season announcement) — same low-kid-relevance
+    standalone mix as before. Recommendation to skip standalone posts
+    entirely still stands.
+  - **Digest template confirmed byte-for-byte the same structure**: pulled
+    3 live digest posts' full `content.rendered` and parsed with
+    `selectolax` — `<u>day-name</u>` section headers, one `<p>` per event
+    in `<time/day-phrase>: <b>Title</b>: description. <a href=…>` form. A
+    quick regex re-check (not the exact production regex, just a
+    structural sanity check) matched **203 of 402** `<p>` blocks across the
+    3 posts (~51% hit rate) — same order of magnitude as the original
+    239/472 (~51%). The multi-item-per-`<p>` sub-list pattern (e.g. "free
+    outdoor movies" listing 5–6 films as `<br>`-separated bullets inside
+    one `<p>`) is still present and still needs the same special-casing.
+  - **One nuance on the "continuation-folding" gotcha**: in this week's
+    sample, every detected multi-paragraph continuation traced back to the
+    **"our next event!" sponsored callout block** (a boxed, multi-`<p>`
+    house ad for an upcoming Skint-sponsored party, e.g. "Cruel Summer:
+    80s & 90s Dance Party" — captured in the fixture) rather than to
+    genuine organic per-event descriptions spilling into a second `<p>`.
+    Worth a closer look during the actual build: the true rate of organic
+    multi-paragraph event descriptions may be lower than the original
+    "~40% of matched events" estimate implied, with a chunk of that
+    apparent rate actually being this one recurring sponsored-insert block
+    per digest (which a parser would want to detect and skip/tag
+    separately anyway, since it's an ad, not an event).
+  - **Kid yield — re-checked, same order of magnitude, still low-density.**
+    Ran a quick (not the real, tighter) keyword allowlist + the shared
+    `_filters.py` adult blocklist against the 203 freshly-parsed events:
+    26 kept (12.8%), but manual review showed most of that jump vs. the
+    original 5.9% is **false positives from a noisier draft allowlist**
+    (e.g. "Child's Play 2" horror screening matched on "kid", "Y2K Baby
+    One More Time" dance party matched on "baby", "Beanie Babe Comedy"
+    matched on "babe"). After discounting those by eye, genuinely
+    kid-relevant hits were things like "Free Outdoor Movies" (recurring
+    series, appears across multiple day headers — same double-count
+    caveat as before), "Smorgasburg's Great Ice Cream Fair", "Jersey City
+    Fourth of July Festival", "Double Dutch Fusion Freestyle + Open Jump",
+    and "Youth Pride" — roughly **single digits of distinct kid events
+    across the ~4-week sample**, consistent with the original "~3–5 truly
+    distinct kid-relevant events per week" estimate, not a meaningfully
+    different number. Summer programming (outdoor movies, festivals) skews
+    slightly more family-friendly than a typical week, but not enough to
+    change the verdict.
+- **Original probe (2026-07-06, kept below for reference):**
 - **What it is:** a long-running NYC "free & cheap things to do" editorial blog
   (WordPress). Citywide aggregator — **not** a venue and **not** a kids feed.
 - **Endpoints confirmed:** `https://theskint.com/feed/` (RSS, 10 most recent
@@ -1486,6 +1652,190 @@ unprobed (expect similar stacks; probe before writing any code).
   ~50%-hit venue regex) for a modest ~3–5 events/week yield. Worth it mainly if
   citywide breadth (vs. single-venue depth) is the priority. Not yet built —
   maintainer call on whether the yield justifies the parser complexity.
+
+### Korean Cultural Center New York (KCCNY) — koreanculture.org — ✅ BUILT 2026-07-23
+
+- **Status:** ✅ **BUILT 2026-07-23** — shipped as source `kccny`. As-built
+  notes (what matched/differed from the probe below):
+  - Confirmed live against the fixture: plain `httpx` (no `curl_cffi`) is
+    correct — matches the probe's "unusual good news" finding.
+  - **`external_id` strategy verified against the fixture, not just
+    research**: the multi-session "A K-Birthday Party" card's two prose
+    dates (Aug 7 + Aug 8, 2026) parse into two distinct occurrences sharing
+    one `data-item-id`; `external_id = f"{item_id}:{occurrence_date}"` is
+    applied to EVERY occurrence (not just multi-session posts, for
+    consistency with `bbg`/`nyc_permitted_events`) so this never collapses.
+  - **Scope decision made explicit during the build (not left to the
+    source itself to decide): no detail-page crawl for v1.** The probe
+    flagged empty-excerpt rows ("Seollal Family Day") as needing a
+    `mommy_poppins`/`snug_harbor`-style detail fetch to recover their date.
+    Built without it instead — an empty-excerpt row is parsed to zero
+    events and skipped (logged), not recovered. Small recall loss, keeps
+    this a cheap list-only scrape. Revisit if this class of row turns out
+    to be a meaningful chunk of the kid-relevant catalog.
+  - **Time-range prose parsing**: KCCNY typically writes ranges with a
+    single trailing meridiem covering both ends ("4:00–5:30 PM", not
+    "4:00 PM–5:30 PM") — different from `bbg`'s per-number-meridiem style,
+    so `kccny.py` has its own `_RANGE_RX` (optional first meridiem,
+    borrowed from the second) rather than reusing `bbg`'s `_TIME_RX`.
+  - `category-past`/`category-Past` was NOT used as the upcoming/past
+    filter (the probe's caution about publish-date ordering was right to
+    flag) — instead every card's real parsed occurrence date is filtered
+    against `[today, today+window_days]` in `fetch()`, same shape as `bbg`.
+  - Kid-relevance filter matched the fixture 1:1: 5 of 8 fixture cards
+    passed the title/excerpt keyword allowlist ("A K-Birthday Party", 3x
+    "Korean Storytime: …", "Seollal Family Day" — dropped afterward for no
+    parseable date); the 3 adult cards (Korean language course, Serang
+    Chung author talk, "The Other Korea" off-site talk) were correctly
+    excluded by the allowlist with no keyword match.
+  - `SOURCE_NEIGHBORHOOD["kccny"] = "Murray Hill"` (substring of the
+    official NTA "Murray Hill-Kips Bay", per the tier-1 label convention).
+  - Opted INTO missing-detection (`window_days=60`, full page-walk every run).
+- **Original probe (2026-07-23, kept below for reference):**
+- **What it is:** the NYC branch of Korea's Ministry of Culture, Sports and
+  Tourism (122 E. 32nd Street, Manhattan — Murray Hill/Kips Bay). Runs
+  Squarespace. Programming is **mostly adult** (concerts, dance, author
+  talks, film screenings, language classes) but has a genuine, recurring
+  **kids/family strand**: a monthly "Korean Storytime" series at the KCCNY
+  library, occasional family days (Seollal/Lunar New Year, a "Pinkfong &
+  Baby Shark" pop-up), and kid-targeted workshops ("A K-Birthday Party" —
+  drop-off class, "Recommended Ages: 6–9"). This is real, current
+  programming (a "Korean Storytime" and "A K-Birthday Party" were both
+  upcoming/2026-dated at probe time), not a defunct feed.
+- **Platform: Squarespace, but NOT the confirmed `?format=json` "upcoming
+  array + epoch-ms startDate" fast path** (that shape — see Coney Island USA
+  — is a true Squarespace **Events** collection). KCCNY's event-bearing pages
+  are Squarespace **Blog collections styled with the "Events" list template**
+  (`collection.type: 1`, `eventView: 1` — a blog, not an Events collection
+  type). Confirmed via `?format=json` on multiple collection paths
+  (`/performing-arts`, `/education-literature`, `/films`, `/gallery-korea`,
+  `/cuisine-tourism`, `/special-events`, `/sports`, `/a-new-family`) — every
+  one returns paginated JSON `items` with `title`/`urlId`/`fullUrl`/`excerpt`/
+  `categories`, but **no `startDate`/`endDate` field exists on any item**.
+  Confirmed the gap is real, not a fetch mistake: detail-page JSON-LD is
+  `Article`/`Organization`/`WebSite`/`LocalBusiness` only — **never `Event`**
+  — so there's no clean per-event date anywhere on the site, list or detail.
+- **⚠️ robots.txt DISALLOWS the JSON fast path — do not use `?format=json`
+  here.** `https://www.koreanculture.org/robots.txt` has (for the `*`
+  user-agent group, which also covers the named AI-crawler block above it):
+  `Disallow:/*?format=json`, `&format=json`, `format=ical`,
+  `format=page-context`, `format=main-content`, `format=json-pretty` — this
+  is Squarespace's own default boilerplate, not a bespoke wall, but it's
+  explicit and unconditional. **Build via a plain HTML scrape instead**,
+  which robots.txt does NOT disallow: the regular collection page (e.g.
+  `GET /education-literature`, no query string) server-renders the identical
+  data inside `<article class="BlogList-item hentry category-<slug>
+  ...">` cards (`.BlogList-item-title` + `href`, `.BlogList-item-excerpt`
+  HTML, category classes), and pagination is a plain `<a
+  class="BlogList-pagination-link" href="/education-literature?offset=<ms>">`
+  link with the "Older" label — `?offset=` alone is NOT in the disallow list.
+  Verified live: the `?offset=`-only URL returns a normal 200 page with the
+  next 20 cards. Use `curl_cffi`/`selectolax` (`article.BlogList-item` cards),
+  not the JSON endpoint.
+- **The real parsing cost: dates are free-text prose inside `.BlogList-item-excerpt`,
+  in several different formats** — confirmed across a live sample:
+  - Single date+time: `"Wednesday, October 22, 2025, 4:00–5:00 PM"`
+  - Two-line multi-session (each line is its own occurrence — treat like
+    `new_york_family`'s per-day expansion, not one event spanning both):
+    `"Friday, August 7, 2026, 4:00–5:30 PM"` / `"Saturday, August 8, 2026,
+    3:00–4:30 PM"` (both under one post, "A K-Birthday Party")
+  - `"Date: October 30th, 2023 @ 4pm"` prefix style (older posts)
+  - Date-range style: `"Dates: January 28 – February 1, 2025"` (found in
+    `body`, not `excerpt` — see next bullet)
+  - **Some rows have an EMPTY `excerpt`** (e.g. "Seollal Family Day") — the
+    date/description exists ONLY in the full `body` HTML in that case, which
+    means a fallback body-fetch (detail-page HTML, same URL the excerpt
+    already links to) is sometimes unavoidable, `mommy_poppins`/`snug_harbor`-
+    style, rather than a pure list-only scrape. Recommend: try `excerpt`
+    first, fall back to a detail-page fetch only when `excerpt` is blank
+    (should be a minority of rows) rather than crawling every detail page.
+  - Age info, when present, is also prose ("Recommended Ages: 6–9",
+    "Designed for ages 4–6") — same regex-extraction opportunity as
+    `new_york_family`'s age bands, but not upstream-structured.
+  - This is squarely in BBG-scrape-difficulty territory (lenient prose date
+    parsing against a real but semi-structured field), possibly a bit worse
+    given the format variety observed — not a quick JSON-fast-path build.
+- **`categories` class gives an imperfect "already happened" signal:**
+  KCCNY staff manually add a `category-past`/`category-Past` class (case
+  varies by collection — `past` lowercase on `education-literature`,
+  `Past` capitalized on `performing-arts`) once an event's date has elapsed.
+  Rows without it are the upcoming candidates, but list pages are ordered by
+  **publish/add date, not event date**, so a `category-past` item can appear
+  ABOVE a still-upcoming one in the feed — this is a helpful filter, not a
+  stopping condition for pagination. A full page-walk of the target
+  collection(s) is still required each run to avoid missing upcoming rows
+  buried past a `category-past` one.
+- **Kid density varies enormously by collection** (all probed with
+  `?format=json` for counting purposes only — **the actual build must use
+  the HTML path above**, this was just the fastest way to sample volume):
+  - `/education-literature` (235 items total) — **the dense one**: ~21%
+    kid/family-relevant by keyword (`storytime`/`kids`/`family`/`children`/
+    `toddler`/`birthday party`) — recurring monthly "Korean Storytime",
+    family days, kid workshops. **Recommended primary/only collection for
+    v1** — best signal-to-noise, and Manhattan coverage is the catalog's
+    thinnest borough.
+  - `/performing-arts` (1198 items, the largest collection) — almost
+    entirely adult concerts/dance/theater; a kid-keyword scan of the whole
+    collection found only ~12 hits (~1%), mostly false-positive-ish
+    ("Youth Choir Concert", "Youth Orchestra Festival" — youth performers,
+    not audience-appropriate-for-kids events). Not worth the ~60-page
+    fetch cost for this yield.
+  - `/films` (388 items) — mostly adult Korean cinema; did surface at least
+    one real hit ("Pinkfong Sing Along Movie Screening") but density
+    unmeasured — low priority.
+  - `/gallery-korea`, `/cuisine-tourism`, `/from-korea-cuisine`,
+    `/special-events`, `/sports`, `/a-new-family` — smaller collections
+    (17–261 items), not individually scanned for kid density; `special-events`
+    and `a-new-family` are cheap enough (32 and 17 items) to keyword-scan
+    opportunistically if `education-literature` alone proves too thin.
+- **Venue:** effectively fixed — "Korean Cultural Center New York" building,
+  122 E. 32nd Street, New York, NY 10016 (Murray Hill/Kips Bay, Manhattan) —
+  a `SOURCE_NEIGHBORHOOD` constant is sufficient. **Do NOT use the JSON-LD
+  `Organization`/`LocalBusiness` address** (460 Park Avenue, 6th Floor) —
+  that's the org's separate mailing/consulate-adjacent address, not the
+  event venue; every sampled event excerpt names 122 E. 32nd Street
+  explicitly. A few rows are off-site (e.g. "The Other Korea" at The Town
+  Hall, "IVY in CHICAGO" at the Ambassador Theatre) — those are adult
+  performing-arts rows likely filtered out anyway if `education-literature`
+  is the only collection built.
+- **`external_id`:** the Squarespace item `id` (hex string) is per-post and
+  stable; a multi-session post like "A K-Birthday Party" needs
+  `external_id = f"{id}:{date}"` once its two prose dates are parsed into
+  separate occurrences (same pattern as `nyc_permitted_events`/
+  `new_york_family`), otherwise the two sessions collapse into one row.
+- **Price:** mostly free (public-diplomacy cultural center) — several
+  excerpts explicitly say "Free and open to children and families"; no
+  structured cost field, so `Price.FREE` on an explicit "free" mention in
+  the prose, else `Price.UNKNOWN`.
+- **Missing-detection:** opt IN (`window_days=`) if the build re-walks the
+  full `education-literature` collection every run (a real full-window
+  re-fetch, not incremental) — the collection is small enough (235 items,
+  ~12 pages) that a full walk every run is cheap.
+- **Fixture:** `tests/fixtures/kccny_sample.html` — 8 real `<article
+  class="BlogList-item ...">` cards from a live `GET /education-literature`
+  fetch (2026-07-23), covering: kid-relevant multi-date rows ("A K-Birthday
+  Party"), kid-relevant single-date rows (two "Korean Storytime" posts, one
+  already `category-past`), an empty-excerpt row ("Seollal Family Day" —
+  exercises the body-fallback case), and adult-only rows (a $150 language
+  course, a ticketed author talk, a $50 off-site talk) to exercise a
+  kid-relevance filter — plus the real `<nav class="BlogList-pagination">`
+  "Older" link. Fixture header comment records the robots.txt finding and
+  the format-variety notes above so `source-adder` doesn't have to
+  re-derive them.
+- **Kid-relevance filtering plan:** inclusive title/excerpt keyword ALLOWLIST
+  (`storytime`, `kids`, `family`, `children`, `toddler`, age-range phrases
+  like "ages 4-6") — same posture as the "kid-keyword tag required" strategy
+  in `nyc_permitted_events`, since KCCNY's collections are NOT kid-curated
+  (unlike `bk_childrens_museum`/`si_childrens_museum`) — plus the shared
+  `ADULT_BLOCKLIST`/`ADULT_TITLE_BLOCKLIST`/`MEMBERS_ONLY` from `_filters.py`
+  as a safety net (a cultural center runs 21+ galas/receptions too).
+- **Expected volume:** modest — the Storytime series is roughly monthly, plus
+  occasional family days/workshops. Ballpark low tens of events per 60-day
+  window, similar order of magnitude to `bbg` (28/window) or smaller — this
+  is a small but genuinely net-new Manhattan source, not a high-volume one.
+- **Next step:** `source-adder` for `kccny`, scoped to `/education-literature`
+  only for v1 (skip `/performing-arts` and the other adult-dominated
+  collections given the yield numbers above).
 
 ---
 
