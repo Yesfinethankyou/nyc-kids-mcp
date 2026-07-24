@@ -2,6 +2,34 @@
 
 ## What was done (most recent first)
 
+### Session 2026-07-24: Playwright / Playwright MCP assessment (research + docs, no code)
+
+Assessed whether integrating Playwright MCP would simplify the project or
+unlock blocked sources. Deliverable: `PLAYWRIGHT-MCP-ASSESSMENT.md`. Verdict:
+
+- **Runtime ingest: the 2026-07-07 headless-STRUCK decision stands** —
+  Playwright MCP is an agent-time tool, not a runtime fetch mechanism (the
+  nightly cron has no agent in the loop), so it neither helps nor reopens
+  that ledger. No fit on the served MCP server either (auth surface).
+- **Dev-session probing is where the value is** — and the key finding is
+  empirical: the web sandbox's pre-installed Chromium
+  (`/opt/pw-browsers/chromium`) gets `ERR_CONNECTION_RESET` through the MITM
+  proxy exactly like `curl_cffi`, but **`--ssl-version-max=tls1.2` fixes it**.
+  With that flag: **NYPL (Incapsula) and QPL (F5) walls FALL in-sandbox**
+  (real calendars served — fixture recapture no longer requires an off-proxy
+  session for those two); the Met now 429s even a real headless browser
+  (Vercel checkpoint — wall got harder); AMNH `/calendar` fires **no** data
+  XHR after full render (featured cards ARE the calendar — the backlog's
+  devtools TODO is closed, negatively).
+- SOURCES-BACKLOG.md updated: new cross-cutting workaround note (the
+  Chromium recipe), AMNH devtools-question closed, Met re-probe recorded.
+- Recommendation: browser use stays probe/fixture-capture-only via the
+  script recipe (adding the Playwright MCP server to `.mcp.json` is an
+  optional convenience, not a dependency); runtime fetches stay
+  httpx/`curl_cffi`; no-feed probes still mean REJECT.
+- No source/server code touched. Branch
+  `claude/playwright-mcp-assessment-p5uofq`.
+
 ### Session 2026-07-14 (cont'd): friendly source names
 
 Sources now carry a human-friendly `display_name` alongside the stable `name`

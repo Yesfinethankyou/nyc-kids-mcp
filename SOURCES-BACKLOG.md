@@ -46,6 +46,21 @@ have neighborhood coding already done); they're just not buildable *in a web
 session* until `curl_cffi`-through-proxy is fixed or the build is done
 elsewhere.
 
+**✅ Partial workaround (2026-07-24): headless Chromium DOES work through the
+sandbox proxy.** The web sandbox ships Playwright's Chromium at
+`/opt/pw-browsers/chromium`. A naive launch connection-resets exactly like
+`curl_cffi` (even on example.com — the MITM proxy resets TLS 1.3 hellos), but
+launching with `args=["--ssl-version-max=tls1.2"]` +
+`proxy={"server": $HTTPS_PROXY}` + `ignore_https_errors=True` (proxy CA)
+works. Verified live from a web session 2026-07-24: **NYPL (Incapsula) and
+QPL (F5) both served their real calendars** (200; QPL page includes the full
+`arrJsonData_cal` blob the parser reads) — so fixture recapture for those two
+sources no longer *requires* an off-proxy session: render + `page.content()`
+in-sandbox works. **The Met still stands** (Vercel Security Checkpoint, 429,
+holds ≥20 s against headless Chromium). Probe/fixture tooling only — runtime
+stays httpx/`curl_cffi` on the NAS and headless remains STRUCK for ingest
+(PHASE-3-PLAN.md). Recipe + full assessment: `PLAYWRIGHT-MCP-ASSESSMENT.md`.
+
 **Off-proxy re-probe (2026-07-13, laptop, `curl_cffi impersonate="chrome"`
 verified working): every wall above fell.** Per-entry findings below, summary:
 **QPL** and **NYPL** are CONFIRMED (both server-render their listings once
@@ -1128,7 +1143,11 @@ unprobed (expect similar stacks; probe before writing any code).
 
 - **Status:** CANDIDATE, deprioritized — probed 2026-07-13 off-proxy: Next.js
   App-Router SPA, event data only in the RSC flight payload (see the block
-  note above). Effectively headless-tier.
+  note above). Effectively headless-tier. **Re-probed 2026-07-24 with
+  in-sandbox headless Chromium (real render, not just impersonated TLS):
+  `/events` now sits behind a Vercel Security Checkpoint that 429s headless
+  browsers and holds ≥20 s — the wall got HARDER. Deprioritization
+  confirmed.**
 - **Why:** the Met runs a substantial family strand — **#MetKids**, family
   programs, drop-in drawing, story time, workshops — a real kid-relevant subset
   under an otherwise adult calendar.
@@ -1261,6 +1280,13 @@ unprobed (expect similar stacks; probe before writing any code).
   calendar is JS-driven. **Options: ship a low-yield featured-only source
   (~8 rows), or spend a browser-devtools session hunting the XHR the grid
   makes. Deprioritized behind the confirmed batch.**
+  **Devtools question CLOSED (2026-07-24, in-sandbox Chromium render — see
+  the cross-cutting workaround note):** after full JS execution `/calendar`
+  still shows only ~6 `amnh-calendar-new-event` cards and **no calendar/data
+  XHR fires at all** (network traffic is 100% analytics/ads). There is no
+  hidden grid endpoint on this page — the featured cards ARE the calendar.
+  Remaining options: ship featured-only (~8 rows) or skip; no further
+  probing of `/calendar` needed.
 - **Why:** major family destination — Discovery Room, family workshops,
   Space Show family programming, overnight "Night at the Museum" sleepovers —
   a well-defined kid-relevant strand under an otherwise mixed adult/family
