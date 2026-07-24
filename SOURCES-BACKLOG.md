@@ -1460,35 +1460,53 @@ unprobed (expect similar stacks; probe before writing any code).
 
 ### Gothamist
 
-- **Status:** CANDIDATE — proposed 2026-07-06, unprobed. **Likely not a kids
-  event source** — flagged for evaluation, not assumed buildable.
-- **What it is:** NYC news/culture site (WNYC-owned). Not a dedicated events
-  calendar — occasional "things to do with kids this weekend" roundup posts,
-  similar in spirit to The Skint but even less event-structured (it's a news
-  site, not an events blog).
-- **URLs to probe:** `https://gothamist.com/feed` or `/arts-entertainment/feed`
-  (WordPress-style RSS, unconfirmed), and check for a dedicated kids/family
-  tag/category feed.
-- **Same two blocking questions as The Skint (settle first):**
-  1. **Per-event or digest/roundup articles?** Gothamist's kids content is
-     almost certainly roundup articles ("32 things to do with kids in NYC
-     this weekend") listing many events in prose, not one item per event.
-     Extracting structured events from that prose is free-text NLP —
-     **explicitly out of scope** (PHASE-3-PLAN.md). If every kids-relevant
-     post is this shape, this candidate is **not buildable** without an
-     out-of-scope NLP step and should be rejected outright.
-  2. **Kid yield.** Even if some items are per-event, Gothamist is a general
-     news site — expect most content to be unrelated to kids/family events
-     entirely (politics, food, transit). A strict allowlist would be
-     mandatory.
-  - **Recommendation:** probe briefly to confirm/reject the digest-format
-    problem before investing more time — this is the weakest candidate of
-    the group and may be a fast REJECTED.
-- **Filtering plan if built (only if per-event structure exists):** mandatory
-  kid-relevance allowlist + the shared `ADULT_BLOCKLIST`/
-  `ADULT_TITLE_BLOCKLIST` from `_filters.py`, same posture as The Skint.
-- **Missing-detection:** opt out (`window_days=None`) if built — editorial
-  rotation, not a full-window feed.
+- **Status:** REJECTED — probed 2026-07-24 (plain `httpx`, no anti-bot wall
+  encountered; no `curl_cffi` needed). Both blocking questions from the
+  original entry are answered and both point the same way: **no usable
+  structured surface, and no per-event content even in prose form.**
+- **What it is:** NYC news/culture site (WNYC-owned), running a **Wagtail**
+  CMS (Python/Django, NOT WordPress — `/wp-json` 404s, no `tribe-events`,
+  no Squarespace/Drupal tells). Confirmed via `https://gothamist.com/feed`
+  (generic RSS, `<atom:link href="http://cms.prod.nypr.digital/feed/">`) and
+  the public search API at `https://api-prod.gothamist.com/api/v2/search`.
+- **Probe findings:**
+  1. **Per-event or digest/roundup?** Confirmed roundup/digest, and confirmed
+     out of scope. Every content item in the CMS — news, arts, and the
+     "things to do" pieces alike — is a single content type,
+     `news.ArticlePage`, with a `body` field that is a list of free-text
+     rich-text HTML blocks. There is no dedicated event/calendar content
+     type (checked: no `events.*` type appears anywhere in `meta.type` across
+     dozens of search results). Pulled a representative recent roundup,
+     ["Want to do 'Hamilton' karaoke or make a World Cup piñata? Visit an NYC
+     library this July"](https://gothamist.com/arts-entertainment/want-to-do-hamilton-karaoke-or-make-a-world-cup-pi%C3%B1ata-visit-an-nyc-library-this-july)
+     (`/api/v2/pages/168486/`) — its entire body is one `paragraph` block of
+     prose: `<h4>The big stuff</h4><p>...Kids can learn to code
+     <a href="...queenslibrary.org/calendar/...">soccer-playing robots</a> in
+     Woodhaven...you can <a href="...queenslibrary.org/calendar/...">make
+     your own World Cup pinata</a> in Flushing...</p>`. Dates, venues, and
+     per-event detail live only in prose sentences and in outbound links to
+     *other sites'* calendar pages (NYPL/QPL/BPL — all three already
+     CONFIRMED/live sources here in their own right). There is nothing here
+     to parse without free-text NLP extraction, which is explicitly
+     out of scope per `PHASE-3-PLAN.md`.
+  2. **Kid yield.** Confirmed low/noisy as predicted. The RSS firehose's most
+     recent 40 items were 100% general news (politics, transit, crime,
+     housing) — zero kids/family content. The search API's `q=kids` query
+     returns 4,477 results, but a scan of the top hits shows they're almost
+     all incidental word matches ("Man pleads not guilty to shooting 8
+     people, including 4 kids...", "NJ Republicans say noncitizen voter
+     problem..."), not family programming. No dedicated kids/family tag or
+     category feed exists (`/arts-entertainment/feed`, `/tag/kids/feed` both
+     404).
+- **Verdict rationale:** unlike Industry City / Governors Island / Domino
+  Park (each initially misjudged by a non-impersonating probe and later
+  confirmed), this is not a probe-strength problem — the Wagtail API is
+  fully open and easy to query, and it unambiguously shows one content
+  type (free-text articles) with no event schema underneath. REJECTED,
+  not DEFERRED: there's no future condition (better probe, different
+  endpoint) that would change this — the underlying content is prose by
+  design.
+- **No fixture captured** — nothing structured to capture.
 
 ### The Skint (theskint.com) — citywide editorial RSS
 
