@@ -834,27 +834,65 @@ to classify the platform and capture a fixture, then flip to CONFIRMED/REJECTED.
 
 ### Puppetworks
 
-- **Status:** CANDIDATE — proposed 2026-07-05, unprobed (sandbox egress to
-  `puppetworks.org` was reset/blocked this session — `curl_cffi
-  impersonate="chrome"` got `Recv failure: Connection reset by peer` on `/`,
-  `/calendar`, `/schedule`, `/tickets`, `/events`; retry from a different
-  network before concluding it's actually unreachable, per the "sandbox
-  egress varies" note above).
-- **Why:** dedicated marionette/puppet theater — all-ages by construction,
-  no kid-relevance filter likely needed (same "curated kids feed" bucket as
-  `mommy_poppins`/`bk_childrens_museum`).
-- **URLs to probe:** `https://puppetworks.org` plus a calendar/schedule/
-  tickets page (exact path unconfirmed — probe blocked before a page loaded).
-  Check for a ticketing-platform embed (many small theaters run Eventbrite,
-  Ticketleap, or a custom WordPress calendar) — grep for the usual tells
-  (`wp-json`, `tribe-events`, `eventbrite`, JSON-LD `Event`).
-- **Borough/venue:** proposed as Brooklyn Bridge Park — **verify during the
-  probe**, since Puppetworks has historically been sited in Park Slope
-  (338 6th Ave), not Brooklyn Bridge Park; confirm the current address before
-  hardcoding a `SOURCE_NEIGHBORHOOD` entry.
-- **Filtering plan if built:** likely no filter needed (single-purpose kids'
-  venue) — confirm the full program list is actually all-ages before skipping
-  a filter, same caution as the other curated feeds.
+- **Status:** ❌ **REJECTED 2026-07-24** — no structured event surface exists,
+  AND the underlying content isn't shaped like discrete dated events even if
+  scraped. Confirmed with a fresh live probe (plain `httpx`, Chrome UA — the
+  `curl_cffi impersonate="chrome"` connection-reset seen this session is the
+  known 2026-07-13 sandbox-proxy MITM issue documented in "Cross-cutting
+  notes" above, not a site-side block; plain `httpx` with a browser UA
+  reached the site fine, no anti-bot wall). This matches and supersedes the
+  brief 2026-07-13 off-proxy note near the top of this file ("rejected here
+  (JS-rendered)") with the full technical finding:
+  - **Platform:** the `edit.site` website builder (`/bundle/publish/0.86.1/
+    bundle.js`, `/__static/...` image blobs, `itemType="https://schema.org/
+    WebPage"` etc.). Zero platform tells from the standard probe list — no
+    `wp-json`, no `tribe-events`, no Squarespace, no Eventbrite, no
+    `.ics`/iCal (the one `ical` hit was a false-positive substring match
+    inside `rel="canonical"`), and **zero JSON-LD `Event` blocks** — the only
+    microdata present is generic `WebPage`/`Organization`/`SiteNavigationElement`/
+    `ImageObject` boilerplate from the page-builder template, confirmed by
+    inspecting every `schema.org` occurrence in the rendered HTML.
+  - **Crucially, the page IS server-rendered plain HTML** (readable with a
+    plain `httpx` GET + browser `User-Agent`, no JS execution needed) — the
+    2026-07-13 "JS-rendered, only CSS/font boilerplate" characterization was
+    itself a UA/proxy artifact, not a real client-render wall. But
+    server-rendered here just means there's clean prose to scrape, not that
+    there's an events feed to parse.
+  - **The content itself is a repertoire/season page, not an events
+    calendar** — same shape problem as the Bronx Zoo/WCS rejection above.
+    The homepage (`/`) has ONE current production ("Pinocchio," July 18 –
+    August 9, 2026) with a **fixed recurring weekly showtime grid**
+    ("Public Performances: Saturdays & Sundays @ 12:30 & 2:30 p.m.") plus one
+    one-off special performance (Fri July 31 @ 7:00pm). `/coming-soon/` lists
+    the rest of the season as **date-RANGE show runs**, not discrete
+    occurrences: "OPENS September 12 thru October 25, 2026," "October 31 &
+    November 1, 2026," "November 2 thru December 30, 2026," "January 16 -
+    April 18, 2027." There is no page anywhere that lists individual
+    Saturday/Sunday dates as separate rows — building an `Event` per
+    occurrence would mean **inventing** every Sat/Sun date within each
+    printed range client-side, which is speculative synthesis, not scraping.
+    `/private-parties/` and `/directions/` are logistics pages, not calendars.
+  - **No ticketing-platform embed found** (no Eventbrite/Ticketleap/etc.) —
+    reservations are by email/phone (`puppetworksinfo@gmail.com`,
+    718-965-3391), not an online booking system that might have exposed a
+    JSON API.
+  - **Address confirmed:** still Park Slope, 338 6th Avenue (at 4th Street),
+    Brooklyn, NY 11215 — the venue's own "Coming Soon" page notes an upcoming
+    partial relocation to **51 35th Street at Industry City** starting
+    September 2026 ("Hansel & Gretel" opens there, and private parties move
+    there too) — confirming the original backlog note that "Brooklyn Bridge
+    Park" was never correct, and adding a wrinkle (the venue itself is about
+    to become two addresses) that would complicate a future `SOURCE_NEIGHBORHOOD`
+    entry if this is ever revisited.
+- **Revisit conditions:** only if Puppetworks adopts a real booking platform
+  (Eventbrite/Ticketleap/WordPress+Tribe/etc.) that publishes per-date
+  sessions, or if a future maintainer decides a synthetic "expand the
+  recurring Sat/Sun grid across the printed date range" convention is
+  acceptable catalog content (no precedent for that in this codebase; the
+  closest analog, WCS zoo season-run spotlights, was rejected for the same
+  reason). Until then, no `source-adder` handoff.
+- **No fixture captured** — nothing structured to capture; this is a REJECTED
+  verdict, not CONFIRMED.
 
 ### Brooklyn Bridge Park — ✅ BUILT 2026-07-13
 
