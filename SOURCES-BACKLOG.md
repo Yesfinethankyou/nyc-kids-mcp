@@ -1510,11 +1510,75 @@ unprobed (expect similar stacks; probe before writing any code).
 
 ### The Skint (theskint.com) — citywide editorial RSS
 
-- **Status:** CANDIDATE — probed 2026-07-06 (plain `httpx`, no anti-bot; `curl_cffi`
-  actually got connection-reset from this sandbox — the reverse of the usual
-  pattern, so try plain `httpx` first for this host). Both blocking questions
-  from the original entry are now answered. **Verdict: technically buildable
-  without AI/NLP, but yield is low — a real judgment call, not an easy win.**
+- **Status:** CANDIDATE — re-probed live 2026-07-24 (17 days after the
+  original 2026-07-06 probe), plain `httpx`, no anti-bot wall encountered.
+  **Every finding below still holds; no material change.** Verdict
+  unchanged: **technically buildable without AI/NLP, but yield is low — a
+  real judgment call, not an easy win.** A fixture is now captured (it
+  wasn't before), so a future build doesn't have to re-probe from scratch.
+- **Fixture:** `tests/fixtures/theskint_sample.json` — 2 entries in
+  trimmed `wp-json/wp/v2/posts` shape: one digest post (`id=89252`,
+  "TUES-THURS, 7/21-23…", content trimmed to the Tuesday section + the
+  "our next event!" sponsored insert + the Wednesday section, Thursday
+  omitted for size) and one standalone sponsored post ("CRUEL SUMMER…",
+  full content, ~2.4KB) to represent the digest/standalone mix. No
+  auth/cookies to strip — public endpoint.
+- **2026-07-24 re-probe findings (fresh numbers, same shape as original):**
+  - Both endpoints still live, unchanged: `https://theskint.com/feed/`
+    (RSS 200, tells: `wp-content`×70, `eventbrite`×61, `ical`×21) and
+    `https://theskint.com/wp-json/wp/v2/posts?per_page=20` (200, still
+    hard-capped at **19 posts**, not 20 — confirms the original "caps at
+    19 total posts" finding). Plain `httpx` (no impersonation, no
+    `curl_cffi`) still works cleanly — no anti-bot wall added since 2026-07-06.
+  - **Digest/standalone mix is *exactly* the same ratio**: of the 19 live
+    posts (spanning 6/26–7/23, i.e. the last ~4 weeks), **8 are digest
+    posts** (`TUES-THURS, M/D-M/D:` / `FRI-MON, M/D-M/D: SKINT WEEKEND` /
+    `SKINT HOLIDAY WEEKEND` title patterns) and **11 are standalone**, still
+    almost entirely "(SPONSORED)" ad placements (comedy shows, dance
+    parties, a theater season announcement) — same low-kid-relevance
+    standalone mix as before. Recommendation to skip standalone posts
+    entirely still stands.
+  - **Digest template confirmed byte-for-byte the same structure**: pulled
+    3 live digest posts' full `content.rendered` and parsed with
+    `selectolax` — `<u>day-name</u>` section headers, one `<p>` per event
+    in `<time/day-phrase>: <b>Title</b>: description. <a href=…>` form. A
+    quick regex re-check (not the exact production regex, just a
+    structural sanity check) matched **203 of 402** `<p>` blocks across the
+    3 posts (~51% hit rate) — same order of magnitude as the original
+    239/472 (~51%). The multi-item-per-`<p>` sub-list pattern (e.g. "free
+    outdoor movies" listing 5–6 films as `<br>`-separated bullets inside
+    one `<p>`) is still present and still needs the same special-casing.
+  - **One nuance on the "continuation-folding" gotcha**: in this week's
+    sample, every detected multi-paragraph continuation traced back to the
+    **"our next event!" sponsored callout block** (a boxed, multi-`<p>`
+    house ad for an upcoming Skint-sponsored party, e.g. "Cruel Summer:
+    80s & 90s Dance Party" — captured in the fixture) rather than to
+    genuine organic per-event descriptions spilling into a second `<p>`.
+    Worth a closer look during the actual build: the true rate of organic
+    multi-paragraph event descriptions may be lower than the original
+    "~40% of matched events" estimate implied, with a chunk of that
+    apparent rate actually being this one recurring sponsored-insert block
+    per digest (which a parser would want to detect and skip/tag
+    separately anyway, since it's an ad, not an event).
+  - **Kid yield — re-checked, same order of magnitude, still low-density.**
+    Ran a quick (not the real, tighter) keyword allowlist + the shared
+    `_filters.py` adult blocklist against the 203 freshly-parsed events:
+    26 kept (12.8%), but manual review showed most of that jump vs. the
+    original 5.9% is **false positives from a noisier draft allowlist**
+    (e.g. "Child's Play 2" horror screening matched on "kid", "Y2K Baby
+    One More Time" dance party matched on "baby", "Beanie Babe Comedy"
+    matched on "babe"). After discounting those by eye, genuinely
+    kid-relevant hits were things like "Free Outdoor Movies" (recurring
+    series, appears across multiple day headers — same double-count
+    caveat as before), "Smorgasburg's Great Ice Cream Fair", "Jersey City
+    Fourth of July Festival", "Double Dutch Fusion Freestyle + Open Jump",
+    and "Youth Pride" — roughly **single digits of distinct kid events
+    across the ~4-week sample**, consistent with the original "~3–5 truly
+    distinct kid-relevant events per week" estimate, not a meaningfully
+    different number. Summer programming (outdoor movies, festivals) skews
+    slightly more family-friendly than a typical week, but not enough to
+    change the verdict.
+- **Original probe (2026-07-06, kept below for reference):**
 - **What it is:** a long-running NYC "free & cheap things to do" editorial blog
   (WordPress). Citywide aggregator — **not** a venue and **not** a kids feed.
 - **Endpoints confirmed:** `https://theskint.com/feed/` (RSS, 10 most recent
