@@ -1837,12 +1837,65 @@ unprobed (expect similar stacks; probe before writing any code).
   only for v1 (skip `/performing-arts` and the other adult-dominated
   collections given the yield numbers above).
 
-### Jamaica Bay-Rockaway Parks Conservancy (JBRPC) — jbrpc.org — 🟢 CONFIRMED 2026-07-25
+### Jamaica Bay-Rockaway Parks Conservancy (JBRPC) — jbrpc.org — ✅ BUILT 2026-07-25
 
-- **Status:** 🟢 **CONFIRMED 2026-07-25** (full `source-verifier` probe, plain
-  `httpx` + browser UA — no anti-bot on this host, `curl_cffi
-  impersonate="chrome"` hit the known sandbox connection-reset so httpx was
-  used instead). Fixture captured. Ready for `source-adder`.
+- **Status:** ✅ **BUILT 2026-07-25** — shipped as source `jbrpc`. As-built
+  notes (what matched/differed from the probe below):
+  - Confirmed against the fixture: plain `httpx` + browser UA works fine, no
+    `curl_cffi` needed, matching the probe's finding (the connection-reset
+    was sandbox-specific, not a real anti-bot).
+  - **Single unpaginated `GET /events` fetch**, as the probe predicted — no
+    month-walk or offset pagination needed. `window_days=60` (the catalog's
+    usual convention, not the raw ~140-day forward window) — a real
+    full-window re-fetch every run, so missing-detection is opted **IN**.
+  - **Zero-category edge case resolved as an explicit, documented decision**
+    (the probe flagged this as needing one, not left implicit): a card with
+    an EMPTY categories list falls back to an inclusive keyword check
+    (`family`/`families`/`kids`/`children`/`youth`/`all ages`) on
+    title+description instead of the "Kids and Families" allowlist. Verified
+    against both zero-category fixture rows — "9th Annual Jamaica Bay
+    Festival" ("a free, fun, **family**-friendly event...") and "Wheel Fun
+    Rentals ... Patriotic LED Bike Ride" ("**Families**, couples, and
+    friends can cruise...") — both correctly kept. A card WITH categories
+    that don't include "Kids and Families" (e.g. "Rockaway Refresh - Flow
+    and Clean": Stewardship/Refresh) gets NO keyword rescue — verified
+    correctly excluded even though its own description also contains
+    incidental family-adjacent language, keeping the allowlist strict for
+    categorized rows.
+  - **`external_id` = the card's href directly, verified against the
+    fixture**: all 15 fixture cards (including the "Rockaway Refresh" /
+    "Stargazing at Floyd Bennett Field" recurring series) have distinct
+    hrefs — 15 hrefs, zero collisions — confirming the probe's read of
+    Squarespace's cumulative-slug-suffix scheme. No `id:date` composition
+    needed, unlike `bbg`/`kccny`/`new_york_family`.
+  - **Borough: small static venue-label lookup table (`_VENUE_BOROUGH`) +
+    a numbered-"Beach ###"-street regex**, exactly the shape the probe
+    suggested — NOT a `SOURCE_NEIGHBORHOOD` constant. One upstream data
+    quirk found during the build the probe didn't flag: the "Fishing Frenzy
+    at Shirley Chisholm State Park" card's venue-label field is the JBRPC
+    org's own Brooklyn office address ("Jamaica Bay-Rockaway Parks
+    Conservancy, Inc.", 1750 Granville Payne Ave, East New York), not the
+    park itself — added as its own lookup key; harmless here since both the
+    org office and Shirley Chisholm State Park are Brooklyn, but a reminder
+    that venue-label text on this platform isn't always the actual event
+    site. Rows with no borough match (e.g. the Jamaica Bay Festival's "40+
+    Locations around Jamaica Bay and Rockaway") get `borough=None` by
+    design, per the probe's plan.
+  - Precise datetimes taken from each card's "Add to Google Calendar" link's
+    UTC `dates=` param (confirmed present on all 15 fixture cards), with a
+    local-time-prose fallback for robustness if a future card ever lacks it.
+  - Description text required selecting `.eventlist-description
+    .sqs-html-content` specifically, not the whole `.eventlist-description`
+    div — Squarespace embeds page CSS/`<style>` blocks alongside the prose
+    inside that wrapper, which would otherwise leak stylesheet junk into
+    `description`/`raw_payload`. Not mentioned in the original probe.
+  - Age range ("Designed for children ages 2–10") regex-extracted from
+    description prose, reusing the same `_AGE_RX` shape as `kccny`.
+  - Expected volume roughly matched: 6/9 upcoming fixture cards passed the
+    kid-relevance gate (~67%, in line with the probe's 45/66 ≈ 68%);
+    extrapolated to the full ~140-day live catalog and capped to the 60-day
+    window, call it roughly 10 events/window — genuinely small volume.
+- **Original probe (2026-07-25, kept below for reference):**
 - **What it is:** nonprofit parks conservancy for Jamaica Bay and the
   Rockaway Peninsula (Rockaway Park, Queens — 11694). Runs school programs,
   volunteer stewardship, and public events. Real potential value:

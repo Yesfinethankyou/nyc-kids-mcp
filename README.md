@@ -42,7 +42,13 @@ tools — designed for use from the Claude mobile app while out with a kid.
   the Korean Cultural Center New York (`kccny`, low tens of events/60d —
   Manhattan's Murray Hill; plain-HTML scrape of the `/education-literature`
   collection since Squarespace's `?format=json` fast path is robots.txt-
-  disallowed here, dates/ages regex-extracted from free-text excerpt prose)
+  disallowed here, dates/ages regex-extracted from free-text excerpt prose),
+  and Jamaica Bay-Rockaway Parks Conservancy (`jbrpc`, ~10 events/60d — a
+  Brooklyn+Queens/Rockaway parks conservancy; single-page HTML scrape of
+  `/events` since Squarespace's `?format=json` fast path is robots.txt-
+  disallowed here too, category-allowlisted on "Kids and Families" with an
+  explicit zero-category keyword fallback, borough from a small static
+  venue lookup since the source spans two boroughs)
   — real descriptions, URLs, and (where upstream provides them) age ranges,
   coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser), Coney Island

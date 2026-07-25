@@ -12,6 +12,7 @@ from .governors_island import GovernorsIslandSource
 from .greenwood_cemetery import GreenWoodCemeterySource
 from .industry_city import IndustryCitySource
 from .intrepid import IntrepidSource
+from .jbrpc import JBRPCSource
 from .kccny import KCCNYSource
 from .mommy_poppins import MommyPoppinsSource
 from .new_york_family import NewYorkFamilySource
@@ -50,6 +51,8 @@ ENABLED_SOURCES: list[type[Source]] = [
     IndustryCitySource,
     GovernorsIslandSource,
     DominoParkSource,
+    # Single unpaginated page fetch — cheap.
+    JBRPCSource,
     # ~2 REST pages at a 1s delay — cheap.
     CityParksFoundationSource,
     # ~15-20 calendar pages at a 1s delay — cheap-ish.

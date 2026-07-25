@@ -660,7 +660,23 @@ Known accepted residuals (see `git log` for the security-audit commit):
     keyword allowlist + shared adult blocklist; single fixed venue →
     `SOURCE_NEIGHBORHOOD["kccny"]="Murray Hill"`; does NOT crawl detail
     pages (an empty-excerpt row is skipped, not recovered) — small volume,
-    low tens of events/60d).
+    low tens of events/60d), Jamaica Bay-Rockaway Parks Conservancy (`jbrpc`
+    — Squarespace Events collection, `?format=json` robots.txt-disallowed
+    same as `kccny` so it's a plain single-page HTML scrape of `/events`
+    (no pagination needed — one fetch returns the entire ~140-day forward
+    window); category ALLOWLIST on "Kids and Families" plus an explicit
+    zero-category keyword-fallback decision (some real kid rows ship with
+    no categories at all); recurrence is solved by Squarespace's own
+    cumulatively-suffixed occurrence URLs so `external_id` is just the
+    card's href, no `id:date` composition; multi-site source spanning
+    Brooklyn (Floyd Bennett Field, Marine Park, Shirley Chisholm State
+    Park, ...) AND Queens/Rockaway (Dubos Point, Bayswater City Park,
+    Edgemere Farm, ...) so borough comes from a small static venue-label
+    lookup + a numbered-"Beach ###"-street regex, not a single
+    `SOURCE_NEIGHBORHOOD` constant; no free lat/lng (lost with the JSON
+    path) so the enrich pass's Census geocode tier carries real weight;
+    small volume — roughly 10 events/60-day window, extrapolated from the
+    probe's 68% category-match rate over the ~140-day catalog).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.
