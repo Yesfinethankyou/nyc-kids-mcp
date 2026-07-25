@@ -2,6 +2,72 @@
 
 ## What was done (most recent first)
 
+### Session 2026-07-24: KCCNY built; Brooklyn Bridge Parents/Puppetworks/Gothamist probed and parked; The Skint re-confirmed (PR #87, branch `claude/add-korean-culture-source-vnebdk`)
+
+Source-expansion session: one new source shipped, four candidates probed
+and resolved (2 rejected, 1 deferred, 1 re-confirmed-but-still-a-judgment-call).
+Each candidate went through `source-verifier` before any build work, and
+each verdict was committed to `SOURCES-BACKLOG.md` as its own small commit.
+
+- **BUILT: `kccny`** (Korean Cultural Center New York, koreanculture.org).
+  Plain-HTML scrape of `/education-literature` only — `?format=json` is
+  robots.txt-disallowed on this Squarespace site, so the confirmed
+  `?format=json` fast path other Squarespace sources use doesn't apply here.
+  No structured date field exists anywhere on the platform; dates/times/ages
+  are regex-extracted from free-text excerpt prose (`_RANGE_RX` handles
+  KCCNY's shared-trailing-meridiem style, "4:00–5:30 PM"). `external_id =
+  f"{item_id}:{occurrence_date}"` always, to handle multi-session posts
+  sharing one `data-item-id`. No detail-page crawl for v1 — an empty-excerpt
+  row is skipped, not recovered (documented as a deliberate small recall
+  loss). Single fixed venue → `SOURCE_NEIGHBORHOOD["kccny"]="Murray Hill"`.
+  Inclusive keyword allowlist + shared `ADULT_BLOCKLIST`/
+  `ADULT_TITLE_BLOCKLIST`/`MEMBERS_ONLY` (mixed adult+kids site, not curated).
+  `window_days=60`, opted into missing-detection. Fixture
+  `tests/fixtures/kccny_sample.html` + 7 parser tests. Full suite 728 green,
+  ruff clean at ship time.
+- **DEFERRED: Brooklyn Bridge Parents** (brooklynbridgeparents.com). WordPress
+  + WP Event Manager plugin — REST API has no usable date field (`acf: []`),
+  so a build would need the same list+detail-crawl shape as `mommy_poppins`/
+  `snug_harbor`. Only **9 events exist site-wide** at any time, and **2 of
+  those are reposts of `brooklyn_army_terminal`** events already in the
+  catalog under a different `compute_id` — a cross-source dedup filter would
+  be required for a ~7-event net-new yield. Not worth the build cost right
+  now; backlog entry has the exact build plan if revisited.
+- **REJECTED: Puppetworks** (Park Slope marionette theater). No platform
+  signature at all (custom `edit.site` builder, no wp-json/Tribe/Squarespace/
+  Eventbrite/JSON-LD `Event`). More fundamentally, the content itself isn't
+  shaped like discrete dated events — a recurring weekly showtime grid
+  ("Saturdays & Sundays @ 12:30 & 2:30") layered over printed season
+  date-*ranges* ("OPENS September 12 thru October 25"). Building real rows
+  would mean synthesizing every Sat/Sun occurrence ourselves — same shape
+  problem as the already-rejected Bronx Zoo/WCS candidates, no precedent in
+  this codebase for that kind of synthesis.
+- **REJECTED: Gothamist** (gothamist.com, WNYC-owned). Runs Wagtail CMS with
+  a single content type (`news.ArticlePage`) — no event schema exists
+  anywhere on the platform. Confirmed via the open `gothamist.com/feed` RSS
+  and the public `api-prod.gothamist.com/api/v2/search` API. Kids "things to
+  do" content is pure prose roundups linking OUT to other sites' calendars
+  (NYPL/QPL/BPL — already-live sources here), so extracting structured
+  events would require out-of-scope NLP. RSS feed's most recent 40 items had
+  zero kids content on top of that. Unlike Industry City/Governors
+  Island/Domino Park's past "no feed" misses, this wasn't a weak-probe
+  problem — the API was fully open and unambiguous.
+- **RE-PROBED, still CANDIDATE: The Skint** (theskint.com). Fresh live
+  re-check of the 2026-07-06 probe, ~3 weeks later — every finding held with
+  no material drift: same 8-digest/11-standalone post mix, same ~51% regex
+  hit rate on the templated digest format, same low kid yield (~3–5
+  genuinely kid-relevant events/week). One new nuance: the "40%
+  multi-paragraph continuation" quirk traces to one recurring
+  sponsored-callout block, not organic event descriptions. Captured a
+  fixture this time (`tests/fixtures/theskint_sample.json`) since none
+  existed before. Still explicitly a maintainer call on parser complexity
+  (day-header segmentation + continuation-folding + ~50%-hit venue regex)
+  vs. yield — not handed to `source-adder`.
+- A GitHub PR (#87) was opened for this branch from the Claude Code UI
+  mid-session, after the `kccny` commit; every subsequent commit (Brooklyn
+  Bridge Parents/Puppetworks/Gothamist/Skint probe docs) pushed straight to
+  it rather than opening a second PR.
+
 ### Session 2026-07-14 (cont'd): friendly source names
 
 Sources now carry a human-friendly `display_name` alongside the stable `name`

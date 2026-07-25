@@ -650,7 +650,17 @@ Known accepted residuals (see `git log` for the security-audit commit):
     pager is broken — returns page 0 every time); inclusive + adult-blocklist
     kid gate (drops the "After Hours"/tasting/gala strand — there's no Family
     theme); single fixed venue → `SOURCE_NEIGHBORHOOD["intrepid"]="Hell's
-    Kitchen"`; ~13 events/60d).
+    Kitchen"`; ~13 events/60d), Korean Cultural Center New York (`kccny` —
+    Squarespace, but `?format=json` is robots.txt-disallowed here so it's a
+    plain HTML scrape of `/education-literature` only (the one collection
+    with real kid programming; the rest is ~99% adult); no structured date
+    field anywhere on the platform, so dates/ages are regex-extracted from
+    free-text excerpt prose, with a multi-line excerpt expanding into one
+    Event per session (`external_id = f"{item_id}:{date}"`); inclusive
+    keyword allowlist + shared adult blocklist; single fixed venue →
+    `SOURCE_NEIGHBORHOOD["kccny"]="Murray Hill"`; does NOT crawl detail
+    pages (an empty-excerpt row is skipped, not recovered) — small volume,
+    low tens of events/60d).
   - **Rejected — no event feed:** Time Out NY Kids (`timeout_nykids.py`
     stub kept). JS-rendered editorial site; no structured data, no API,
     no sitemap with events. Needs headless browser — out of scope.

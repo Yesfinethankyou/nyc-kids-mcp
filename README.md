@@ -38,8 +38,12 @@ tools — designed for use from the Claude mobile app while out with a kid.
   the Drupal/Solr calendar's embedded per-card JSON, one event per program's
   next occurrence, with age bands), and the Intrepid Museum
   (`intrepid`, ~13 events/60d — Pier 86 sea/air/space museum, Drupal calendar
-  scrape, inclusive kid filter dropping the adult "After Hours" strand) — real
-  descriptions, URLs, and (where upstream provides them) age ranges,
+  scrape, inclusive kid filter dropping the adult "After Hours" strand), and
+  the Korean Cultural Center New York (`kccny`, low tens of events/60d —
+  Manhattan's Murray Hill; plain-HTML scrape of the `/education-literature`
+  collection since Squarespace's `?format=json` fast path is robots.txt-
+  disallowed here, dates/ages regex-extracted from free-text excerpt prose)
+  — real descriptions, URLs, and (where upstream provides them) age ranges,
   coordinates, prices. Rejected: Time
   Out NY Kids (no event feed without a headless browser), Coney Island
   USA (feed works, but the calendar is adult programming), and the five
