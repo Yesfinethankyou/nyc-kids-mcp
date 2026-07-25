@@ -1837,50 +1837,124 @@ unprobed (expect similar stacks; probe before writing any code).
   only for v1 (skip `/performing-arts` and the other adult-dominated
   collections given the yield numbers above).
 
-### Jamaica Bay-Rockaway Parks Conservancy (JBRPC) — jbrpc.org
+### Jamaica Bay-Rockaway Parks Conservancy (JBRPC) — jbrpc.org — 🟢 CONFIRMED 2026-07-25
 
-- **Status:** CANDIDATE — proposed 2026-07-25, **quick-checked only** (a
-  homepage + `/events` fetch, not a full `source-verifier` probe — no
-  platform-signature confirmation, no fixture capture). Looks promising;
-  run `source-verifier` before handing to `source-adder`.
+- **Status:** 🟢 **CONFIRMED 2026-07-25** (full `source-verifier` probe, plain
+  `httpx` + browser UA — no anti-bot on this host, `curl_cffi
+  impersonate="chrome"` hit the known sandbox connection-reset so httpx was
+  used instead). Fixture captured. Ready for `source-adder`.
 - **What it is:** nonprofit parks conservancy for Jamaica Bay and the
   Rockaway Peninsula (Rockaway Park, Queens — 11694). Runs school programs,
-  volunteer stewardship, and public events (2026 stats claimed: 75,000
-  program participants, 120,000 student interactions). Real potential value:
+  volunteer stewardship, and public events. Real potential value:
   **Queens/Rockaway is thin coverage in this catalog** — `qpl` is the only
   real Queens source today, and none of it is Rockaway-specific park/nature
-  programming.
-- **Platform (quick-check only, unconfirmed):** looks like **Squarespace**
-  (`images.squarespace-cdn.com` CDN references, Squarespace branding in
-  page markup) — worth checking whether `/events?format=json` is open here
-  (unlike `kccny`, which has it robots.txt-disallowed) or whether this is
-  another Blog-collection-styled-as-events situation. Check `robots.txt`
-  first, same lesson as KCCNY.
-- **`/events` page structure (quick-check):** looks like a genuine
-  Squarespace **Events collection**, not a blog — discrete cards with a
-  month/date indicator, title, category tags, time range + location, brief
-  description, "View Event" link, and calendar-add (Google/ICS) options.
-  Category filter chips visible: "Active Recreation," "History," **"Kids and
-  Families,"** "Stewardship," "Wildlife and Nature" — a **"Kids and
-  Families" category tag would make this a curated-filter build** (allowlist
-  on category, not free-text keyword matching), similar posture to
-  `si_childrens_museum`/`bk_childrens_museum` if it holds up under a real
-  probe.
-- **Example events seen:** "9th Annual Jamaica Bay Festival" (Jul 25, 2026),
-  "Stargazing at Floyd Bennett Field" (recurring monthly-ish), "Rockaway
-  Refresh" (recurring Mondays), "Shorebird Festival" (Aug 16, 2026),
-  "Raptorama" (Sep 27, 2026) — mix of one-off festivals and recurring
-  series, so expect the same "does the id/date field distinguish
-  occurrences" question every recurring-series source has had to answer.
-- **Open questions for the real probe:** confirm `?format=json` availability
-  + robots.txt; confirm the "Kids and Families" category is a real filed
-  taxonomy on each item (not just a display chip) queryable via the JSON;
-  check recurrence semantics for series like "Rockaway Refresh"; check for a
-  fixed single venue vs. multiple sites across the peninsula (Floyd Bennett
-  Field vs. the main JBRPC campus would need per-event venue, not a
-  `SOURCE_NEIGHBORHOOD` constant).
-- **Next step:** `source-verifier` — this was not a full probe, just a
-  same-session sanity check before adding to the backlog.
+  programming. Turns out this source is actually **Brooklyn+Queens mixed**
+  (see venue finding below), which still makes it net-new: none of the
+  specific sites (Floyd Bennett Field, Jamaica Bay Wildlife Refuge, Shirley
+  Chisholm State Park, Dubos Point, Bayswater City Park, Edgemere Farm,
+  Rockaway Community Park, …) are covered by any existing source.
+- **Platform: confirmed Squarespace Events collection**, real (not a blog
+  styled as events) — `<div class="eventlist eventlist--upcoming">` /
+  `eventlist--past` sections, `<article class="eventlist-event …">` cards,
+  collection id `5c735cba6e9a7f1fd2a76c5e`.
+- **`?format=json` is robots.txt-DISALLOWED here too — same KCCNY
+  situation, resolved the same way.** `robots.txt` has
+  `Disallow:/*?format=json` and `Disallow:/*&format=json` (also
+  `?format=ical`) under `User-agent: *`. The JSON endpoint DOES return 200
+  with the expected Coney-Island-USA shape (`upcoming`/`past` arrays,
+  `startDate`/`endDate` epoch-ms, a real `categories` array matching the
+  HTML chips exactly, and — bonus — `location.mapLat`/`mapLng` lat/lng
+  directly on each item) — verified once for documentation purposes, but per
+  the KCCNY precedent this endpoint is treated as unusable and the **plain
+  HTML scrape of `/events` is the build path**, not the JSON fast path.
+  **Consequence:** the free lat/lng that the disallowed JSON would have
+  given is NOT available from the HTML path — venues here are a jurisdiction
+  mix (Floyd Bennett Field is NPS/Gateway NRA, Shirley Chisholm State Park is
+  NYS Parks, Dubos Point is NYC Parks) so `park_neighborhoods.json` coverage
+  is not guaranteed; expect the enrich pass's Census forward-geocode tier to
+  carry more weight for this source than for a straight NYC-Parks-property
+  venue.
+- **The "Kids and Families" category IS a real filed taxonomy field**,
+  confirmed both in the JSON `categories` array and as the HTML chip
+  links (`<a href="?category=Kids+and+Families">`) — NOT just cosmetic
+  display. **Server-side category filtering works on the plain HTML page
+  too** (not robots.txt-disallowed): `GET
+  https://www.jbrpc.org/events?category=Kids+and+Families` returned 45/66
+  cards filtered server-side (verified live) — a clean category-ALLOWLIST
+  build, same posture as `si_childrens_museum`/`bbg`, fetchable either by
+  filtering the full page client-side or by hitting the filtered URL
+  directly. One gotcha: **some cards carry NO category at all** (e.g. "9th
+  Annual Jamaica Bay Festival" — `categories: []` in both HTML and JSON)
+  despite being clearly kid-relevant content — don't drop uncategorized rows
+  silently; needs a decision (keyword fallback vs. accept the loss).
+- **Single-page fetch gets the ENTIRE forward window — no pagination
+  needed.** `GET /events` returned all 66 cards (36 upcoming out to
+  2026-12-13 — a ~140-day forward window — + 30 past back to 2026-06-13) in
+  one fetch; the JSON twin's `pagination.nextPage`/`nextPageOffset` only
+  paginates the **past** list (older history), confirmed by decoding the
+  offset to a date before the fetch date — the upcoming list is complete,
+  unpaginated. A build can either take the full ~140-day forward window or
+  cap it to the usual 55–60-day convention client-side.
+- **Recurrence: solved cleanly by the URL scheme — no `id:date` composition
+  needed.** Every card, including each occurrence of a recurring series like
+  "Rockaway Refresh" or "Stargazing at Floyd Bennett Field", gets its own
+  unique detail URL: Squarespace mints these by cumulatively appending a
+  random slug segment per occurrence (e.g.
+  `/events/2026/6/29/rockaway-refresh-summer-opening`,
+  `…-summer-opening-s864y`, `…-summer-opening-s864y-fw8rr`, …). Each card's
+  href is therefore already an occurrence-unique key — use it directly as
+  `external_id` (or just leave `external_id` unset and let `compute_id`'s
+  URL fallback do the same job), unlike the permit-source/`new_york_family`
+  `f"{id}:{start.isoformat()}"` pattern that shared-id recurring sources
+  needed.
+  "9th Annual Jamaica Bay Festival" (one-off, Jul 25, 2026), "Shorebird
+  Festival" (Aug 16), "Raptorama" (Sep 27) confirmed as genuine one-offs with
+  a single card each.
+- **Venue: multi-site — per-event venue extraction required, NOT a
+  `SOURCE_NEIGHBORHOOD` constant.** Confirmed titles/addresses span both
+  boroughs: **Brooklyn** — Floyd Bennett Field (the most frequent single
+  venue, "5057 Flatbush Ave NY, 11234"), Marine Park, Shirley Chisholm State
+  Park, Canarsie Pier, Plumb Beach, Mill Basin, Gerritsen Ave Beach;
+  **Queens/Rockaway** — Jamaica Bay Wildlife Refuge (Broad Channel), Dubos
+  Point Wildlife Sanctuary, Bayswater City Park, Rockaway Community Park,
+  Edgemere Farm, Jacob Riis Park/Riis Landing. Each HTML card carries an
+  address block (`eventlist-meta-address` + a Google-Maps link with the full
+  street address) sufficient for a small static venue→borough/neighborhood
+  table (`VENUE_NEIGHBORHOOD`-style) covering the ~12 recurring venue names,
+  falling back to the enrich pass's geocoding tiers for anything not in the
+  table.
+- **Precise times available even off the disallowed JSON path:** each
+  card's "Add to Google Calendar" link encodes exact UTC start/end
+  (`dates=20260725T000000Z/20260725T013000Z`) — regex-extractable from the
+  HTML for full datetime precision, not just the coarse `event-date`
+  date-only `datetime` attribute + prose time range.
+- **Fixture captured:** `tests/fixtures/jbrpc_sample.html` — 15 real
+  `<article class="eventlist-event …">` cards (9 upcoming + 6 past) out of
+  the live page's 66, verbatim markup, wrapped in the real
+  `eventlist--upcoming`/`eventlist--past` container structure. Selected for
+  diversity: a recurring series occurrence, a zero-category row, a
+  many-category row, Brooklyn AND Queens venues, and the past-vs-upcoming
+  class distinction. Header comment records the robots.txt finding, the
+  `?category=` filter URL, and the recurrence-URL scheme so `source-adder`
+  doesn't have to re-derive them. Verified parses cleanly with `selectolax`
+  (`article.eventlist-event` → 15 cards, all fields present).
+- **Kid-relevance filtering plan:** category ALLOWLIST on "Kids and
+  Families" (real upstream taxonomy, confirmed queryable) — same posture as
+  `si_childrens_museum`/`bbg`. Keep the shared `ADULT_BLOCKLIST` /
+  `ADULT_TITLE_BLOCKLIST` / `MEMBERS_ONLY` as a defensive safety net (this is
+  a general parks conservancy, not a pure kids feed — it also runs
+  volunteer-stewardship and history programming for all ages, which the
+  category filter should already exclude, but a gala/fundraiser edge case
+  hasn't been ruled out).
+- **Expected volume:** with the "Kids and Families" filter, roughly
+  45/66 ≈ 68% of the sampled window — call it low tens of events per
+  55–60-day window once capped to the usual convention (the confirmed raw
+  forward window is larger, ~140 days/36 events unfiltered).
+- **Next step:** `source-adder` for `jbrpc` — HTML scrape (`curl_cffi` or
+  plain `httpx`, both work; no anti-bot encountered) of `/events` (or the
+  pre-filtered `/events?category=Kids+and+Families`), `selectolax` cards,
+  small static venue table for the ~12 recurring sites + enrich-pass
+  fallback for anything not in it.
 
 ---
 

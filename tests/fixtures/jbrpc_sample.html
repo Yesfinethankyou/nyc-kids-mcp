@@ -1,0 +1,3622 @@
+<!--
+Captured 2026-07-25 from https://www.jbrpc.org/events (plain httpx, browser UA;
+curl_cffi impersonate="chrome" connection-reset in this sandbox per
+SOURCES-BACKLOG.md, so plain httpx was used instead -- worked fine, no anti-bot
+on this host).
+
+Trimmed to 9 "eventlist--upcoming" cards + 6 "eventlist--past"
+cards (real markup, verbatim) out of 66 total on the live page (36 upcoming out
+to 2026-12-13, 30 past back to 2026-06-13) -- selected for diversity: a
+recurring series (Rockaway Refresh / Stargazing at Floyd Bennett Field, each
+occurrence has a distinct incrementally-suffixed URL slug -- Squarespace's
+recurring-event URL scheme -- so `external_id`/`compute_id` can key off the
+per-card href with no `id:date` composition needed), a "Kids and Families"
+category-tagged row and a non-kid row (Stewardship/Refresh-only), a
+zero-category row ("9th Annual Jamaica Bay Festival" -- upstream sometimes
+ships NO categories at all, both in this HTML and in the ?format=json
+equivalent -- don't assume every card has an eventlist-cats div), and venues
+spanning both Brooklyn (Floyd Bennett Field, Marine Park, Shirley Chisholm
+State Park, Mill Basin) and Queens/Rockaway (Dubos Point Wildlife Sanctuary,
+Bayswater City Park, Edgemere Farm) -- this is a multi-site source, not a
+single fixed venue.
+
+IMPORTANT: `?format=json` (the Coney-Island-USA-style Squarespace fast path,
+confirmed present and returning a real `upcoming`/`past` shape with epoch-ms
+startDate, lat/lng in `location.mapLat`/`mapLng`, and a real `categories`
+array matching these HTML chips) is robots.txt-DISALLOWED on this site
+(`Disallow:/*?format=json`, also `?format=ical`) -- same situation as kccny.
+Per that precedent this fixture captures the plain HTML path instead. The
+category filter IS also reachable server-side via a plain HTML query param
+NOT disallowed by robots.txt: https://www.jbrpc.org/events?category=Kids+and+Families
+(confirmed live: 45/66 cards vs. 66 unfiltered) -- a category-allowlist build
+can fetch that URL directly instead of filtering client-side.
+
+Losing the JSON path means losing the free lat/lng -- venues here (Floyd
+Bennett Field is NPS/Gateway NRA, Shirley Chisholm State Park is NYS Parks,
+Dubos Point is a NYC Parks nature sanctuary) are a mix of jurisdictions, so
+`park_neighborhoods.json` coverage is NOT guaranteed for all of them -- the
+enrich pass's Census forward-geocode tier will likely carry more of the
+weight for this source than it does for a straight NYC-Parks-property venue.
+-->
+<div class="sqs-events-collection-list events events-list events-stacked" data-controller="EventsImageLoader">
+
+  <!-- Upcoming Events -->
+
+  <div class="eventlist eventlist--upcoming">
+<article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/4/24/stargazing-at-floyd-bennett-field-hxsx8-pscg9-p9a8r" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg" data-image-dimensions="2048x1367" data-image-focal-point="0.5,0.5" alt="Stargazing at Floyd Bennett Field" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg" width="2048" height="1367" alt="" sizes="(max-width: 639px)224.72567666422825vw,78.65398683247989vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1775412857723-CZA85SLA3QR98JAWTFQJ/SH89419-2048x1367.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jul</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">24</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Wildlife+and+Nature">Wildlife and Nature</a>, <a href="?category=Kids+and+Families">Kids and Families</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/4/24/stargazing-at-floyd-bennett-field-hxsx8-pscg9-p9a8r" class="eventlist-title-link">Stargazing at Floyd Bennett Field</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-07-24">Friday, July 24, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-07-24">8:00 PM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-07-24">9:30 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Floyd Bennett Field
+              
+              <a href="http://maps.google.com?q=5057 Flatbush Ave NY, 11234 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Stargazing%20at%20Floyd%20Bennett%20Field&dates=20260725T000000Z/20260725T013000Z&location=5057%20Flatbush%20Ave%2C%20NY%2C%2011234%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/4/24/stargazing-at-floyd-bennett-field-hxsx8-pscg9-p9a8r?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-69d2a70c51809460a78e1f58"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="276153d47cfba759aa92" id="block-276153d47cfba759aa92"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Join the Amateur Astronomers Association at historic Floyd Bennett Field for free monthly observing sessions, open to the public!</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">The observing location is next to the Community Garden. It is within walking distance of the Q35 bus, and there is ample parking for cars. <br class="ProseMirror-trailingBreak"></p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">If you do come out, remember to observe proper car light etiquette. <strong>Douse your lights at the entrance in the fence line, and let someone guide you in. If your car has running lights that don’t turn off, park at the fence</strong>. NOTE: Events are canceled in the event of rain, of if the sky is overcast.</p></div>
+
+
+  
+<style id="container-styles">#block-276153d47cfba759aa92 {
+    
+    
+    
+  }
+
+  #block-276153d47cfba759aa92 .sqs-html-content {
+    
+    }
+
+  #block-276153d47cfba759aa92 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-276153d47cfba759aa92 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-276153d47cfba759aa92 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="2cee3288350d52eea2c9" id="block-2cee3288350d52eea2c9"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="small"
+  data-button-type="tertiary"
+  
+>
+  <a
+    href="https://aaa.org/venue/floyd-bennett-field/"
+    class="sqs-block-button-element--small sqs-button-element--tertiary sqs-block-button-element"
+    data-sqsp-button
+    target="_blank"
+  >
+    Learn more
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-2cee3288350d52eea2c9 {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-2cee3288350d52eea2c9 {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/4/24/stargazing-at-floyd-bennett-field-hxsx8-pscg9-p9a8r" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/7/25/9th-annual-jamaica-bay-festival-1" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg" data-image-dimensions="1080x720" data-image-focal-point="0.18105144414681226,0.0" alt="9th Annual Jamaica Bay Festival" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg" width="1080" height="720" alt="" sizes="(max-width: 639px)225vw,78.75vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 18.105144414681227% 0%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1784817107952-47QA565YJ0M1APWZAA3P/JB%2BFestival%2B2026%2BDigital%2BFlyer%2B%25281080%2Bx%2B1350%2Bpx%2529%25281%2529.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jul</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">25</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/7/25/9th-annual-jamaica-bay-festival-1" class="eventlist-title-link">9th Annual Jamaica Bay Festival</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-07-25">Saturday, July 25, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-07-25">9:00 AM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-07-25">5:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                40&#43; Locations around Jamaica Bay and Rockaway
+              
+              
+              <a href="http://maps.google.com?q=40&#43; Locations around Jamaica Bay and Rockaway" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=9th%20Annual%20Jamaica%20Bay%20Festival&dates=20260725T130000Z/20260725T210000Z" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/7/25/9th-annual-jamaica-bay-festival-1?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-6a621f4f4493494a7472f273"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="895d3bfb3a631c59cb20" id="block-895d3bfb3a631c59cb20"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><span class="sqsrte-text-color--black">The Jamaica Bay-Rockaway Parks Conservancy will host the <strong>9th <br>Annual Jamaica Bay Festival</strong> on City of Water Day, Saturday, July 25, 2026.</span></p><p class="preFade fadeIn" style="white-space:pre-wrap;" data-rte-preserve-empty="true"><span class="sqsrte-text-color--black">The Jamaica Bay Festival is a free, fun, family-friendly event taking place along the water around Jamaica Bay and Rockaway — featuring activities that encompass wildlife and nature, history, stewardship, arts, culture, and recreation of all kinds: biking, kayaking, canoeing, sailing, swimming and more.</span></p></div>
+
+
+  
+<style id="container-styles">#block-895d3bfb3a631c59cb20 {
+    
+    
+    
+  }
+
+  #block-895d3bfb3a631c59cb20 .sqs-html-content {
+    
+    }
+
+  #block-895d3bfb3a631c59cb20 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-895d3bfb3a631c59cb20 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-895d3bfb3a631c59cb20 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image" data-aspect-ratio="121.50170648464164" data-block-type="5" data-sqsp-block="image-classic" id="block-yui_3_17_2_1_1784820215603_2600"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div
+        class="
+          image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default
+        "
+        data-test="image-block-inline-outer-wrapper"
+        data-sqsp-image-classic-block-layout="inline"
+    >
+
+      
+
+      
+        <figure
+            class="
+              sqs-block-image-figure
+              intrinsic
+            "
+            style="max-width:1080px;"
+        >
+          
+        
+        
+
+        
+          <a
+              data-sqsp-image-classic-block-image-link
+              class="
+                sqs-block-image-link
+                
+          
+        
+              "
+              href="https://www.jbrpc.org/jamaica-bay-festival"
+              
+          >
+            
+          <div
+              
+              
+              class="image-block-wrapper"
+              data-animation-role="image"
+              
+  
+
+          >
+            <div data-sqsp-image-classic-block-image-container class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio
+            " style="
+                position: relative;
+                
+                  padding-bottom:121.501708984375%;
+                
+                overflow: hidden;-webkit-mask-image: -webkit-radial-gradient(white, black);
+              "
+              >
+                
+                
+                
+                
+                
+                
+                
+                <img data-stretch="false" data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg" data-image-dimensions="1080x1350" data-image-focal-point="0.5,0.5" alt="" data-load="false" elementtiming="system-image-block" data-sqsp-image-classic-block-image src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg" width="1080" height="1350" alt="" sizes="(max-width: 640px) 100vw, (max-width: 767px) 100vw, 100vw" style="display:block;object-fit: cover; width: 100%; height: 100%; object-position: 50% 50%" onload="this.classList.add(&quot;loaded&quot;)" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/de811bfc-0f58-4a59-9dd2-3a853a8caa0d/JB+Festival+2026+Digital+Flyer+%281080+x+1350+px%29.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+
+            </div>
+          </div>
+        
+          </a>
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="yui_3_17_2_1_1784820215603_1745" id="block-yui_3_17_2_1_1784820215603_1745"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="medium"
+  data-button-type="primary"
+  
+>
+  <a
+    href="https://www.jbrpc.org/jamaica-bay-festival"
+    class="sqs-block-button-element--medium sqs-button-element--primary sqs-block-button-element"
+    data-sqsp-button
+    target="_blank"
+  >
+    Learn more
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-yui_3_17_2_1_1784820215603_1745 {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-yui_3_17_2_1_1784820215603_1745 {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/7/25/9th-annual-jamaica-bay-festival-1" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/6/29/rockaway-refresh-summer-opening-s864y-h2kad-395ef" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png" data-image-dimensions="1080x719" data-image-focal-point="0.4642857142857143,0.04315476190476186" alt="Rockaway Refresh - Flow and Clean" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png" width="1080" height="719" alt="" sizes="(max-width: 639px)225.31293463143257vw,78.85952712100139vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 46.42857142857143% 4.315476190476186%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jul</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">27</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Stewardship">Stewardship</a>, <a href="?category=Refresh">Refresh</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/6/29/rockaway-refresh-summer-opening-s864y-h2kad-395ef" class="eventlist-title-link">Rockaway Refresh - Flow and Clean</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-07-27">Monday, July 27, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-07-27">10:00 AM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-07-27">1:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Beach 87th Street Boardwalk (near Rippers)
+              
+              <a href="http://maps.google.com?q=86-01 Shore Front Pkwy NY, 11693 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Rockaway%20Refresh%20-%20Flow%20and%20Clean&dates=20260727T140000Z/20260727T170000Z&location=86-01%20Shore%20Front%20Pkwy%2C%20NY%2C%2011693%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/6/29/rockaway-refresh-summer-opening-s864y-h2kad-395ef?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-69c6d948a31bf47b10daa4e1"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="a9cc88b35b35524c3991" id="block-a9cc88b35b35524c3991"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Join Jamaica Bay-Rockaway Parks Conservancy for Rockaway Refresh: Flow &amp; Clean, a mindful start to your Monday morning that gives back to the beach! We'll kick things off with Refresh Yoga, a short session of gentle, grounding movement—then head to the sand to clean up the shoreline. Volunteers are invited to help us keep our beaches debris-free after busy beach weekends.<br><br>Our Rockaway Refresh summer schedule is on our website. Follow <a target="_blank" href="https://www.instagram.com/jbrpc/">@jbrpc</a> for more info.<br><br>Please complete our volunteer waiver prior to the start of the event by clicking here.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true"></p></div>
+
+
+  
+<style id="container-styles">#block-a9cc88b35b35524c3991 {
+    
+    
+    
+  }
+
+  #block-a9cc88b35b35524c3991 .sqs-html-content {
+    
+    }
+
+  #block-a9cc88b35b35524c3991 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-a9cc88b35b35524c3991 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-a9cc88b35b35524c3991 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/6/29/rockaway-refresh-summer-opening-s864y-h2kad-395ef" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/5/30/i-fish-new-york-on-world-fish-migration-day-ya9yg" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png" data-image-dimensions="1332x888" data-image-focal-point="0.6586057513627354,0.48918660481770837" alt="Learn to Fish Clinic, with New York State Department of Environmental Conservation" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png" width="1332" height="888" alt="" sizes="(max-width: 639px)225vw,78.75vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 65.86057513627354% 48.918660481770836%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1777487537991-RB8KGUUK833483WVVMJE/Untitled+design%287%29.png?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Aug</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">12</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Wildlife+and+Nature">Wildlife and Nature</a>, <a href="?category=Kids+and+Families">Kids and Families</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/5/30/i-fish-new-york-on-world-fish-migration-day-ya9yg" class="eventlist-title-link">Learn to Fish Clinic, with New York State Department of Environmental Conservation</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-08-12">Wednesday, August 12, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-08-12">4:00 PM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-08-12">6:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Gerritsen Ave Beach
+              
+              <a href="http://maps.google.com?q=3078 Gerritsen Ave NY, 11229 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Learn%20to%20Fish%20Clinic%2C%20with%20New%20York%20State%20Department%20of%20Environmental%20Conservation&dates=20260812T200000Z/20260812T220000Z&location=3078%20Gerritsen%20Ave%2C%20NY%2C%2011229%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/5/30/i-fish-new-york-on-world-fish-migration-day-ya9yg?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-69c1a4d119aed71e516ae962"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="b00824a9ac54dfc4e1e1" id="block-b00824a9ac54dfc4e1e1"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">The New York State Department of Environmental Conservation (DEC) I FISH NY program is excited to offer an engaging recreational experience, connecting state residents with their local natural resources through fishing. </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">This free event will take place on May 20, 2026 from 12-3pm at Park at Beach 108th Street (Rockaway Ferry Terminal) in Queens as a part of World Fish Migration Day. </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">DEC provides all the necessary instruction, equipment, and bait for a fishing experience. Visit the <a target="_blank" href="https://dec.ny.gov/things-to-do/freshwater-fishing/learn-to-fish/free-clinics">DEC Free Learn To Fish Clinics webpage</a> for more information about this and other free fishing events. </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Stop by the Jamaica Bay-Rockaway Parks Conservancy table to learn about our upcoming recreation, ecology, and family programs like this one and more!</p></div>
+
+
+  
+<style id="container-styles">#block-b00824a9ac54dfc4e1e1 {
+    
+    
+    
+  }
+
+  #block-b00824a9ac54dfc4e1e1 .sqs-html-content {
+    
+    }
+
+  #block-b00824a9ac54dfc4e1e1 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-b00824a9ac54dfc4e1e1 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-b00824a9ac54dfc4e1e1 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/5/30/i-fish-new-york-on-world-fish-migration-day-ya9yg" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/8/22/drgufv1695ikrije87jgxw2cs8ojwl" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg" data-image-dimensions="1200x800" data-image-focal-point="0.5,0.5" alt="National Park Week Kickoff at Floyd Bennett Field" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg" width="1200" height="800" alt="" sizes="(max-width: 639px)225vw,78.75vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781117438953-YGRM9B69F0R28DS0Q53G/Floyd-Bennett-Field-Brooklyn-NYC-Photo-Courtesy-Jamaica_Bay-Rockaway-Parks-Conservancy.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Aug</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">22</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Kids+and+Families">Kids and Families</a>, <a href="?category=Wildlife+and+Nature">Wildlife and Nature</a>, <a href="?category=Active+Recreation">Active Recreation</a>, <a href="?category=History">History</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/8/22/drgufv1695ikrije87jgxw2cs8ojwl" class="eventlist-title-link">National Park Week Kickoff at Floyd Bennett Field</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-08-22">Saturday, August 22, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-08-22">9:00 AM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-08-22">1:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Floyd Bennett Field
+              
+              <a href="http://maps.google.com?q=1 Floyd Bennett Field Brooklyn, New York, 11234 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=National%20Park%20Week%20Kickoff%20at%20Floyd%20Bennett%20Field&dates=20260822T130000Z/20260822T170000Z&location=1%20Floyd%20Bennett%20Field%2C%20Brooklyn%2C%20New%20York%2C%2011234%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/8/22/drgufv1695ikrije87jgxw2cs8ojwl?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-6a29b02d3c0b9b5c04fde12b"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="67cf801ca98fe1e0d015" id="block-67cf801ca98fe1e0d015"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Join the Jamaica Bay-Rockaway Parks Conservancy and the National Park Service (NPS) on Saturday, August 22 from 9AM–1PM at Floyd Bennett Field for a special kickoff celebration to National Park Week! </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Spend the morning exploring one of New York City’s most exciting national park spaces through a variety of unique experiences happening across the park, including free NPS kayaking on Jamaica Bay, visits to the Ryan Visitor Center, and tours of historic Hangar B to view vintage aircraft up close, with NPS rangers available to help guide your visit.<br><br>Visitors will also have the opportunity to rent bikes or hop aboard a trolley shuttle to travel between activities and destinations throughout the park, while the Big Apple Jet Rally takes place the very same day and is open for attendees to enjoy as part of the festivities. </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Activities and tours will take place at scheduled times throughout the morning, with a full program and timing to be announced ahead of the event. Whether you are coming for waterfront adventure, aviation history, conservation, or a new way to experience the park, this special celebration offers something for everyone.</p></div>
+
+
+  
+<style id="container-styles">#block-67cf801ca98fe1e0d015 {
+    
+    
+    
+  }
+
+  #block-67cf801ca98fe1e0d015 .sqs-html-content {
+    
+    }
+
+  #block-67cf801ca98fe1e0d015 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-67cf801ca98fe1e0d015 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-67cf801ca98fe1e0d015 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/8/22/drgufv1695ikrije87jgxw2cs8ojwl" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/7/25/jamaica-bay-open-paddle-kayaking-b43rd-st-ak5zf" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg" data-image-dimensions="6240x4160" data-image-focal-point="0.5,0.5" alt="Jamaica Bay Open Paddle Kayaking, B43rd St." data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg" width="6240" height="4160" alt="" sizes="(max-width: 639px)225vw,78.75vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1772479990513-QDHYM1EOUD46U9OIMLBR/DSCF4117.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Aug</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">29</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Active+Recreation">Active Recreation</a>, <a href="?category=Kids+and+Families">Kids and Families</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/7/25/jamaica-bay-open-paddle-kayaking-b43rd-st-ak5zf" class="eventlist-title-link">Jamaica Bay Open Paddle Kayaking, B43rd St.</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-08-29">Saturday, August 29, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-08-29">12:30 PM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-08-29">1:30 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Beach 43rd Street Parklet
+              
+              <a href="http://maps.google.com?q=5-98A Beach 43rd Street Queens, NY, 11691 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Jamaica%20Bay%20Open%20Paddle%20Kayaking%2C%20B43rd%20St.&dates=20260829T163000Z/20260829T173000Z&location=5-98A%20Beach%2043rd%20Street%2C%20Queens%2C%20NY%2C%2011691%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/7/25/jamaica-bay-open-paddle-kayaking-b43rd-st-ak5zf?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-69bdae4375bb205db2ac9360"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="dfca35b8dd766c6701f9" id="block-dfca35b8dd766c6701f9"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p class="" style="white-space:pre-wrap;" data-rte-preserve-empty="true">Join Jamaica Bay-Rockaway Parks Conservancy, Gateway National Recreation Area, and the Garden by the Bay for an easy, open kayak paddle in Jamaica Bay! </p><p class="" style="white-space:pre-wrap;" data-rte-preserve-empty="true">We’ll paddle around Norton Basin, a protected tributary of the Bay that offers calm conditions welcoming to beginner and experienced kayakers alike. The shoreline of Norton Basin is surrounded by natural areas and open space, making it the perfect place to spot native wildlife – from small shorebirds to soaring raptors. The experienced rangers at Gateway National Recreation Area will provide kayaking instruction, along with on-water support to ensure a safe and fun kayaking experience!<br><br>Learn more about the opportunities available to explore Rockaway’s native plants and animals in Norton Basin’s neighboring parks and receive a copy of JBRPC’s <a target="_blank" href="https://www.jbrpc.org/field-guide">Common Plants and Pollinators of Jamaica Bay and Rockaway: A Field Guide</a> to take home.</p><p class="" style="white-space:pre-wrap;" data-rte-preserve-empty="true"></p></div>
+
+
+  
+<style id="container-styles">#block-dfca35b8dd766c6701f9 {
+    
+    --stroke-style: none;--stroke-thickness: 6px;
+    
+      
+      
+      
+    
+
+--tweak-text-block-background-color: initial;
+
+  }
+
+  #block-dfca35b8dd766c6701f9 .sqs-html-content {
+    
+    --tweak-text-block-padding: 6% 6% 6% 6%;
+  --tweak-text-block-padding: initial;
+}
+
+  #block-dfca35b8dd766c6701f9 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+#block-dfca35b8dd766c6701f9 {
+      --tweak-text-block-radius: 0px 0px 0px 0px;
+    }
+
+
+  
+  
+
+  #block-dfca35b8dd766c6701f9 {
+    }
+
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-dfca35b8dd766c6701f9 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-dfca35b8dd766c6701f9 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/7/25/jamaica-bay-open-paddle-kayaking-b43rd-st-ak5zf" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/9/19/international-coastal-cleanup-day-at-dubos-point-wildlife-sanctuary" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg" data-image-dimensions="2048x1365" data-image-focal-point="0.5,0.5" alt="International Coastal Cleanup Day at Dubos Point Wildlife Sanctuary" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg" width="2048" height="1365" alt="" sizes="(max-width: 639px)225.05494505494505vw,78.76923076923077vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783452341518-D9FP7TXJZ6K052MQES97/DSCF5712.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Sep</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">19</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Stewardship">Stewardship</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/9/19/international-coastal-cleanup-day-at-dubos-point-wildlife-sanctuary" class="eventlist-title-link">International Coastal Cleanup Day at Dubos Point Wildlife Sanctuary</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-09-19">Saturday, September 19, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-09-19">10:00 AM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-09-19">12:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Dubos Point Wildlife Sanctuary
+              
+              <a href="http://maps.google.com?q=60-03 De Costa Avenue Queens, New York, 11692 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=International%20Coastal%20Cleanup%20Day%20at%20Dubos%20Point%20Wildlife%20Sanctuary&dates=20260919T140000Z/20260919T160000Z&location=60-03%20De%20Costa%20Avenue%2C%20Queens%2C%20New%20York%2C%2011692%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/9/19/international-coastal-cleanup-day-at-dubos-point-wildlife-sanctuary?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-6a4d5289fee4421a7c7bcfb6"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="5887c7f275d7c94137f4" id="block-5887c7f275d7c94137f4"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">In honor of International Coastal Cleanup Day, join JBRPC for a cleanup at Dubos Point Wildlife Sanctuary! <br><br>Gloves, bags, and tools will be provided. Volunteers are encouraged to wear weather-appropriate clothing and sturdy, closed-toe shoes, and bring their own water and sunscreen. Event is rain or shine.<br><br>Please complete our volunteer waiver prior to the start of the event by clicking <a target="_blank" href="https://docs.google.com/forms/d/1erobDxl76vYFFAlnziftqDxB3bdYWqQVmxAa-OaQT3E/viewform?edit_requested=true">here</a>.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true"><em>JBRPC Community Stewardship Programs are generously supported by Bloomberg Philanthropies, Con Edison, NYC Green Fund, and NYC Ferry, operated by Hornblower, and public funding through NY Senator Roxanne Persaud, Assemblymembers Stacey Pheffer-Amato and Jaime R. Williams, Former NYC Council Speaker Adrienne Adams, and Council Members Joann Ariola, Selvena Brooks-Powers, and Mercedes Narcisse.</em></p></div>
+
+
+  
+<style id="container-styles">#block-5887c7f275d7c94137f4 {
+    
+    
+    
+  }
+
+  #block-5887c7f275d7c94137f4 .sqs-html-content {
+    
+    }
+
+  #block-5887c7f275d7c94137f4 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-5887c7f275d7c94137f4 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-5887c7f275d7c94137f4 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="yui_3_17_2_1_1783452517923_1889" id="block-yui_3_17_2_1_1783452517923_1889"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="small"
+  data-button-type="tertiary"
+  
+>
+  <a
+    href="https://www.eventbrite.com/events/1985722878584/dashboard/?eid=1985722878584"
+    class="sqs-block-button-element--small sqs-button-element--tertiary sqs-block-button-element"
+    data-sqsp-button
+    target="_blank"
+  >
+    register
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-yui_3_17_2_1_1783452517923_1889 {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-yui_3_17_2_1_1783452517923_1889 {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/9/19/international-coastal-cleanup-day-at-dubos-point-wildlife-sanctuary" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/10/3/floyd-bennett-field-public-arts-festival" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg" data-image-dimensions="2500x1875" data-image-focal-point="0.5,0.5" alt="Floyd Bennett Field! Public Arts Festival" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg" width="2500" height="1875" alt="" sizes="(max-width: 639px)200vw,70vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1779992551361-JU92VEQ8GPNUR52NG8QJ/IMG_0398.jpeg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Oct</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">3</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=History">History</a>, <a href="?category=Kids+and+Families">Kids and Families</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/10/3/floyd-bennett-field-public-arts-festival" class="eventlist-title-link">Floyd Bennett Field! Public Arts Festival</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-10-03">Saturday, October 3, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-10-03">6:00 PM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-10-03">10:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Floyd Bennett Field
+              
+              <a href="http://maps.google.com?q=3159 Flatbush Ave, Brooklyn, NY 11234 Brooklyn, New York, 11234 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Floyd%20Bennett%20Field%21%20Public%20Arts%20Festival&dates=20261003T220000Z/20261004T020000Z&location=3159%20Flatbush%20Ave%2C%20Brooklyn%2C%20NY%2011234%2C%20Brooklyn%2C%20New%20York%2C%2011234%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/10/3/floyd-bennett-field-public-arts-festival?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-6a1885e1cdc9727354b04ce5"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="755b29adc109b98da870" id="block-755b29adc109b98da870"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Floyd Bennett Field! Public Arts Festival will return in fall 2026! </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">The festival is a free, family-friendly event, featuring site-specific digital video artworks projection-mapped onto the 8,640-square-foot façade of historic Hangars 3 &amp; 4 as a celebration of the park’s rich history and vibrant future. </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">This year’s festival will feature a playful version of the dinner and a show concept. As the sun sets over the landscape, neighbors and friends will gather for <a target="_blank" href="https://www.longesttablecommunity.org/"><strong><em>The Longest Table</em></strong></a>, a collective outdoor dinner that turns dining into art and conversation into connection, accompanied by music and family-friendly lawn activities. </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">When night settles, the hangars will come alive once more, washed in color, motion, and sound, with newly-commissioned digital artworks projected onto the unique brick and glass canvas of the building façade.&nbsp;</p></div>
+
+
+  
+<style id="container-styles">#block-755b29adc109b98da870 {
+    
+    
+    
+  }
+
+  #block-755b29adc109b98da870 .sqs-html-content {
+    
+    }
+
+  #block-755b29adc109b98da870 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-755b29adc109b98da870 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-755b29adc109b98da870 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="yui_3_17_2_1_1779993604223_2579" id="block-yui_3_17_2_1_1779993604223_2579"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="small"
+  data-button-type="tertiary"
+  
+>
+  <a
+    href="https://www.jbrpc.org/2024-paf"
+    class="sqs-block-button-element--small sqs-button-element--tertiary sqs-block-button-element"
+    data-sqsp-button
+    
+  >
+    Learn more
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-yui_3_17_2_1_1779993604223_2579 {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-yui_3_17_2_1_1779993604223_2579 {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div><div class="sqs-block image-block sqs-block-image" data-block-type="5" data-sqsp-block="image-classic" id="block-yui_3_17_2_1_1779993604223_1799"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div
+        class="
+          image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default
+        "
+        data-test="image-block-inline-outer-wrapper"
+        data-sqsp-image-classic-block-layout="inline"
+    >
+
+      
+
+      
+        <figure
+            class="
+              sqs-block-image-figure
+              intrinsic
+            "
+            style="max-width:2500px;"
+        >
+          
+        
+        
+
+        
+          
+            
+          <div
+              
+              
+              class="image-block-wrapper"
+              data-animation-role="image"
+              
+  
+
+          >
+            <div data-sqsp-image-classic-block-image-container class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio
+            " style="
+                position: relative;
+                
+                  padding-bottom:75%;
+                
+                overflow: hidden;-webkit-mask-image: -webkit-radial-gradient(white, black);
+              "
+              >
+                
+                
+                
+                
+                
+                
+                
+                <img data-stretch="false" data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg" data-image-dimensions="2500x1875" data-image-focal-point="0.5,0.5" alt="" data-load="false" elementtiming="system-image-block" data-sqsp-image-classic-block-image src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg" width="2500" height="1875" alt="" sizes="(max-width: 640px) 100vw, (max-width: 767px) 100vw, 100vw" style="display:block;object-fit: cover; width: 100%; height: 100%; object-position: 50% 50%" onload="this.classList.add(&quot;loaded&quot;)" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/3fa7cf58-07fc-45b4-87a4-95ac41589934/IMG_7527.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/10/3/floyd-bennett-field-public-arts-festival" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--upcoming eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/10/24/november-cleansweep-bayswater-city-park-shoreline" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg" data-image-dimensions="4032x3024" data-image-focal-point="0.5,0.5" alt="November CleanSweep: Bayswater City Park Shoreline" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg" width="4032" height="3024" alt="" sizes="(max-width: 639px)200vw,70vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1776963303466-U2JBU8VSJ0GO8DRN0JW3/IMG_0917.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Oct</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">24</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Stewardship">Stewardship</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/10/24/november-cleansweep-bayswater-city-park-shoreline" class="eventlist-title-link">November CleanSweep: Bayswater City Park Shoreline</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-10-24">Saturday, October 24, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-10-24">10:00 AM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-10-24">12:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Bayswater City Park
+              
+              <a href="http://maps.google.com?q=7-01 Bay 32 St, Far Rockaway, NY 11691 Rockaway Park, NY 11694 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=November%20CleanSweep%3A%20Bayswater%20City%20Park%20Shoreline&dates=20261024T140000Z/20261024T160000Z&location=7-01%20Bay%2032%20St%2C%20Far%20Rockaway%2C%20NY%2011691%2C%20Rockaway%20Park%2C%20NY%2011694%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/10/24/november-cleansweep-bayswater-city-park-shoreline?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-69ea4e19b494a445df4d4aea"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="46408de2fa365b16de43" id="block-46408de2fa365b16de43"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">As the winter months progress, the prevailing winds and tides bring major debris into Jamaica Bay. Join Jamaica Bay-Rockaway Parks Conservancy for the November CleanSweep, an effort by volunteers and students to remove marine debris from our shoreline! Enjoy the beautiful fall weather and end the year with the gift of clean shorelines!<br><br>Gloves, bags, and tools will be provided. Volunteers are encouraged to wear weather-appropriate clothing and sturdy, closed-toe shoes, and bring their own water and sunscreen. Event is rain or shine.<br><br><em>JBRPC Community Stewardship Programs are generously supported by Bloomberg Philanthropies, Con Edison, NYC Green Fund, and NYC Ferry, operated by Hornblower, and public funding through NY Senator Roxanne Persaud, Assemblymembers Stacey Pheffer-Amato and Jaime R. Williams, Former NYC Council Speaker Adrienne Adams, and Council Members Joann Ariola, Selvena Brooks-Powers, and Mercedes Narcisse.</em><br><br>Please complete our volunteer waiver prior to the start of the event by clickin<a href="https://docs.google.com/forms/d/e/1FAIpQLScP_7RnyotYTim4hke5CmZ9LeLiHbRxyqdp99JdYyYugeY0gA/viewform">g he</a><a target="_blank" class="in-cell-link" href="https://docs.google.com/forms/d/e/1FAIpQLScP_7RnyotYTim4hke5CmZ9LeLiHbRxyqdp99JdYyYugeY0gA/viewform">re</a>.</p></div>
+
+
+  
+<style id="container-styles">#block-46408de2fa365b16de43 {
+    
+    
+    
+  }
+
+  #block-46408de2fa365b16de43 .sqs-html-content {
+    
+    }
+
+  #block-46408de2fa365b16de43 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-46408de2fa365b16de43 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-46408de2fa365b16de43 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/10/24/november-cleansweep-bayswater-city-park-shoreline" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article>
+  </div>
+
+  <!-- Past Events -->
+
+  <div class="eventlist eventlist--past">
+  <hr class="eventlist-past-upcoming-divider">
+<article class="eventlist-event eventlist-event--past eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/6/29/rockaway-refresh-summer-opening-s864y-h2kad-eb7f4" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png" data-image-dimensions="1080x719" data-image-focal-point="0.4642857142857143,0.04315476190476186" alt="Rockaway Refresh" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png" width="1080" height="719" alt="" sizes="(max-width: 639px)225.31293463143257vw,78.85952712100139vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 46.42857142857143% 4.315476190476186%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781014110318-WFIUURSPJQVBETYJYKVX/Rockaway%2BRefresh%2BSocial%2BPosts%25281%2529.png?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jul</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">20</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Stewardship">Stewardship</a>, <a href="?category=Refresh">Refresh</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/6/29/rockaway-refresh-summer-opening-s864y-h2kad-eb7f4" class="eventlist-title-link">Rockaway Refresh</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-07-20">Monday, July 20, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-07-20">1:00 PM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-07-20">4:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Beach 17th Street Boardwalk
+              
+              <a href="http://maps.google.com?q=Beach 17th Street Boardwalk NY, 11691 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Rockaway%20Refresh&dates=20260720T170000Z/20260720T200000Z&location=Beach%2017th%20Street%20Boardwalk%2C%20NY%2C%2011691%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/6/29/rockaway-refresh-summer-opening-s864y-h2kad-eb7f4?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-69c6d793f064911686a9faf4"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="e5737fc211ff3041b586" id="block-e5737fc211ff3041b586"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Join Jamaica Bay-Rockaway Parks Conservancy (JBRPC) staff for weekly Rockaway Refresh! boardwalk, beach, and shoreline cleanups. These pop-up cleanups will happen all summer on Mondays.  Volunteers are invited to help us keep our beaches debris-free after busy beach weekends.<br><br>Our Rockaway Refresh summer schedule is on our website. Follow <a target="_blank" href="https://www.instagram.com/jbrpc/">@jbrpc</a> for more info.<br><br>Please complete our volunteer waiver prior to the start of the event by clicking here.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true"></p></div>
+
+
+  
+<style id="container-styles">#block-e5737fc211ff3041b586 {
+    
+    
+    
+  }
+
+  #block-e5737fc211ff3041b586 .sqs-html-content {
+    
+    }
+
+  #block-e5737fc211ff3041b586 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-e5737fc211ff3041b586 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-e5737fc211ff3041b586 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/6/29/rockaway-refresh-summer-opening-s864y-h2kad-eb7f4" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--past eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/7/3/wheel-fun-rentals-celebrates-americas-250th-with-patriotic-led-bike-ride-m2wcl" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg" data-image-dimensions="575x500" data-image-focal-point="0.5,0.5" alt="Wheel Fun Rentals Celebrates America's 250th with Patriotic LED Bike Ride" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg" width="575" height="500" alt="" sizes="(max-width: 639px)172.5vw,60.37499999999999vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012455969-OZA5EO5YFUP9PJFRYJCJ/Wheel-Fun-Rentals-in-Brooklyn-and-Staten-Island-Celebrate-America-250-with-Patriotic-LED-Iluminated-Night-RIdes.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jul</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">4</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/7/3/wheel-fun-rentals-celebrates-americas-250th-with-patriotic-led-bike-ride-m2wcl" class="eventlist-title-link">Wheel Fun Rentals Celebrates America's 250th with Patriotic LED Bike Ride</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-07-04">Saturday, July 4, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-07-04">8:00 PM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-07-04">9:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Marine Park Parking Lot
+              
+              <a href="http://maps.google.com?q=3244 Avenue U Brooklyn, New York, 11234 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Wheel%20Fun%20Rentals%20Celebrates%20America%27s%20250th%20with%20Patriotic%20LED%20Bike%20Ride&dates=20260705T000000Z/20260705T010000Z&location=3244%20Avenue%20U%2C%20Brooklyn%2C%20New%20York%2C%2011234%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/7/3/wheel-fun-rentals-celebrates-americas-250th-with-patriotic-led-bike-ride-m2wcl?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-6a469cf11aa91b68f14432c3"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="a3be42d69b3909c06183" id="block-a3be42d69b3909c06183"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Wheel Fun Rentals at Boathouse Row is lighting up summer nights in patriotic style as it celebrates America's 250th anniversary with special Red, White &amp; Blue LED Illuminated Surrey Night Rides.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">For the summer-long celebration, Wheel Fun Rentals has transformed its popular LED-illuminated specialty bikes into dazzling patriotic attractions featuring custom red, white, and blue lighting. Families, couples, and friends can cruise along two of New York City's scenic waterfronts while celebrating America's historic 250th birthday.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Night Rides are first-come, first-served and available Friday – Sundays and holidays beginning at sunset until 10pm, last 1-hour rental goes out at 9pm. Pricing is $29 for a Single Surrey (seats up to 3 adults and 2 small children), and $39 for a Double Surrey (seats up to 6 adults and 2 small children).</p></div>
+
+
+  
+<style id="container-styles">#block-a3be42d69b3909c06183 {
+    
+    
+    
+  }
+
+  #block-a3be42d69b3909c06183 .sqs-html-content {
+    
+    }
+
+  #block-a3be42d69b3909c06183 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-a3be42d69b3909c06183 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-a3be42d69b3909c06183 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="756c07c2edd82cf4a82b" id="block-756c07c2edd82cf4a82b"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="small"
+  data-button-type="tertiary"
+  
+>
+  <a
+    href="https://www.nycgovparks.org/parks/marine-park/events/2026/07/03/wheel-fun-rentals-celebrates-americas-250th-with-patriotic-led-bike-ride"
+    class="sqs-block-button-element--small sqs-button-element--tertiary sqs-block-button-element"
+    data-sqsp-button
+    
+  >
+    Learn more
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-756c07c2edd82cf4a82b {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-756c07c2edd82cf4a82b {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/7/3/wheel-fun-rentals-celebrates-americas-250th-with-patriotic-led-bike-ride-m2wcl" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--past eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/7/3/fishing-frenzy-at-shirley-chisholm-state-park" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg" data-image-dimensions="1848x898" data-image-focal-point="0.5,0.5" alt="Fishing Frenzy at Shirley Chisholm State Park" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg" width="1848" height="898" alt="" sizes="(max-width: 639px)308.6859688195991vw,108.04008908685968vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1783012868559-OMMP6JZROF20JM4V90A1/fish+copy.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jul</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">3</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Active+Recreation">Active Recreation</a>, <a href="?category=Wildlife+and+Nature">Wildlife and Nature</a>, <a href="?category=Kids+and+Families">Kids and Families</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/7/3/fishing-frenzy-at-shirley-chisholm-state-park" class="eventlist-title-link">Fishing Frenzy at Shirley Chisholm State Park</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-07-03">Friday, July 3, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-07-03">2:00 PM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-07-03">5:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Jamaica Bay-Rockaway Parks Conservancy, Inc.
+              
+              <a href="http://maps.google.com?q=1750 Granville Payne Avenue Brooklyn, New York, 11207 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Fishing%20Frenzy%20at%20Shirley%20Chisholm%20State%20Park&dates=20260703T180000Z/20260703T210000Z&location=1750%20Granville%20Payne%20Avenue%2C%20Brooklyn%2C%20New%20York%2C%2011207%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/7/3/fishing-frenzy-at-shirley-chisholm-state-park?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-6a469d13bfef82100ddfd5a3"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="b6e49e3f1cd4e7d8d0c4" id="block-b6e49e3f1cd4e7d8d0c4"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Join park educators in learning what fish live in Jamaica Bay through FREE rod and reel fishing! Catch and release only. Materials provided.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">No experience necessary, join us on Penn Pier to learn the ins and outs of fishing in Jamaica Bay! Participants will also learn about fish identification, fishing equipment and techniques, angling ethics, and aquatic ecology.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">This is a FREE program! All supplies, including rods and bait will be provided.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Each session is limited to 15 fishing rods; families/small groups are encouraged to share a rod.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Please only register for one session per Friday, to give others a chance to fish.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Session times: 2:00pm to 2:45pm | 3:00pm to 3:45pm | 4:00pm to 4:45pm</p></div>
+
+
+  
+<style id="container-styles">#block-b6e49e3f1cd4e7d8d0c4 {
+    
+    
+    
+  }
+
+  #block-b6e49e3f1cd4e7d8d0c4 .sqs-html-content {
+    
+    }
+
+  #block-b6e49e3f1cd4e7d8d0c4 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-b6e49e3f1cd4e7d8d0c4 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-b6e49e3f1cd4e7d8d0c4 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="yui_3_17_2_1_1783012628910_2653" id="block-yui_3_17_2_1_1783012628910_2653"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="small"
+  data-button-type="tertiary"
+  
+>
+  <a
+    href="https://www.eventbrite.com/e/fishing-frenzy-fridays-registration-1992511249785?aff=oddtdtcreator&keep_tld=true"
+    class="sqs-block-button-element--small sqs-button-element--tertiary sqs-block-button-element"
+    data-sqsp-button
+    target="_blank"
+  >
+    Learn more
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-yui_3_17_2_1_1783012628910_2653 {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-yui_3_17_2_1_1783012628910_2653 {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/7/3/fishing-frenzy-at-shirley-chisholm-state-park" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--past eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/6/25/movies-under-the-stars-zootopia-2025" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg" data-image-dimensions="2000x1335" data-image-focal-point="0.5,0.5" alt="Movies Under the Stars: Zootopia (2025)" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg" width="2000" height="1335" alt="" sizes="(max-width: 639px)224.71910112359552vw,78.65168539325843vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781025180846-GM89K7SHFLA7LAPPEH0K/image.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jun</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">25</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Kids+and+Families">Kids and Families</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/6/25/movies-under-the-stars-zootopia-2025" class="eventlist-title-link">Movies Under the Stars: Zootopia (2025)</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-06-25">Thursday, June 25, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-06-25">8:30 PM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-06-25">10:30 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Lawn at Fillmore Avenue and Madison Place, Marine Park
+              
+              <a href="http://maps.google.com?q=3000 Fillmore Avenue Brooklyn, New York, 11234 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Movies%20Under%20the%20Stars%3A%20Zootopia%20%282025%29&dates=20260626T003000Z/20260626T023000Z&location=3000%20Fillmore%20Avenue%2C%20Brooklyn%2C%20New%20York%2C%2011234%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/6/25/movies-under-the-stars-zootopia-2025?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-6a28490d6cfcd236567066c3"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="e27a72d7ea8e6813bda3" id="block-e27a72d7ea8e6813bda3"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Grab a blanket and come enjoy a movie in your neighborhood park! </p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">This summer, NYC Parks and The Mayor’s Office of Media and Entertainment will host family-friendly movie showings across the five boroughs.</p><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Screening of Zootopia at Marine Park will begin at dusk. In the event of extreme rain, the event will be cancelled. </p></div>
+
+
+  
+<style id="container-styles">#block-e27a72d7ea8e6813bda3 {
+    
+    
+    
+  }
+
+  #block-e27a72d7ea8e6813bda3 .sqs-html-content {
+    
+    }
+
+  #block-e27a72d7ea8e6813bda3 {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-e27a72d7ea8e6813bda3 {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-e27a72d7ea8e6813bda3 .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="yui_3_17_2_1_1781025038234_2813" id="block-yui_3_17_2_1_1781025038234_2813"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="small"
+  data-button-type="tertiary"
+  
+>
+  <a
+    href="https://www.nycgovparks.org/events/2026/06/25/movies-under-the-stars-zootopia-2025"
+    class="sqs-block-button-element--small sqs-button-element--tertiary sqs-block-button-element"
+    data-sqsp-button
+    target="_blank"
+  >
+    Learn more
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-yui_3_17_2_1_1781025038234_2813 {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-yui_3_17_2_1_1781025038234_2813 {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/6/25/movies-under-the-stars-zootopia-2025" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--past eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2026/6/14/just-for-kids-puppetmobiles-pinocchio" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp" data-image-dimensions="2500x1875" data-image-focal-point="0.5,0.5" alt="Just for Kids: PuppetMobile’s Pinocchio" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp" width="2500" height="1875" alt="" sizes="(max-width: 639px)200vw,70vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1781022094367-XA6L7CRKAHEUSUBSTCYO/Photo-May-18-2025-1-06-37-PM.webp?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jun</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">14</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Kids+and+Families">Kids and Families</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2026/6/14/just-for-kids-puppetmobiles-pinocchio" class="eventlist-title-link">Just for Kids: PuppetMobile’s Pinocchio</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-06-14">Sunday, June 14, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-06-14">11:00 AM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-06-14">12:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Lawn at Fillmore Avenue and Madison Place, Marine Park
+              
+              <a href="http://maps.google.com?q=2936 Fillmore Avenue Brooklyn, New York, 11229 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Just%20for%20Kids%3A%20PuppetMobile%E2%80%99s%20Pinocchio&dates=20260614T150000Z/20260614T160000Z&location=2936%20Fillmore%20Avenue%2C%20Brooklyn%2C%20New%20York%2C%2011229%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2026/6/14/just-for-kids-puppetmobiles-pinocchio?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-6a283c906680d31211cc6487"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="67d8da7a45a1a99d9f8c" id="block-67d8da7a45a1a99d9f8c"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p style="white-space:pre-wrap;" data-rte-preserve-empty="true">Find a spot on the lawn for a one-of-a-kind production of Pinocchio in Marine Park, presented by the CityParks PuppetMobile in partnership with City Parks Foundation and the Swedish Cottage Marionette Theater team at NYC Parks.</p></div>
+
+
+  
+<style id="container-styles">#block-67d8da7a45a1a99d9f8c {
+    
+    
+    
+  }
+
+  #block-67d8da7a45a1a99d9f8c .sqs-html-content {
+    
+    }
+
+  #block-67d8da7a45a1a99d9f8c {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+
+
+
+  
+  
+
+  
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-67d8da7a45a1a99d9f8c {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-67d8da7a45a1a99d9f8c .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="yui_3_17_2_1_1781021841302_3071" id="block-yui_3_17_2_1_1781021841302_3071"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="small"
+  data-button-type="tertiary"
+  
+>
+  <a
+    href="https://www.nycgovparks.org/events/2026/06/14/just-for-kids-puppetmobiles-pinocchio"
+    class="sqs-block-button-element--small sqs-button-element--tertiary sqs-block-button-element"
+    data-sqsp-button
+    target="_blank"
+  >
+    Learn more
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-yui_3_17_2_1_1781021841302_3071 {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-yui_3_17_2_1_1781021841302_3071 {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2026/6/14/just-for-kids-puppetmobiles-pinocchio" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article><article class="eventlist-event eventlist-event--past eventlist-event--hasimg eventlist-hasimg">
+
+      <a href="/events/2024/4/6/park-pals-sc9zy-tpc8b-7jxxw-znprt" class="eventlist-column-thumbnail content-fill" data-animation-role="image">
+        
+          
+          
+          
+          
+          
+          
+          
+<img data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg" data-image-dimensions="600x400" data-image-focal-point="0.5,0.5" alt="Pollinator Explorers: A JBRPC Family Program at Edgemere Farm" data-load="false" elementtiming="nbf-events-stacked" src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg" width="600" height="400" alt="" sizes="(max-width: 639px)225vw,78.75vw" style="display:block;object-fit:cover; width: 100%; height: 100%; position: absolute; object-position: 50% 50%;" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/1780674740082-9L89T5UY1U5KB2I2OYWF/Bee%2Bon%2BAster.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+        
+      </a>
+
+      <div class="eventlist-column-date">
+
+        <div class="eventlist-datetag">
+
+          <div class="eventlist-datetag-inner">
+
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--month">Jun</div>
+            <div class="eventlist-datetag-startdate eventlist-datetag-startdate--day">14</div>
+
+            
+            
+
+            <div class="eventlist-datetag-status"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="eventlist-column-info">
+
+        
+        <div class="eventlist-cats">
+          <a href="?category=Kids+and+Families">Kids and Families</a>, <a href="?category=Wildlife+and+Nature">Wildlife and Nature</a>
+        </div>
+        
+
+        <h1 class="eventlist-title"><a href="/events/2024/4/6/park-pals-sc9zy-tpc8b-7jxxw-znprt" class="eventlist-title-link">Pollinator Explorers: A JBRPC Family Program at Edgemere Farm</a></h1>
+
+        <ul class="eventlist-meta event-meta" data-animation-role="date">
+
+          
+
+          <li class="eventlist-meta-item eventlist-meta-date event-meta-item">
+            <time class="event-date" datetime="2026-06-14">Sunday, June 14, 2026</time>
+          </li>
+
+          <li class="eventlist-meta-item eventlist-meta-time event-meta-item">
+            <span class="event-time-localized">
+              <time class="event-time-localized-start" datetime="2026-06-14">10:00 AM</time>
+              <span class="event-datetime-divider"></span>
+              <time class="event-time-localized-end" datetime="2026-06-14">12:00 PM</time>
+            </span>
+          </li>
+
+          
+
+          
+            
+            <li class="eventlist-meta-item eventlist-meta-address event-meta-item">
+              
+                Edgemere Farm
+              
+              <a href="http://maps.google.com?q=3-85 B 45 St, Far Rockaway, NY 11691 Brooklyn, NY, 11234 United States" class="eventlist-meta-address-maplink" target="_blank">(map)</a>
+            </li>
+            
+          
+
+          <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
+            <a href="http://www.google.com/calendar/event?action=TEMPLATE&text=Pollinator%20Explorers%3A%20A%20JBRPC%20Family%20Program%20at%20Edgemere%20Farm&dates=20260614T140000Z/20260614T160000Z&location=3-85%20B%2045%20St%2C%20Far%20Rockaway%2C%20NY%2011691%2C%20Brooklyn%2C%20NY%2C%2011234%2C%20United%20States" class="eventlist-meta-export-google">Google Calendar</a>
+            <span class="eventlist-meta-export-divider"></span>
+            <a href="/events/2024/4/6/park-pals-sc9zy-tpc8b-7jxxw-znprt?format=ical" class="eventlist-meta-export-ical">ICS</a>
+          </li>
+
+        </ul>
+
+        
+          
+          <div class="eventlist-description"><div class="sqs-layout sqs-grid-12 columns-12" data-layout-label="Post Body" data-type="item" id="item-69c1a5dcce1d7e7ca477e41e"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.html/a9032d95-ba0b-473e-a531-82cdd71f9f84_789/website.components.html.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.html" data-sqsp-block="text" data-website-component-id="78aaed480dd2474ea48a" id="block-78aaed480dd2474ea48a"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content" data-sqsp-text-block-content><p class="" style="white-space:pre-wrap;" data-rte-preserve-empty="true">Join us at Edgemere Farm for a free, fun, hands-on program celebrating pollinators and their important role in our community! Designed for children ages 2–10 and their caregivers, this interactive event will explore how bees, butterflies, and other pollinators help grow the food we eat and support healthy ecosystems right here in Rockaway.<br><br>Families will enjoy a guided garden tour, playful learning activities including making their own “insect hotels” using upcycled and foraged materials, and a chance to take home a native plant to support pollinators at home. Through exploration, movement, and discovery, participants will learn how caring for pollinators helps strengthen both the farm and our local environment. Pre-registration is required. </p></div>
+
+
+  
+<style id="container-styles">#block-78aaed480dd2474ea48a {
+    
+    --stroke-style: none;--stroke-thickness: 6px;
+    
+      
+      
+      
+    
+
+--tweak-text-block-background-color: initial;
+
+  }
+
+  #block-78aaed480dd2474ea48a .sqs-html-content {
+    
+    --tweak-text-block-padding: 6% 6% 6% 6%;
+  --tweak-text-block-padding: initial;
+}
+
+  #block-78aaed480dd2474ea48a {
+      mix-blend-mode: var(--tweak-text-block-blend
+  );
+      border-radius: var(--tweak-text-block-radius);
+  }
+
+  
+  
+#block-78aaed480dd2474ea48a {
+      --tweak-text-block-radius: 0px 0px 0px 0px;
+    }
+
+
+  
+  
+
+  #block-78aaed480dd2474ea48a {
+    }
+
+</style>
+
+<style id="override-container-styles">
+    @media screen and (max-width: 767px) {
+          
+            
+
+#block-78aaed480dd2474ea48a {
+            
+            }
+        }
+    
+  
+    @media screen and (max-width: 767px) {
+          #block-78aaed480dd2474ea48a .sqs-html-content {
+            
+            }
+        }
+    
+  @media screen and (max-width: 767px) {
+          
+          
+
+          
+          
+          
+        }</style>
+
+<style class="transform-overrides-vars">
+    
+  </style>
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-button button-block" data-block-css="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.styles.css&quot;]" data-block-scripts="[&quot;https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.button/f65f6db7-c879-4d1a-af69-8d39fa021cc3_959/website.components.button.visitor.js&quot;]" data-block-type="1337" data-definition-name="website.components.button" data-sqsp-block="button" data-website-component-id="yui_3_17_2_1_1779897062367_1729" id="block-yui_3_17_2_1_1779897062367_1729"><div class="sqs-block-content">
+
+
+
+  
+    
+    
+      
+      
+
+
+
+<div
+  class="sqs-block-button-container sqs-button-block-container-system_desktop sqs-block-button-container--center "
+  data-animation-role="button"
+  data-button-size="small"
+  data-button-type="tertiary"
+  
+>
+  <a
+    href="https://www.eventbrite.com/e/pollinator-explorers-a-jbrpc-family-program-at-edgemere-farm-tickets-1989660322585?aff=oddtdtcreatorv"
+    class="sqs-block-button-element--small sqs-button-element--tertiary sqs-block-button-element"
+    data-sqsp-button
+    target="_blank"
+  >
+    Register
+  </a>
+  
+
+
+
+</div>
+
+    
+  
+    
+    
+      
+    
+  
+
+
+<style>
+  #block-yui_3_17_2_1_1779897062367_1729 {
+    --sqs-block-content-flex: 0;
+  }
+
+  
+  
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+</style>
+<style class="transform-vars">
+    #block-yui_3_17_2_1_1779897062367_1729 {
+      --opacity: 100%;
+      --translate-x: 0px;
+      --translate-y: 0px;
+      --rotation: 0deg;
+      --scale-x: 100%;
+      --scale-y: 100%;
+      --skew-x: 0deg;
+      --skew-y: 0deg;
+      --origin-x: 50%;
+      --origin-y: 50%;
+      --block-transform: none;
+
+      opacity: var(--opacity, 1);
+      transform: var(--block-transform);
+      transform-origin: var(--origin-x) var(--origin-y);
+    }
+  </style><style class="transform-overrides-vars">
+    
+  </style>
+</div></div><div class="sqs-block image-block sqs-block-image" data-block-type="5" data-sqsp-block="image-classic" id="block-yui_3_17_2_1_1779897062367_2260"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div
+        class="
+          image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default
+        "
+        data-test="image-block-inline-outer-wrapper"
+        data-sqsp-image-classic-block-layout="inline"
+    >
+
+      
+
+      
+        <figure
+            class="
+              sqs-block-image-figure
+              intrinsic
+            "
+            style="max-width:2550px;"
+        >
+          
+        
+        
+
+        
+          
+            
+          <div
+              
+              
+              class="image-block-wrapper"
+              data-animation-role="image"
+              
+  
+
+          >
+            <div data-sqsp-image-classic-block-image-container class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio
+            " style="
+                position: relative;
+                
+                  padding-bottom:129.41177368164062%;
+                
+                overflow: hidden;-webkit-mask-image: -webkit-radial-gradient(white, black);
+              "
+              >
+                
+                
+                
+                
+                
+                
+                
+                <img data-stretch="false" data-src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg" data-image-dimensions="2550x3300" data-image-focal-point="0.5,0.5" alt="" data-load="false" elementtiming="system-image-block" data-sqsp-image-classic-block-image src="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg" width="2550" height="3300" alt="" sizes="(max-width: 640px) 100vw, (max-width: 767px) 100vw, 100vw" style="display:block;object-fit: cover; width: 100%; height: 100%; object-position: 50% 50%" onload="this.classList.add(&quot;loaded&quot;)" srcset="https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg?format=100w 100w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg?format=300w 300w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/5398acafe4b03ea7cc92ff58/7eac5900-5a47-456d-a081-a4cd3d6fc7fd/2026+Pollinator+Explorers+Flyer.jpg?format=2500w 2500w" loading="lazy" decoding="async" data-loader="sqs">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div></div></div></div></div>
+          
+        
+
+        <a href="/events/2024/4/6/park-pals-sc9zy-tpc8b-7jxxw-znprt" class="eventlist-button sqs-editable-button sqs-button-element--primary">
+          View Event &#8594;
+        </a>
+
+      </div>
+
+      <div class="clear"></div>
+
+    </article>
+  </div>
+
+</div>
