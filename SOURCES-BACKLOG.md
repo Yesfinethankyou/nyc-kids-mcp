@@ -1837,6 +1837,51 @@ unprobed (expect similar stacks; probe before writing any code).
   only for v1 (skip `/performing-arts` and the other adult-dominated
   collections given the yield numbers above).
 
+### Jamaica Bay-Rockaway Parks Conservancy (JBRPC) — jbrpc.org
+
+- **Status:** CANDIDATE — proposed 2026-07-25, **quick-checked only** (a
+  homepage + `/events` fetch, not a full `source-verifier` probe — no
+  platform-signature confirmation, no fixture capture). Looks promising;
+  run `source-verifier` before handing to `source-adder`.
+- **What it is:** nonprofit parks conservancy for Jamaica Bay and the
+  Rockaway Peninsula (Rockaway Park, Queens — 11694). Runs school programs,
+  volunteer stewardship, and public events (2026 stats claimed: 75,000
+  program participants, 120,000 student interactions). Real potential value:
+  **Queens/Rockaway is thin coverage in this catalog** — `qpl` is the only
+  real Queens source today, and none of it is Rockaway-specific park/nature
+  programming.
+- **Platform (quick-check only, unconfirmed):** looks like **Squarespace**
+  (`images.squarespace-cdn.com` CDN references, Squarespace branding in
+  page markup) — worth checking whether `/events?format=json` is open here
+  (unlike `kccny`, which has it robots.txt-disallowed) or whether this is
+  another Blog-collection-styled-as-events situation. Check `robots.txt`
+  first, same lesson as KCCNY.
+- **`/events` page structure (quick-check):** looks like a genuine
+  Squarespace **Events collection**, not a blog — discrete cards with a
+  month/date indicator, title, category tags, time range + location, brief
+  description, "View Event" link, and calendar-add (Google/ICS) options.
+  Category filter chips visible: "Active Recreation," "History," **"Kids and
+  Families,"** "Stewardship," "Wildlife and Nature" — a **"Kids and
+  Families" category tag would make this a curated-filter build** (allowlist
+  on category, not free-text keyword matching), similar posture to
+  `si_childrens_museum`/`bk_childrens_museum` if it holds up under a real
+  probe.
+- **Example events seen:** "9th Annual Jamaica Bay Festival" (Jul 25, 2026),
+  "Stargazing at Floyd Bennett Field" (recurring monthly-ish), "Rockaway
+  Refresh" (recurring Mondays), "Shorebird Festival" (Aug 16, 2026),
+  "Raptorama" (Sep 27, 2026) — mix of one-off festivals and recurring
+  series, so expect the same "does the id/date field distinguish
+  occurrences" question every recurring-series source has had to answer.
+- **Open questions for the real probe:** confirm `?format=json` availability
+  + robots.txt; confirm the "Kids and Families" category is a real filed
+  taxonomy on each item (not just a display chip) queryable via the JSON;
+  check recurrence semantics for series like "Rockaway Refresh"; check for a
+  fixed single venue vs. multiple sites across the peninsula (Floyd Bennett
+  Field vs. the main JBRPC campus would need per-event venue, not a
+  `SOURCE_NEIGHBORHOOD` constant).
+- **Next step:** `source-verifier` — this was not a full probe, just a
+  same-session sanity check before adding to the backlog.
+
 ---
 
 ## Deferred to Phase 3+ (headless browser required)

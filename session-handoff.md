@@ -2,6 +2,30 @@
 
 ## What was done (most recent first)
 
+### Session 2026-07-25: Jamaica Bay-Rockaway Parks Conservancy (JBRPC) added to backlog (branch `claude/add-korean-culture-source-vnebdk`, restarted from `main` after PR #87 merged)
+
+PR #87 (the kccny session below) merged, so this branch was restarted from
+fresh `main` per the merged-branch convention rather than stacking on the
+old, now-merged tip.
+
+- **Added `### Jamaica Bay-Rockaway Parks Conservancy (JBRPC) — jbrpc.org`**
+  to `SOURCES-BACKLOG.md` as a fresh `CANDIDATE`, at the user's request —
+  quick-checked (homepage + `/events` fetch) but **not** run through a full
+  `source-verifier` probe, so no platform confirmation and no fixture yet.
+  Why it's promising: Queens/Rockaway coverage is thin in this catalog
+  (`qpl` is the only real Queens source today); the `/events` page looks
+  like a genuine Squarespace Events collection (not a blog-styled-as-events
+  situation like `kccny`) with a **"Kids and Families" category filter
+  chip** visible, which — if it's a real filed taxonomy, not just a display
+  label — would make this a curated-category build rather than a
+  free-text-keyword one. Open questions for the real probe: `?format=json`
+  availability + robots.txt (check before assuming the fast path works, per
+  the KCCNY lesson), whether "Kids and Families" is queryable via JSON,
+  recurrence semantics for series like "Rockaway Refresh," and whether
+  events span multiple venues across the peninsula (would need per-event
+  venue, not a `SOURCE_NEIGHBORHOOD` constant) or are single-campus.
+  No code, tests, or fixture — docs-only, next step is `source-verifier`.
+
 ### Session 2026-07-24: KCCNY built; Brooklyn Bridge Parents/Puppetworks/Gothamist probed and parked; The Skint re-confirmed (PR #87, branch `claude/add-korean-culture-source-vnebdk`)
 
 Source-expansion session: one new source shipped, four candidates probed
