@@ -751,7 +751,6 @@ The `docker-compose.dev.yml` override:
   owned by the host user, and the image's app user (uid 10001) can't write
   to it under that mount. The override is a dev-only workaround; the NAS
   flow uses 10001 and a host directory chowned to match.
-- Profile-disables Watchtower (no point polling for updates locally)
 
 ## Docker conventions (Checkpoint D)
 
@@ -769,9 +768,14 @@ The `docker-compose.dev.yml` override:
 - Host port is bound to `127.0.0.1:8765:8765`. Tailscale Funnel on the host
   is the only path in. Do not change to `0.0.0.0` — that exposes the
   service on the LAN unnecessarily.
-- Watchtower is scoped via `com.centurylinklabs.watchtower.enable=true`
-  label so it does not auto-update other containers on the NAS. If you
-  add a sidecar that should NOT auto-update, just omit the label.
+- **No Watchtower in this repo's compose.** Auto-updates come from a
+  host-wide Watchtower that runs as its own stack on the NAS and updates
+  every container (maintainer call, 2026-10-21). Don't re-add one here:
+  two Watchtowers race to recreate the same containers. The services keep
+  `com.centurylinklabs.watchtower.enable=true` (ignored host-wide, honored
+  by a label-scoped Watchtower); a sidecar that must NOT auto-update gets
+  the label set to `"false"` — omitting it is no longer enough. Keep the
+  host Watchtower's schedule clear of the 03:30 ingest cron.
 - Healthcheck is a TCP-port probe (no curl in slim, no auth needed). For
   a richer probe, point it at the existing unauthenticated `/healthz`
   route (`server.py`) rather than baking the master token into the

@@ -2,6 +2,29 @@
 
 ## What was done (most recent first)
 
+### Session 2026-10-21: drop bundled Watchtower in favor of a host-wide one (branch `chore/host-wide-watchtower`)
+
+Infra-only; no app code touched, suite unaffected.
+
+- **Removed the `watchtower` service** from `docker-compose.yml` and its
+  profile-disable block from `docker-compose.dev.yml` (the override would
+  otherwise define an image-less service). Maintainer now runs ONE host-wide
+  Watchtower as its own stack on the NAS that updates every container; the
+  bundled label-scoped one (`containrrr/watchtower:1.7.1`, unmaintained)
+  would race it to recreate `nyc-events` / `nyc-events-dashboard`.
+- **Kept** `com.centurylinklabs.watchtower.enable=true` on both services —
+  ignored host-wide, still honored if someone runs a label-scoped Watchtower.
+  Comments updated to say so.
+- **Docs:** README "Deploy" intro + step 4 rewritten (host-wide stack example
+  on `nickfedor/watchtower`, schedule 05:00 to clear the 03:30 ingest,
+  manual `pull && up -d` for immediate deploys, `--remove-orphans`
+  migration step); "Image tags" now says pinned tags opt out. CLAUDE.md
+  Docker conventions updated ("No Watchtower in this repo's compose").
+- **Trade-off (accepted):** deploy latency goes from ≤5 min (old 300s poll)
+  to next scheduled host run, unless deployed by hand.
+- **NAS steps after merge:** `git pull`, `docker compose up -d
+  --remove-orphans` in the repo dir, then deploy the host-wide stack.
+
 ### Session 2026-07-24: KCCNY built; Brooklyn Bridge Parents/Puppetworks/Gothamist probed and parked; The Skint re-confirmed (PR #87, branch `claude/add-korean-culture-source-vnebdk`)
 
 Source-expansion session: one new source shipped, four candidates probed
