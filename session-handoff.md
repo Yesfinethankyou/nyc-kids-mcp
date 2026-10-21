@@ -2,6 +2,27 @@
 
 ## What was done (most recent first)
 
+### Session 2026-10-21 (later): fix red CI — mcp 2.x floated into the test job (branch `fix/ci-use-lockfile`)
+
+- **Symptom:** "Test and lint" failed on the PR #89 merge. Lint was clean;
+  the Test step exited 2 (collection error), not on any assertion.
+- **Cause:** CI ran `pip install -e ".[dev]"` against pyproject's loose
+  floors and never read `requirements.lock`. MCP Python SDK 2.0 (2026-07-28)
+  removed `mcp.server.fastmcp`, so every test importing
+  `tools`/`server`/`auth` stopped collecting. It had been broken since July 28; #89
+  was just the first push since. Prod was unaffected (the image installs the
+  lockfile, `mcp==1.28.1`).
+- **Fix:** pyproject caps `mcp<2`. That's enough to turn CI green, and it also
+  keeps local dev installs and lockfile regeneration off 2.x.
+- **Still TODO (by hand):** make `test.yml` mirror the Dockerfile (lockfile →
+  `--no-deps -e .` → pytest/ruff) so CI tests exactly what ships. The session
+  token lacks GitHub `workflow` scope, so it couldn't push workflow edits.
+- **Follow-up:** the real v2 migration (`FastMCP` → `MCPServer`,
+  `streamable_http_path`/`transport_security` move to `streamable_http_app()`,
+  watch the Funnel 421 quirk) is tracked in **issue #90**.
+- Suite not run locally (PyPI was unreachable from the session). The PR's
+  CI run is the verification.
+
 ### Session 2026-10-21: drop bundled Watchtower in favor of a host-wide one (branch `chore/host-wide-watchtower`)
 
 Infra-only; no app code touched, suite unaffected.

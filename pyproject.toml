@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "NYC family-friendly events MCP server"
 requires-python = ">=3.11"
 dependencies = [
-    "mcp>=1.2.0",
+    "mcp>=1.2.0,<2",  # v2 removes mcp.server.fastmcp; migration tracked in #90
     "httpx>=0.27",
     "selectolax>=0.3",
     "curl_cffi>=0.9",
