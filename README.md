@@ -107,8 +107,8 @@ python -c "import secrets; print(secrets.token_urlsafe(48))"
 ## Deploy (Docker + Synology + Tailscale Funnel)
 
 The production target is a Synology NAS. The compose file ships two services:
-the MCP server itself and a Watchtower instance scoped to update only this
-container.
+the MCP server itself and the read-only tailnet dashboard. Auto-updates come
+from a host-wide Watchtower that runs as its own stack (see step 4).
 
 ### 1. Pull and run
 
@@ -165,26 +165,57 @@ the first run). The container therefore needs outbound HTTPS at ingest time.
 Set `ENRICH=0` in the command's environment to skip the pass.
 
 Don't bake the cron into the container — Watchtower restarts the container
-on every image update, which would race with a long-running ingest.
+on every image update, which would race with a long-running ingest. For the
+same reason, keep the ingest and the Watchtower schedule apart (e.g. ingest
+03:30, Watchtower 05:00).
 
 ### 4. Auto-updates via Watchtower
 
-The compose file's Watchtower service polls every 5 minutes for new
-`ghcr.io/yesfinethankyou/nyc-kids-mcp:latest` images. It only touches
-containers carrying the `com.centurylinklabs.watchtower.enable=true` label,
-so other containers on your NAS are untouched.
+This repo does **not** ship its own Watchtower. Run one host-wide Watchtower
+as a separate stack on the NAS; it updates every container, including these
+two. (An earlier version of this compose file bundled a label-scoped
+Watchtower — running both makes two updaters race to recreate the same
+containers. If you're upgrading from that version, see "Migrating" below.)
 
-Watchtower itself is version-pinned in the compose file (it mounts the
-Docker socket, which is root-equivalent on the host — it must not float on
-`:latest`). Bump its tag deliberately. The app image's Python dependencies
-are pinned via `requirements.lock` at build time, so a rebuild of the same
-git commit produces the same dependency set; the residual trust is the
-`:latest` app tag itself, which Watchtower auto-deploys by design — pin the
-app image and drop Watchtower if you want a human in that loop (see below).
+A minimal host-wide stack:
+
+```yaml
+services:
+  watchtower:
+    image: nickfedor/watchtower   # maintained fork; containrrr/watchtower is unmaintained
+    container_name: watchtower
+    environment:
+      - TZ=America/New_York
+      - WATCHTOWER_SCHEDULE=0 0 5 * * *   # 05:00 daily, after the 03:30 ingest
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+```
+
+Watchtower mounts the Docker socket, which is root-equivalent on the host —
+pin its tag once you're happy with a release and bump it deliberately. The
+app image's Python dependencies are pinned via `requirements.lock` at build
+time; the residual trust is the `:latest` app tag itself, which Watchtower
+auto-deploys by design.
+
+Both services keep the `com.centurylinklabs.watchtower.enable=true` label.
+A host-wide Watchtower ignores it; a label-scoped one
+(`WATCHTOWER_LABEL_ENABLE=true`) uses it. To exclude a container from
+auto-updates entirely, set the label to `"false"` or pin a version tag.
 
 When a new tag is pushed to GitHub (`v0.2.0`, etc.), the GH Actions workflow
-builds + pushes amd64 and arm64 images. The NAS picks up the update on the
-next poll.
+builds + pushes amd64 and arm64 images. The NAS picks it up on Watchtower's
+next scheduled run. To deploy immediately instead of waiting:
+
+```bash
+docker compose pull && docker compose up -d
+```
+
+**Migrating** from the bundled-Watchtower version: pull this change, then run
+`docker compose up -d --remove-orphans` in the repo directory to remove the
+old `nyc-events-watchtower` container before starting the host-wide one.
 
 ### Image tags
 
@@ -193,8 +224,9 @@ The CI publishes the following on every `vX.Y.Z` tag push:
 - `:latest` (only from `main` branch pushes)
 - `:vX.Y.Z`, `:X.Y`, `:X` (semver-derived)
 
-For pinning in production, prefer `:vX.Y.Z` over `:latest` and disable
-Watchtower auto-update for that container by removing the enable label.
+For pinning in production, prefer `:vX.Y.Z` over `:latest`. Watchtower only
+pulls newer builds of the same tag, so a pinned version tag is never
+auto-updated.
 
 ### 5. Backups + uptime monitoring (multi-user Phase C)
 
