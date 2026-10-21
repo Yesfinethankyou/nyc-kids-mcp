@@ -22,9 +22,13 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-
-      - name: Install (package + dev deps)
-        run: pip install -e ".[dev]"
+          cache-dependency-path: requirements.lock
+          
+      - name: Install (locked deps + package + dev tools)
+        run: |
+             pip install -r requirements.lock
+             pip install --no-deps -e .
+             pip install "pytest>=8" "ruff>=0.6"
 
       - name: Lint
         run: ruff check

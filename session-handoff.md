@@ -2,6 +2,30 @@
 
 ## What was done (most recent first)
 
+### Session 2026-10-21 (later): fix red CI — two upstream majors floated into the test job (PR #91, branch `fix/ci-use-lockfile`)
+
+- **Symptom:** "Test and lint" failed on the PR #89 merge. Lint was clean;
+  the Test step exited 2 (collection errors). #89 (infra/docs only) was
+  just the first push since the last green run on 2026-07-25.
+- **Cause:** CI runs `pip install -e ".[dev]"` against pyproject's loose `>=`
+  floors and never reads `requirements.lock`, so it picked up two breaking
+  majors:
+  1. **selectolax 1.0** removed `selectolax.parser` (Modest). Nine sources
+     import it, and `sources/__init__.py` imports them all, so most of the
+     suite died at import.
+  2. **mcp 2.x** removed `mcp.server.fastmcp`, which killed every test importing `tools`.
+  Prod was unaffected because the image installs the lockfile.
+- **How it was diagnosed:** Actions log downloads are blocked from the
+  session, so a throwaway branch added a root `conftest.py` that emitted
+  collection errors as `::error::` annotations (readable via the check-runs
+  API) and ran via `workflow_dispatch`. Reuse that trick if it recurs.
+- **Fix:** pyproject caps `mcp<2` and `selectolax<1`. Real migrations are
+  tracked in **#90** (MCP v2) and **#92** (selectolax Lexbor).
+- **TODO (by hand):** delete the leftover `debug/ci-collection` branch, and
+  make `test.yml` mirror the Dockerfile install (lockfile → `--no-deps -e .`
+  → pytest/ruff) so CI tests what ships. The session token lacked
+  `workflow` scope and branch-delete rights.
+
 ### Session 2026-10-21: drop bundled Watchtower in favor of a host-wide one (branch `chore/host-wide-watchtower`)
 
 Infra-only; no app code touched, suite unaffected.
