@@ -22,7 +22,8 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-
+          cache-dependency-path: requirements.lock
+          
       - name: Install (locked deps + package + dev tools)
         run: |
              pip install -r requirements.lock
