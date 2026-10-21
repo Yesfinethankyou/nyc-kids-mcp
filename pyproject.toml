@@ -6,7 +6,7 @@ requires-python = ">=3.11"
 dependencies = [
     "mcp>=1.2.0,<2",  # v2 removes mcp.server.fastmcp; migration tracked in #90
     "httpx>=0.27",
-    "selectolax>=0.3",
+    "selectolax>=0.3,<1",  # 1.0 removes selectolax.parser (Modest); migration tracked in #92
     "curl_cffi>=0.9",
     "pydantic>=2.5",
     "uvicorn[standard]>=0.30",

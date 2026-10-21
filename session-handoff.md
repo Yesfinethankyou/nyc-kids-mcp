@@ -2,26 +2,29 @@
 
 ## What was done (most recent first)
 
-### Session 2026-10-21 (later): fix red CI — mcp 2.x floated into the test job (branch `fix/ci-use-lockfile`)
+### Session 2026-10-21 (later): fix red CI — two upstream majors floated into the test job (PR #91, branch `fix/ci-use-lockfile`)
 
 - **Symptom:** "Test and lint" failed on the PR #89 merge. Lint was clean;
-  the Test step exited 2 (collection error), not on any assertion.
-- **Cause:** CI ran `pip install -e ".[dev]"` against pyproject's loose
-  floors and never read `requirements.lock`. MCP Python SDK 2.0 (2026-07-28)
-  removed `mcp.server.fastmcp`, so every test importing
-  `tools`/`server`/`auth` stopped collecting. It had been broken since July 28; #89
-  was just the first push since. Prod was unaffected (the image installs the
-  lockfile, `mcp==1.28.1`).
-- **Fix:** pyproject caps `mcp<2`. That's enough to turn CI green, and it also
-  keeps local dev installs and lockfile regeneration off 2.x.
-- **Still TODO (by hand):** make `test.yml` mirror the Dockerfile (lockfile →
-  `--no-deps -e .` → pytest/ruff) so CI tests exactly what ships. The session
-  token lacks GitHub `workflow` scope, so it couldn't push workflow edits.
-- **Follow-up:** the real v2 migration (`FastMCP` → `MCPServer`,
-  `streamable_http_path`/`transport_security` move to `streamable_http_app()`,
-  watch the Funnel 421 quirk) is tracked in **issue #90**.
-- Suite not run locally (PyPI was unreachable from the session). The PR's
-  CI run is the verification.
+  the Test step exited 2 (collection errors). #89 (infra/docs only) was
+  just the first push since the last green run on 2026-07-25.
+- **Cause:** CI runs `pip install -e ".[dev]"` against pyproject's loose `>=`
+  floors and never reads `requirements.lock`, so it picked up two breaking
+  majors:
+  1. **selectolax 1.0** removed `selectolax.parser` (Modest). Nine sources
+     import it, and `sources/__init__.py` imports them all, so most of the
+     suite died at import.
+  2. **mcp 2.x** removed `mcp.server.fastmcp`, which killed every test importing `tools`.
+  Prod was unaffected because the image installs the lockfile.
+- **How it was diagnosed:** Actions log downloads are blocked from the
+  session, so a throwaway branch added a root `conftest.py` that emitted
+  collection errors as `::error::` annotations (readable via the check-runs
+  API) and ran via `workflow_dispatch`. Reuse that trick if it recurs.
+- **Fix:** pyproject caps `mcp<2` and `selectolax<1`. Real migrations are
+  tracked in **#90** (MCP v2) and **#92** (selectolax Lexbor).
+- **TODO (by hand):** delete the leftover `debug/ci-collection` branch, and
+  make `test.yml` mirror the Dockerfile install (lockfile → `--no-deps -e .`
+  → pytest/ruff) so CI tests what ships. The session token lacked
+  `workflow` scope and branch-delete rights.
 
 ### Session 2026-10-21: drop bundled Watchtower in favor of a host-wide one (branch `chore/host-wide-watchtower`)
 
